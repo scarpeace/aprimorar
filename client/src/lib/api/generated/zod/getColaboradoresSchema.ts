@@ -3,7 +3,8 @@
  * Do not edit manually.
  */
 
-import { pagedModelColaboradorResponseDTOSchema } from "./pagedModelColaboradorResponseDTOSchema.ts";
+import { pagedModelColaboradorListResponseDTOSchema } from "./pagedModelColaboradorListResponseDTOSchema.ts";
+import { problemDetailSchema } from "./problemDetailSchema.ts";
 import { z } from "zod/v4";
 
 export const getColaboradoresQueryParamsSchema = z.object({
@@ -23,6 +24,21 @@ export const getColaboradoresQueryParamsSchema = z.object({
 /**
  * @description Lista de colaboradores retornada com sucesso.
  */
-export const getColaboradores200Schema = z.lazy(() => pagedModelColaboradorResponseDTOSchema);
+export const getColaboradores200Schema = z.lazy(() => pagedModelColaboradorListResponseDTOSchema);
+
+/**
+ * @description Requisição inválida.
+ */
+export const getColaboradores400Schema = z.lazy(() => problemDetailSchema);
+
+/**
+ * @description Não autenticado.
+ */
+export const getColaboradores401Schema = z.lazy(() => problemDetailSchema);
+
+/**
+ * @description Erro interno do sistema.
+ */
+export const getColaboradores500Schema = z.lazy(() => problemDetailSchema);
 
 export const getColaboradoresQueryResponseSchema = z.lazy(() => getColaboradores200Schema);

@@ -4,7 +4,7 @@
  */
 
 import { alunoRequestDTOSchema } from "./alunoRequestDTOSchema.ts";
-import { alunoResponseDTOSchema } from "./alunoResponseDTOSchema.ts";
+import { problemDetailSchema } from "./problemDetailSchema.ts";
 import { z } from "zod/v4";
 
 export const updateAlunoPathParamsSchema = z.object({
@@ -14,7 +14,32 @@ export const updateAlunoPathParamsSchema = z.object({
 /**
  * @description Aluno atualizado com sucesso.
  */
-export const updateAluno200Schema = z.lazy(() => alunoResponseDTOSchema).describe("Dados do aluno retornados pela API");
+export const updateAluno200Schema = z.any();
+
+/**
+ * @description Requisição inválida.
+ */
+export const updateAluno400Schema = z.lazy(() => problemDetailSchema);
+
+/**
+ * @description Não autenticado.
+ */
+export const updateAluno401Schema = z.lazy(() => problemDetailSchema);
+
+/**
+ * @description Recurso não encontrado.
+ */
+export const updateAluno404Schema = z.lazy(() => problemDetailSchema);
+
+/**
+ * @description Conflito de dados ou de estado.
+ */
+export const updateAluno409Schema = z.lazy(() => problemDetailSchema);
+
+/**
+ * @description Erro interno do sistema.
+ */
+export const updateAluno500Schema = z.lazy(() => problemDetailSchema);
 
 export const updateAlunoMutationRequestSchema = z
   .lazy(() => alunoRequestDTOSchema)

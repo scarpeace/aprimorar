@@ -3,7 +3,8 @@
  * Do not edit manually.
  */
 
-import type { PagedModelAlunoResponseDTO } from "./PagedModelAlunoResponseDTO.ts";
+import type { PagedModelAlunoListResponseDTO } from "./PagedModelAlunoListResponseDTO.ts";
+import type { ProblemDetail } from "./ProblemDetail.ts";
 
 export type GetAlunosQueryParams = {
   /**
@@ -55,12 +56,37 @@ export type GetAlunosQueryParams = {
 /**
  * @description Lista de alunos retornada com sucesso.
  */
-export type GetAlunos200 = PagedModelAlunoResponseDTO;
+export type GetAlunos200 = PagedModelAlunoListResponseDTO;
+
+/**
+ * @description Requisição inválida.
+ */
+export type GetAlunos400 = ProblemDetail;
+
+/**
+ * @description Não autenticado.
+ */
+export type GetAlunos401 = ProblemDetail;
+
+/**
+ * @description Recurso não encontrado.
+ */
+export type GetAlunos404 = ProblemDetail;
+
+/**
+ * @description Conflito de dados ou de estado.
+ */
+export type GetAlunos409 = ProblemDetail;
+
+/**
+ * @description Erro interno do sistema.
+ */
+export type GetAlunos500 = ProblemDetail;
 
 export type GetAlunosQueryResponse = GetAlunos200;
 
 export type GetAlunosQuery = {
   Response: GetAlunos200;
   QueryParams: GetAlunosQueryParams;
-  Errors: any;
+  Errors: GetAlunos400 | GetAlunos401 | GetAlunos404 | GetAlunos409 | GetAlunos500;
 };

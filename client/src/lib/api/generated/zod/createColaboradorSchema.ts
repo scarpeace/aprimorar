@@ -4,15 +4,33 @@
  */
 
 import { colaboradorRequestDTOSchema } from "./colaboradorRequestDTOSchema.ts";
-import { colaboradorResponseDTOSchema } from "./colaboradorResponseDTOSchema.ts";
+import { problemDetailSchema } from "./problemDetailSchema.ts";
 import { z } from "zod/v4";
 
 /**
  * @description Colaborador criado com sucesso.
  */
-export const createColaborador201Schema = z
-  .lazy(() => colaboradorResponseDTOSchema)
-  .describe("Dados do colaborador retornados pela API");
+export const createColaborador201Schema = z.any();
+
+/**
+ * @description Requisição inválida.
+ */
+export const createColaborador400Schema = z.lazy(() => problemDetailSchema);
+
+/**
+ * @description Não autenticado.
+ */
+export const createColaborador401Schema = z.lazy(() => problemDetailSchema);
+
+/**
+ * @description Conflito de dados ou de estado.
+ */
+export const createColaborador409Schema = z.lazy(() => problemDetailSchema);
+
+/**
+ * @description Erro interno do sistema.
+ */
+export const createColaborador500Schema = z.lazy(() => problemDetailSchema);
 
 export const createColaboradorMutationRequestSchema = z
   .lazy(() => colaboradorRequestDTOSchema)

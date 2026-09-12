@@ -4,12 +4,37 @@
  */
 
 import type { AlunoRequestDTO } from "./AlunoRequestDTO.ts";
-import type { AlunoResponseDTO } from "./AlunoResponseDTO.ts";
+import type { ProblemDetail } from "./ProblemDetail.ts";
 
 /**
  * @description Aluno criado com sucesso.
  */
-export type CriarAluno201 = AlunoResponseDTO;
+export type CriarAluno201 = any;
+
+/**
+ * @description Requisição inválida.
+ */
+export type CriarAluno400 = ProblemDetail;
+
+/**
+ * @description Não autenticado.
+ */
+export type CriarAluno401 = ProblemDetail;
+
+/**
+ * @description Recurso não encontrado.
+ */
+export type CriarAluno404 = ProblemDetail;
+
+/**
+ * @description Conflito de dados ou de estado.
+ */
+export type CriarAluno409 = ProblemDetail;
+
+/**
+ * @description Erro interno do sistema.
+ */
+export type CriarAluno500 = ProblemDetail;
 
 export type CriarAlunoMutationRequest = AlunoRequestDTO;
 
@@ -18,5 +43,5 @@ export type CriarAlunoMutationResponse = CriarAluno201;
 export type CriarAlunoMutation = {
   Response: CriarAluno201;
   Request: CriarAlunoMutationRequest;
-  Errors: any;
+  Errors: CriarAluno400 | CriarAluno401 | CriarAluno404 | CriarAluno409 | CriarAluno500;
 };

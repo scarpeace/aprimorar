@@ -8,6 +8,11 @@ import type {
   UpdateColaboradorMutationRequest,
   UpdateColaboradorMutationResponse,
   UpdateColaboradorPathParams,
+  UpdateColaborador400,
+  UpdateColaborador401,
+  UpdateColaborador404,
+  UpdateColaborador409,
+  UpdateColaborador500,
 } from "../../types/UpdateColaborador.ts";
 import type { Client, RequestConfig, ResponseErrorConfig } from "@/lib/api/client";
 import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
@@ -30,12 +35,13 @@ export async function updateColaborador(
 
   const requestData = data;
 
-  const res = await request<UpdateColaboradorMutationResponse, ResponseErrorConfig<Error>, UpdateColaboradorMutationRequest>({
-    method: "PATCH",
-    url: `/v1/colaboradores/${colaboradorId}`,
-    data: requestData,
-    ...requestConfig,
-  });
+  const res = await request<
+    UpdateColaboradorMutationResponse,
+    ResponseErrorConfig<
+      UpdateColaborador400 | UpdateColaborador401 | UpdateColaborador404 | UpdateColaborador409 | UpdateColaborador500
+    >,
+    UpdateColaboradorMutationRequest
+  >({ method: "PATCH", url: `/v1/colaboradores/${colaboradorId}`, data: requestData, ...requestConfig });
   return res.data;
 }
 
@@ -45,7 +51,9 @@ export function updateColaboradorMutationOptions<TContext = unknown>(
   const mutationKey = updateColaboradorMutationKey();
   return mutationOptions<
     UpdateColaboradorMutationResponse,
-    ResponseErrorConfig<Error>,
+    ResponseErrorConfig<
+      UpdateColaborador400 | UpdateColaborador401 | UpdateColaborador404 | UpdateColaborador409 | UpdateColaborador500
+    >,
     { colaboradorId: UpdateColaboradorPathParams["colaboradorId"]; data: UpdateColaboradorMutationRequest },
     TContext
   >({
@@ -64,7 +72,9 @@ export function useUpdateColaborador<TContext>(
   options: {
     mutation?: UseMutationOptions<
       UpdateColaboradorMutationResponse,
-      ResponseErrorConfig<Error>,
+      ResponseErrorConfig<
+        UpdateColaborador400 | UpdateColaborador401 | UpdateColaborador404 | UpdateColaborador409 | UpdateColaborador500
+      >,
       { colaboradorId: UpdateColaboradorPathParams["colaboradorId"]; data: UpdateColaboradorMutationRequest },
       TContext
     > & { client?: QueryClient };
@@ -77,14 +87,18 @@ export function useUpdateColaborador<TContext>(
 
   const baseOptions = updateColaboradorMutationOptions(config) as UseMutationOptions<
     UpdateColaboradorMutationResponse,
-    ResponseErrorConfig<Error>,
+    ResponseErrorConfig<
+      UpdateColaborador400 | UpdateColaborador401 | UpdateColaborador404 | UpdateColaborador409 | UpdateColaborador500
+    >,
     { colaboradorId: UpdateColaboradorPathParams["colaboradorId"]; data: UpdateColaboradorMutationRequest },
     TContext
   >;
 
   return useMutation<
     UpdateColaboradorMutationResponse,
-    ResponseErrorConfig<Error>,
+    ResponseErrorConfig<
+      UpdateColaborador400 | UpdateColaborador401 | UpdateColaborador404 | UpdateColaborador409 | UpdateColaborador500
+    >,
     { colaboradorId: UpdateColaboradorPathParams["colaboradorId"]; data: UpdateColaboradorMutationRequest },
     TContext
   >(
@@ -96,7 +110,9 @@ export function useUpdateColaborador<TContext>(
     queryClient,
   ) as UseMutationResult<
     UpdateColaboradorMutationResponse,
-    ResponseErrorConfig<Error>,
+    ResponseErrorConfig<
+      UpdateColaborador400 | UpdateColaborador401 | UpdateColaborador404 | UpdateColaborador409 | UpdateColaborador500
+    >,
     { colaboradorId: UpdateColaboradorPathParams["colaboradorId"]; data: UpdateColaboradorMutationRequest },
     TContext
   >;

@@ -4,7 +4,7 @@
  */
 
 import fetch from "@/lib/api/client";
-import type { LoginMutationRequest, LoginMutationResponse } from "../../types/Login.ts";
+import type { LoginMutationRequest, LoginMutationResponse, Login400, Login401, Login500 } from "../../types/Login.ts";
 import type { Client, RequestConfig, ResponseErrorConfig } from "@/lib/api/client";
 import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
 import { mutationOptions, useMutation } from "@tanstack/react-query";
@@ -14,7 +14,7 @@ export const loginMutationKey = () => [{ url: "/v1/auth/login" }] as const;
 export type LoginMutationKey = ReturnType<typeof loginMutationKey>;
 
 /**
- * @description Autentica um usuario e retorna um access token JWT.
+ * @description Autentica um usuário e retorna um access token JWT.
  * {@link /v1/auth/login}
  */
 export async function login(
@@ -25,7 +25,7 @@ export async function login(
 
   const requestData = data;
 
-  const res = await request<LoginMutationResponse, ResponseErrorConfig<Error>, LoginMutationRequest>({
+  const res = await request<LoginMutationResponse, ResponseErrorConfig<Login400 | Login401 | Login500>, LoginMutationRequest>({
     method: "POST",
     url: `/v1/auth/login`,
     data: requestData,
@@ -38,7 +38,12 @@ export function loginMutationOptions<TContext = unknown>(
   config: Partial<RequestConfig<LoginMutationRequest>> & { client?: Client } = {},
 ) {
   const mutationKey = loginMutationKey();
-  return mutationOptions<LoginMutationResponse, ResponseErrorConfig<Error>, { data: LoginMutationRequest }, TContext>({
+  return mutationOptions<
+    LoginMutationResponse,
+    ResponseErrorConfig<Login400 | Login401 | Login500>,
+    { data: LoginMutationRequest },
+    TContext
+  >({
     mutationKey,
     mutationFn: async ({ data }) => {
       return login(data, config);
@@ -47,14 +52,17 @@ export function loginMutationOptions<TContext = unknown>(
 }
 
 /**
- * @description Autentica um usuario e retorna um access token JWT.
+ * @description Autentica um usuário e retorna um access token JWT.
  * {@link /v1/auth/login}
  */
 export function useLogin<TContext>(
   options: {
-    mutation?: UseMutationOptions<LoginMutationResponse, ResponseErrorConfig<Error>, { data: LoginMutationRequest }, TContext> & {
-      client?: QueryClient;
-    };
+    mutation?: UseMutationOptions<
+      LoginMutationResponse,
+      ResponseErrorConfig<Login400 | Login401 | Login500>,
+      { data: LoginMutationRequest },
+      TContext
+    > & { client?: QueryClient };
     client?: Partial<RequestConfig<LoginMutationRequest>> & { client?: Client };
   } = {},
 ) {
@@ -64,17 +72,27 @@ export function useLogin<TContext>(
 
   const baseOptions = loginMutationOptions(config) as UseMutationOptions<
     LoginMutationResponse,
-    ResponseErrorConfig<Error>,
+    ResponseErrorConfig<Login400 | Login401 | Login500>,
     { data: LoginMutationRequest },
     TContext
   >;
 
-  return useMutation<LoginMutationResponse, ResponseErrorConfig<Error>, { data: LoginMutationRequest }, TContext>(
+  return useMutation<
+    LoginMutationResponse,
+    ResponseErrorConfig<Login400 | Login401 | Login500>,
+    { data: LoginMutationRequest },
+    TContext
+  >(
     {
       ...baseOptions,
       mutationKey,
       ...mutationOptions,
     },
     queryClient,
-  ) as UseMutationResult<LoginMutationResponse, ResponseErrorConfig<Error>, { data: LoginMutationRequest }, TContext>;
+  ) as UseMutationResult<
+    LoginMutationResponse,
+    ResponseErrorConfig<Login400 | Login401 | Login500>,
+    { data: LoginMutationRequest },
+    TContext
+  >;
 }

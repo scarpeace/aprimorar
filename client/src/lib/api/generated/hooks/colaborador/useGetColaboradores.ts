@@ -4,7 +4,13 @@
  */
 
 import fetch from "@/lib/api/client";
-import type { GetColaboradoresQueryResponse, GetColaboradoresQueryParams } from "../../types/GetColaboradores.ts";
+import type {
+  GetColaboradoresQueryResponse,
+  GetColaboradoresQueryParams,
+  GetColaboradores400,
+  GetColaboradores401,
+  GetColaboradores500,
+} from "../../types/GetColaboradores.ts";
 import type { Client, RequestConfig, ResponseErrorConfig } from "@/lib/api/client";
 import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from "@tanstack/react-query";
 import { queryOptions, useQuery } from "@tanstack/react-query";
@@ -24,12 +30,11 @@ export async function getColaboradores(
 ) {
   const { client: request = fetch, ...requestConfig } = config;
 
-  const res = await request<GetColaboradoresQueryResponse, ResponseErrorConfig<Error>, unknown>({
-    method: "GET",
-    url: `/v1/colaboradores`,
-    params,
-    ...requestConfig,
-  });
+  const res = await request<
+    GetColaboradoresQueryResponse,
+    ResponseErrorConfig<GetColaboradores400 | GetColaboradores401 | GetColaboradores500>,
+    unknown
+  >({ method: "GET", url: `/v1/colaboradores`, params, ...requestConfig });
   return res.data;
 }
 
@@ -38,7 +43,12 @@ export function getColaboradoresQueryOptions(
   config: Partial<RequestConfig> & { client?: Client } = {},
 ) {
   const queryKey = getColaboradoresQueryKey(params);
-  return queryOptions<GetColaboradoresQueryResponse, ResponseErrorConfig<Error>, GetColaboradoresQueryResponse, typeof queryKey>({
+  return queryOptions<
+    GetColaboradoresQueryResponse,
+    ResponseErrorConfig<GetColaboradores400 | GetColaboradores401 | GetColaboradores500>,
+    GetColaboradoresQueryResponse,
+    typeof queryKey
+  >({
     queryKey,
     queryFn: async ({ signal }) => {
       return getColaboradores(params, { ...config, signal: config.signal ?? signal });
@@ -58,7 +68,13 @@ export function useGetColaboradores<
   params?: GetColaboradoresQueryParams,
   options: {
     query?: Partial<
-      QueryObserverOptions<GetColaboradoresQueryResponse, ResponseErrorConfig<Error>, TData, TQueryData, TQueryKey>
+      QueryObserverOptions<
+        GetColaboradoresQueryResponse,
+        ResponseErrorConfig<GetColaboradores400 | GetColaboradores401 | GetColaboradores500>,
+        TData,
+        TQueryData,
+        TQueryKey
+      >
     > & { client?: QueryClient };
     client?: Partial<RequestConfig> & { client?: Client };
   } = {},
@@ -74,7 +90,9 @@ export function useGetColaboradores<
       queryKey,
     } as unknown as QueryObserverOptions,
     queryClient,
-  ) as UseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey };
+  ) as UseQueryResult<TData, ResponseErrorConfig<GetColaboradores400 | GetColaboradores401 | GetColaboradores500>> & {
+    queryKey: TQueryKey;
+  };
 
   query.queryKey = queryKey as TQueryKey;
 

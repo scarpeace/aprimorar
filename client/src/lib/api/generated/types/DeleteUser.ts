@@ -3,6 +3,8 @@
  * Do not edit manually.
  */
 
+import type { ProblemDetail } from "./ProblemDetail.ts";
+
 export type DeleteUserPathParams = {
   /**
    * @type string, uuid
@@ -11,14 +13,34 @@ export type DeleteUserPathParams = {
 };
 
 /**
- * @description Usuario excluido com sucesso
+ * @description Usuário excluído com sucesso
  */
 export type DeleteUser204 = any;
+
+/**
+ * @description Não autenticado.
+ */
+export type DeleteUser401 = ProblemDetail;
+
+/**
+ * @description Recurso não encontrado.
+ */
+export type DeleteUser404 = ProblemDetail;
+
+/**
+ * @description Conflito de dados ou de estado.
+ */
+export type DeleteUser409 = ProblemDetail;
+
+/**
+ * @description Erro interno do sistema.
+ */
+export type DeleteUser500 = ProblemDetail;
 
 export type DeleteUserMutationResponse = DeleteUser204;
 
 export type DeleteUserMutation = {
   Response: DeleteUser204;
   PathParams: DeleteUserPathParams;
-  Errors: any;
+  Errors: DeleteUser401 | DeleteUser404 | DeleteUser409 | DeleteUser500;
 };

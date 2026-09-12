@@ -5,6 +5,7 @@
 
 import { despesaRequestSchema } from "./despesaRequestSchema.ts";
 import { despesaResponseSchema } from "./despesaResponseSchema.ts";
+import { problemDetailSchema } from "./problemDetailSchema.ts";
 import { z } from "zod/v4";
 
 export const updateDespesaPathParamsSchema = z.object({
@@ -15,6 +16,31 @@ export const updateDespesaPathParamsSchema = z.object({
  * @description Despesa atualizada com sucesso
  */
 export const updateDespesa200Schema = z.lazy(() => despesaResponseSchema).describe("Dados da despesa retornados pela API");
+
+/**
+ * @description Requisição inválida.
+ */
+export const updateDespesa400Schema = z.lazy(() => problemDetailSchema);
+
+/**
+ * @description Não autenticado.
+ */
+export const updateDespesa401Schema = z.lazy(() => problemDetailSchema);
+
+/**
+ * @description Recurso não encontrado.
+ */
+export const updateDespesa404Schema = z.lazy(() => problemDetailSchema);
+
+/**
+ * @description Conflito de dados ou de estado.
+ */
+export const updateDespesa409Schema = z.lazy(() => problemDetailSchema);
+
+/**
+ * @description Erro interno do sistema.
+ */
+export const updateDespesa500Schema = z.lazy(() => problemDetailSchema);
 
 export const updateDespesaMutationRequestSchema = z
   .lazy(() => despesaRequestSchema)

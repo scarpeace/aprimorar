@@ -3,13 +3,34 @@
  * Do not edit manually.
  */
 
+import type { ProblemDetail } from "./ProblemDetail.ts";
 import type { UserRequestDTO } from "./UserRequestDTO.ts";
 import type { UserResponseDTO } from "./UserResponseDTO.ts";
 
 /**
- * @description Usuario criado com sucesso
+ * @description Usuário criado com sucesso
  */
 export type CreateUser201 = UserResponseDTO;
+
+/**
+ * @description Requisição inválida.
+ */
+export type CreateUser400 = ProblemDetail;
+
+/**
+ * @description Não autenticado.
+ */
+export type CreateUser401 = ProblemDetail;
+
+/**
+ * @description Conflito de dados ou de estado.
+ */
+export type CreateUser409 = ProblemDetail;
+
+/**
+ * @description Erro interno do sistema.
+ */
+export type CreateUser500 = ProblemDetail;
 
 export type CreateUserMutationRequest = UserRequestDTO;
 
@@ -18,5 +39,5 @@ export type CreateUserMutationResponse = CreateUser201;
 export type CreateUserMutation = {
   Response: CreateUser201;
   Request: CreateUserMutationRequest;
-  Errors: any;
+  Errors: CreateUser400 | CreateUser401 | CreateUser409 | CreateUser500;
 };

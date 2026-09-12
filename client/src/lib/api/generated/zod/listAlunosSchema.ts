@@ -4,6 +4,7 @@
  */
 
 import { alunosListDTOSchema } from "./alunosListDTOSchema.ts";
+import { problemDetailSchema } from "./problemDetailSchema.ts";
 import { z } from "zod/v4";
 
 /**
@@ -12,5 +13,30 @@ import { z } from "zod/v4";
 export const listAlunos200Schema = z.array(
   z.lazy(() => alunosListDTOSchema).describe("Opção simplificada de aluno para seletores"),
 );
+
+/**
+ * @description Requisição inválida.
+ */
+export const listAlunos400Schema = z.lazy(() => problemDetailSchema);
+
+/**
+ * @description Não autenticado.
+ */
+export const listAlunos401Schema = z.lazy(() => problemDetailSchema);
+
+/**
+ * @description Recurso não encontrado.
+ */
+export const listAlunos404Schema = z.lazy(() => problemDetailSchema);
+
+/**
+ * @description Conflito de dados ou de estado.
+ */
+export const listAlunos409Schema = z.lazy(() => problemDetailSchema);
+
+/**
+ * @description Erro interno do sistema.
+ */
+export const listAlunos500Schema = z.lazy(() => problemDetailSchema);
 
 export const listAlunosQueryResponseSchema = z.lazy(() => listAlunos200Schema);

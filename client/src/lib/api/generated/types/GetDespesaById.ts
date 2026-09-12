@@ -4,6 +4,7 @@
  */
 
 import type { DespesaResponse } from "./DespesaResponse.ts";
+import type { ProblemDetail } from "./ProblemDetail.ts";
 
 export type GetDespesaByIdPathParams = {
   /**
@@ -17,10 +18,25 @@ export type GetDespesaByIdPathParams = {
  */
 export type GetDespesaById200 = DespesaResponse;
 
+/**
+ * @description Não autenticado.
+ */
+export type GetDespesaById401 = ProblemDetail;
+
+/**
+ * @description Recurso não encontrado.
+ */
+export type GetDespesaById404 = ProblemDetail;
+
+/**
+ * @description Erro interno do sistema.
+ */
+export type GetDespesaById500 = ProblemDetail;
+
 export type GetDespesaByIdQueryResponse = GetDespesaById200;
 
 export type GetDespesaByIdQuery = {
   Response: GetDespesaById200;
   PathParams: GetDespesaByIdPathParams;
-  Errors: any;
+  Errors: GetDespesaById401 | GetDespesaById404 | GetDespesaById500;
 };

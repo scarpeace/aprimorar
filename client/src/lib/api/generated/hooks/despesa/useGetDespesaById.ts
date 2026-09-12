@@ -4,7 +4,13 @@
  */
 
 import fetch from "@/lib/api/client";
-import type { GetDespesaByIdQueryResponse, GetDespesaByIdPathParams } from "../../types/GetDespesaById.ts";
+import type {
+  GetDespesaByIdQueryResponse,
+  GetDespesaByIdPathParams,
+  GetDespesaById401,
+  GetDespesaById404,
+  GetDespesaById500,
+} from "../../types/GetDespesaById.ts";
 import type { Client, RequestConfig, ResponseErrorConfig } from "@/lib/api/client";
 import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from "@tanstack/react-query";
 import { queryOptions, useQuery } from "@tanstack/react-query";
@@ -24,11 +30,11 @@ export async function getDespesaById(
 ) {
   const { client: request = fetch, ...requestConfig } = config;
 
-  const res = await request<GetDespesaByIdQueryResponse, ResponseErrorConfig<Error>, unknown>({
-    method: "GET",
-    url: `/v1/despesas/${despesaId}`,
-    ...requestConfig,
-  });
+  const res = await request<
+    GetDespesaByIdQueryResponse,
+    ResponseErrorConfig<GetDespesaById401 | GetDespesaById404 | GetDespesaById500>,
+    unknown
+  >({ method: "GET", url: `/v1/despesas/${despesaId}`, ...requestConfig });
   return res.data;
 }
 
@@ -37,7 +43,12 @@ export function getDespesaByIdQueryOptions(
   config: Partial<RequestConfig> & { client?: Client } = {},
 ) {
   const queryKey = getDespesaByIdQueryKey(despesaId);
-  return queryOptions<GetDespesaByIdQueryResponse, ResponseErrorConfig<Error>, GetDespesaByIdQueryResponse, typeof queryKey>({
+  return queryOptions<
+    GetDespesaByIdQueryResponse,
+    ResponseErrorConfig<GetDespesaById401 | GetDespesaById404 | GetDespesaById500>,
+    GetDespesaByIdQueryResponse,
+    typeof queryKey
+  >({
     enabled: !!despesaId,
     queryKey,
     queryFn: async ({ signal }) => {
@@ -58,7 +69,13 @@ export function useGetDespesaById<
   despesaId: GetDespesaByIdPathParams["despesaId"],
   options: {
     query?: Partial<
-      QueryObserverOptions<GetDespesaByIdQueryResponse, ResponseErrorConfig<Error>, TData, TQueryData, TQueryKey>
+      QueryObserverOptions<
+        GetDespesaByIdQueryResponse,
+        ResponseErrorConfig<GetDespesaById401 | GetDespesaById404 | GetDespesaById500>,
+        TData,
+        TQueryData,
+        TQueryKey
+      >
     > & { client?: QueryClient };
     client?: Partial<RequestConfig> & { client?: Client };
   } = {},
@@ -74,7 +91,9 @@ export function useGetDespesaById<
       queryKey,
     } as unknown as QueryObserverOptions,
     queryClient,
-  ) as UseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey };
+  ) as UseQueryResult<TData, ResponseErrorConfig<GetDespesaById401 | GetDespesaById404 | GetDespesaById500>> & {
+    queryKey: TQueryKey;
+  };
 
   query.queryKey = queryKey as TQueryKey;
 

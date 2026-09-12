@@ -4,7 +4,14 @@
  */
 
 import fetch from "@/lib/api/client";
-import type { CreateDespesaMutationRequest, CreateDespesaMutationResponse } from "../../types/CreateDespesa.ts";
+import type {
+  CreateDespesaMutationRequest,
+  CreateDespesaMutationResponse,
+  CreateDespesa400,
+  CreateDespesa401,
+  CreateDespesa409,
+  CreateDespesa500,
+} from "../../types/CreateDespesa.ts";
 import type { Client, RequestConfig, ResponseErrorConfig } from "@/lib/api/client";
 import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
 import { mutationOptions, useMutation } from "@tanstack/react-query";
@@ -25,12 +32,11 @@ export async function createDespesa(
 
   const requestData = data;
 
-  const res = await request<CreateDespesaMutationResponse, ResponseErrorConfig<Error>, CreateDespesaMutationRequest>({
-    method: "POST",
-    url: `/v1/despesas`,
-    data: requestData,
-    ...requestConfig,
-  });
+  const res = await request<
+    CreateDespesaMutationResponse,
+    ResponseErrorConfig<CreateDespesa400 | CreateDespesa401 | CreateDespesa409 | CreateDespesa500>,
+    CreateDespesaMutationRequest
+  >({ method: "POST", url: `/v1/despesas`, data: requestData, ...requestConfig });
   return res.data;
 }
 
@@ -40,7 +46,7 @@ export function createDespesaMutationOptions<TContext = unknown>(
   const mutationKey = createDespesaMutationKey();
   return mutationOptions<
     CreateDespesaMutationResponse,
-    ResponseErrorConfig<Error>,
+    ResponseErrorConfig<CreateDespesa400 | CreateDespesa401 | CreateDespesa409 | CreateDespesa500>,
     { data: CreateDespesaMutationRequest },
     TContext
   >({
@@ -59,7 +65,7 @@ export function useCreateDespesa<TContext>(
   options: {
     mutation?: UseMutationOptions<
       CreateDespesaMutationResponse,
-      ResponseErrorConfig<Error>,
+      ResponseErrorConfig<CreateDespesa400 | CreateDespesa401 | CreateDespesa409 | CreateDespesa500>,
       { data: CreateDespesaMutationRequest },
       TContext
     > & { client?: QueryClient };
@@ -72,12 +78,17 @@ export function useCreateDespesa<TContext>(
 
   const baseOptions = createDespesaMutationOptions(config) as UseMutationOptions<
     CreateDespesaMutationResponse,
-    ResponseErrorConfig<Error>,
+    ResponseErrorConfig<CreateDespesa400 | CreateDespesa401 | CreateDespesa409 | CreateDespesa500>,
     { data: CreateDespesaMutationRequest },
     TContext
   >;
 
-  return useMutation<CreateDespesaMutationResponse, ResponseErrorConfig<Error>, { data: CreateDespesaMutationRequest }, TContext>(
+  return useMutation<
+    CreateDespesaMutationResponse,
+    ResponseErrorConfig<CreateDespesa400 | CreateDespesa401 | CreateDespesa409 | CreateDespesa500>,
+    { data: CreateDespesaMutationRequest },
+    TContext
+  >(
     {
       ...baseOptions,
       mutationKey,
@@ -86,7 +97,7 @@ export function useCreateDespesa<TContext>(
     queryClient,
   ) as UseMutationResult<
     CreateDespesaMutationResponse,
-    ResponseErrorConfig<Error>,
+    ResponseErrorConfig<CreateDespesa400 | CreateDespesa401 | CreateDespesa409 | CreateDespesa500>,
     { data: CreateDespesaMutationRequest },
     TContext
   >;

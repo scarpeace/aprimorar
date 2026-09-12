@@ -4,12 +4,32 @@
  */
 
 import type { ColaboradorRequestDTO } from "./ColaboradorRequestDTO.ts";
-import type { ColaboradorResponseDTO } from "./ColaboradorResponseDTO.ts";
+import type { ProblemDetail } from "./ProblemDetail.ts";
 
 /**
  * @description Colaborador criado com sucesso.
  */
-export type CreateColaborador201 = ColaboradorResponseDTO;
+export type CreateColaborador201 = any;
+
+/**
+ * @description Requisição inválida.
+ */
+export type CreateColaborador400 = ProblemDetail;
+
+/**
+ * @description Não autenticado.
+ */
+export type CreateColaborador401 = ProblemDetail;
+
+/**
+ * @description Conflito de dados ou de estado.
+ */
+export type CreateColaborador409 = ProblemDetail;
+
+/**
+ * @description Erro interno do sistema.
+ */
+export type CreateColaborador500 = ProblemDetail;
 
 export type CreateColaboradorMutationRequest = ColaboradorRequestDTO;
 
@@ -18,5 +38,5 @@ export type CreateColaboradorMutationResponse = CreateColaborador201;
 export type CreateColaboradorMutation = {
   Response: CreateColaborador201;
   Request: CreateColaboradorMutationRequest;
-  Errors: any;
+  Errors: CreateColaborador400 | CreateColaborador401 | CreateColaborador409 | CreateColaborador500;
 };

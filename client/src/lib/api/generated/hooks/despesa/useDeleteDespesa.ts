@@ -4,7 +4,13 @@
  */
 
 import fetch from "@/lib/api/client";
-import type { DeleteDespesaMutationResponse, DeleteDespesaPathParams } from "../../types/DeleteDespesa.ts";
+import type {
+  DeleteDespesaMutationResponse,
+  DeleteDespesaPathParams,
+  DeleteDespesa401,
+  DeleteDespesa404,
+  DeleteDespesa500,
+} from "../../types/DeleteDespesa.ts";
 import type { Client, RequestConfig, ResponseErrorConfig } from "@/lib/api/client";
 import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
 import { mutationOptions, useMutation } from "@tanstack/react-query";
@@ -23,11 +29,11 @@ export async function deleteDespesa(
 ) {
   const { client: request = fetch, ...requestConfig } = config;
 
-  const res = await request<DeleteDespesaMutationResponse, ResponseErrorConfig<Error>, unknown>({
-    method: "DELETE",
-    url: `/v1/despesas/${despesaId}`,
-    ...requestConfig,
-  });
+  const res = await request<
+    DeleteDespesaMutationResponse,
+    ResponseErrorConfig<DeleteDespesa401 | DeleteDespesa404 | DeleteDespesa500>,
+    unknown
+  >({ method: "DELETE", url: `/v1/despesas/${despesaId}`, ...requestConfig });
   return res.data;
 }
 
@@ -35,7 +41,7 @@ export function deleteDespesaMutationOptions<TContext = unknown>(config: Partial
   const mutationKey = deleteDespesaMutationKey();
   return mutationOptions<
     DeleteDespesaMutationResponse,
-    ResponseErrorConfig<Error>,
+    ResponseErrorConfig<DeleteDespesa401 | DeleteDespesa404 | DeleteDespesa500>,
     { despesaId: DeleteDespesaPathParams["despesaId"] },
     TContext
   >({
@@ -54,7 +60,7 @@ export function useDeleteDespesa<TContext>(
   options: {
     mutation?: UseMutationOptions<
       DeleteDespesaMutationResponse,
-      ResponseErrorConfig<Error>,
+      ResponseErrorConfig<DeleteDespesa401 | DeleteDespesa404 | DeleteDespesa500>,
       { despesaId: DeleteDespesaPathParams["despesaId"] },
       TContext
     > & { client?: QueryClient };
@@ -67,14 +73,14 @@ export function useDeleteDespesa<TContext>(
 
   const baseOptions = deleteDespesaMutationOptions(config) as UseMutationOptions<
     DeleteDespesaMutationResponse,
-    ResponseErrorConfig<Error>,
+    ResponseErrorConfig<DeleteDespesa401 | DeleteDespesa404 | DeleteDespesa500>,
     { despesaId: DeleteDespesaPathParams["despesaId"] },
     TContext
   >;
 
   return useMutation<
     DeleteDespesaMutationResponse,
-    ResponseErrorConfig<Error>,
+    ResponseErrorConfig<DeleteDespesa401 | DeleteDespesa404 | DeleteDespesa500>,
     { despesaId: DeleteDespesaPathParams["despesaId"] },
     TContext
   >(
@@ -86,7 +92,7 @@ export function useDeleteDespesa<TContext>(
     queryClient,
   ) as UseMutationResult<
     DeleteDespesaMutationResponse,
-    ResponseErrorConfig<Error>,
+    ResponseErrorConfig<DeleteDespesa401 | DeleteDespesa404 | DeleteDespesa500>,
     { despesaId: DeleteDespesaPathParams["despesaId"] },
     TContext
   >;

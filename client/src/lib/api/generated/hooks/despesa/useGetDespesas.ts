@@ -4,7 +4,13 @@
  */
 
 import fetch from "@/lib/api/client";
-import type { GetDespesasQueryResponse, GetDespesasQueryParams } from "../../types/GetDespesas.ts";
+import type {
+  GetDespesasQueryResponse,
+  GetDespesasQueryParams,
+  GetDespesas400,
+  GetDespesas401,
+  GetDespesas500,
+} from "../../types/GetDespesas.ts";
 import type { Client, RequestConfig, ResponseErrorConfig } from "@/lib/api/client";
 import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from "@tanstack/react-query";
 import { queryOptions, useQuery } from "@tanstack/react-query";
@@ -21,12 +27,11 @@ export type GetDespesasQueryKey = ReturnType<typeof getDespesasQueryKey>;
 export async function getDespesas(params?: GetDespesasQueryParams, config: Partial<RequestConfig> & { client?: Client } = {}) {
   const { client: request = fetch, ...requestConfig } = config;
 
-  const res = await request<GetDespesasQueryResponse, ResponseErrorConfig<Error>, unknown>({
-    method: "GET",
-    url: `/v1/despesas`,
-    params,
-    ...requestConfig,
-  });
+  const res = await request<
+    GetDespesasQueryResponse,
+    ResponseErrorConfig<GetDespesas400 | GetDespesas401 | GetDespesas500>,
+    unknown
+  >({ method: "GET", url: `/v1/despesas`, params, ...requestConfig });
   return res.data;
 }
 
@@ -35,7 +40,12 @@ export function getDespesasQueryOptions(
   config: Partial<RequestConfig> & { client?: Client } = {},
 ) {
   const queryKey = getDespesasQueryKey(params);
-  return queryOptions<GetDespesasQueryResponse, ResponseErrorConfig<Error>, GetDespesasQueryResponse, typeof queryKey>({
+  return queryOptions<
+    GetDespesasQueryResponse,
+    ResponseErrorConfig<GetDespesas400 | GetDespesas401 | GetDespesas500>,
+    GetDespesasQueryResponse,
+    typeof queryKey
+  >({
     queryKey,
     queryFn: async ({ signal }) => {
       return getDespesas(params, { ...config, signal: config.signal ?? signal });
@@ -54,9 +64,15 @@ export function useGetDespesas<
 >(
   params?: GetDespesasQueryParams,
   options: {
-    query?: Partial<QueryObserverOptions<GetDespesasQueryResponse, ResponseErrorConfig<Error>, TData, TQueryData, TQueryKey>> & {
-      client?: QueryClient;
-    };
+    query?: Partial<
+      QueryObserverOptions<
+        GetDespesasQueryResponse,
+        ResponseErrorConfig<GetDespesas400 | GetDespesas401 | GetDespesas500>,
+        TData,
+        TQueryData,
+        TQueryKey
+      >
+    > & { client?: QueryClient };
     client?: Partial<RequestConfig> & { client?: Client };
   } = {},
 ) {
@@ -71,7 +87,7 @@ export function useGetDespesas<
       queryKey,
     } as unknown as QueryObserverOptions,
     queryClient,
-  ) as UseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey };
+  ) as UseQueryResult<TData, ResponseErrorConfig<GetDespesas400 | GetDespesas401 | GetDespesas500>> & { queryKey: TQueryKey };
 
   query.queryKey = queryKey as TQueryKey;
 

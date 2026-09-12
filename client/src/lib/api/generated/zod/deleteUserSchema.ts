@@ -3,6 +3,7 @@
  * Do not edit manually.
  */
 
+import { problemDetailSchema } from "./problemDetailSchema.ts";
 import { z } from "zod/v4";
 
 export const deleteUserPathParamsSchema = z.object({
@@ -10,8 +11,28 @@ export const deleteUserPathParamsSchema = z.object({
 });
 
 /**
- * @description Usuario excluido com sucesso
+ * @description Usuário excluído com sucesso
  */
 export const deleteUser204Schema = z.any();
+
+/**
+ * @description Não autenticado.
+ */
+export const deleteUser401Schema = z.lazy(() => problemDetailSchema);
+
+/**
+ * @description Recurso não encontrado.
+ */
+export const deleteUser404Schema = z.lazy(() => problemDetailSchema);
+
+/**
+ * @description Conflito de dados ou de estado.
+ */
+export const deleteUser409Schema = z.lazy(() => problemDetailSchema);
+
+/**
+ * @description Erro interno do sistema.
+ */
+export const deleteUser500Schema = z.lazy(() => problemDetailSchema);
 
 export const deleteUserMutationResponseSchema = z.lazy(() => deleteUser204Schema);

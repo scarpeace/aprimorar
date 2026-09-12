@@ -4,7 +4,7 @@
  */
 
 /**
- * @description Formato de payload para criar um novo responsável
+ * @description Dados do responsável do aluno
  */
 export type ResponsavelRequestDTO = {
   /**
@@ -25,11 +25,6 @@ export type ResponsavelRequestDTO = {
    * @type string
    */
   telefone: string;
-  /**
-   * @description Data de nascimento do responsável
-   * @type string, date
-   */
-  dataNascimento?: string | null;
   /**
    * @description CPF do responsável
    * @minLength 1

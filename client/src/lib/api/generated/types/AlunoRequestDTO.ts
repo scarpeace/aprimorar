@@ -4,6 +4,7 @@
  */
 
 import type { EnderecoRequestDTO } from "./EnderecoRequestDTO.ts";
+import type { ResponsavelRequestDTO } from "./ResponsavelRequestDTO.ts";
 
 /**
  * @description Formato de payload para o cadastro de um aluno
@@ -50,8 +51,8 @@ export type AlunoRequestDTO = {
    */
   endereco: EnderecoRequestDTO;
   /**
-   * @description ID do responsável vinculado ao aluno
-   * @type string, uuid
+   * @description Dados do responsável do aluno
+   * @type object
    */
-  responsavelId: string;
+  responsavel: ResponsavelRequestDTO;
 };

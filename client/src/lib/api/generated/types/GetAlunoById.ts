@@ -3,7 +3,8 @@
  * Do not edit manually.
  */
 
-import type { AlunoResponseDTO } from "./AlunoResponseDTO.ts";
+import type { AlunoDetailResponseDTO } from "./AlunoDetailResponseDTO.ts";
+import type { ProblemDetail } from "./ProblemDetail.ts";
 
 export type GetAlunoByIdPathParams = {
   /**
@@ -15,12 +16,37 @@ export type GetAlunoByIdPathParams = {
 /**
  * @description Aluno retornado com sucesso.
  */
-export type GetAlunoById200 = AlunoResponseDTO;
+export type GetAlunoById200 = AlunoDetailResponseDTO;
+
+/**
+ * @description Requisição inválida.
+ */
+export type GetAlunoById400 = ProblemDetail;
+
+/**
+ * @description Não autenticado.
+ */
+export type GetAlunoById401 = ProblemDetail;
+
+/**
+ * @description Recurso não encontrado.
+ */
+export type GetAlunoById404 = ProblemDetail;
+
+/**
+ * @description Conflito de dados ou de estado.
+ */
+export type GetAlunoById409 = ProblemDetail;
+
+/**
+ * @description Erro interno do sistema.
+ */
+export type GetAlunoById500 = ProblemDetail;
 
 export type GetAlunoByIdQueryResponse = GetAlunoById200;
 
 export type GetAlunoByIdQuery = {
   Response: GetAlunoById200;
   PathParams: GetAlunoByIdPathParams;
-  Errors: any;
+  Errors: GetAlunoById400 | GetAlunoById401 | GetAlunoById404 | GetAlunoById409 | GetAlunoById500;
 };

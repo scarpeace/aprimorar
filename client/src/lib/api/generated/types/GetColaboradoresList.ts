@@ -4,15 +4,26 @@
  */
 
 import type { ColaboradoresOptionsDTO } from "./ColaboradoresOptionsDTO.ts";
+import type { ProblemDetail } from "./ProblemDetail.ts";
 
 /**
  * @description Lista de opções de colaboradores retornada com sucesso.
  */
 export type GetColaboradoresList200 = ColaboradoresOptionsDTO[];
 
+/**
+ * @description Não autenticado.
+ */
+export type GetColaboradoresList401 = ProblemDetail;
+
+/**
+ * @description Erro interno do sistema.
+ */
+export type GetColaboradoresList500 = ProblemDetail;
+
 export type GetColaboradoresListQueryResponse = GetColaboradoresList200;
 
 export type GetColaboradoresListQuery = {
   Response: GetColaboradoresList200;
-  Errors: any;
+  Errors: GetColaboradoresList401 | GetColaboradoresList500;
 };

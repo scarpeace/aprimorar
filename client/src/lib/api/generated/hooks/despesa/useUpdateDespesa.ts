@@ -8,6 +8,11 @@ import type {
   UpdateDespesaMutationRequest,
   UpdateDespesaMutationResponse,
   UpdateDespesaPathParams,
+  UpdateDespesa400,
+  UpdateDespesa401,
+  UpdateDespesa404,
+  UpdateDespesa409,
+  UpdateDespesa500,
 } from "../../types/UpdateDespesa.ts";
 import type { Client, RequestConfig, ResponseErrorConfig } from "@/lib/api/client";
 import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
@@ -30,12 +35,11 @@ export async function updateDespesa(
 
   const requestData = data;
 
-  const res = await request<UpdateDespesaMutationResponse, ResponseErrorConfig<Error>, UpdateDespesaMutationRequest>({
-    method: "PATCH",
-    url: `/v1/despesas/${despesaId}`,
-    data: requestData,
-    ...requestConfig,
-  });
+  const res = await request<
+    UpdateDespesaMutationResponse,
+    ResponseErrorConfig<UpdateDespesa400 | UpdateDespesa401 | UpdateDespesa404 | UpdateDespesa409 | UpdateDespesa500>,
+    UpdateDespesaMutationRequest
+  >({ method: "PATCH", url: `/v1/despesas/${despesaId}`, data: requestData, ...requestConfig });
   return res.data;
 }
 
@@ -45,7 +49,7 @@ export function updateDespesaMutationOptions<TContext = unknown>(
   const mutationKey = updateDespesaMutationKey();
   return mutationOptions<
     UpdateDespesaMutationResponse,
-    ResponseErrorConfig<Error>,
+    ResponseErrorConfig<UpdateDespesa400 | UpdateDespesa401 | UpdateDespesa404 | UpdateDespesa409 | UpdateDespesa500>,
     { despesaId: UpdateDespesaPathParams["despesaId"]; data: UpdateDespesaMutationRequest },
     TContext
   >({
@@ -64,7 +68,7 @@ export function useUpdateDespesa<TContext>(
   options: {
     mutation?: UseMutationOptions<
       UpdateDespesaMutationResponse,
-      ResponseErrorConfig<Error>,
+      ResponseErrorConfig<UpdateDespesa400 | UpdateDespesa401 | UpdateDespesa404 | UpdateDespesa409 | UpdateDespesa500>,
       { despesaId: UpdateDespesaPathParams["despesaId"]; data: UpdateDespesaMutationRequest },
       TContext
     > & { client?: QueryClient };
@@ -77,14 +81,14 @@ export function useUpdateDespesa<TContext>(
 
   const baseOptions = updateDespesaMutationOptions(config) as UseMutationOptions<
     UpdateDespesaMutationResponse,
-    ResponseErrorConfig<Error>,
+    ResponseErrorConfig<UpdateDespesa400 | UpdateDespesa401 | UpdateDespesa404 | UpdateDespesa409 | UpdateDespesa500>,
     { despesaId: UpdateDespesaPathParams["despesaId"]; data: UpdateDespesaMutationRequest },
     TContext
   >;
 
   return useMutation<
     UpdateDespesaMutationResponse,
-    ResponseErrorConfig<Error>,
+    ResponseErrorConfig<UpdateDespesa400 | UpdateDespesa401 | UpdateDespesa404 | UpdateDespesa409 | UpdateDespesa500>,
     { despesaId: UpdateDespesaPathParams["despesaId"]; data: UpdateDespesaMutationRequest },
     TContext
   >(
@@ -96,7 +100,7 @@ export function useUpdateDespesa<TContext>(
     queryClient,
   ) as UseMutationResult<
     UpdateDespesaMutationResponse,
-    ResponseErrorConfig<Error>,
+    ResponseErrorConfig<UpdateDespesa400 | UpdateDespesa401 | UpdateDespesa404 | UpdateDespesa409 | UpdateDespesa500>,
     { despesaId: UpdateDespesaPathParams["despesaId"]; data: UpdateDespesaMutationRequest },
     TContext
   >;

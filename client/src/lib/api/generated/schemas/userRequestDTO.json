@@ -13,7 +13,7 @@
       "type": "string",
       "description": "Perfil de acesso",
       "example": "COLABORADOR",
-      "enum": ["ALUNO", "COLABORADOR", "RESPONSAVEL", "ADMIN", "SISTEMA"]
+      "enum": ["ALUNO", "COLABORADOR", "SECRETARIA", "ADMIN"]
     }
   },
   "description": "Payload para criação de usuário",

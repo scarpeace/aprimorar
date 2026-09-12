@@ -3,6 +3,13 @@
  * Do not edit manually.
  */
 
+export const despesaRequestTipoEnum = {
+  ENTRADA: "ENTRADA",
+  SAIDA: "SAIDA",
+} as const;
+
+export type DespesaRequestTipoEnumKey = (typeof despesaRequestTipoEnum)[keyof typeof despesaRequestTipoEnum];
+
 export const despesaRequestCategoriaEnum = {
   CONTAS: "CONTAS",
   PROFESSORES: "PROFESSORES",
@@ -39,7 +46,12 @@ export type DespesaRequest = {
    */
   titulo: string;
   /**
-   * @description Categoria da despesa operacional
+   * @description Tipo do lançamento financeiro
+   * @type string
+   */
+  tipo: DespesaRequestTipoEnumKey;
+  /**
+   * @description Categoria do lançamento financeiro
    * @type string
    */
   categoria: DespesaRequestCategoriaEnumKey;
@@ -50,10 +62,10 @@ export type DespesaRequest = {
    */
   valor: number;
   /**
-   * @description Data de pagamento
+   * @description Data de vencimento
    * @type string, date
    */
-  dataPagamento?: string | null;
+  dataVencimento: string;
   /**
    * @description Forma de pagamento da despesa
    * @type string

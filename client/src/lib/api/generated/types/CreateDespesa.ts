@@ -5,11 +5,32 @@
 
 import type { DespesaRequest } from "./DespesaRequest.ts";
 import type { DespesaResponse } from "./DespesaResponse.ts";
+import type { ProblemDetail } from "./ProblemDetail.ts";
 
 /**
  * @description Despesa criada com sucesso
  */
 export type CreateDespesa201 = DespesaResponse;
+
+/**
+ * @description Requisição inválida.
+ */
+export type CreateDespesa400 = ProblemDetail;
+
+/**
+ * @description Não autenticado.
+ */
+export type CreateDespesa401 = ProblemDetail;
+
+/**
+ * @description Conflito de dados ou de estado.
+ */
+export type CreateDespesa409 = ProblemDetail;
+
+/**
+ * @description Erro interno do sistema.
+ */
+export type CreateDespesa500 = ProblemDetail;
 
 export type CreateDespesaMutationRequest = DespesaRequest;
 
@@ -18,5 +39,5 @@ export type CreateDespesaMutationResponse = CreateDespesa201;
 export type CreateDespesaMutation = {
   Response: CreateDespesa201;
   Request: CreateDespesaMutationRequest;
-  Errors: any;
+  Errors: CreateDespesa400 | CreateDespesa401 | CreateDespesa409 | CreateDespesa500;
 };

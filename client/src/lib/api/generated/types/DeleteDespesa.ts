@@ -3,6 +3,8 @@
  * Do not edit manually.
  */
 
+import type { ProblemDetail } from "./ProblemDetail.ts";
+
 export type DeleteDespesaPathParams = {
   /**
    * @type integer, int64
@@ -15,10 +17,25 @@ export type DeleteDespesaPathParams = {
  */
 export type DeleteDespesa204 = any;
 
+/**
+ * @description Não autenticado.
+ */
+export type DeleteDespesa401 = ProblemDetail;
+
+/**
+ * @description Recurso não encontrado.
+ */
+export type DeleteDespesa404 = ProblemDetail;
+
+/**
+ * @description Erro interno do sistema.
+ */
+export type DeleteDespesa500 = ProblemDetail;
+
 export type DeleteDespesaMutationResponse = DeleteDespesa204;
 
 export type DeleteDespesaMutation = {
   Response: DeleteDespesa204;
   PathParams: DeleteDespesaPathParams;
-  Errors: any;
+  Errors: DeleteDespesa401 | DeleteDespesa404 | DeleteDespesa500;
 };

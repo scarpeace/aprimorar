@@ -4,7 +4,7 @@
  */
 
 import type { AlunoRequestDTO } from "./AlunoRequestDTO.ts";
-import type { AlunoResponseDTO } from "./AlunoResponseDTO.ts";
+import type { ProblemDetail } from "./ProblemDetail.ts";
 
 export type UpdateAlunoPathParams = {
   /**
@@ -16,7 +16,32 @@ export type UpdateAlunoPathParams = {
 /**
  * @description Aluno atualizado com sucesso.
  */
-export type UpdateAluno200 = AlunoResponseDTO;
+export type UpdateAluno200 = any;
+
+/**
+ * @description Requisição inválida.
+ */
+export type UpdateAluno400 = ProblemDetail;
+
+/**
+ * @description Não autenticado.
+ */
+export type UpdateAluno401 = ProblemDetail;
+
+/**
+ * @description Recurso não encontrado.
+ */
+export type UpdateAluno404 = ProblemDetail;
+
+/**
+ * @description Conflito de dados ou de estado.
+ */
+export type UpdateAluno409 = ProblemDetail;
+
+/**
+ * @description Erro interno do sistema.
+ */
+export type UpdateAluno500 = ProblemDetail;
 
 export type UpdateAlunoMutationRequest = AlunoRequestDTO;
 
@@ -26,5 +51,5 @@ export type UpdateAlunoMutation = {
   Response: UpdateAluno200;
   Request: UpdateAlunoMutationRequest;
   PathParams: UpdateAlunoPathParams;
-  Errors: any;
+  Errors: UpdateAluno400 | UpdateAluno401 | UpdateAluno404 | UpdateAluno409 | UpdateAluno500;
 };

@@ -4,24 +4,14 @@
  */
 
 /**
- * @description Dados do responsável retornados pela API
+ * @description Dados do responsável do aluno
  */
 export type ResponsavelResponseDTO = {
-  /**
-   * @description ID do responsável
-   * @type string, uuid
-   */
-  id: string;
   /**
    * @description Nome do responsável
    * @type string
    */
   nome: string;
-  /**
-   * @description Data de nascimento do responsável
-   * @type string, date
-   */
-  dataNascimento?: string | null;
   /**
    * @description CPF do responsável
    * @type string
@@ -37,14 +27,4 @@ export type ResponsavelResponseDTO = {
    * @type string
    */
   email: string;
-  /**
-   * @description Data e hora quando o responsável foi criado
-   * @type string, date-time
-   */
-  createdAt: string;
-  /**
-   * @description Data e hora quando o responsável foi atualizado
-   * @type string, date-time
-   */
-  updatedAt?: string | null;
 };

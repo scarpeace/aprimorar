@@ -3,6 +3,7 @@
  * Do not edit manually.
  */
 
+import { problemDetailSchema } from "./problemDetailSchema.ts";
 import { userResponseDTOSchema } from "./userResponseDTOSchema.ts";
 import { z } from "zod/v4";
 
@@ -11,8 +12,23 @@ export const mePathParamsSchema = z.object({
 });
 
 /**
- * @description Usuario autenticado retornado com sucesso
+ * @description Usuário retornado com sucesso
  */
 export const me200Schema = z.lazy(() => userResponseDTOSchema).describe("Dados do usuario retornados pela API");
+
+/**
+ * @description Não autenticado.
+ */
+export const me401Schema = z.lazy(() => problemDetailSchema);
+
+/**
+ * @description Recurso não encontrado.
+ */
+export const me404Schema = z.lazy(() => problemDetailSchema);
+
+/**
+ * @description Erro interno do sistema.
+ */
+export const me500Schema = z.lazy(() => problemDetailSchema);
 
 export const meQueryResponseSchema = z.lazy(() => me200Schema);

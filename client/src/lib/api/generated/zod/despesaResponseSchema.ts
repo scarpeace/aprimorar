@@ -12,13 +12,16 @@ export const despesaResponseSchema = z
   .object({
     id: z.optional(z.int().describe("ID da despesa")),
     titulo: z.optional(z.string().describe("Título da despesa")),
+    tipo: z.optional(z.enum(["ENTRADA", "SAIDA"]).describe("Tipo do lançamento financeiro")),
     categoria: z.optional(
       z
         .enum(["CONTAS", "PROFESSORES", "FUNCIONARIOS", "DESPENSA", "MANUTENCAO", "SERVICOS", "ASSINATURAS"])
-        .describe("Categoria da despesa operacional"),
+        .describe("Categoria do lançamento financeiro"),
     ),
     valor: z.optional(z.number().describe("Valor da despesa")),
+    dataVencimento: z.optional(z.iso.date().describe("Data de vencimento")),
     dataPagamento: z.optional(z.iso.date().describe("Data de pagamento")),
+    status: z.optional(z.enum(["PENDENTE", "PAGA", "ATRASADA"]).describe("Status do lançamento financeiro")),
     formaPagamento: z.optional(
       z
         .enum(["PIX", "DINHEIRO", "CARTAO_CREDITO", "CARTAO_DEBITO", "BOLETO", "TRANSFERENCIA"])

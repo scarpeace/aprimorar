@@ -4,7 +4,7 @@
  */
 
 import { colaboradorRequestDTOSchema } from "./colaboradorRequestDTOSchema.ts";
-import { colaboradorResponseDTOSchema } from "./colaboradorResponseDTOSchema.ts";
+import { problemDetailSchema } from "./problemDetailSchema.ts";
 import { z } from "zod/v4";
 
 export const updateColaboradorPathParamsSchema = z.object({
@@ -14,9 +14,32 @@ export const updateColaboradorPathParamsSchema = z.object({
 /**
  * @description Colaborador atualizado com sucesso.
  */
-export const updateColaborador200Schema = z
-  .lazy(() => colaboradorResponseDTOSchema)
-  .describe("Dados do colaborador retornados pela API");
+export const updateColaborador200Schema = z.any();
+
+/**
+ * @description Requisição inválida.
+ */
+export const updateColaborador400Schema = z.lazy(() => problemDetailSchema);
+
+/**
+ * @description Não autenticado.
+ */
+export const updateColaborador401Schema = z.lazy(() => problemDetailSchema);
+
+/**
+ * @description Recurso não encontrado.
+ */
+export const updateColaborador404Schema = z.lazy(() => problemDetailSchema);
+
+/**
+ * @description Conflito de dados ou de estado.
+ */
+export const updateColaborador409Schema = z.lazy(() => problemDetailSchema);
+
+/**
+ * @description Erro interno do sistema.
+ */
+export const updateColaborador500Schema = z.lazy(() => problemDetailSchema);
 
 export const updateColaboradorMutationRequestSchema = z
   .lazy(() => colaboradorRequestDTOSchema)

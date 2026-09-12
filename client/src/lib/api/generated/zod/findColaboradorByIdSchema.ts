@@ -3,7 +3,8 @@
  * Do not edit manually.
  */
 
-import { colaboradorResponseDTOSchema } from "./colaboradorResponseDTOSchema.ts";
+import { colaboradorDetailResponseDTOSchema } from "./colaboradorDetailResponseDTOSchema.ts";
+import { problemDetailSchema } from "./problemDetailSchema.ts";
 import { z } from "zod/v4";
 
 export const findColaboradorByIdPathParamsSchema = z.object({
@@ -14,7 +15,22 @@ export const findColaboradorByIdPathParamsSchema = z.object({
  * @description Colaborador retornado com sucesso.
  */
 export const findColaboradorById200Schema = z
-  .lazy(() => colaboradorResponseDTOSchema)
-  .describe("Dados do colaborador retornados pela API");
+  .lazy(() => colaboradorDetailResponseDTOSchema)
+  .describe("Dados detalhados do colaborador");
+
+/**
+ * @description Não autenticado.
+ */
+export const findColaboradorById401Schema = z.lazy(() => problemDetailSchema);
+
+/**
+ * @description Recurso não encontrado.
+ */
+export const findColaboradorById404Schema = z.lazy(() => problemDetailSchema);
+
+/**
+ * @description Erro interno do sistema.
+ */
+export const findColaboradorById500Schema = z.lazy(() => problemDetailSchema);
 
 export const findColaboradorByIdQueryResponseSchema = z.lazy(() => findColaboradorById200Schema);

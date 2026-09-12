@@ -1,5 +1,0 @@
-{
-  "type": "object",
-  "properties": { "id": { "type": "string", "format": "uuid" }, "nome": { "type": "string" }, "escola": { "type": "string" } },
-  "x-readme-ref-name": "AlunoDados"
-}

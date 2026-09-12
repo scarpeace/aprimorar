@@ -4,7 +4,13 @@
  */
 
 import fetch from "@/lib/api/client";
-import type { FindColaboradorByIdQueryResponse, FindColaboradorByIdPathParams } from "../../types/FindColaboradorById.ts";
+import type {
+  FindColaboradorByIdQueryResponse,
+  FindColaboradorByIdPathParams,
+  FindColaboradorById401,
+  FindColaboradorById404,
+  FindColaboradorById500,
+} from "../../types/FindColaboradorById.ts";
 import type { Client, RequestConfig, ResponseErrorConfig } from "@/lib/api/client";
 import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from "@tanstack/react-query";
 import { queryOptions, useQuery } from "@tanstack/react-query";
@@ -24,11 +30,11 @@ export async function findColaboradorById(
 ) {
   const { client: request = fetch, ...requestConfig } = config;
 
-  const res = await request<FindColaboradorByIdQueryResponse, ResponseErrorConfig<Error>, unknown>({
-    method: "GET",
-    url: `/v1/colaboradores/${colaboradorId}`,
-    ...requestConfig,
-  });
+  const res = await request<
+    FindColaboradorByIdQueryResponse,
+    ResponseErrorConfig<FindColaboradorById401 | FindColaboradorById404 | FindColaboradorById500>,
+    unknown
+  >({ method: "GET", url: `/v1/colaboradores/${colaboradorId}`, ...requestConfig });
   return res.data;
 }
 
@@ -39,7 +45,7 @@ export function findColaboradorByIdQueryOptions(
   const queryKey = findColaboradorByIdQueryKey(colaboradorId);
   return queryOptions<
     FindColaboradorByIdQueryResponse,
-    ResponseErrorConfig<Error>,
+    ResponseErrorConfig<FindColaboradorById401 | FindColaboradorById404 | FindColaboradorById500>,
     FindColaboradorByIdQueryResponse,
     typeof queryKey
   >({
@@ -63,7 +69,13 @@ export function useFindColaboradorById<
   colaboradorId: FindColaboradorByIdPathParams["colaboradorId"],
   options: {
     query?: Partial<
-      QueryObserverOptions<FindColaboradorByIdQueryResponse, ResponseErrorConfig<Error>, TData, TQueryData, TQueryKey>
+      QueryObserverOptions<
+        FindColaboradorByIdQueryResponse,
+        ResponseErrorConfig<FindColaboradorById401 | FindColaboradorById404 | FindColaboradorById500>,
+        TData,
+        TQueryData,
+        TQueryKey
+      >
     > & { client?: QueryClient };
     client?: Partial<RequestConfig> & { client?: Client };
   } = {},
@@ -79,7 +91,9 @@ export function useFindColaboradorById<
       queryKey,
     } as unknown as QueryObserverOptions,
     queryClient,
-  ) as UseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey };
+  ) as UseQueryResult<TData, ResponseErrorConfig<FindColaboradorById401 | FindColaboradorById404 | FindColaboradorById500>> & {
+    queryKey: TQueryKey;
+  };
 
   query.queryKey = queryKey as TQueryKey;
 

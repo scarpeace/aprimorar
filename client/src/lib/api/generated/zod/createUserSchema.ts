@@ -3,14 +3,35 @@
  * Do not edit manually.
  */
 
+import { problemDetailSchema } from "./problemDetailSchema.ts";
 import { userRequestDTOSchema } from "./userRequestDTOSchema.ts";
 import { userResponseDTOSchema } from "./userResponseDTOSchema.ts";
 import { z } from "zod/v4";
 
 /**
- * @description Usuario criado com sucesso
+ * @description Usuário criado com sucesso
  */
 export const createUser201Schema = z.lazy(() => userResponseDTOSchema).describe("Dados do usuario retornados pela API");
+
+/**
+ * @description Requisição inválida.
+ */
+export const createUser400Schema = z.lazy(() => problemDetailSchema);
+
+/**
+ * @description Não autenticado.
+ */
+export const createUser401Schema = z.lazy(() => problemDetailSchema);
+
+/**
+ * @description Conflito de dados ou de estado.
+ */
+export const createUser409Schema = z.lazy(() => problemDetailSchema);
+
+/**
+ * @description Erro interno do sistema.
+ */
+export const createUser500Schema = z.lazy(() => problemDetailSchema);
 
 export const createUserMutationRequestSchema = z.lazy(() => userRequestDTOSchema).describe("Payload para criação de usuário");
 

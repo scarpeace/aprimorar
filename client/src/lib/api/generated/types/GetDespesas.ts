@@ -4,6 +4,7 @@
  */
 
 import type { PagedModelDespesaResponse } from "./PagedModelDespesaResponse.ts";
+import type { ProblemDetail } from "./ProblemDetail.ts";
 
 export const getDespesasQueryParamsCategoriaEnum = {
   CONTAS: "CONTAS",
@@ -37,7 +38,7 @@ export type GetDespesasQueryParams = {
    */
   busca?: string | null;
   /**
-   * @description Categoria da despesa operacional
+   * @description Categoria do lançamento financeiro
    * @type string
    */
   categoria?: GetDespesasQueryParamsCategoriaEnumKey | null;
@@ -82,10 +83,25 @@ export type GetDespesasQueryParams = {
  */
 export type GetDespesas200 = PagedModelDespesaResponse;
 
+/**
+ * @description Requisição inválida.
+ */
+export type GetDespesas400 = ProblemDetail;
+
+/**
+ * @description Não autenticado.
+ */
+export type GetDespesas401 = ProblemDetail;
+
+/**
+ * @description Erro interno do sistema.
+ */
+export type GetDespesas500 = ProblemDetail;
+
 export type GetDespesasQueryResponse = GetDespesas200;
 
 export type GetDespesasQuery = {
   Response: GetDespesas200;
   QueryParams: GetDespesasQueryParams;
-  Errors: any;
+  Errors: GetDespesas400 | GetDespesas401 | GetDespesas500;
 };

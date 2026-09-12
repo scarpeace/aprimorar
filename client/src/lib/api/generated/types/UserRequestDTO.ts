@@ -6,9 +6,8 @@
 export const userRequestDTORoleEnum = {
   ALUNO: "ALUNO",
   COLABORADOR: "COLABORADOR",
-  RESPONSAVEL: "RESPONSAVEL",
+  SECRETARIA: "SECRETARIA",
   ADMIN: "ADMIN",
-  SISTEMA: "SISTEMA",
 } as const;
 
 export type UserRequestDTORoleEnumKey = (typeof userRequestDTORoleEnum)[keyof typeof userRequestDTORoleEnum];

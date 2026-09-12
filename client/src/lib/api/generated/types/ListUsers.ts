@@ -3,16 +3,27 @@
  * Do not edit manually.
  */
 
+import type { ProblemDetail } from "./ProblemDetail.ts";
 import type { UserResponseDTO } from "./UserResponseDTO.ts";
 
 /**
- * @description Lista de usuarios retornada com sucesso
+ * @description Lista de usuários retornada com sucesso
  */
 export type ListUsers200 = UserResponseDTO[];
+
+/**
+ * @description Não autenticado.
+ */
+export type ListUsers401 = ProblemDetail;
+
+/**
+ * @description Erro interno do sistema.
+ */
+export type ListUsers500 = ProblemDetail;
 
 export type ListUsersQueryResponse = ListUsers200;
 
 export type ListUsersQuery = {
   Response: ListUsers200;
-  Errors: any;
+  Errors: ListUsers401 | ListUsers500;
 };

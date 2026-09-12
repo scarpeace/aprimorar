@@ -3,7 +3,8 @@
  * Do not edit manually.
  */
 
-import { pagedModelAlunoResponseDTOSchema } from "./pagedModelAlunoResponseDTOSchema.ts";
+import { pagedModelAlunoListResponseDTOSchema } from "./pagedModelAlunoListResponseDTOSchema.ts";
+import { problemDetailSchema } from "./problemDetailSchema.ts";
 import { z } from "zod/v4";
 
 export const getAlunosQueryParamsSchema = z.object({
@@ -24,6 +25,31 @@ export const getAlunosQueryParamsSchema = z.object({
 /**
  * @description Lista de alunos retornada com sucesso.
  */
-export const getAlunos200Schema = z.lazy(() => pagedModelAlunoResponseDTOSchema);
+export const getAlunos200Schema = z.lazy(() => pagedModelAlunoListResponseDTOSchema);
+
+/**
+ * @description Requisição inválida.
+ */
+export const getAlunos400Schema = z.lazy(() => problemDetailSchema);
+
+/**
+ * @description Não autenticado.
+ */
+export const getAlunos401Schema = z.lazy(() => problemDetailSchema);
+
+/**
+ * @description Recurso não encontrado.
+ */
+export const getAlunos404Schema = z.lazy(() => problemDetailSchema);
+
+/**
+ * @description Conflito de dados ou de estado.
+ */
+export const getAlunos409Schema = z.lazy(() => problemDetailSchema);
+
+/**
+ * @description Erro interno do sistema.
+ */
+export const getAlunos500Schema = z.lazy(() => problemDetailSchema);
 
 export const getAlunosQueryResponseSchema = z.lazy(() => getAlunos200Schema);

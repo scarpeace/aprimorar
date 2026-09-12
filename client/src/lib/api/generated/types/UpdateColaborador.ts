@@ -4,7 +4,7 @@
  */
 
 import type { ColaboradorRequestDTO } from "./ColaboradorRequestDTO.ts";
-import type { ColaboradorResponseDTO } from "./ColaboradorResponseDTO.ts";
+import type { ProblemDetail } from "./ProblemDetail.ts";
 
 export type UpdateColaboradorPathParams = {
   /**
@@ -16,7 +16,32 @@ export type UpdateColaboradorPathParams = {
 /**
  * @description Colaborador atualizado com sucesso.
  */
-export type UpdateColaborador200 = ColaboradorResponseDTO;
+export type UpdateColaborador200 = any;
+
+/**
+ * @description Requisição inválida.
+ */
+export type UpdateColaborador400 = ProblemDetail;
+
+/**
+ * @description Não autenticado.
+ */
+export type UpdateColaborador401 = ProblemDetail;
+
+/**
+ * @description Recurso não encontrado.
+ */
+export type UpdateColaborador404 = ProblemDetail;
+
+/**
+ * @description Conflito de dados ou de estado.
+ */
+export type UpdateColaborador409 = ProblemDetail;
+
+/**
+ * @description Erro interno do sistema.
+ */
+export type UpdateColaborador500 = ProblemDetail;
 
 export type UpdateColaboradorMutationRequest = ColaboradorRequestDTO;
 
@@ -26,5 +51,5 @@ export type UpdateColaboradorMutation = {
   Response: UpdateColaborador200;
   Request: UpdateColaboradorMutationRequest;
   PathParams: UpdateColaboradorPathParams;
-  Errors: any;
+  Errors: UpdateColaborador400 | UpdateColaborador401 | UpdateColaborador404 | UpdateColaborador409 | UpdateColaborador500;
 };

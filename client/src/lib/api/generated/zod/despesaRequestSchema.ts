@@ -11,11 +11,12 @@ import { z } from "zod/v4";
 export const despesaRequestSchema = z
   .object({
     titulo: z.string().min(0).max(120).describe("Título da despesa"),
+    tipo: z.enum(["ENTRADA", "SAIDA"]).describe("Tipo do lançamento financeiro"),
     categoria: z
       .enum(["CONTAS", "PROFESSORES", "FUNCIONARIOS", "DESPENSA", "MANUTENCAO", "SERVICOS", "ASSINATURAS"])
-      .describe("Categoria da despesa operacional"),
+      .describe("Categoria do lançamento financeiro"),
     valor: z.number().min(0.01).describe("Valor da despesa"),
-    dataPagamento: z.iso.date().describe("Data de pagamento").nullish(),
+    dataVencimento: z.iso.date().describe("Data de vencimento"),
     formaPagamento: z
       .enum(["PIX", "DINHEIRO", "CARTAO_CREDITO", "CARTAO_DEBITO", "BOLETO", "TRANSFERENCIA"])
       .describe("Forma de pagamento da despesa"),

@@ -5,6 +5,7 @@
 
 import type { DespesaRequest } from "./DespesaRequest.ts";
 import type { DespesaResponse } from "./DespesaResponse.ts";
+import type { ProblemDetail } from "./ProblemDetail.ts";
 
 export type UpdateDespesaPathParams = {
   /**
@@ -18,6 +19,31 @@ export type UpdateDespesaPathParams = {
  */
 export type UpdateDespesa200 = DespesaResponse;
 
+/**
+ * @description Requisição inválida.
+ */
+export type UpdateDespesa400 = ProblemDetail;
+
+/**
+ * @description Não autenticado.
+ */
+export type UpdateDespesa401 = ProblemDetail;
+
+/**
+ * @description Recurso não encontrado.
+ */
+export type UpdateDespesa404 = ProblemDetail;
+
+/**
+ * @description Conflito de dados ou de estado.
+ */
+export type UpdateDespesa409 = ProblemDetail;
+
+/**
+ * @description Erro interno do sistema.
+ */
+export type UpdateDespesa500 = ProblemDetail;
+
 export type UpdateDespesaMutationRequest = DespesaRequest;
 
 export type UpdateDespesaMutationResponse = UpdateDespesa200;
@@ -26,5 +52,5 @@ export type UpdateDespesaMutation = {
   Response: UpdateDespesa200;
   Request: UpdateDespesaMutationRequest;
   PathParams: UpdateDespesaPathParams;
-  Errors: any;
+  Errors: UpdateDespesa400 | UpdateDespesa401 | UpdateDespesa404 | UpdateDespesa409 | UpdateDespesa500;
 };

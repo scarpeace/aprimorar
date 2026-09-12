@@ -5,12 +5,33 @@
 
 import { despesaRequestSchema } from "./despesaRequestSchema.ts";
 import { despesaResponseSchema } from "./despesaResponseSchema.ts";
+import { problemDetailSchema } from "./problemDetailSchema.ts";
 import { z } from "zod/v4";
 
 /**
  * @description Despesa criada com sucesso
  */
 export const createDespesa201Schema = z.lazy(() => despesaResponseSchema).describe("Dados da despesa retornados pela API");
+
+/**
+ * @description Requisição inválida.
+ */
+export const createDespesa400Schema = z.lazy(() => problemDetailSchema);
+
+/**
+ * @description Não autenticado.
+ */
+export const createDespesa401Schema = z.lazy(() => problemDetailSchema);
+
+/**
+ * @description Conflito de dados ou de estado.
+ */
+export const createDespesa409Schema = z.lazy(() => problemDetailSchema);
+
+/**
+ * @description Erro interno do sistema.
+ */
+export const createDespesa500Schema = z.lazy(() => problemDetailSchema);
 
 export const createDespesaMutationRequestSchema = z
   .lazy(() => despesaRequestSchema)

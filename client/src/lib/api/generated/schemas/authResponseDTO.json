@@ -19,7 +19,7 @@
           "type": "string",
           "description": "Perfil de acesso",
           "example": "COLABORADOR",
-          "enum": ["ALUNO", "COLABORADOR", "RESPONSAVEL", "ADMIN", "SISTEMA"]
+          "enum": ["ALUNO", "COLABORADOR", "SECRETARIA", "ADMIN"]
         },
         "active": { "type": "boolean", "description": "Indica se a conta está ativa", "example": true },
         "createdAt": {

@@ -6,17 +6,13 @@
 import { z } from "zod/v4";
 
 /**
- * @description Dados do responsável retornados pela API
+ * @description Dados do responsável do aluno
  */
 export const responsavelResponseDTOSchema = z
   .object({
-    id: z.uuid().describe("ID do responsável"),
     nome: z.string().describe("Nome do responsável"),
-    dataNascimento: z.iso.date().describe("Data de nascimento do responsável").nullish(),
     cpf: z.string().describe("CPF do responsável"),
     telefone: z.string().describe("Contato do responsável"),
     email: z.string().describe("Email do responsável"),
-    createdAt: z.iso.datetime().describe("Data e hora quando o responsável foi criado"),
-    updatedAt: z.iso.datetime().describe("Data e hora quando o responsável foi atualizado").nullish(),
   })
-  .describe("Dados do responsável retornados pela API");
+  .describe("Dados do responsável do aluno");

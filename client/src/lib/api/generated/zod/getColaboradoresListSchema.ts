@@ -4,6 +4,7 @@
  */
 
 import { colaboradoresOptionsDTOSchema } from "./colaboradoresOptionsDTOSchema.ts";
+import { problemDetailSchema } from "./problemDetailSchema.ts";
 import { z } from "zod/v4";
 
 /**
@@ -12,5 +13,15 @@ import { z } from "zod/v4";
 export const getColaboradoresList200Schema = z.array(
   z.lazy(() => colaboradoresOptionsDTOSchema).describe("Opção simplificada de colaborador para seletores"),
 );
+
+/**
+ * @description Não autenticado.
+ */
+export const getColaboradoresList401Schema = z.lazy(() => problemDetailSchema);
+
+/**
+ * @description Erro interno do sistema.
+ */
+export const getColaboradoresList500Schema = z.lazy(() => problemDetailSchema);
 
 export const getColaboradoresListQueryResponseSchema = z.lazy(() => getColaboradoresList200Schema);

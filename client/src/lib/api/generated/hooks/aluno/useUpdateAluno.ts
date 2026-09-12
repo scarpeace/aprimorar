@@ -4,7 +4,16 @@
  */
 
 import fetch from "@/lib/api/client";
-import type { UpdateAlunoMutationRequest, UpdateAlunoMutationResponse, UpdateAlunoPathParams } from "../../types/UpdateAluno.ts";
+import type {
+  UpdateAlunoMutationRequest,
+  UpdateAlunoMutationResponse,
+  UpdateAlunoPathParams,
+  UpdateAluno400,
+  UpdateAluno401,
+  UpdateAluno404,
+  UpdateAluno409,
+  UpdateAluno500,
+} from "../../types/UpdateAluno.ts";
 import type { Client, RequestConfig, ResponseErrorConfig } from "@/lib/api/client";
 import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
 import { mutationOptions, useMutation } from "@tanstack/react-query";
@@ -26,12 +35,11 @@ export async function updateAluno(
 
   const requestData = data;
 
-  const res = await request<UpdateAlunoMutationResponse, ResponseErrorConfig<Error>, UpdateAlunoMutationRequest>({
-    method: "PUT",
-    url: `/v1/alunos/${alunoId}`,
-    data: requestData,
-    ...requestConfig,
-  });
+  const res = await request<
+    UpdateAlunoMutationResponse,
+    ResponseErrorConfig<UpdateAluno400 | UpdateAluno401 | UpdateAluno404 | UpdateAluno409 | UpdateAluno500>,
+    UpdateAlunoMutationRequest
+  >({ method: "PUT", url: `/v1/alunos/${alunoId}`, data: requestData, ...requestConfig });
   return res.data;
 }
 
@@ -41,7 +49,7 @@ export function updateAlunoMutationOptions<TContext = unknown>(
   const mutationKey = updateAlunoMutationKey();
   return mutationOptions<
     UpdateAlunoMutationResponse,
-    ResponseErrorConfig<Error>,
+    ResponseErrorConfig<UpdateAluno400 | UpdateAluno401 | UpdateAluno404 | UpdateAluno409 | UpdateAluno500>,
     { alunoId: UpdateAlunoPathParams["alunoId"]; data: UpdateAlunoMutationRequest },
     TContext
   >({
@@ -60,7 +68,7 @@ export function useUpdateAluno<TContext>(
   options: {
     mutation?: UseMutationOptions<
       UpdateAlunoMutationResponse,
-      ResponseErrorConfig<Error>,
+      ResponseErrorConfig<UpdateAluno400 | UpdateAluno401 | UpdateAluno404 | UpdateAluno409 | UpdateAluno500>,
       { alunoId: UpdateAlunoPathParams["alunoId"]; data: UpdateAlunoMutationRequest },
       TContext
     > & { client?: QueryClient };
@@ -73,14 +81,14 @@ export function useUpdateAluno<TContext>(
 
   const baseOptions = updateAlunoMutationOptions(config) as UseMutationOptions<
     UpdateAlunoMutationResponse,
-    ResponseErrorConfig<Error>,
+    ResponseErrorConfig<UpdateAluno400 | UpdateAluno401 | UpdateAluno404 | UpdateAluno409 | UpdateAluno500>,
     { alunoId: UpdateAlunoPathParams["alunoId"]; data: UpdateAlunoMutationRequest },
     TContext
   >;
 
   return useMutation<
     UpdateAlunoMutationResponse,
-    ResponseErrorConfig<Error>,
+    ResponseErrorConfig<UpdateAluno400 | UpdateAluno401 | UpdateAluno404 | UpdateAluno409 | UpdateAluno500>,
     { alunoId: UpdateAlunoPathParams["alunoId"]; data: UpdateAlunoMutationRequest },
     TContext
   >(
@@ -92,7 +100,7 @@ export function useUpdateAluno<TContext>(
     queryClient,
   ) as UseMutationResult<
     UpdateAlunoMutationResponse,
-    ResponseErrorConfig<Error>,
+    ResponseErrorConfig<UpdateAluno400 | UpdateAluno401 | UpdateAluno404 | UpdateAluno409 | UpdateAluno500>,
     { alunoId: UpdateAlunoPathParams["alunoId"]; data: UpdateAlunoMutationRequest },
     TContext
   >;

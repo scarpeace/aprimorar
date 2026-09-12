@@ -4,15 +4,41 @@
  */
 
 import type { AlunosListDTO } from "./AlunosListDTO.ts";
+import type { ProblemDetail } from "./ProblemDetail.ts";
 
 /**
  * @description Lista de opções de alunos retornada com sucesso.
  */
 export type ListAlunos200 = AlunosListDTO[];
 
+/**
+ * @description Requisição inválida.
+ */
+export type ListAlunos400 = ProblemDetail;
+
+/**
+ * @description Não autenticado.
+ */
+export type ListAlunos401 = ProblemDetail;
+
+/**
+ * @description Recurso não encontrado.
+ */
+export type ListAlunos404 = ProblemDetail;
+
+/**
+ * @description Conflito de dados ou de estado.
+ */
+export type ListAlunos409 = ProblemDetail;
+
+/**
+ * @description Erro interno do sistema.
+ */
+export type ListAlunos500 = ProblemDetail;
+
 export type ListAlunosQueryResponse = ListAlunos200;
 
 export type ListAlunosQuery = {
   Response: ListAlunos200;
-  Errors: any;
+  Errors: ListAlunos400 | ListAlunos401 | ListAlunos404 | ListAlunos409 | ListAlunos500;
 };

@@ -3,6 +3,13 @@
  * Do not edit manually.
  */
 
+export const despesaResponseTipoEnum = {
+  ENTRADA: "ENTRADA",
+  SAIDA: "SAIDA",
+} as const;
+
+export type DespesaResponseTipoEnumKey = (typeof despesaResponseTipoEnum)[keyof typeof despesaResponseTipoEnum];
+
 export const despesaResponseCategoriaEnum = {
   CONTAS: "CONTAS",
   PROFESSORES: "PROFESSORES",
@@ -14,6 +21,14 @@ export const despesaResponseCategoriaEnum = {
 } as const;
 
 export type DespesaResponseCategoriaEnumKey = (typeof despesaResponseCategoriaEnum)[keyof typeof despesaResponseCategoriaEnum];
+
+export const despesaResponseStatusEnum = {
+  PENDENTE: "PENDENTE",
+  PAGA: "PAGA",
+  ATRASADA: "ATRASADA",
+} as const;
+
+export type DespesaResponseStatusEnumKey = (typeof despesaResponseStatusEnum)[keyof typeof despesaResponseStatusEnum];
 
 export const despesaResponseFormaPagamentoEnum = {
   PIX: "PIX",
@@ -42,7 +57,12 @@ export type DespesaResponse = {
    */
   titulo?: string;
   /**
-   * @description Categoria da despesa operacional
+   * @description Tipo do lançamento financeiro
+   * @type string | undefined
+   */
+  tipo?: DespesaResponseTipoEnumKey;
+  /**
+   * @description Categoria do lançamento financeiro
    * @type string | undefined
    */
   categoria?: DespesaResponseCategoriaEnumKey;
@@ -52,10 +72,20 @@ export type DespesaResponse = {
    */
   valor?: number;
   /**
+   * @description Data de vencimento
+   * @type string | undefined, date
+   */
+  dataVencimento?: string;
+  /**
    * @description Data de pagamento
    * @type string | undefined, date
    */
   dataPagamento?: string;
+  /**
+   * @description Status do lançamento financeiro
+   * @type string | undefined
+   */
+  status?: DespesaResponseStatusEnumKey;
   /**
    * @description Forma de pagamento da despesa
    * @type string | undefined

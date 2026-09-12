@@ -4,13 +4,14 @@
  */
 
 import { pagedModelDespesaResponseSchema } from "./pagedModelDespesaResponseSchema.ts";
+import { problemDetailSchema } from "./problemDetailSchema.ts";
 import { z } from "zod/v4";
 
 export const getDespesasQueryParamsSchema = z.object({
   busca: z.string().describe("Texto livre de busca").nullish(),
   categoria: z
     .enum(["CONTAS", "PROFESSORES", "FUNCIONARIOS", "DESPENSA", "MANUTENCAO", "SERVICOS", "ASSINATURAS"])
-    .describe("Categoria da despesa operacional")
+    .describe("Categoria do lançamento financeiro")
     .nullish(),
   formaPagamento: z
     .enum(["PIX", "DINHEIRO", "CARTAO_CREDITO", "CARTAO_DEBITO", "BOLETO", "TRANSFERENCIA"])
@@ -31,5 +32,20 @@ export const getDespesasQueryParamsSchema = z.object({
  * @description Página de despesas retornada com sucesso
  */
 export const getDespesas200Schema = z.lazy(() => pagedModelDespesaResponseSchema);
+
+/**
+ * @description Requisição inválida.
+ */
+export const getDespesas400Schema = z.lazy(() => problemDetailSchema);
+
+/**
+ * @description Não autenticado.
+ */
+export const getDespesas401Schema = z.lazy(() => problemDetailSchema);
+
+/**
+ * @description Erro interno do sistema.
+ */
+export const getDespesas500Schema = z.lazy(() => problemDetailSchema);
 
 export const getDespesasQueryResponseSchema = z.lazy(() => getDespesas200Schema);

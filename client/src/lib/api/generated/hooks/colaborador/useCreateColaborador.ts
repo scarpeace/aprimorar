@@ -4,7 +4,14 @@
  */
 
 import fetch from "@/lib/api/client";
-import type { CreateColaboradorMutationRequest, CreateColaboradorMutationResponse } from "../../types/CreateColaborador.ts";
+import type {
+  CreateColaboradorMutationRequest,
+  CreateColaboradorMutationResponse,
+  CreateColaborador400,
+  CreateColaborador401,
+  CreateColaborador409,
+  CreateColaborador500,
+} from "../../types/CreateColaborador.ts";
 import type { Client, RequestConfig, ResponseErrorConfig } from "@/lib/api/client";
 import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
 import { mutationOptions, useMutation } from "@tanstack/react-query";
@@ -25,12 +32,11 @@ export async function createColaborador(
 
   const requestData = data;
 
-  const res = await request<CreateColaboradorMutationResponse, ResponseErrorConfig<Error>, CreateColaboradorMutationRequest>({
-    method: "POST",
-    url: `/v1/colaboradores`,
-    data: requestData,
-    ...requestConfig,
-  });
+  const res = await request<
+    CreateColaboradorMutationResponse,
+    ResponseErrorConfig<CreateColaborador400 | CreateColaborador401 | CreateColaborador409 | CreateColaborador500>,
+    CreateColaboradorMutationRequest
+  >({ method: "POST", url: `/v1/colaboradores`, data: requestData, ...requestConfig });
   return res.data;
 }
 
@@ -40,7 +46,7 @@ export function createColaboradorMutationOptions<TContext = unknown>(
   const mutationKey = createColaboradorMutationKey();
   return mutationOptions<
     CreateColaboradorMutationResponse,
-    ResponseErrorConfig<Error>,
+    ResponseErrorConfig<CreateColaborador400 | CreateColaborador401 | CreateColaborador409 | CreateColaborador500>,
     { data: CreateColaboradorMutationRequest },
     TContext
   >({
@@ -59,7 +65,7 @@ export function useCreateColaborador<TContext>(
   options: {
     mutation?: UseMutationOptions<
       CreateColaboradorMutationResponse,
-      ResponseErrorConfig<Error>,
+      ResponseErrorConfig<CreateColaborador400 | CreateColaborador401 | CreateColaborador409 | CreateColaborador500>,
       { data: CreateColaboradorMutationRequest },
       TContext
     > & { client?: QueryClient };
@@ -72,14 +78,14 @@ export function useCreateColaborador<TContext>(
 
   const baseOptions = createColaboradorMutationOptions(config) as UseMutationOptions<
     CreateColaboradorMutationResponse,
-    ResponseErrorConfig<Error>,
+    ResponseErrorConfig<CreateColaborador400 | CreateColaborador401 | CreateColaborador409 | CreateColaborador500>,
     { data: CreateColaboradorMutationRequest },
     TContext
   >;
 
   return useMutation<
     CreateColaboradorMutationResponse,
-    ResponseErrorConfig<Error>,
+    ResponseErrorConfig<CreateColaborador400 | CreateColaborador401 | CreateColaborador409 | CreateColaborador500>,
     { data: CreateColaboradorMutationRequest },
     TContext
   >(
@@ -91,7 +97,7 @@ export function useCreateColaborador<TContext>(
     queryClient,
   ) as UseMutationResult<
     CreateColaboradorMutationResponse,
-    ResponseErrorConfig<Error>,
+    ResponseErrorConfig<CreateColaborador400 | CreateColaborador401 | CreateColaborador409 | CreateColaborador500>,
     { data: CreateColaboradorMutationRequest },
     TContext
   >;

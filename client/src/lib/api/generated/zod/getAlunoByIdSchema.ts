@@ -3,7 +3,8 @@
  * Do not edit manually.
  */
 
-import { alunoResponseDTOSchema } from "./alunoResponseDTOSchema.ts";
+import { alunoDetailResponseDTOSchema } from "./alunoDetailResponseDTOSchema.ts";
+import { problemDetailSchema } from "./problemDetailSchema.ts";
 import { z } from "zod/v4";
 
 export const getAlunoByIdPathParamsSchema = z.object({
@@ -13,6 +14,31 @@ export const getAlunoByIdPathParamsSchema = z.object({
 /**
  * @description Aluno retornado com sucesso.
  */
-export const getAlunoById200Schema = z.lazy(() => alunoResponseDTOSchema).describe("Dados do aluno retornados pela API");
+export const getAlunoById200Schema = z.lazy(() => alunoDetailResponseDTOSchema).describe("Dados detalhados do aluno");
+
+/**
+ * @description Requisição inválida.
+ */
+export const getAlunoById400Schema = z.lazy(() => problemDetailSchema);
+
+/**
+ * @description Não autenticado.
+ */
+export const getAlunoById401Schema = z.lazy(() => problemDetailSchema);
+
+/**
+ * @description Recurso não encontrado.
+ */
+export const getAlunoById404Schema = z.lazy(() => problemDetailSchema);
+
+/**
+ * @description Conflito de dados ou de estado.
+ */
+export const getAlunoById409Schema = z.lazy(() => problemDetailSchema);
+
+/**
+ * @description Erro interno do sistema.
+ */
+export const getAlunoById500Schema = z.lazy(() => problemDetailSchema);
 
 export const getAlunoByIdQueryResponseSchema = z.lazy(() => getAlunoById200Schema);

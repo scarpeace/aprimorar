@@ -3,7 +3,8 @@
  * Do not edit manually.
  */
 
-import type { ColaboradorResponseDTO } from "./ColaboradorResponseDTO.ts";
+import type { ColaboradorDetailResponseDTO } from "./ColaboradorDetailResponseDTO.ts";
+import type { ProblemDetail } from "./ProblemDetail.ts";
 
 export type FindColaboradorByIdPathParams = {
   /**
@@ -15,12 +16,27 @@ export type FindColaboradorByIdPathParams = {
 /**
  * @description Colaborador retornado com sucesso.
  */
-export type FindColaboradorById200 = ColaboradorResponseDTO;
+export type FindColaboradorById200 = ColaboradorDetailResponseDTO;
+
+/**
+ * @description Não autenticado.
+ */
+export type FindColaboradorById401 = ProblemDetail;
+
+/**
+ * @description Recurso não encontrado.
+ */
+export type FindColaboradorById404 = ProblemDetail;
+
+/**
+ * @description Erro interno do sistema.
+ */
+export type FindColaboradorById500 = ProblemDetail;
 
 export type FindColaboradorByIdQueryResponse = FindColaboradorById200;
 
 export type FindColaboradorByIdQuery = {
   Response: FindColaboradorById200;
   PathParams: FindColaboradorByIdPathParams;
-  Errors: any;
+  Errors: FindColaboradorById401 | FindColaboradorById404 | FindColaboradorById500;
 };

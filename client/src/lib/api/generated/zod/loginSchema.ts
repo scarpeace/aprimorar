@@ -5,12 +5,28 @@
 
 import { authRequestDTOSchema } from "./authRequestDTOSchema.ts";
 import { authResponseDTOSchema } from "./authResponseDTOSchema.ts";
+import { problemDetailSchema } from "./problemDetailSchema.ts";
 import { z } from "zod/v4";
 
 /**
- * @description Usuario autenticado com sucesso.
+ * @description Usuário autenticado com sucesso.
  */
 export const login200Schema = z.lazy(() => authResponseDTOSchema).describe("Resposta de autenticacao com access token JWT");
+
+/**
+ * @description Requisição inválida.
+ */
+export const login400Schema = z.lazy(() => problemDetailSchema);
+
+/**
+ * @description Não autenticado.
+ */
+export const login401Schema = z.lazy(() => problemDetailSchema);
+
+/**
+ * @description Erro interno do sistema.
+ */
+export const login500Schema = z.lazy(() => problemDetailSchema);
 
 export const loginMutationRequestSchema = z.lazy(() => authRequestDTOSchema).describe("Payload de autenticação");
 

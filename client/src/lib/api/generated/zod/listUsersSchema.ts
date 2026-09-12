@@ -3,12 +3,23 @@
  * Do not edit manually.
  */
 
+import { problemDetailSchema } from "./problemDetailSchema.ts";
 import { userResponseDTOSchema } from "./userResponseDTOSchema.ts";
 import { z } from "zod/v4";
 
 /**
- * @description Lista de usuarios retornada com sucesso
+ * @description Lista de usuários retornada com sucesso
  */
 export const listUsers200Schema = z.array(z.lazy(() => userResponseDTOSchema).describe("Dados do usuario retornados pela API"));
+
+/**
+ * @description Não autenticado.
+ */
+export const listUsers401Schema = z.lazy(() => problemDetailSchema);
+
+/**
+ * @description Erro interno do sistema.
+ */
+export const listUsers500Schema = z.lazy(() => problemDetailSchema);
 
 export const listUsersQueryResponseSchema = z.lazy(() => listUsers200Schema);

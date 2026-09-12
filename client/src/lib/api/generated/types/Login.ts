@@ -5,11 +5,27 @@
 
 import type { AuthRequestDTO } from "./AuthRequestDTO.ts";
 import type { AuthResponseDTO } from "./AuthResponseDTO.ts";
+import type { ProblemDetail } from "./ProblemDetail.ts";
 
 /**
- * @description Usuario autenticado com sucesso.
+ * @description Usuário autenticado com sucesso.
  */
 export type Login200 = AuthResponseDTO;
+
+/**
+ * @description Requisição inválida.
+ */
+export type Login400 = ProblemDetail;
+
+/**
+ * @description Não autenticado.
+ */
+export type Login401 = ProblemDetail;
+
+/**
+ * @description Erro interno do sistema.
+ */
+export type Login500 = ProblemDetail;
 
 export type LoginMutationRequest = AuthRequestDTO;
 
@@ -18,5 +34,5 @@ export type LoginMutationResponse = Login200;
 export type LoginMutation = {
   Response: Login200;
   Request: LoginMutationRequest;
-  Errors: any;
+  Errors: Login400 | Login401 | Login500;
 };

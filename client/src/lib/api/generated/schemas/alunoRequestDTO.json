@@ -1,5 +1,5 @@
 {
-  "required": ["cpf", "dataNascimento", "email", "endereco", "escola", "nome", "responsavelId", "telefone"],
+  "required": ["cpf", "dataNascimento", "email", "endereco", "escola", "nome", "responsavel", "telefone"],
   "type": "object",
   "properties": {
     "nome": { "minLength": 1, "type": "string", "description": "Nome completo do aluno", "example": "Ana Silva" },
@@ -28,7 +28,23 @@
       "description": "Endereço do cadastro",
       "x-readme-ref-name": "EnderecoRequestDTO"
     },
-    "responsavelId": { "type": "string", "description": "ID do responsável vinculado ao aluno", "format": "uuid" }
+    "responsavel": {
+      "required": ["cpf", "email", "nome", "telefone"],
+      "type": "object",
+      "properties": {
+        "nome": { "minLength": 1, "type": "string", "description": "Nome do responsável", "example": "João Silva" },
+        "email": {
+          "minLength": 1,
+          "type": "string",
+          "description": "E-mail do responsável",
+          "example": "joao.silva@example.com"
+        },
+        "telefone": { "minLength": 1, "type": "string", "description": "Contato do responsável", "example": "11999999999" },
+        "cpf": { "minLength": 1, "type": "string", "description": "CPF do responsável", "example": "12345678901" }
+      },
+      "description": "Dados do responsável do aluno",
+      "x-readme-ref-name": "ResponsavelRequestDTO"
+    }
   },
   "description": "Formato de payload para o cadastro de um aluno",
   "x-readme-ref-name": "AlunoRequestDTO"

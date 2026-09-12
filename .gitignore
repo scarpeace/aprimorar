@@ -55,3 +55,4 @@ server/bin/
 docs
 
 codebook.toml
+client/src/lib/api/generated/

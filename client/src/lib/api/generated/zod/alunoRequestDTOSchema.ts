@@ -4,6 +4,7 @@
  */
 
 import { enderecoRequestDTOSchema } from "./enderecoRequestDTOSchema.ts";
+import { responsavelRequestDTOSchema } from "./responsavelRequestDTOSchema.ts";
 import { z } from "zod/v4";
 
 /**
@@ -20,6 +21,8 @@ export const alunoRequestDTOSchema = z
     get endereco() {
       return enderecoRequestDTOSchema.describe("Endereço do cadastro");
     },
-    responsavelId: z.uuid().describe("ID do responsável vinculado ao aluno"),
+    get responsavel() {
+      return responsavelRequestDTOSchema.describe("Dados do responsável do aluno");
+    },
   })
   .describe("Formato de payload para o cadastro de um aluno");

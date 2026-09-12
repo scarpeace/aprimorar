@@ -36,8 +36,9 @@ Documento operacional do repositório. Mantenha este arquivo atualizado quando a
 - entidade JPA não vaza para API
 - mudança de schema sempre via Flyway
 - dependência entre módulos só pelos contratos permitidos no `package-info.java`
-- contratos públicos ficam na raiz do módulo; implementação, persistência e HTTP
-  ficam nos subpacotes internos
+- quando um módulo expõe contratos a outros módulos, eles ficam em uma `api/`
+  declarada como `NamedInterface`; implementação, persistência e HTTP ficam nos
+  subpacotes internos
 - conversão entre entidade, contrato e DTO deve ser explícita
 - evitar abstrações sem mais de um uso real
 
@@ -48,10 +49,13 @@ aprimorar/
 ├── auth/
 ├── atendimentos/
 │   └── individuais/
-│       ├── domain/*.java
-│       │   └── enums/
+│       ├── config/
+│       ├── domain/{enums,exception}
 │       ├── repository/{atendimento,cobranca,repasse,view}
-│       └── web/controller/AtendimentoIndividualController.java
+│       ├── service/
+│       └── web/
+│           ├── controller/AtendimentoIndividualController.java
+│           └── dto/{atendimento,calendario,cobranca,repasse}
 ├── pessoas/
 │   ├── api/
 │   ├── domain/{enums,exception}
@@ -60,17 +64,23 @@ aprimorar/
 │   └── web/
 │       ├── controller/
 │       └── dto/{aluno,colaborador,endereco}
-├── financeiro/
-│   ├── despesas/
-│   └── cobranca_aluno/
+├── despesas/
+│   ├── config/
+│   ├── domain/{enums,exception}
+│   ├── repository/specifications/
+│   ├── service/
+│   └── web/{controller,dto}
 ├── common/
 └── config/
 ```
 
 - `auth` concentra login e gerenciamento de usuários.
-- `atendimentos/individuais` concentra o fluxo de atendimento, cobrança e
-  repasse individuais; há um controller HTTP único e services separados para
-  escrita e leitura pela view.
+- `atendimentos/individuais` concentra atendimento, cobrança e repasse
+  individuais. Há um controller HTTP único, um service de escrita e um service
+  de consulta pela view `vw_atendimentos_individuais`.
+- o calendário de atendimentos individuais é uma consulta própria em
+  `GET /v1/atendimentos-individuais/calendario`; seu contrato é neutro em
+  relação ao FullCalendar e aceita intervalo, `alunoId` e `colaboradorId`.
 - `pessoas` expõe `AlunoService` e `ColaboradorService` em uma única `api`; esses
   contratos oferecem apenas verificação de existência por ID. As implementações
   de aluno e colaborador permanecem separadas em `service` e `web`, com DTOs
@@ -78,7 +88,8 @@ aprimorar/
 - `pessoas/domain/Endereco` contém o value object de endereço; não é uma entidade
   nem possui ciclo de vida próprio.
 - `Responsavel` é um value object embutido em `AlunoEntity`, sem tabela própria.
-- `despesas` registra gastos operacionais independentes de atendimento.
+- `despesas` é um módulo independente para lançamentos operacionais de entrada
+  e saída, sem relação com atendimentos.
 - `common` é aberto para modelos, utilitários e anotações compartilhadas.
 - `config` contém configuração transversal, não regras de domínio.
 
@@ -106,21 +117,26 @@ Dentro de `server/`:
   para responsável
 - o valor da cobrança vive em `cobrancas_individuais`; o valor do repasse vive
   em `repasses_individuais`
+- toda criação de atendimento individual cria uma cobrança e um repasse
+  pendentes; o atendimento não armazena valores financeiros próprios
 - alunos e colaboradores não são excluídos; o campo `ativo` controla ativação e
   desativação
 - não existem registros ou realocação para aluno, colaborador ou responsável fantasma
 - exceções de negócio são específicas de cada módulo e tratadas pelo handler do
   próprio módulo
+- `DespesaDadosInvalidosException` representa validações de domínio de despesas
+  e é retornada como `400 Bad Request`
 
 ### Erros HTTP
 
 - respostas de erro usam `org.springframework.http.ProblemDetail`
 - `GlobalExceptionHandler` em `aprimorar.config` tem baixa precedência e trata
   apenas erros transversais
-- handlers de `auth`, `pessoas/aluno`, `pessoas/colaborador`,
-  `atendimentos/individuais` e `financeiro/despesas` ficam nos pacotes dos
-  respectivos subdomínios e tratam as exceções próprias de cada domínio
-- anotações OpenAPI reutilizáveis ficam em `common/openapi`
+- handlers de `auth`, `pessoas`, `atendimentos/individuais` e `despesas` ficam
+  nos pacotes dos respectivos módulos e tratam suas exceções próprias
+- anotações OpenAPI reutilizáveis ficam em `common/openapi`; todos os
+  controllers usam `@CommonProblemResponses` e documentam erros específicos
+  com as anotações de `400`, `404` e `409` disponíveis
 
 ### Autenticação
 
@@ -183,7 +199,7 @@ Dentro de `server/`:
 - tabela de atendimentos vinculados:
   - filtros aplicam direto quando alterados
   - busca pode usar debounce
-  - pagamento/repasse usa toggle do DaisyUI
+  - pagamento e repasse usam ações explícitas de registrar e cancelar
 - ações:
   - editar: `primary`
   - arquivar: `warning`

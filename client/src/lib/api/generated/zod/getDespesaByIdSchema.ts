@@ -4,6 +4,7 @@
  */
 
 import { despesaResponseSchema } from "./despesaResponseSchema.ts";
+import { problemDetailSchema } from "./problemDetailSchema.ts";
 import { z } from "zod/v4";
 
 export const getDespesaByIdPathParamsSchema = z.object({
@@ -14,5 +15,20 @@ export const getDespesaByIdPathParamsSchema = z.object({
  * @description Despesa retornada com sucesso
  */
 export const getDespesaById200Schema = z.lazy(() => despesaResponseSchema).describe("Dados da despesa retornados pela API");
+
+/**
+ * @description Não autenticado.
+ */
+export const getDespesaById401Schema = z.lazy(() => problemDetailSchema);
+
+/**
+ * @description Recurso não encontrado.
+ */
+export const getDespesaById404Schema = z.lazy(() => problemDetailSchema);
+
+/**
+ * @description Erro interno do sistema.
+ */
+export const getDespesaById500Schema = z.lazy(() => problemDetailSchema);
 
 export const getDespesaByIdQueryResponseSchema = z.lazy(() => getDespesaById200Schema);

@@ -4,13 +4,38 @@
  */
 
 import { alunoRequestDTOSchema } from "./alunoRequestDTOSchema.ts";
-import { alunoResponseDTOSchema } from "./alunoResponseDTOSchema.ts";
+import { problemDetailSchema } from "./problemDetailSchema.ts";
 import { z } from "zod/v4";
 
 /**
  * @description Aluno criado com sucesso.
  */
-export const criarAluno201Schema = z.lazy(() => alunoResponseDTOSchema).describe("Dados do aluno retornados pela API");
+export const criarAluno201Schema = z.any();
+
+/**
+ * @description Requisição inválida.
+ */
+export const criarAluno400Schema = z.lazy(() => problemDetailSchema);
+
+/**
+ * @description Não autenticado.
+ */
+export const criarAluno401Schema = z.lazy(() => problemDetailSchema);
+
+/**
+ * @description Recurso não encontrado.
+ */
+export const criarAluno404Schema = z.lazy(() => problemDetailSchema);
+
+/**
+ * @description Conflito de dados ou de estado.
+ */
+export const criarAluno409Schema = z.lazy(() => problemDetailSchema);
+
+/**
+ * @description Erro interno do sistema.
+ */
+export const criarAluno500Schema = z.lazy(() => problemDetailSchema);
 
 export const criarAlunoMutationRequestSchema = z
   .lazy(() => alunoRequestDTOSchema)

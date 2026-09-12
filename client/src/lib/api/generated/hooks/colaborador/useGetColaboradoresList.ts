@@ -4,7 +4,11 @@
  */
 
 import fetch from "@/lib/api/client";
-import type { GetColaboradoresListQueryResponse } from "../../types/GetColaboradoresList.ts";
+import type {
+  GetColaboradoresListQueryResponse,
+  GetColaboradoresList401,
+  GetColaboradoresList500,
+} from "../../types/GetColaboradoresList.ts";
 import type { Client, RequestConfig, ResponseErrorConfig } from "@/lib/api/client";
 import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from "@tanstack/react-query";
 import { queryOptions, useQuery } from "@tanstack/react-query";
@@ -20,11 +24,11 @@ export type GetColaboradoresListQueryKey = ReturnType<typeof getColaboradoresLis
 export async function getColaboradoresList(config: Partial<RequestConfig> & { client?: Client } = {}) {
   const { client: request = fetch, ...requestConfig } = config;
 
-  const res = await request<GetColaboradoresListQueryResponse, ResponseErrorConfig<Error>, unknown>({
-    method: "GET",
-    url: `/v1/colaboradores/list`,
-    ...requestConfig,
-  });
+  const res = await request<
+    GetColaboradoresListQueryResponse,
+    ResponseErrorConfig<GetColaboradoresList401 | GetColaboradoresList500>,
+    unknown
+  >({ method: "GET", url: `/v1/colaboradores/list`, ...requestConfig });
   return res.data;
 }
 
@@ -32,7 +36,7 @@ export function getColaboradoresListQueryOptions(config: Partial<RequestConfig> 
   const queryKey = getColaboradoresListQueryKey();
   return queryOptions<
     GetColaboradoresListQueryResponse,
-    ResponseErrorConfig<Error>,
+    ResponseErrorConfig<GetColaboradoresList401 | GetColaboradoresList500>,
     GetColaboradoresListQueryResponse,
     typeof queryKey
   >({
@@ -54,7 +58,13 @@ export function useGetColaboradoresList<
 >(
   options: {
     query?: Partial<
-      QueryObserverOptions<GetColaboradoresListQueryResponse, ResponseErrorConfig<Error>, TData, TQueryData, TQueryKey>
+      QueryObserverOptions<
+        GetColaboradoresListQueryResponse,
+        ResponseErrorConfig<GetColaboradoresList401 | GetColaboradoresList500>,
+        TData,
+        TQueryData,
+        TQueryKey
+      >
     > & { client?: QueryClient };
     client?: Partial<RequestConfig> & { client?: Client };
   } = {},
@@ -70,7 +80,7 @@ export function useGetColaboradoresList<
       queryKey,
     } as unknown as QueryObserverOptions,
     queryClient,
-  ) as UseQueryResult<TData, ResponseErrorConfig<Error>> & { queryKey: TQueryKey };
+  ) as UseQueryResult<TData, ResponseErrorConfig<GetColaboradoresList401 | GetColaboradoresList500>> & { queryKey: TQueryKey };
 
   query.queryKey = queryKey as TQueryKey;
 

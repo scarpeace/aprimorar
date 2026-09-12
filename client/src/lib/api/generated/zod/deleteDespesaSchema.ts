@@ -3,6 +3,7 @@
  * Do not edit manually.
  */
 
+import { problemDetailSchema } from "./problemDetailSchema.ts";
 import { z } from "zod/v4";
 
 export const deleteDespesaPathParamsSchema = z.object({
@@ -13,5 +14,20 @@ export const deleteDespesaPathParamsSchema = z.object({
  * @description Despesa excluída com sucesso
  */
 export const deleteDespesa204Schema = z.any();
+
+/**
+ * @description Não autenticado.
+ */
+export const deleteDespesa401Schema = z.lazy(() => problemDetailSchema);
+
+/**
+ * @description Recurso não encontrado.
+ */
+export const deleteDespesa404Schema = z.lazy(() => problemDetailSchema);
+
+/**
+ * @description Erro interno do sistema.
+ */
+export const deleteDespesa500Schema = z.lazy(() => problemDetailSchema);
 
 export const deleteDespesaMutationResponseSchema = z.lazy(() => deleteDespesa204Schema);

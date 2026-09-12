@@ -3,7 +3,8 @@
  * Do not edit manually.
  */
 
-import type { PagedModelColaboradorResponseDTO } from "./PagedModelColaboradorResponseDTO.ts";
+import type { PagedModelColaboradorListResponseDTO } from "./PagedModelColaboradorListResponseDTO.ts";
+import type { ProblemDetail } from "./ProblemDetail.ts";
 
 export type GetColaboradoresQueryParams = {
   /**
@@ -50,12 +51,27 @@ export type GetColaboradoresQueryParams = {
 /**
  * @description Lista de colaboradores retornada com sucesso.
  */
-export type GetColaboradores200 = PagedModelColaboradorResponseDTO;
+export type GetColaboradores200 = PagedModelColaboradorListResponseDTO;
+
+/**
+ * @description Requisição inválida.
+ */
+export type GetColaboradores400 = ProblemDetail;
+
+/**
+ * @description Não autenticado.
+ */
+export type GetColaboradores401 = ProblemDetail;
+
+/**
+ * @description Erro interno do sistema.
+ */
+export type GetColaboradores500 = ProblemDetail;
 
 export type GetColaboradoresQueryResponse = GetColaboradores200;
 
 export type GetColaboradoresQuery = {
   Response: GetColaboradores200;
   QueryParams: GetColaboradoresQueryParams;
-  Errors: any;
+  Errors: GetColaboradores400 | GetColaboradores401 | GetColaboradores500;
 };
