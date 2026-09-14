@@ -54,9 +54,6 @@ public class ColaboradorEntity {
     @Column(name = "ativo", nullable = false)
     private Boolean active = true;
 
-    @Column(name = "user_id", unique = true)
-    private UUID userId;
-
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
