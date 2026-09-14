@@ -73,8 +73,8 @@ aprimorar/
 └── config/
 ```
 
-- `auth` concentra a identidade de autenticação; por enquanto contém `User` e
-  as roles `ADMIN` e `SECRETARIA`.
+- `auth` concentra autenticação JWT com access token Bearer e refresh token
+  HttpOnly; por enquanto contém as roles `ADMIN` e `SECRETARIA`.
 - `atendimentos/individuais` concentra atendimento, cobrança e repasse
   individuais. Há um controller HTTP único, um service de escrita e um service
   de consulta pela view `vw_atendimentos_individuais`.
