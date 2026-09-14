@@ -12,6 +12,7 @@ Documento operacional do repositório. Mantenha este arquivo atualizado quando a
 - backend: trabalhar em `server/`
 - frontend: trabalhar em `client/`
 - contrato da API: backend primeiro, frontend depois
+- as rotas HTTP não usam o prefixo versionado `/v1`
 
 ## Backend
 
@@ -75,6 +76,11 @@ aprimorar/
 
 - `auth` concentra autenticação JWT com access token Bearer e refresh token
   HttpOnly; por enquanto contém as roles `ADMIN` e `SECRETARIA`.
+  `POST /auth/login`, `POST /auth/refresh` e `POST /auth/logout` são públicos;
+  `GET /auth/me` e as APIs de domínio exigem um access token válido.
+  O refresh token fica no cookie `refresh_token` (`HttpOnly`, `SameSite=Lax`,
+  escopo `/auth`) e somente seu hash é persistido. O usuário atual é retornado
+  por `/auth/me` como `id`, `email` e `role`.
 - `atendimentos/individuais` concentra atendimento, cobrança e repasse
   individuais. Há um controller HTTP único, um service de escrita e um service
   de consulta pela view `vw_atendimentos_individuais`.
@@ -134,9 +140,10 @@ Dentro de `server/`:
   apenas erros transversais
 - handlers de `pessoas`, `atendimentos/individuais` e `despesas` ficam nos
   pacotes dos respectivos módulos e tratam suas exceções próprias
-- anotações OpenAPI reutilizáveis ficam em `common/openapi`; todos os
-  controllers usam `@CommonProblemResponses` e documentam erros específicos
-  com as anotações de `400`, `404` e `409` disponíveis
+- `AuthException` é tratada pelo handler global como `401 Unauthorized`
+- anotações OpenAPI reutilizáveis ficam em `common/openapi`; os controllers de
+  domínio usam `@CommonProblemResponses` e documentam erros específicos com as
+  anotações de `400`, `404` e `409` disponíveis
 
 ### Testes
 
@@ -230,20 +237,30 @@ Banco local esperado no profile `dev`:
 - user: `myuser`
 - password: `mypassword`
 
+Configuração de ambiente:
+
+- `dev` é o profile padrão; para produção, definir `SPRING_PROFILES_ACTIVE=prod`
+- o backend lê opcionalmente `server/.env` quando iniciado dentro de `server/`
+- `server/.env.example` documenta as chaves necessárias; em produção, fornecê-las
+  como variáveis de ambiente
+
 SonarQube local:
 
 - dashboard: `http://localhost:9000`
 - script de análise: `server/sonar.sh`
-- token fica em `.env.local` ou `.env` como `SONAR_TOKEN`
+- token fica em `server/.env` como `SONAR_TOKEN`
 
-Segredos, tokens e senhas devem permanecer em `.env`/`.env.local`; nunca os
-copie para documentação, logs ou respostas de diagnóstico.
+Segredos, tokens e senhas devem permanecer em `server/.env` ou nas variáveis
+de ambiente do deploy; nunca os copie para documentação, logs ou respostas de
+diagnóstico.
 
 ## O que costuma quebrar
 
 - contrato gerado desatualizado
 - import antigo de tipo gerado depois de mudança no OpenAPI
 - migration Flyway editada depois de aplicada ou com versão duplicada
+- `target/classes` manter migrations ou `data.sql` removidos da fonte; executar
+  `./mvnw clean` antes de repetir a inicialização local
 - teste de contexto iniciado sem as variáveis de ambiente necessárias
 - lógica demais em um único componente de tela
 - script antigo da raiz sendo usado como fonte de verdade
