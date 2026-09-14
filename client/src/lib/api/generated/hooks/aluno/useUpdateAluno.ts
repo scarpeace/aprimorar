@@ -3,7 +3,7 @@
  * Do not edit manually.
  */
 
-import fetch from "@/lib/api/client";
+import fetch from "@/lib/backend/client";
 import type {
   UpdateAlunoMutationRequest,
   UpdateAlunoMutationResponse,
@@ -14,7 +14,7 @@ import type {
   UpdateAluno409,
   UpdateAluno500,
 } from "../../types/UpdateAluno.ts";
-import type { Client, RequestConfig, ResponseErrorConfig } from "@/lib/api/client";
+import type { Client, RequestConfig, ResponseErrorConfig } from "@/lib/backend/client";
 import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
 import { mutationOptions, useMutation } from "@tanstack/react-query";
 

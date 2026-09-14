@@ -3,7 +3,7 @@
  * Do not edit manually.
  */
 
-import fetch from "@/lib/api/client";
+import fetch from "@/lib/backend/client";
 import type {
   DeleteDespesaMutationResponse,
   DeleteDespesaPathParams,
@@ -11,7 +11,7 @@ import type {
   DeleteDespesa404,
   DeleteDespesa500,
 } from "../../types/DeleteDespesa.ts";
-import type { Client, RequestConfig, ResponseErrorConfig } from "@/lib/api/client";
+import type { Client, RequestConfig, ResponseErrorConfig } from "@/lib/backend/client";
 import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
 import { mutationOptions, useMutation } from "@tanstack/react-query";
 

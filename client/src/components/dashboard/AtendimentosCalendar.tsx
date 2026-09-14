@@ -11,7 +11,7 @@ import { CalendarDesktop } from "@/components/dashboard/CalendarDesktop";
 import { CalendarMobile } from "@/components/dashboard/CalendarMobile";
 import type { SharedCalendarProps } from "@/components/dashboard/calendar-shared";
 import { ErrorCard } from "@/components/ui/ErrorCard";
-import { getFriendlyErrorMessage } from "@/lib/api/client";
+import { getFriendlyErrorMessage } from "@/lib/backend/client";
 import { getAtendimentoCalendarColor, tipoAtendimentoLabels } from "@/lib/constants/atendimento-constants";
 import { toAnoMes } from "@/lib/utils/date-utils";
 

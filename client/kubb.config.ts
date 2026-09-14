@@ -6,6 +6,7 @@ import { pluginZod } from "@kubb/plugin-zod";
 
 export default defineConfig({
   input: {
+    //TODO: tem que mover isso aqui pra uma variável de ambiente
     path: "http://localhost:8080/v3/api-docs",
   },
   output: {
@@ -32,7 +33,7 @@ export default defineConfig({
         name: ({ group }) => group.toLowerCase(),
       },
       client: {
-        importPath: "@/lib/api/client",
+        importPath: "@/lib/backend/client",
       },
       suspense: false,
       paramsCasing: "camelcase",

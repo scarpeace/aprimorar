@@ -107,7 +107,7 @@ export function AlunoAtendimentos({ alunoId }: Readonly<AlunoAtendimentosProps>)
 
   const content = atendimentos.data?.content ?? [];
   const resumo = relatorio.data?.resumo;
-  const relatorioPdfUrl = `/api/proxy/v1/atendimentos/alunos/${alunoId}/relatorio.pdf?dataInicio=${dataInicio}&dataFim=${dataFim}`;
+  const relatorioPdfUrl = `/api/backend/v1/atendimentos/alunos/${alunoId}/relatorio.pdf?dataInicio=${dataInicio}&dataFim=${dataFim}`;
   const metadata = atendimentos.data?.page;
   const totalPages = metadata?.totalPages ?? 0;
   const totalElements = metadata?.totalElements ?? 0;

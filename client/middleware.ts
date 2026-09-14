@@ -1,6 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
-import { AUTH_ROLE_COOKIE, AUTH_TOKEN_COOKIE } from "@/lib/auth/constants";
-import { resolveRedirectPath } from "@/lib/auth/redirects";
+import { AUTH_ROLE_COOKIE, AUTH_TOKEN_COOKIE } from "@/features/auth/constants";
+import { resolveRedirectPath } from "@/features/auth/redirects";
 
 export function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
@@ -30,4 +30,3 @@ export function middleware(request: NextRequest) {
 export const config = {
   matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
 };
-

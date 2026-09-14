@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import { Nav } from "@/components/layout/Nav";
-import { requireSession } from "@/lib/auth/session";
+import { requireSession } from "@/features/auth/session";
 
 export default async function PrivateLayout({
   children,

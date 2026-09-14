@@ -25,7 +25,6 @@ Documento operacional do repositório. Mantenha este arquivo atualizado quando a
 - Flyway
 - Spring Modulith
 - PostgreSQL
-- `com.auth0:java-jwt` para emissão e validação de JWT
 
 ### Convenções
 
@@ -74,7 +73,8 @@ aprimorar/
 └── config/
 ```
 
-- `auth` concentra login e gerenciamento de usuários.
+- `auth` concentra a identidade de autenticação; por enquanto contém `User` e
+  as roles `ADMIN` e `SECRETARIA`.
 - `atendimentos/individuais` concentra atendimento, cobrança e repasse
   individuais. Há um controller HTTP único, um service de escrita e um service
   de consulta pela view `vw_atendimentos_individuais`.
@@ -132,37 +132,18 @@ Dentro de `server/`:
 - respostas de erro usam `org.springframework.http.ProblemDetail`
 - `GlobalExceptionHandler` em `aprimorar.config` tem baixa precedência e trata
   apenas erros transversais
-- handlers de `auth`, `pessoas`, `atendimentos/individuais` e `despesas` ficam
-  nos pacotes dos respectivos módulos e tratam suas exceções próprias
+- handlers de `pessoas`, `atendimentos/individuais` e `despesas` ficam nos
+  pacotes dos respectivos módulos e tratam suas exceções próprias
 - anotações OpenAPI reutilizáveis ficam em `common/openapi`; todos os
   controllers usam `@CommonProblemResponses` e documentam erros específicos
   com as anotações de `400`, `404` e `409` disponíveis
-
-### Autenticação
-
-- a aplicação é stateless e usa `auth/config/JwtAuthenticationFilter`
-- `JwtService` usa `com.auth0:java-jwt` com HS256
-- `JWT_SECRET` é texto bruto, obrigatório e deve ter ao menos 32 bytes em UTF-8
-- o token usa issuer `aprimorar-api`, UUID no `subject` e expiração de oito horas
-- authorities são carregadas do usuário no banco, não de claims do token
-- `UserEntity` implementa `UserDetails`
-- `AuthService` implementa `UserDetailsService` e usa `DaoAuthenticationProvider`
-  com BCrypt
-- login fica em `POST /v1/auth/login`; gerenciamento de usuários fica em
-  `/v1/auth/users` e exige role `ADMIN`
-- o usuário administrador é sincronizado no boot usando
-  `APP_ADMIN_USERNAME` e `APP_ADMIN_PASSWORD`
-- não usar OAuth2 Resource Server, Nimbus, JWKS ou provedores externos
 
 ### Testes
 
 - testes unitários de service usam Mockito e ficam próximos ao pacote testado
 - não misturar teste de `Specification` dentro de teste de service
 - preferir teste pequeno por regra de negócio relevante
-- testar o JWT sem expor segredos
 - warnings de JaCoCo/ByteBuddy sobre instrumentação podem aparecer no sandbox; considerar o exit code do Maven
-- após mudanças de segurança ou configuração, executar ao menos `compile` e
-  `test-compile`; rodar a suíte completa quando possível
 
 ## Frontend
 
@@ -263,7 +244,6 @@ copie para documentação, logs ou respostas de diagnóstico.
 - contrato gerado desatualizado
 - import antigo de tipo gerado depois de mudança no OpenAPI
 - migration Flyway editada depois de aplicada ou com versão duplicada
-- token antigo usado depois da troca da chave efetiva do JWT
 - teste de contexto iniciado sem as variáveis de ambiente necessárias
 - lógica demais em um único componente de tela
 - script antigo da raiz sendo usado como fonte de verdade
@@ -277,7 +257,6 @@ copie para documentação, logs ou respostas de diagnóstico.
 - criar entidade JPA para value object sem ciclo de vida próprio
 - criar relacionamento JPA entre módulos sem benefício concreto
 - vazar entidade JPA pela API
-- reintroduzir dependência OAuth2/Nimbus para autenticação JWT
 - apagar dados ou resetar banco sem confirmar o alvo exato
 - imprimir segredos, senhas ou hashes completos em comandos e logs
 - quebrar padrão visual já fechado em telas irmãs

@@ -5,7 +5,7 @@ import { toast } from "sonner";
 import { useCreateUser } from "@/lib/api/generated/hooks/user/useCreateUser";
 import { useDeleteUser } from "@/lib/api/generated/hooks/user/useDeleteUser";
 import { listUsersQueryKey } from "@/lib/api/generated/hooks/user/useListUsers";
-import { getFriendlyErrorMessage } from "@/lib/api/client";
+import { getFriendlyErrorMessage } from "@/lib/backend/client";
 
 export function useUserMutations() {
   const queryClient = useQueryClient();

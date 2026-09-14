@@ -3,7 +3,7 @@
  * Do not edit manually.
  */
 
-import fetch from "@/lib/api/client";
+import fetch from "@/lib/backend/client";
 import type {
   GetDespesaByIdQueryResponse,
   GetDespesaByIdPathParams,
@@ -11,7 +11,7 @@ import type {
   GetDespesaById404,
   GetDespesaById500,
 } from "../../types/GetDespesaById.ts";
-import type { Client, RequestConfig, ResponseErrorConfig } from "@/lib/api/client";
+import type { Client, RequestConfig, ResponseErrorConfig } from "@/lib/backend/client";
 import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from "@tanstack/react-query";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 

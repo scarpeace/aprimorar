@@ -30,7 +30,9 @@ Este arquivo vale para o frontend atual do projeto em `client/`.
 - `src/components/ui/` para componentes base reutilizáveis
 - `src/components/ui/forms/` para inputs integrados com RHF
 - `src/hooks/` para mutações e coordenação de cache/toast
-- `src/lib/` para api, auth, constants, utils e validação
+- `src/features/auth/` para a UI e sessão de autenticação
+- `src/lib/backend/` para o cliente manual e a URL da API Java
+- `src/lib/api/generated/` exclusivamente para a saída do Kubb
 
 ## Formulários
 
@@ -42,6 +44,8 @@ Este arquivo vale para o frontend atual do projeto em `client/`.
 ## Dados e API
 
 - usar hooks e tipos gerados pelo Kubb
+- `src/app/api/session/` recebe login/logout e grava/remove os cookies HTTP-only
+- `src/app/api/backend/` encaminha chamadas autenticadas para a API Java
 - mutações manuais ficam em `src/hooks/`
 - invalidar lista, detalhe e derivados quando a mutação alterar esses dados
 - evitar `fetch` direto em componente

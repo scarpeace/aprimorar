@@ -13,8 +13,8 @@ import {
   Receipt,
   ShieldUser,
 } from "lucide-react";
-import { LogoutButton } from "@/components/auth/LogoutButton";
-import type { AuthUser } from "@/lib/auth/types";
+import { LogoutButton } from "@/features/auth/LogoutButton";
+import type { AuthUser } from "@/features/auth/types";
 
 const navLinkBase = "rounded-lg border px-3 py-2 text-sm font-semibold transition";
 const navLinkActive = "border-primary/25 bg-base-200 text-base-content shadow-sm";
