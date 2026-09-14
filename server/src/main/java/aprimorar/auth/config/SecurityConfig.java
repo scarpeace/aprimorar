@@ -31,7 +31,7 @@ public class SecurityConfig {
             .cors(Customizer.withDefaults())
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/auth/**").permitAll()
+                .requestMatchers("/auth/login", "/auth/refresh", "/auth/logout").permitAll()
                 .anyRequest().authenticated()
             )
             .oauth2ResourceServer(resource -> resource.jwt(Customizer.withDefaults()))
