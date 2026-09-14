@@ -79,7 +79,7 @@ aprimorar/
   individuais. Há um controller HTTP único, um service de escrita e um service
   de consulta pela view `vw_atendimentos_individuais`.
 - o calendário de atendimentos individuais é uma consulta própria em
-  `GET /v1/atendimentos-individuais/calendario`; seu contrato é neutro em
+  `GET /atendimentos-individuais/calendario`; seu contrato é neutro em
   relação ao FullCalendar e aceita intervalo, `alunoId` e `colaboradorId`.
 - `pessoas` expõe `AlunoService` e `ColaboradorService` em uma única `api`; esses
   contratos oferecem apenas verificação de existência por ID. As implementações

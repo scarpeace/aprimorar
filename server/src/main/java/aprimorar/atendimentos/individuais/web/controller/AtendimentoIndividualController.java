@@ -40,7 +40,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/v1/atendimentos-individuais")
+@RequestMapping("/atendimentos-individuais")
 @Tag(name = "Atendimentos individuais")
 @CommonProblemResponses
 public class AtendimentoIndividualController {
@@ -62,7 +62,7 @@ public class AtendimentoIndividualController {
     @BadRequestProblemResponse
     public ResponseEntity<Void> agendar(@RequestBody @Valid AtendimentoIndividualRequest request) {
         Long id = atendimentoService.agendar(request);
-        return ResponseEntity.created(URI.create("/v1/atendimentos-individuais/" + id)).build();
+        return ResponseEntity.created(URI.create("/atendimentos-individuais/" + id)).build();
     }
 
     @PatchMapping("/{id}")

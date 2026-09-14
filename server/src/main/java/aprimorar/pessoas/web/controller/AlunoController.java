@@ -34,7 +34,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/v1/alunos")
+@RequestMapping("/alunos")
 @Tag(name = "Aluno", description = "APIs de gestão de alunos")
 @CommonProblemResponses
 @BadRequestProblemResponse
@@ -53,7 +53,7 @@ public class AlunoController {
     @ApiResponse(responseCode = "201", description = "Aluno criado com sucesso.")
     public ResponseEntity<Void> createAluno(@RequestBody @Valid AlunoRequestDTO alunoRequestDTO) {
         UUID id = alunoService.createAluno(alunoRequestDTO);
-        return ResponseEntity.created(URI.create("/v1/alunos/" + id)).build();
+        return ResponseEntity.created(URI.create("/alunos/" + id)).build();
     }
 
     @GetMapping

@@ -33,7 +33,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/v1/colaboradores")
+@RequestMapping("/colaboradores")
 @Tag(name = "Colaborador", description = "APIs de gestão de colaboradores")
 @CommonProblemResponses
 public class ColaboradorController {
@@ -53,7 +53,7 @@ public class ColaboradorController {
         @RequestBody @Valid ColaboradorRequestDTO colaboradorRequestDto
     ) {
         UUID id = colaboradorService.createColaborador(colaboradorRequestDto);
-        return ResponseEntity.created(URI.create("/v1/colaboradores/" + id)).build();
+        return ResponseEntity.created(URI.create("/colaboradores/" + id)).build();
     }
 
     @GetMapping
