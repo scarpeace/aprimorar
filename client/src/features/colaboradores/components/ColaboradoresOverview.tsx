@@ -3,7 +3,7 @@
 import { Plus } from "lucide-react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { ColaboradorForm } from "@/components/colaboradores/ColaboradorForm";
+import { ColaboradorForm } from "@/features/colaboradores/components/ColaboradorForm";
 import { useGetColaboradores } from "@/lib/api/generated/hooks/colaborador/useGetColaboradores";
 import { EmptyCard } from "@/components/ui/EmptyCard";
 import { ErrorCard } from "@/components/ui/ErrorCard";

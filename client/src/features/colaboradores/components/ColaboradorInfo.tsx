@@ -4,7 +4,7 @@ import Link from "next/link";
 import { Archive, ArchiveRestore, PencilLine, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { ColaboradorForm } from "@/components/colaboradores/ColaboradorForm";
+import { ColaboradorForm } from "@/features/colaboradores/components/ColaboradorForm";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 import { DetailField } from "@/components/ui/DetailField";
@@ -12,7 +12,7 @@ import { ErrorCard } from "@/components/ui/ErrorCard";
 import { Modal } from "@/components/ui/Modal";
 import { PageLoading } from "@/components/ui/PageLoading";
 import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
-import { useColaboradorMutations } from "@/hooks/use-colaborador-mutations";
+import { useColaboradorMutations } from "@/features/colaboradores/hooks/use-colaborador-mutations";
 import { useFindColaboradorById } from "@/lib/api/generated/hooks/colaborador/useFindColaboradorById";
 import { formatCpf, formatDate, formatPhone, formatZip } from "@/lib/utils/formatter";
 

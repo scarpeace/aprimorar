@@ -8,9 +8,9 @@ import { DateInput } from "@/components/ui/forms/DateInput";
 import { MaskedInput } from "@/components/ui/forms/MaskedInput";
 import { SelectInput } from "@/components/ui/forms/SelectInput";
 import { TextInput } from "@/components/ui/forms/TextInput";
-import { useColaboradorMutations } from "@/hooks/use-colaborador-mutations";
+import { useColaboradorMutations } from "@/features/colaboradores/hooks/use-colaborador-mutations";
 import { BRAZILIAN_STATES } from "@/lib/constants/address-constants";
-import { colaboradorFormSchema, type ColaboradorFormData } from "@/lib/validators/colaborador-form-schema";
+import { colaboradorFormSchema, type ColaboradorFormData } from "@/features/colaboradores/schemas/colaborador-form-schema";
 
 const FUNCAO_OPTIONS: { value: string; label: string }[] = [
   { value: "PROFESSOR", label: "Professor" },

@@ -1,4 +1,4 @@
-import { ColaboradoresOverview } from "@/components/colaboradores/ColaboradoresOverview";
+import { ColaboradoresOverview } from "@/features/colaboradores/components/ColaboradoresOverview";
 
 export default function ColaboradoresPage() {
   return (

@@ -1,5 +1,5 @@
-import { ColaboradorAtendimentos } from "@/components/colaboradores/ColaboradorAtendimentos";
-import { ColaboradorInfo } from "@/components/colaboradores/ColaboradorInfo";
+import { ColaboradorAtendimentos } from "@/features/colaboradores/components/ColaboradorAtendimentos";
+import { ColaboradorInfo } from "@/features/colaboradores/components/ColaboradorInfo";
 
 export default async function ColaboradorPage({
   params,
