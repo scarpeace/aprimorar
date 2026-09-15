@@ -12,8 +12,10 @@ import { getAccessToken } from "@/auth/token-store";
 kubbFetchClient.setConfig({
   baseURL: process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8080",
   credentials: "include",
+  headers: {
+    "Content-Type": "application/json",
+  },
 });
-
 
 function getHeaders(headers: RequestConfig["headers"]) {
   return Array.isArray(headers) ? Object.fromEntries(headers) : headers ?? {};
@@ -68,11 +70,13 @@ export const client: Client = async <TData, TError = unknown, TVariables = unkno
   if (response.status === 401) {
     const refreshedToken = await refreshOnce();
 
-    if (!refreshedToken) {
-      return response;
+    if (refreshedToken) {
+      response = await request<TData, TError, TVariables>(config, refreshedToken);
     }
+  }
 
-    response = await request<TData, TError, TVariables>(config, refreshedToken);
+  if (response.status < 200 || response.status >= 300) {
+    throw response.data;
   }
 
   return response;

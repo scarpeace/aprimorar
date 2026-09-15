@@ -1,190 +1,110 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
-import { keepPreviousData } from "@tanstack/react-query";
 import type { DatesSetArg, EventClickArg, EventInput } from "@fullcalendar/core";
-import type FullCalendar from "@fullcalendar/react";
-import type { CalendarioAtendimentosResponse } from "@/lib/api/generated/types/CalendarioAtendimentosResponse";
-import { useGetCalendarioAtendimentos } from "@/lib/api/generated/hooks/atendimento/useGetCalendarioAtendimentos";
-import { CalendarDesktop } from "@/features/atendimentos/components/calendarios/CalendarDesktop";
-import { CalendarMobile } from "@/features/atendimentos/components/calendarios/CalendarMobile";
-import type { SharedCalendarProps } from "@/features/atendimentos/components/calendarios/calendar-shared";
+import dayGridPlugin from "@fullcalendar/daygrid";
+import ptBrLocale from "@fullcalendar/core/locales/pt-br";
+import interactionPlugin from "@fullcalendar/interaction";
+import FullCalendar from "@fullcalendar/react";
+import { useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 import { ErrorCard } from "@/components/ui/ErrorCard";
+import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 import { getFriendlyErrorMessage } from "@/lib/api/api-error";
-import { getAtendimentoCalendarColor, tipoAtendimentoLabels } from "@/lib/constants/atendimento-constants";
-import { toAnoMes } from "@/lib/utils/date-utils";
+import { useBuscarCalendarioAtendimentosIndividuais } from "@/lib/api/generated/hooks/atendimentos individuais/useBuscarCalendarioAtendimentosIndividuais";
 
-const MOBILE_BREAKPOINT = "(max-width: 768px)";
+type CalendarRange = {
+  inicio: string;
+  fim: string;
+};
 
-function toCalendarEvent(atendimento: CalendarioAtendimentosResponse): EventInput {
+function getInitialRange(): CalendarRange {
+  const now = new Date();
+  const inicio = new Date(now.getFullYear(), now.getMonth(), 1);
+  const fim = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59);
+
   return {
-    id: String(atendimento.id),
-    title: `${atendimento.nomeAluno} - ${atendimento.nomeColaborador}`,
-    start: atendimento.dataHoraInicio,
-    end: atendimento.dataHoraFim,
-    color: getAtendimentoCalendarColor(atendimento.tipo).backgroundColor,
-    extendedProps: {
-      nomeAluno: atendimento.nomeAluno,
-      nomeColaborador: atendimento.nomeColaborador,
-    },
+    inicio: inicio.toISOString(),
+    fim: fim.toISOString(),
   };
-}
-
-function legendItems(data?: {
-  totalAulas: number;
-  totalMentoria: number;
-  totalTerapia: number;
-  totalOV: number;
-  totalENEM: number;
-  totalPAS: number;
-  totalOutros: number;
-}) {
-  return [
-    {
-      tipo: "AULA",
-      label: tipoAtendimentoLabels.AULA,
-      total: data?.totalAulas ?? 0,
-    },
-    {
-      tipo: "MENTORIA",
-      label: tipoAtendimentoLabels.MENTORIA,
-      total: data?.totalMentoria ?? 0,
-    },
-    {
-      tipo: "TERAPIA",
-      label: tipoAtendimentoLabels.TERAPIA,
-      total: data?.totalTerapia ?? 0,
-    },
-    {
-      tipo: "ORIENTACAO_VOCACIONAL",
-      label: tipoAtendimentoLabels.ORIENTACAO_VOCACIONAL,
-      total: data?.totalOV ?? 0,
-    },
-    {
-      tipo: "ENEM",
-      label: tipoAtendimentoLabels.ENEM,
-      total: data?.totalENEM ?? 0,
-    },
-    {
-      tipo: "PAS",
-      label: tipoAtendimentoLabels.PAS,
-      total: data?.totalPAS ?? 0,
-    },
-    {
-      tipo: "OUTRO",
-      label: tipoAtendimentoLabels.OUTRO,
-      total: data?.totalOutros ?? 0,
-    },
-  ];
 }
 
 export function AtendimentosCalendar() {
-  const [calendarDate, setCalendarDate] = useState(() => new Date());
-  const [isMobile, setIsMobile] = useState(false);
-  const calendarRef = useRef<FullCalendar>(null);
   const router = useRouter();
-  const anoMes = toAnoMes(calendarDate);
-  const calendarioAtendimentos = useGetCalendarioAtendimentos(
-    { anoMes },
-    {
-      query: {
-        placeholderData: keepPreviousData,
-      },
-    },
+  const [range, setRange] = useState<CalendarRange>(getInitialRange);
+  const calendario = useBuscarCalendarioAtendimentosIndividuais(range);
+
+  const events = useMemo<EventInput[]>(
+    () =>
+      (calendario.data ?? []).map((atendimento) => ({
+        id: String(atendimento.id),
+        title: `${atendimento.alunoNome} - ${atendimento.colaboradorNome}`,
+        start: atendimento.dataHoraInicio,
+        end: atendimento.dataHoraFim,
+      })),
+    [calendario.data],
   );
-  const data = calendarioAtendimentos.data;
 
-  const calendarEvents = useMemo(() => (data?.eventos ?? []).map(toCalendarEvent), [data?.eventos]);
-  const items = useMemo(() => legendItems(data), [data]);
+  function handleDatesSet(info: DatesSetArg) {
+    const nextRange = {
+      inicio: info.start.toISOString(),
+      fim: info.end.toISOString(),
+    };
 
-  useEffect(() => {
-    const mediaQuery = window.matchMedia(MOBILE_BREAKPOINT);
-    const sync = () => setIsMobile(mediaQuery.matches);
+    setRange((currentRange) => {
+      if (currentRange.inicio === nextRange.inicio && currentRange.fim === nextRange.fim) {
+        return currentRange;
+      }
 
-    sync();
-    mediaQuery.addEventListener("change", sync);
-
-    return () => mediaQuery.removeEventListener("change", sync);
-  }, []);
-
-  function handleOpenDay(date: Date) {
-    setCalendarDate(date);
-    calendarRef.current?.getApi().changeView("timeGridDay", date);
+      return nextRange;
+    });
   }
 
   function handleEventClick(info: EventClickArg) {
-    info.jsEvent.preventDefault();
     router.push(`/atendimentos/${info.event.id}`);
   }
 
-  function handleDatesSet(info: DatesSetArg) {
-    const next = info.view.currentStart.getTime();
-    const current = calendarDate.getTime();
-
-    if (next !== current) {
-      setCalendarDate(info.view.currentStart);
-    }
-  }
-
-  const sharedCalendarProps: SharedCalendarProps = {
-    calendarRef,
-    calendarDate,
-    events: calendarEvents,
-    onDatesSet: handleDatesSet,
-    onEventClick: handleEventClick,
-    onOpenDay: handleOpenDay,
-  };
-
-  if (calendarioAtendimentos.isError) {
+  if (calendario.isError) {
     return (
       <ErrorCard
-        title="Não foi possível carregar o calendário de atendimentos"
-        description={getFriendlyErrorMessage(calendarioAtendimentos.error)}
-        error={calendarioAtendimentos.error}
+        title="Não foi possível carregar o calendário"
+        description={getFriendlyErrorMessage(calendario.error)}
+        error={calendario.error}
       />
     );
   }
 
-  if (calendarioAtendimentos.isLoading && !data) {
+  if (calendario.isLoading) {
     return (
-      <section className="rounded-2xl border border-base-300 bg-base-100 p-6 shadow-sm">
-        <p className="text-sm text-base-content/60">Carregando atendimentos...</p>
+      <section className="flex min-h-96 items-center justify-center rounded-2xl border border-base-300 bg-base-100 p-6 shadow-sm">
+        <LoadingSpinner />
       </section>
     );
   }
 
   return (
     <section className="rounded-2xl border border-base-300 bg-base-100 p-6 shadow-sm">
-      <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
-        <div>
-          <div className="flex items-center gap-3">
-            <h2 className="text-2xl font-bold text-base-content">Calendário de atendimentos</h2>
-            <span className="badge badge-primary badge-soft">{data?.totalAtendimentos ?? 0}</span>
+      <div className="relative">
+        {calendario.isFetching ? (
+          <div className="absolute right-0 top-0 z-10 flex items-center gap-2 rounded-lg bg-base-100/90 px-3 py-2 text-xs text-base-content/65 shadow-sm">
+            <LoadingSpinner />
+            Atualizando...
           </div>
-          <p className="mt-2 text-sm text-base-content/65">
-            Visualize os atendimentos agendados e clique em um evento para abrir o detalhe.
-          </p>
-        </div>
+        ) : null}
 
-        <div className="flex flex-wrap gap-2">
-          {items.map((item) => (
-            <div key={item.tipo} className="badge badge-soft h-auto gap-2 px-3 py-2 text-xs text-base-content/75">
-              <span
-                className="h-2.5 w-2.5 rounded-full"
-                style={{
-                  backgroundColor: getAtendimentoCalendarColor(item.tipo).backgroundColor,
-                }}
-              />
-              <span>{item.label}</span>
-              <span className="font-semibold">{item.total}</span>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      <div className="appointments-calendar mt-6 rounded-2xl border border-base-300 bg-base-100 p-3">
-        {isMobile ? <CalendarMobile {...sharedCalendarProps} /> : <CalendarDesktop {...sharedCalendarProps} />}
+        <FullCalendar
+          plugins={[dayGridPlugin, interactionPlugin]}
+          initialView="dayGridMonth"
+          locale={ptBrLocale}
+          headerToolbar={{
+            left: "prev,next today",
+            center: "title",
+            right: "dayGridMonth",
+          }}
+          events={events}
+          datesSet={handleDatesSet}
+          eventClick={handleEventClick}
+          height="auto"
+        />
       </div>
     </section>
   );
