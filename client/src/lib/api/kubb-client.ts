@@ -20,6 +20,21 @@ function getHeaders(headers: RequestConfig["headers"]) {
 }
 
 
+export const publicClient: Client = async <TData, TError = unknown, TVariables = unknown>(
+  config: RequestConfig<TVariables>,
+) => {
+  const response = await kubbFetchClient<TData, TError, TVariables>({
+    ...config,
+    credentials: "include",
+  });
+
+  if (response.status < 200 || response.status >= 300) {
+    throw response.data;
+  }
+
+  return response;
+};
+
 async function request<TData, TError, TVariables>(
   config: RequestConfig<TVariables>,
   token: string,

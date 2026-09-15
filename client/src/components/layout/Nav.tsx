@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import type { ReactNode } from "react";
+import { LogoutButton } from "@/features/auth/LogoutButton";
 import {
   BriefcaseBusiness,
   CalendarDays,
@@ -82,6 +83,9 @@ export function Nav({ children }: Readonly<{ children: ReactNode }>) {
                     <NavLabel icon={ShieldUser} label="Admin" />
                   </Link>
                 </li>
+                <li className="mt-2 border-t border-base-300 pt-2">
+                  <LogoutButton />
+                </li>
               </ul>
             </div>
 
@@ -125,7 +129,9 @@ export function Nav({ children }: Readonly<{ children: ReactNode }>) {
             </ul>
           </div>
 
-
+          <div className="navbar-end hidden lg:flex">
+            <LogoutButton compact />
+          </div>
         </div>
       </header>
 
