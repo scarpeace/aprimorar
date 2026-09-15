@@ -3,11 +3,11 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import type { AtendimentoResponseStatusEnumKey, AtendimentoResponse } from "@/lib/api/generated/types/AtendimentoResponse";
-import { AtendimentoStatusBadge } from "@/components/atendimentos/AtendimentoStatusBadge";
-import { AtendimentoTipoBadge } from "@/components/atendimentos/AtendimentoTipoBadge";
+import { AtendimentoStatusBadge } from "@/features/atendimentos/components/AtendimentoStatusBadge";
+import { AtendimentoTipoBadge } from "@/features/atendimentos/components/AtendimentoTipoBadge";
 import { Button } from "@/components/ui/Button";
 import { DetailField } from "@/components/ui/DetailField";
-import { useAtendimentoMutations } from "@/hooks/use-atendimento-mutations";
+import { useAtendimentoMutations } from "@/features/atendimentos/hooks/use-atendimento-mutations";
 import { atendimentoStatusOptions } from "@/lib/constants/atendimento-constants";
 import { formatDateShortYear, formatTime } from "@/lib/utils/date-utils";
 import { brl, formatDate } from "@/lib/utils/formatter";

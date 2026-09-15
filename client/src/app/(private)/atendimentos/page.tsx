@@ -1,4 +1,4 @@
-import { AtendimentosOverview } from "@/components/atendimentos/AtendimentosOverview";
+import { AtendimentosOverview } from "@/features/atendimentos/components/AtendimentosOverview";
 
 export default function AtendimentosPage() {
   return (

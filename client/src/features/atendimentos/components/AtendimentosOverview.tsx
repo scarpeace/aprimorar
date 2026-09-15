@@ -1,10 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { AtendimentoForm } from "@/components/atendimentos/AtendimentoForm";
-import { AtendimentosFilters } from "@/components/atendimentos/AtendimentosFilters";
-import { AtendimentosMonthTabs } from "@/components/atendimentos/AtendimentosMonthTabs";
-import { AtendimentosResults } from "@/components/atendimentos/AtendimentosResults";
+import { AtendimentoForm } from "@/features/atendimentos/components/AtendimentoForm";
+import { AtendimentosFilters } from "@/features/atendimentos/components/AtendimentosFilters";
+import { AtendimentosMonthTabs } from "@/features/atendimentos/components/AtendimentosMonthTabs";
+import { AtendimentosResults } from "@/features/atendimentos/components/AtendimentosResults";
 import type {
   AtendimentoResponseStatusEnumKey,
   AtendimentoResponseTipoEnumKey,

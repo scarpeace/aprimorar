@@ -1,9 +1,9 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { AtendimentoPaymentBadge } from "@/components/atendimentos/AtendimentoPaymentBadge";
-import { AtendimentoStatusBadge } from "@/components/atendimentos/AtendimentoStatusBadge";
-import { AtendimentoTipoBadge } from "@/components/atendimentos/AtendimentoTipoBadge";
+import { AtendimentoPaymentBadge } from "@/features/atendimentos/components/AtendimentoPaymentBadge";
+import { AtendimentoStatusBadge } from "@/features/atendimentos/components/AtendimentoStatusBadge";
+import { AtendimentoTipoBadge } from "@/features/atendimentos/components/AtendimentoTipoBadge";
 import { EmptyCard } from "@/components/ui/EmptyCard";
 import { ErrorCard } from "@/components/ui/ErrorCard";
 import { PageLoading } from "@/components/ui/PageLoading";

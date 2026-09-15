@@ -1,9 +1,9 @@
 "use client";
 
 import type { AtendimentoResponse } from "@/lib/api/generated/types/AtendimentoResponse";
-import { AtendimentoPaymentBadge } from "@/components/atendimentos/AtendimentoPaymentBadge";
+import { AtendimentoPaymentBadge } from "@/features/atendimentos/components/AtendimentoPaymentBadge";
 import { DetailField } from "@/components/ui/DetailField";
-import { useAtendimentoMutations } from "@/hooks/use-atendimento-mutations";
+import { useAtendimentoMutations } from "@/features/atendimentos/hooks/use-atendimento-mutations";
 import { formatDate } from "@/lib/utils/formatter";
 
 type AtendimentoPaymentsProps = {

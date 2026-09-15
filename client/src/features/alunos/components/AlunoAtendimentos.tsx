@@ -3,9 +3,9 @@
 import { useState } from "react";
 import { endOfMonth, format, startOfMonth } from "date-fns";
 import { useRouter } from "next/navigation";
-import { AtendimentoPaymentBadge } from "@/components/atendimentos/AtendimentoPaymentBadge";
-import { AtendimentoStatusBadge } from "@/components/atendimentos/AtendimentoStatusBadge";
-import { AtendimentoTipoBadge } from "@/components/atendimentos/AtendimentoTipoBadge";
+import { AtendimentoPaymentBadge } from "@/features/atendimentos/components/AtendimentoPaymentBadge";
+import { AtendimentoStatusBadge } from "@/features/atendimentos/components/AtendimentoStatusBadge";
+import { AtendimentoTipoBadge } from "@/features/atendimentos/components/AtendimentoTipoBadge";
 import { EmptyCard } from "@/components/ui/EmptyCard";
 import { ErrorCard } from "@/components/ui/ErrorCard";
 import { PageLoading } from "@/components/ui/PageLoading";
@@ -13,7 +13,7 @@ import { SearchInput } from "@/components/ui/SearchInput";
 import { TablePagination } from "@/components/ui/TablePagination";
 import { Toggle } from "@/components/ui/Toggle";
 import { useDebounce } from "@/hooks/useDebounce";
-import { useAtendimentoMutations } from "@/hooks/use-atendimento-mutations";
+import { useAtendimentoMutations } from "@/features/atendimentos/hooks/use-atendimento-mutations";
 import { useGetAtendimentos } from "@/lib/api/generated/hooks/atendimento/useGetAtendimentos";
 import { useGetRelatorioAluno } from "@/lib/api/generated/hooks/atendimento/useGetRelatorioAluno";
 import type {

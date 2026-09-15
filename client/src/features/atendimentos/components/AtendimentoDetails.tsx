@@ -1,9 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { AtendimentoData } from "@/components/atendimentos/AtendimentoData";
-import { AtendimentoForm } from "@/components/atendimentos/AtendimentoForm";
-import { AtendimentoPayments } from "@/components/atendimentos/AtendimentoPayments";
+import { AtendimentoData } from "@/features/atendimentos/components/AtendimentoData";
+import { AtendimentoForm } from "@/features/atendimentos/components/AtendimentoForm";
+import { AtendimentoPayments } from "@/features/atendimentos/components/AtendimentoPayments";
 import { useGetAtendimentoById } from "@/lib/api/generated/hooks/atendimento/useGetAtendimentoById";
 import { ErrorCard } from "@/components/ui/ErrorCard";
 import { Modal } from "@/components/ui/Modal";

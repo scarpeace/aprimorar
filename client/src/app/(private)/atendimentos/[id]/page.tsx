@@ -1,4 +1,4 @@
-import { AtendimentoDetails } from "@/components/atendimentos/AtendimentoDetails";
+import { AtendimentoDetails } from "@/features/atendimentos/components/AtendimentoDetails";
 
 export default async function AtendimentoDetailsPage({
   params,

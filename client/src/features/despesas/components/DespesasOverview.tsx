@@ -3,7 +3,7 @@
 import { PencilLine, Plus, Trash2 } from "lucide-react";
 import { useState, type MouseEvent } from "react";
 import { Button } from "@/components/ui/Button";
-import { AtendimentoPaymentBadge } from "@/components/atendimentos/AtendimentoPaymentBadge";
+import { AtendimentoPaymentBadge } from "@/features/atendimentos/components/AtendimentoPaymentBadge";
 import { EmptyCard } from "@/components/ui/EmptyCard";
 import { ErrorCard } from "@/components/ui/ErrorCard";
 import { Modal } from "@/components/ui/Modal";

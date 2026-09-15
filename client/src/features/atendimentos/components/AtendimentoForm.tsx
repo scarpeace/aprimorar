@@ -12,10 +12,10 @@ import { Field } from "@/components/ui/forms/Field";
 import { MonetaryInput } from "@/components/ui/forms/MonetaryInput";
 import { SelectInput } from "@/components/ui/forms/SelectInput";
 import { TextInput } from "@/components/ui/forms/TextInput";
-import { useAtendimentoMutations } from "@/hooks/use-atendimento-mutations";
+import { useAtendimentoMutations } from "@/features/atendimentos/hooks/use-atendimento-mutations";
 import { atendimentoTipoOptions } from "@/lib/constants/atendimento-constants";
 import { addHoursToDateTimeLocal, formatDateTimeLocal, getDurationInHours } from "@/lib/utils/date-utils";
-import { atendimentoFormSchema, type AtendimentoFormInput } from "@/lib/validators/atendimento-form-schema";
+import { atendimentoFormSchema, type AtendimentoFormInput } from "@/features/atendimentos/schemas/atendimento-form-schema";
 
 const CREATE_TIPO_OPTIONS = atendimentoTipoOptions.filter((option) => option.value !== "");
 
