@@ -1,16 +1,9 @@
 import { z } from "zod/v4";
-import { alunoRequestDTOSchema, enderecoRequestDTOSchema } from "@/lib/api/generated/zod";
+import { alunoRequestDTOSchema } from "@/lib/api/generated/zod";
+import { enderecoFormSchema } from "@/lib/schemas/endereco-form-schema";
 
 const requiredText = (label: string) => z.string().trim().min(1, `${label} é obrigatório`);
 
-const enderecoFormSchema = enderecoRequestDTOSchema.extend({
-  rua: requiredText("Rua"),
-  numero: requiredText("Número"),
-  bairro: requiredText("Bairro"),
-  cidade: requiredText("Cidade"),
-  estado: requiredText("Estado"),
-  cep: requiredText("CEP"),
-});
 
 export const alunoFormSchema = alunoRequestDTOSchema.extend({
   nome: requiredText("Nome"),
