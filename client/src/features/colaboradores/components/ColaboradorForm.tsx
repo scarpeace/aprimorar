@@ -9,7 +9,7 @@ import { MaskedInput } from "@/components/ui/forms/MaskedInput";
 import { SelectInput } from "@/components/ui/forms/SelectInput";
 import { TextInput } from "@/components/ui/forms/TextInput";
 import { useColaboradorMutations } from "@/features/colaboradores/hooks/use-colaborador-mutations";
-import { BRAZILIAN_STATES } from "@/lib/constants/address-constants";
+import { BRAZILIAN_STATES } from "@/lib/constants/endereco-constants";
 import { colaboradorFormSchema, type ColaboradorFormData } from "@/features/colaboradores/schemas/colaborador-form-schema";
 
 const FUNCAO_OPTIONS: { value: string; label: string }[] = [
