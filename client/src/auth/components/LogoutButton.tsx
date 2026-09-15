@@ -2,7 +2,7 @@
 
 import { LogOut } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useAuthMutations } from "@/features/auth/hooks/use-auth-mutations";
+import { useAuthMutations } from "@/auth/hooks/use-auth-mutations";
 
 export function LogoutButton({ compact = false }: Readonly<{ compact?: boolean }>) {
   const router = useRouter();

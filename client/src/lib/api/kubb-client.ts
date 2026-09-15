@@ -5,8 +5,8 @@ import kubbFetchClient, {
   type ResponseConfig,
   type ResponseErrorConfig,
 } from "@kubb/plugin-client/clients/fetch";
-import { refreshOnce } from "@/lib/auth/auth-refresh";
-import { getAccessToken } from "@/lib/auth/token-store";
+import { refreshOnce } from "@/auth/auth-refresh";
+import { getAccessToken } from "@/auth/token-store";
 
 
 kubbFetchClient.setConfig({

@@ -10,7 +10,7 @@ import { getFriendlyErrorMessage } from "@/lib/api/api-error";
 import {
   clearAccessToken,
   setAccessToken,
-} from "@/lib/auth/token-store";
+} from "@/auth/token-store";
 
 export function useAuthMutations() {
   const queryClient = useQueryClient();

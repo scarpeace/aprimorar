@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { refreshOnce } from "@/lib/auth/auth-refresh";
-import { getAccessToken } from "@/lib/auth/token-store";
+import { refreshOnce } from "@/auth/auth-refresh";
+import { getAccessToken } from "@/auth/token-store";
 
 export function AuthProvider({
   children,

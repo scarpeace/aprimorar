@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { AuthProvider } from "@/components/auth-provider";
+import { AuthProvider } from "@/auth/components/AuthProvider";
 import { Nav } from "@/components/layout/Nav";
 
 export default function PrivateLayout({
