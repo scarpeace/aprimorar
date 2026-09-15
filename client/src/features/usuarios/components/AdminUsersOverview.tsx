@@ -8,8 +8,8 @@ import { ErrorCard } from "@/components/ui/ErrorCard";
 import { Modal } from "@/components/ui/Modal";
 import { PageLoading } from "@/components/ui/PageLoading";
 import { Button } from "@/components/ui/Button";
-import { UserForm } from "@/components/admin/UserForm";
-import { useUserMutations } from "@/hooks/use-user-mutations";
+import { UserForm } from "@/features/usuarios/components/UserForm";
+import { useUserMutations } from "@/features/usuarios/hooks/use-user-mutations";
 import { formatDateShortYear } from "@/lib/utils/date-utils";
 
 const roleLabels = {

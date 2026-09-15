@@ -11,7 +11,7 @@ import { ErrorCard } from "@/components/ui/ErrorCard";
 import { PageLoading } from "@/components/ui/PageLoading";
 import { SearchInput } from "@/components/ui/SearchInput";
 import { TablePagination } from "@/components/ui/TablePagination";
-import { useDebounce } from "@/hooks/useDebounce";
+import { useDebounce } from "@/lib/hooks/use-debounce";
 import { useAtendimentoMutations } from "@/features/atendimentos/hooks/use-atendimento-mutations";
 import { useGetAtendimentos } from "@/lib/api/generated/hooks/atendimento/useGetAtendimentos";
 import { useGetResumoFinanceiroColaborador } from "@/lib/api/generated/hooks/atendimento/useGetResumoFinanceiroColaborador";

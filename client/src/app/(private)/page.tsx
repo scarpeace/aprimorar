@@ -1,4 +1,4 @@
-import { DashboardOverview } from "@/components/dashboard/DashboardOverview";
+import { AtendimentosCalendar } from "@/features/atendimentos/components/calendarios/AtendimentosCalendar";
 
 export default function DashboardPage() {
   return (
@@ -11,7 +11,7 @@ export default function DashboardPage() {
         </p>
       </div>
 
-      <DashboardOverview />
+      <AtendimentosCalendar />
     </section>
   );
 }

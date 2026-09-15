@@ -1,4 +1,4 @@
-import { AdminUsersOverview } from "@/components/admin/AdminUsersOverview";
+import { AdminUsersOverview } from "@/features/usuarios/components/AdminUsersOverview";
 
 export default function AdminPage() {
   return (

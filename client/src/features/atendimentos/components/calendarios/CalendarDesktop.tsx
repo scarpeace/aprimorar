@@ -8,7 +8,7 @@ import interactionPlugin from "@fullcalendar/interaction";
 import listPlugin from "@fullcalendar/list";
 import FullCalendar from "@fullcalendar/react";
 import timeGridPlugin from "@fullcalendar/timegrid";
-import type { SharedCalendarProps } from "@/components/dashboard/calendar-shared";
+import type { SharedCalendarProps } from "@/features/atendimentos/components/calendarios/calendar-shared";
 
 const CALENDAR_PLUGINS = [dayGridPlugin, timeGridPlugin, listPlugin, interactionPlugin];
 

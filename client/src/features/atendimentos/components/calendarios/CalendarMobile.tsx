@@ -7,7 +7,7 @@ import listPlugin from "@fullcalendar/list";
 import FullCalendar from "@fullcalendar/react";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import { useState } from "react";
-import type { SharedCalendarProps } from "@/components/dashboard/calendar-shared";
+import type { SharedCalendarProps } from "@/features/atendimentos/components/calendarios/calendar-shared";
 import { Button } from "@/components/ui/Button";
 
 const CALENDAR_PLUGINS = [listPlugin, timeGridPlugin, interactionPlugin];

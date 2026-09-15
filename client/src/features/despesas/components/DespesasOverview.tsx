@@ -11,7 +11,7 @@ import { PageLoading } from "@/components/ui/PageLoading";
 import { SearchInput } from "@/components/ui/SearchInput";
 import { TablePagination } from "@/components/ui/TablePagination";
 import { DespesaForm } from "@/features/despesas/components/DespesaForm";
-import { useDebounce } from "@/hooks/useDebounce";
+import { useDebounce } from "@/lib/hooks/use-debounce";
 import { useDespesaMutations } from "@/features/despesas/hooks/use-despesa-mutations";
 import { useGetDespesas } from "@/lib/api/generated/hooks/despesa/useGetDespesas";
 import type {

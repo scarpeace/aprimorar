@@ -5,8 +5,8 @@ import { FormProvider, useForm } from "react-hook-form";
 import { Button } from "@/components/ui/Button";
 import { SelectInput } from "@/components/ui/forms/SelectInput";
 import { TextInput } from "@/components/ui/forms/TextInput";
-import { useUserMutations } from "@/hooks/use-user-mutations";
-import { userFormSchema, type UserFormData } from "@/lib/validators/user-form-schema";
+import { useUserMutations } from "@/features/usuarios/hooks/use-user-mutations";
+import { userFormSchema, type UserFormData } from "@/features/usuarios/schemas/user-form-schema";
 
 type UserFormProps = {
   onSuccess: () => void;

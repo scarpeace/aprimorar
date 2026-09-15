@@ -7,9 +7,9 @@ import type { DatesSetArg, EventClickArg, EventInput } from "@fullcalendar/core"
 import type FullCalendar from "@fullcalendar/react";
 import type { CalendarioAtendimentosResponse } from "@/lib/api/generated/types/CalendarioAtendimentosResponse";
 import { useGetCalendarioAtendimentos } from "@/lib/api/generated/hooks/atendimento/useGetCalendarioAtendimentos";
-import { CalendarDesktop } from "@/components/dashboard/CalendarDesktop";
-import { CalendarMobile } from "@/components/dashboard/CalendarMobile";
-import type { SharedCalendarProps } from "@/components/dashboard/calendar-shared";
+import { CalendarDesktop } from "@/features/atendimentos/components/calendarios/CalendarDesktop";
+import { CalendarMobile } from "@/features/atendimentos/components/calendarios/CalendarMobile";
+import type { SharedCalendarProps } from "@/features/atendimentos/components/calendarios/calendar-shared";
 import { ErrorCard } from "@/components/ui/ErrorCard";
 import { getFriendlyErrorMessage } from "@/lib/api/api-error";
 import { getAtendimentoCalendarColor, tipoAtendimentoLabels } from "@/lib/constants/atendimento-constants";

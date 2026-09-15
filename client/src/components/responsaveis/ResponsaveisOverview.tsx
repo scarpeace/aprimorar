@@ -12,7 +12,7 @@ import { PageLoading } from "@/components/ui/PageLoading";
 import { Button } from "@/components/ui/Button";
 import { SearchInput } from "@/components/ui/SearchInput";
 import { TablePagination } from "@/components/ui/TablePagination";
-import { useDebounce } from "@/hooks/useDebounce";
+import { useDebounce } from "@/lib/hooks/use-debounce";
 import { formatCpf, formatPhone } from "@/lib/utils/formatter";
 
 const PAGE_SIZE = 10;

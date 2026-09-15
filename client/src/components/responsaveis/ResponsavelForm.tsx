@@ -8,7 +8,7 @@ import { DateInput } from "@/components/ui/forms/DateInput";
 import { MaskedInput } from "@/components/ui/forms/MaskedInput";
 import { TextInput } from "@/components/ui/forms/TextInput";
 import { useResponsavelMutations } from "@/hooks/use-responsavel-mutations";
-import { responsavelFormSchema, type ResponsavelFormData } from "@/lib/validators/responsavel-form-schema";
+import { responsavelFormSchema, type ResponsavelFormData } from "@/features/alunos/schemas/responsavel-form-schema";
 
 type ResponsavelFormProps = {
   initialData?: ResponsavelResponseDTO;

@@ -11,7 +11,7 @@ import type {
 } from "@/lib/api/generated/types/AtendimentoResponse";
 import { useGetAtendimentos } from "@/lib/api/generated/hooks/atendimento/useGetAtendimentos";
 import { Modal } from "@/components/ui/Modal";
-import { useDebounce } from "@/hooks/useDebounce";
+import { useDebounce } from "@/lib/hooks/use-debounce";
 
 const PAGE_SIZE = 20;
 

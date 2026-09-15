@@ -9,7 +9,7 @@ import { useAuthMutations } from "@/auth/hooks/use-auth-mutations";
 import {
   loginFormSchema,
   type LoginFormData,
-} from "@/lib/validators/login-form-schema";
+} from "@/auth/schemas/login-form-schema";
 
 export function LoginForm() {
   const router = useRouter();

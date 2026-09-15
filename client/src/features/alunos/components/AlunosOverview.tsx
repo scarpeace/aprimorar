@@ -13,7 +13,7 @@ import { Button } from "@/components/ui/Button";
 import { SearchInput } from "@/components/ui/SearchInput";
 import { TablePagination } from "@/components/ui/TablePagination";
 import { Toggle } from "@/components/ui/Toggle";
-import { useDebounce } from "@/hooks/useDebounce";
+import { useDebounce } from "@/lib/hooks/use-debounce";
 import { formatCpf } from "@/lib/utils/formatter";
 
 const PAGE_SIZE = 10;
