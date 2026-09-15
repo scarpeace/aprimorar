@@ -1,4 +1,4 @@
-import { DespesasOverview } from "@/components/despesas/DespesasOverview";
+import { DespesasOverview } from "@/features/despesas/components/DespesasOverview";
 
 export default function DespesasPage() {
   return (

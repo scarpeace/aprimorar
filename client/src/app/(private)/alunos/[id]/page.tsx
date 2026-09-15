@@ -1,5 +1,5 @@
-import { AlunoAtendimentos } from "@/components/alunos/AlunoAtendimentos";
-import { AlunoInfo } from "@/components/alunos/AlunoInfo";
+import { AlunoAtendimentos } from "@/features/alunos/components/AlunoAtendimentos";
+import { AlunoInfo } from "@/features/alunos/components/AlunoInfo";
 
 export default async function AlunoPage({
   params,

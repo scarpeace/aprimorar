@@ -8,13 +8,13 @@ import { MonetaryInput } from "@/components/ui/forms/MonetaryInput";
 import { SelectInput } from "@/components/ui/forms/SelectInput";
 import { TextAreaInput } from "@/components/ui/forms/TextAreaInput";
 import { TextInput } from "@/components/ui/forms/TextInput";
-import { useDespesaMutations } from "@/hooks/use-despesa-mutations";
+import { useDespesaMutations } from "@/features/despesas/hooks/use-despesa-mutations";
 import {
   createCategoriaDespesaOptions,
   createFormaPagamentoDespesaOptions,
 } from "@/lib/constants/despesa-constants";
 import type { DespesaResponse } from "@/lib/api/generated/types/DespesaResponse";
-import { despesaFormSchema, type DespesaFormData } from "@/lib/validators/despesa-form-schema";
+import { despesaFormSchema, type DespesaFormData } from "@/features/despesas/schemas/despesa-form-schema";
 
 type DespesaFormProps = {
   initialData?: DespesaResponse;

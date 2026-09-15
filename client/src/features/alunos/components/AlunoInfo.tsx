@@ -4,7 +4,7 @@ import Link from "next/link";
 import { Archive, ArchiveRestore, PencilLine, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { AlunoForm } from "@/components/alunos/AlunoForm";
+import { AlunoForm } from "@/features/alunos/components/AlunoForm";
 import { useGetAlunoById } from "@/lib/api/generated/hooks/aluno/useGetAlunoById";
 import { useGetResponsavelById } from "@/lib/api/generated/hooks/responsavel/useGetResponsavelById";
 import { Badge } from "@/components/ui/Badge";
@@ -13,9 +13,9 @@ import { DetailField } from "@/components/ui/DetailField";
 import { ErrorCard } from "@/components/ui/ErrorCard";
 import { Modal } from "@/components/ui/Modal";
 import { PageLoading } from "@/components/ui/PageLoading";
-import { useAlunoMutations } from "@/hooks/use-aluno-mutations";
+import { useAlunoMutations } from "@/features/alunos/hooks/use-aluno-mutations";
 import { formatCpf, formatDate, formatPhone, formatZip } from "@/lib/utils/formatter";
-import { LoadingSpinner } from "../ui/LoadingSpinner";
+import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 
 export function AlunoInfo({ alunoId }: Readonly<{ alunoId: string }>) {
   const router = useRouter();

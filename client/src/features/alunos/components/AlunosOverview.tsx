@@ -3,7 +3,7 @@
 import { Plus } from "lucide-react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { AlunoForm } from "@/components/alunos/AlunoForm";
+import { AlunoForm } from "@/features/alunos/components/AlunoForm";
 import { useGetAlunos } from "@/lib/api/generated/hooks/aluno/useGetAlunos";
 import { EmptyCard } from "@/components/ui/EmptyCard";
 import { ErrorCard } from "@/components/ui/ErrorCard";

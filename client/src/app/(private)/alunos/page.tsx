@@ -1,5 +1,5 @@
-import { AlunosKpis } from "@/components/alunos/AlunosKpis";
-import { AlunosOverview } from "@/components/alunos/AlunosOverview";
+import { AlunosKpis } from "@/features/alunos/components/AlunosKpis";
+import { AlunosOverview } from "@/features/alunos/components/AlunosOverview";
 import { ResponsaveisOverview } from "@/components/responsaveis/ResponsaveisOverview";
 
 export default function AlunosPage() {

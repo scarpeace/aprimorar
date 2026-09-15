@@ -10,9 +10,9 @@ import { DateInput } from "@/components/ui/forms/DateInput";
 import { MaskedInput } from "@/components/ui/forms/MaskedInput";
 import { SelectInput } from "@/components/ui/forms/SelectInput";
 import { TextInput } from "@/components/ui/forms/TextInput";
-import { useAlunoMutations } from "@/hooks/use-aluno-mutations";
+import { useAlunoMutations } from "@/features/alunos/hooks/use-aluno-mutations";
 import { BRAZILIAN_STATES } from "@/lib/constants/address-constants";
-import { alunoFormSchema, type AlunoFormData } from "@/lib/validators/aluno-form-schema";
+import { alunoFormSchema, type AlunoFormData } from "@/features/alunos/schemas/aluno-form-schema";
 
 type AlunoFormProps = {
   initialData?: AlunoResponseDTO;
