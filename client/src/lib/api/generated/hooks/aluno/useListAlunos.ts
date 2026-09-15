@@ -3,7 +3,7 @@
  * Do not edit manually.
  */
 
-import fetch from "@/lib/backend/client";
+import fetch from "@/lib/api/kubb-client";
 import type {
   ListAlunosQueryResponse,
   ListAlunos400,
@@ -12,17 +12,17 @@ import type {
   ListAlunos409,
   ListAlunos500,
 } from "../../types/ListAlunos.ts";
-import type { Client, RequestConfig, ResponseErrorConfig } from "@/lib/backend/client";
+import type { Client, RequestConfig, ResponseErrorConfig } from "@/lib/api/kubb-client";
 import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from "@tanstack/react-query";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
-export const listAlunosQueryKey = () => [{ url: "/v1/alunos/options" }] as const;
+export const listAlunosQueryKey = () => [{ url: "/alunos/options" }] as const;
 
 export type ListAlunosQueryKey = ReturnType<typeof listAlunosQueryKey>;
 
 /**
  * @description Retorna uma lista de opções de alunos.
- * {@link /v1/alunos/options}
+ * {@link /alunos/options}
  */
 export async function listAlunos(config: Partial<RequestConfig> & { client?: Client } = {}) {
   const { client: request = fetch, ...requestConfig } = config;
@@ -31,7 +31,7 @@ export async function listAlunos(config: Partial<RequestConfig> & { client?: Cli
     ListAlunosQueryResponse,
     ResponseErrorConfig<ListAlunos400 | ListAlunos401 | ListAlunos404 | ListAlunos409 | ListAlunos500>,
     unknown
-  >({ method: "GET", url: `/v1/alunos/options`, ...requestConfig });
+  >({ method: "GET", url: `/alunos/options`, ...requestConfig });
   return res.data;
 }
 
@@ -52,7 +52,7 @@ export function listAlunosQueryOptions(config: Partial<RequestConfig> & { client
 
 /**
  * @description Retorna uma lista de opções de alunos.
- * {@link /v1/alunos/options}
+ * {@link /alunos/options}
  */
 export function useListAlunos<
   TData = ListAlunosQueryResponse,

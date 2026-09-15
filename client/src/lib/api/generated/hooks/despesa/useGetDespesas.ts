@@ -3,7 +3,7 @@
  * Do not edit manually.
  */
 
-import fetch from "@/lib/backend/client";
+import fetch from "@/lib/api/kubb-client";
 import type {
   GetDespesasQueryResponse,
   GetDespesasQueryParams,
@@ -11,18 +11,18 @@ import type {
   GetDespesas401,
   GetDespesas500,
 } from "../../types/GetDespesas.ts";
-import type { Client, RequestConfig, ResponseErrorConfig } from "@/lib/backend/client";
+import type { Client, RequestConfig, ResponseErrorConfig } from "@/lib/api/kubb-client";
 import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from "@tanstack/react-query";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
 export const getDespesasQueryKey = (params?: GetDespesasQueryParams) =>
-  [{ url: "/v1/despesas" }, ...(params ? [params] : [])] as const;
+  [{ url: "/despesas" }, ...(params ? [params] : [])] as const;
 
 export type GetDespesasQueryKey = ReturnType<typeof getDespesasQueryKey>;
 
 /**
  * @description Lista despesas com paginação, ordenação e filtros opcionais
- * {@link /v1/despesas}
+ * {@link /despesas}
  */
 export async function getDespesas(params?: GetDespesasQueryParams, config: Partial<RequestConfig> & { client?: Client } = {}) {
   const { client: request = fetch, ...requestConfig } = config;
@@ -31,7 +31,7 @@ export async function getDespesas(params?: GetDespesasQueryParams, config: Parti
     GetDespesasQueryResponse,
     ResponseErrorConfig<GetDespesas400 | GetDespesas401 | GetDespesas500>,
     unknown
-  >({ method: "GET", url: `/v1/despesas`, params, ...requestConfig });
+  >({ method: "GET", url: `/despesas`, params, ...requestConfig });
   return res.data;
 }
 
@@ -55,7 +55,7 @@ export function getDespesasQueryOptions(
 
 /**
  * @description Lista despesas com paginação, ordenação e filtros opcionais
- * {@link /v1/despesas}
+ * {@link /despesas}
  */
 export function useGetDespesas<
   TData = GetDespesasQueryResponse,

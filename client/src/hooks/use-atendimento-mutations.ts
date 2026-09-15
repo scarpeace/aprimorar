@@ -12,7 +12,7 @@ import { getAtendimentosQueryKey } from "@/lib/api/generated/hooks/atendimento/u
 import { useTogglePagamentoAluno } from "@/lib/api/generated/hooks/atendimento/useTogglePagamentoAluno";
 import { useToggleRepasseColaborador } from "@/lib/api/generated/hooks/atendimento/useToggleRepasseColaborador";
 import { useUpdateAtendimento } from "@/lib/api/generated/hooks/atendimento/useUpdateAtendimento";
-import { getFriendlyErrorMessage } from "@/lib/backend/client";
+import { getFriendlyErrorMessage } from "@/lib/api/api-error";
 
 export function useAtendimentoMutations() {
   const queryClient = useQueryClient();

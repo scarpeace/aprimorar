@@ -13,8 +13,6 @@ import {
   Receipt,
   ShieldUser,
 } from "lucide-react";
-import { LogoutButton } from "@/features/auth/LogoutButton";
-import type { AuthUser } from "@/features/auth/types";
 
 const navLinkBase = "rounded-lg border px-3 py-2 text-sm font-semibold transition";
 const navLinkActive = "border-primary/25 bg-base-200 text-base-content shadow-sm";
@@ -37,19 +35,8 @@ function NavLabel({ icon: Icon, label }: Readonly<{ icon: typeof LayoutDashboard
   );
 }
 
-function UserSummary({ user }: Readonly<{ user: AuthUser }>) {
-  return (
-    <div className="px-3 py-2">
-      <p className="truncate text-xs font-semibold text-base-content/60">{user.username}</p>
-      <p className="text-xs uppercase tracking-wider text-base-content/40">{user.role}</p>
-    </div>
-  );
-}
-
-export function Nav({ children, user }: Readonly<{ children: ReactNode; user: AuthUser }>) {
+export function Nav({ children }: Readonly<{ children: ReactNode }>) {
   const pathname = usePathname();
-  const isAdmin = user.role === "ADMIN";
-  const canAccessDespesas = isAdmin || user.role === "COLABORADOR";
 
   return (
     <div className="min-h-screen bg-base-200">
@@ -85,29 +72,15 @@ export function Nav({ children, user }: Readonly<{ children: ReactNode; user: Au
                     <NavLabel icon={CalendarDays} label="Atendimentos" />
                   </Link>
                 </li>
-                {canAccessDespesas ? (
-                  <li>
-                    <Link href="/despesas" className={getNavLinkClass(pathname, "/despesas")}>
-                      <NavLabel icon={Receipt} label="Despesas" />
-                    </Link>
-                  </li>
-                ) : null}
-                {isAdmin ? (
-                  <li>
-                    <Link href="/admin" className={getNavLinkClass(pathname, "/admin")}>
-                      <NavLabel icon={ShieldUser} label="Admin" />
-                    </Link>
-                  </li>
-                ) : null}
-
-                <li className="mt-2 border-t border-base-300 pt-2">
-                  <div className="pointer-events-none p-0">
-                    <UserSummary user={user} />
-                  </div>
+                <li>
+                  <Link href="/despesas" className={getNavLinkClass(pathname, "/despesas")}>
+                    <NavLabel icon={Receipt} label="Despesas" />
+                  </Link>
                 </li>
-
-                <li className="mt-1 px-1">
-                  <LogoutButton />
+                <li>
+                  <Link href="/admin" className={getNavLinkClass(pathname, "/admin")}>
+                    <NavLabel icon={ShieldUser} label="Admin" />
+                  </Link>
                 </li>
               </ul>
             </div>
@@ -139,29 +112,20 @@ export function Nav({ children, user }: Readonly<{ children: ReactNode; user: Au
                   <NavLabel icon={CalendarDays} label="Atendimentos" />
                 </Link>
               </li>
-              {canAccessDespesas ? (
-                <li>
-                  <Link href="/despesas" className={getNavLinkClass(pathname, "/despesas")}>
-                    <NavLabel icon={Receipt} label="Despesas" />
-                  </Link>
-                </li>
-              ) : null}
-              {isAdmin ? (
-                <li>
-                  <Link href="/admin" className={getNavLinkClass(pathname, "/admin")}>
-                    <NavLabel icon={ShieldUser} label="Admin" />
-                  </Link>
-                </li>
-              ) : null}
+              <li>
+                <Link href="/despesas" className={getNavLinkClass(pathname, "/despesas")}>
+                  <NavLabel icon={Receipt} label="Despesas" />
+                </Link>
+              </li>
+              <li>
+                <Link href="/admin" className={getNavLinkClass(pathname, "/admin")}>
+                  <NavLabel icon={ShieldUser} label="Admin" />
+                </Link>
+              </li>
             </ul>
           </div>
 
-          <div className="navbar-end hidden w-auto items-center gap-3 lg:flex">
-            <div className="text-right">
-              <UserSummary user={user} />
-            </div>
-            <LogoutButton compact />
-          </div>
+
         </div>
       </header>
 

@@ -3,7 +3,7 @@
  * Do not edit manually.
  */
 
-import fetch from "@/lib/backend/client";
+import fetch from "@/lib/api/kubb-client";
 import type {
   FindColaboradorByIdQueryResponse,
   FindColaboradorByIdPathParams,
@@ -11,18 +11,18 @@ import type {
   FindColaboradorById404,
   FindColaboradorById500,
 } from "../../types/FindColaboradorById.ts";
-import type { Client, RequestConfig, ResponseErrorConfig } from "@/lib/backend/client";
+import type { Client, RequestConfig, ResponseErrorConfig } from "@/lib/api/kubb-client";
 import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from "@tanstack/react-query";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
 export const findColaboradorByIdQueryKey = (colaboradorId: FindColaboradorByIdPathParams["colaboradorId"]) =>
-  [{ url: "/v1/colaboradores/:colaboradorId", params: { colaboradorId: colaboradorId } }] as const;
+  [{ url: "/colaboradores/:colaboradorId", params: { colaboradorId: colaboradorId } }] as const;
 
 export type FindColaboradorByIdQueryKey = ReturnType<typeof findColaboradorByIdQueryKey>;
 
 /**
  * @description Retorna um colaborador por ID.
- * {@link /v1/colaboradores/:colaboradorId}
+ * {@link /colaboradores/:colaboradorId}
  */
 export async function findColaboradorById(
   colaboradorId: FindColaboradorByIdPathParams["colaboradorId"],
@@ -34,7 +34,7 @@ export async function findColaboradorById(
     FindColaboradorByIdQueryResponse,
     ResponseErrorConfig<FindColaboradorById401 | FindColaboradorById404 | FindColaboradorById500>,
     unknown
-  >({ method: "GET", url: `/v1/colaboradores/${colaboradorId}`, ...requestConfig });
+  >({ method: "GET", url: `/colaboradores/${colaboradorId}`, ...requestConfig });
   return res.data;
 }
 
@@ -59,7 +59,7 @@ export function findColaboradorByIdQueryOptions(
 
 /**
  * @description Retorna um colaborador por ID.
- * {@link /v1/colaboradores/:colaboradorId}
+ * {@link /colaboradores/:colaboradorId}
  */
 export function useFindColaboradorById<
   TData = FindColaboradorByIdQueryResponse,

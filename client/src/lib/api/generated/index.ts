@@ -19,13 +19,10 @@ export type { CancelarRepassesIndividuaisMutationKey } from "./hooks/atendimento
 export type { ExcluirAtendimentoIndividualMutationKey } from "./hooks/atendimentos individuais/useExcluirAtendimentoIndividual.ts";
 export type { RegistrarPagamentoCobrancasIndividuaisMutationKey } from "./hooks/atendimentos individuais/useRegistrarPagamentoCobrancasIndividuais.ts";
 export type { RegistrarRepassesIndividuaisMutationKey } from "./hooks/atendimentos individuais/useRegistrarRepassesIndividuais.ts";
-export type { ActivateUserMutationKey } from "./hooks/auth/useActivateUser.ts";
-export type { CreateUserMutationKey } from "./hooks/auth/useCreateUser.ts";
-export type { DeactivateUserMutationKey } from "./hooks/auth/useDeactivateUser.ts";
-export type { DeleteUserMutationKey } from "./hooks/auth/useDeleteUser.ts";
-export type { ListUsersQueryKey } from "./hooks/auth/useListUsers.ts";
-export type { LoginMutationKey } from "./hooks/auth/useLogin.ts";
-export type { MeQueryKey } from "./hooks/auth/useMe.ts";
+export type { GetCurrentUserQueryKey } from "./hooks/autentica\u00E7\u00E3o/useGetCurrentUser.ts";
+export type { LoginMutationKey } from "./hooks/autentica\u00E7\u00E3o/useLogin.ts";
+export type { LogoutMutationKey } from "./hooks/autentica\u00E7\u00E3o/useLogout.ts";
+export type { RefreshAccessTokenMutationKey } from "./hooks/autentica\u00E7\u00E3o/useRefreshAccessToken.ts";
 export type { ActivateColaboradorMutationKey } from "./hooks/colaborador/useActivateColaborador.ts";
 export type { CreateColaboradorMutationKey } from "./hooks/colaborador/useCreateColaborador.ts";
 export type { DeactivateColaboradorMutationKey } from "./hooks/colaborador/useDeactivateColaborador.ts";
@@ -60,16 +57,6 @@ export type {
   ActivateColaboradorMutationResponse,
   ActivateColaboradorPathParams,
 } from "./types/ActivateColaborador.ts";
-export type {
-  ActivateUser204,
-  ActivateUser401,
-  ActivateUser404,
-  ActivateUser409,
-  ActivateUser500,
-  ActivateUserMutation,
-  ActivateUserMutationResponse,
-  ActivateUserPathParams,
-} from "./types/ActivateUser.ts";
 export type {
   AgendarAtendimentoIndividual201,
   AgendarAtendimentoIndividual400,
@@ -107,8 +94,7 @@ export type {
   AtualizarAtendimentoIndividualMutationResponse,
   AtualizarAtendimentoIndividualPathParams,
 } from "./types/AtualizarAtendimentoIndividual.ts";
-export type { AuthRequestDTO } from "./types/AuthRequestDTO.ts";
-export type { AuthResponseDTO } from "./types/AuthResponseDTO.ts";
+export type { AuthMeResponse, AuthMeResponseRoleEnumKey } from "./types/AuthMeResponse.ts";
 export type {
   BuscarAtendimentoIndividualPorId200,
   BuscarAtendimentoIndividualPorId401,
@@ -243,16 +229,6 @@ export type {
   CreateDespesaMutationResponse,
 } from "./types/CreateDespesa.ts";
 export type {
-  CreateUser201,
-  CreateUser400,
-  CreateUser401,
-  CreateUser409,
-  CreateUser500,
-  CreateUserMutation,
-  CreateUserMutationRequest,
-  CreateUserMutationResponse,
-} from "./types/CreateUser.ts";
-export type {
   CriarAluno201,
   CriarAluno400,
   CriarAluno401,
@@ -284,16 +260,6 @@ export type {
   DeactivateColaboradorPathParams,
 } from "./types/DeactivateColaborador.ts";
 export type {
-  DeactivateUser204,
-  DeactivateUser401,
-  DeactivateUser404,
-  DeactivateUser409,
-  DeactivateUser500,
-  DeactivateUserMutation,
-  DeactivateUserMutationResponse,
-  DeactivateUserPathParams,
-} from "./types/DeactivateUser.ts";
-export type {
   DeleteDespesa204,
   DeleteDespesa401,
   DeleteDespesa404,
@@ -302,16 +268,6 @@ export type {
   DeleteDespesaMutationResponse,
   DeleteDespesaPathParams,
 } from "./types/DeleteDespesa.ts";
-export type {
-  DeleteUser204,
-  DeleteUser401,
-  DeleteUser404,
-  DeleteUser409,
-  DeleteUser500,
-  DeleteUserMutation,
-  DeleteUserMutationResponse,
-  DeleteUserPathParams,
-} from "./types/DeleteUser.ts";
 export type {
   DespesaRequest,
   DespesaRequestCategoriaEnumKey,
@@ -384,6 +340,7 @@ export type {
   GetColaboradoresListQuery,
   GetColaboradoresListQueryResponse,
 } from "./types/GetColaboradoresList.ts";
+export type { GetCurrentUser200, GetCurrentUserQuery, GetCurrentUserQueryResponse } from "./types/GetCurrentUser.ts";
 export type {
   GetDespesaById200,
   GetDespesaById401,
@@ -414,17 +371,10 @@ export type {
   ListAlunosQuery,
   ListAlunosQueryResponse,
 } from "./types/ListAlunos.ts";
-export type { ListUsers200, ListUsers401, ListUsers500, ListUsersQuery, ListUsersQueryResponse } from "./types/ListUsers.ts";
-export type {
-  Login200,
-  Login400,
-  Login401,
-  Login500,
-  LoginMutation,
-  LoginMutationRequest,
-  LoginMutationResponse,
-} from "./types/Login.ts";
-export type { Me200, Me401, Me404, Me500, MePathParams, MeQuery, MeQueryResponse } from "./types/Me.ts";
+export type { Login200, LoginMutation, LoginMutationRequest, LoginMutationResponse } from "./types/Login.ts";
+export type { LoginRequest } from "./types/LoginRequest.ts";
+export type { LoginResponse } from "./types/LoginResponse.ts";
+export type { Logout200, LogoutMutation, LogoutMutationResponse } from "./types/Logout.ts";
 export type {
   PagarDespesa200,
   PagarDespesa401,
@@ -442,6 +392,11 @@ export type { PagedModelColaboradorListResponseDTO } from "./types/PagedModelCol
 export type { PagedModelDespesaResponse } from "./types/PagedModelDespesaResponse.ts";
 export type { PagedModelRepasseIndividualResponse } from "./types/PagedModelRepasseIndividualResponse.ts";
 export type { ProblemDetail } from "./types/ProblemDetail.ts";
+export type {
+  RefreshAccessToken200,
+  RefreshAccessTokenMutation,
+  RefreshAccessTokenMutationResponse,
+} from "./types/RefreshAccessToken.ts";
 export type {
   RegistrarPagamentoCobrancasIndividuais204,
   RegistrarPagamentoCobrancasIndividuais400,
@@ -514,8 +469,6 @@ export type {
   UpdateDespesaMutationResponse,
   UpdateDespesaPathParams,
 } from "./types/UpdateDespesa.ts";
-export type { UserRequestDTO, UserRequestDTORoleEnumKey } from "./types/UserRequestDTO.ts";
-export type { UserResponseDTO, UserResponseDTORoleEnumKey } from "./types/UserResponseDTO.ts";
 export { activateAluno } from "./hooks/aluno/useActivateAluno.ts";
 export { activateAlunoMutationKey } from "./hooks/aluno/useActivateAluno.ts";
 export { activateAlunoMutationOptions } from "./hooks/aluno/useActivateAluno.ts";
@@ -600,34 +553,22 @@ export { registrarRepassesIndividuais } from "./hooks/atendimentos individuais/u
 export { registrarRepassesIndividuaisMutationKey } from "./hooks/atendimentos individuais/useRegistrarRepassesIndividuais.ts";
 export { registrarRepassesIndividuaisMutationOptions } from "./hooks/atendimentos individuais/useRegistrarRepassesIndividuais.ts";
 export { useRegistrarRepassesIndividuais } from "./hooks/atendimentos individuais/useRegistrarRepassesIndividuais.ts";
-export { activateUser } from "./hooks/auth/useActivateUser.ts";
-export { activateUserMutationKey } from "./hooks/auth/useActivateUser.ts";
-export { activateUserMutationOptions } from "./hooks/auth/useActivateUser.ts";
-export { useActivateUser } from "./hooks/auth/useActivateUser.ts";
-export { createUser } from "./hooks/auth/useCreateUser.ts";
-export { createUserMutationKey } from "./hooks/auth/useCreateUser.ts";
-export { createUserMutationOptions } from "./hooks/auth/useCreateUser.ts";
-export { useCreateUser } from "./hooks/auth/useCreateUser.ts";
-export { deactivateUser } from "./hooks/auth/useDeactivateUser.ts";
-export { deactivateUserMutationKey } from "./hooks/auth/useDeactivateUser.ts";
-export { deactivateUserMutationOptions } from "./hooks/auth/useDeactivateUser.ts";
-export { useDeactivateUser } from "./hooks/auth/useDeactivateUser.ts";
-export { deleteUser } from "./hooks/auth/useDeleteUser.ts";
-export { deleteUserMutationKey } from "./hooks/auth/useDeleteUser.ts";
-export { deleteUserMutationOptions } from "./hooks/auth/useDeleteUser.ts";
-export { useDeleteUser } from "./hooks/auth/useDeleteUser.ts";
-export { listUsers } from "./hooks/auth/useListUsers.ts";
-export { listUsersQueryKey } from "./hooks/auth/useListUsers.ts";
-export { listUsersQueryOptions } from "./hooks/auth/useListUsers.ts";
-export { useListUsers } from "./hooks/auth/useListUsers.ts";
-export { login } from "./hooks/auth/useLogin.ts";
-export { loginMutationKey } from "./hooks/auth/useLogin.ts";
-export { loginMutationOptions } from "./hooks/auth/useLogin.ts";
-export { useLogin } from "./hooks/auth/useLogin.ts";
-export { me } from "./hooks/auth/useMe.ts";
-export { meQueryKey } from "./hooks/auth/useMe.ts";
-export { meQueryOptions } from "./hooks/auth/useMe.ts";
-export { useMe } from "./hooks/auth/useMe.ts";
+export { getCurrentUser } from "./hooks/autentica\u00E7\u00E3o/useGetCurrentUser.ts";
+export { getCurrentUserQueryKey } from "./hooks/autentica\u00E7\u00E3o/useGetCurrentUser.ts";
+export { getCurrentUserQueryOptions } from "./hooks/autentica\u00E7\u00E3o/useGetCurrentUser.ts";
+export { useGetCurrentUser } from "./hooks/autentica\u00E7\u00E3o/useGetCurrentUser.ts";
+export { login } from "./hooks/autentica\u00E7\u00E3o/useLogin.ts";
+export { loginMutationKey } from "./hooks/autentica\u00E7\u00E3o/useLogin.ts";
+export { loginMutationOptions } from "./hooks/autentica\u00E7\u00E3o/useLogin.ts";
+export { useLogin } from "./hooks/autentica\u00E7\u00E3o/useLogin.ts";
+export { logout } from "./hooks/autentica\u00E7\u00E3o/useLogout.ts";
+export { logoutMutationKey } from "./hooks/autentica\u00E7\u00E3o/useLogout.ts";
+export { logoutMutationOptions } from "./hooks/autentica\u00E7\u00E3o/useLogout.ts";
+export { useLogout } from "./hooks/autentica\u00E7\u00E3o/useLogout.ts";
+export { refreshAccessToken } from "./hooks/autentica\u00E7\u00E3o/useRefreshAccessToken.ts";
+export { refreshAccessTokenMutationKey } from "./hooks/autentica\u00E7\u00E3o/useRefreshAccessToken.ts";
+export { refreshAccessTokenMutationOptions } from "./hooks/autentica\u00E7\u00E3o/useRefreshAccessToken.ts";
+export { useRefreshAccessToken } from "./hooks/autentica\u00E7\u00E3o/useRefreshAccessToken.ts";
 export { activateColaborador } from "./hooks/colaborador/useActivateColaborador.ts";
 export { activateColaboradorMutationKey } from "./hooks/colaborador/useActivateColaborador.ts";
 export { activateColaboradorMutationOptions } from "./hooks/colaborador/useActivateColaborador.ts";
@@ -687,6 +628,7 @@ export { useUpdateDespesa } from "./hooks/despesa/useUpdateDespesa.ts";
 export { atendimentoIndividualCalendarioResponseTipoEnum } from "./types/AtendimentoIndividualCalendarioResponse.ts";
 export { atendimentoIndividualRequestTipoEnum } from "./types/AtendimentoIndividualRequest.ts";
 export { atendimentoIndividualResponseTipoEnum } from "./types/AtendimentoIndividualResponse.ts";
+export { authMeResponseRoleEnum } from "./types/AuthMeResponse.ts";
 export { buscarAtendimentosIndividuaisQueryParamsTipoEnum } from "./types/BuscarAtendimentosIndividuais.ts";
 export { buscarCobrancasIndividuaisQueryParamsFormaPagamentoEnum } from "./types/BuscarCobrancasIndividuais.ts";
 export { buscarCobrancasIndividuaisQueryParamsStatusEnum } from "./types/BuscarCobrancasIndividuais.ts";
@@ -710,8 +652,6 @@ export { registrarPagamentoIndividualRequestFormaPagamentoEnum } from "./types/R
 export { registrarRepasseIndividualRequestFormaPagamentoEnum } from "./types/RegistrarRepasseIndividualRequest.ts";
 export { repasseIndividualResponseFormaPagamentoEnum } from "./types/RepasseIndividualResponse.ts";
 export { repasseIndividualResponseStatusEnum } from "./types/RepasseIndividualResponse.ts";
-export { userRequestDTORoleEnum } from "./types/UserRequestDTO.ts";
-export { userResponseDTORoleEnum } from "./types/UserResponseDTO.ts";
 export {
   activateAluno204Schema,
   activateAluno400Schema,
@@ -730,15 +670,6 @@ export {
   activateColaboradorMutationResponseSchema,
   activateColaboradorPathParamsSchema,
 } from "./zod/activateColaboradorSchema.ts";
-export {
-  activateUser204Schema,
-  activateUser401Schema,
-  activateUser404Schema,
-  activateUser409Schema,
-  activateUser500Schema,
-  activateUserMutationResponseSchema,
-  activateUserPathParamsSchema,
-} from "./zod/activateUserSchema.ts";
 export {
   agendarAtendimentoIndividual201Schema,
   agendarAtendimentoIndividual400Schema,
@@ -765,8 +696,7 @@ export {
   atualizarAtendimentoIndividualMutationResponseSchema,
   atualizarAtendimentoIndividualPathParamsSchema,
 } from "./zod/atualizarAtendimentoIndividualSchema.ts";
-export { authRequestDTOSchema } from "./zod/authRequestDTOSchema.ts";
-export { authResponseDTOSchema } from "./zod/authResponseDTOSchema.ts";
+export { authMeResponseSchema } from "./zod/authMeResponseSchema.ts";
 export {
   buscarAtendimentoIndividualPorId200Schema,
   buscarAtendimentoIndividualPorId401Schema,
@@ -877,15 +807,6 @@ export {
   createDespesaMutationResponseSchema,
 } from "./zod/createDespesaSchema.ts";
 export {
-  createUser201Schema,
-  createUser400Schema,
-  createUser401Schema,
-  createUser409Schema,
-  createUser500Schema,
-  createUserMutationRequestSchema,
-  createUserMutationResponseSchema,
-} from "./zod/createUserSchema.ts";
-export {
   criarAluno201Schema,
   criarAluno400Schema,
   criarAluno401Schema,
@@ -914,15 +835,6 @@ export {
   deactivateColaboradorPathParamsSchema,
 } from "./zod/deactivateColaboradorSchema.ts";
 export {
-  deactivateUser204Schema,
-  deactivateUser401Schema,
-  deactivateUser404Schema,
-  deactivateUser409Schema,
-  deactivateUser500Schema,
-  deactivateUserMutationResponseSchema,
-  deactivateUserPathParamsSchema,
-} from "./zod/deactivateUserSchema.ts";
-export {
   deleteDespesa204Schema,
   deleteDespesa401Schema,
   deleteDespesa404Schema,
@@ -930,15 +842,6 @@ export {
   deleteDespesaMutationResponseSchema,
   deleteDespesaPathParamsSchema,
 } from "./zod/deleteDespesaSchema.ts";
-export {
-  deleteUser204Schema,
-  deleteUser401Schema,
-  deleteUser404Schema,
-  deleteUser409Schema,
-  deleteUser500Schema,
-  deleteUserMutationResponseSchema,
-  deleteUserPathParamsSchema,
-} from "./zod/deleteUserSchema.ts";
 export { despesaRequestSchema } from "./zod/despesaRequestSchema.ts";
 export { despesaResponseSchema } from "./zod/despesaResponseSchema.ts";
 export { enderecoRequestDTOSchema } from "./zod/enderecoRequestDTOSchema.ts";
@@ -994,6 +897,7 @@ export {
   getColaboradoresQueryParamsSchema,
   getColaboradoresQueryResponseSchema,
 } from "./zod/getColaboradoresSchema.ts";
+export { getCurrentUser200Schema, getCurrentUserQueryResponseSchema } from "./zod/getCurrentUserSchema.ts";
 export {
   getDespesaById200Schema,
   getDespesaById401Schema,
@@ -1019,21 +923,10 @@ export {
   listAlunos500Schema,
   listAlunosQueryResponseSchema,
 } from "./zod/listAlunosSchema.ts";
-export {
-  listUsers200Schema,
-  listUsers401Schema,
-  listUsers500Schema,
-  listUsersQueryResponseSchema,
-} from "./zod/listUsersSchema.ts";
-export {
-  login200Schema,
-  login400Schema,
-  login401Schema,
-  login500Schema,
-  loginMutationRequestSchema,
-  loginMutationResponseSchema,
-} from "./zod/loginSchema.ts";
-export { me200Schema, me401Schema, me404Schema, me500Schema, mePathParamsSchema, meQueryResponseSchema } from "./zod/meSchema.ts";
+export { loginRequestSchema } from "./zod/loginRequestSchema.ts";
+export { loginResponseSchema } from "./zod/loginResponseSchema.ts";
+export { login200Schema, loginMutationRequestSchema, loginMutationResponseSchema } from "./zod/loginSchema.ts";
+export { logout200Schema, logoutMutationResponseSchema } from "./zod/logoutSchema.ts";
 export {
   pagarDespesa200Schema,
   pagarDespesa401Schema,
@@ -1050,6 +943,7 @@ export { pagedModelColaboradorListResponseDTOSchema } from "./zod/pagedModelCola
 export { pagedModelDespesaResponseSchema } from "./zod/pagedModelDespesaResponseSchema.ts";
 export { pagedModelRepasseIndividualResponseSchema } from "./zod/pagedModelRepasseIndividualResponseSchema.ts";
 export { problemDetailSchema } from "./zod/problemDetailSchema.ts";
+export { refreshAccessToken200Schema, refreshAccessTokenMutationResponseSchema } from "./zod/refreshAccessTokenSchema.ts";
 export {
   registrarPagamentoCobrancasIndividuais204Schema,
   registrarPagamentoCobrancasIndividuais400Schema,
@@ -1107,5 +1001,3 @@ export {
   updateDespesaMutationResponseSchema,
   updateDespesaPathParamsSchema,
 } from "./zod/updateDespesaSchema.ts";
-export { userRequestDTOSchema } from "./zod/userRequestDTOSchema.ts";
-export { userResponseDTOSchema } from "./zod/userResponseDTOSchema.ts";

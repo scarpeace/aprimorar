@@ -9,7 +9,7 @@ import { useDesarquivarColaborador } from "@/lib/api/generated/hooks/colaborador
 import { findColaboradorByIdQueryKey } from "@/lib/api/generated/hooks/colaborador/useFindColaboradorById";
 import { getColaboradoresQueryKey } from "@/lib/api/generated/hooks/colaborador/useGetColaboradores";
 import { useUpdateColaborador } from "@/lib/api/generated/hooks/colaborador/useUpdateColaborador";
-import { getFriendlyErrorMessage } from "@/lib/backend/client";
+import { getFriendlyErrorMessage } from "@/lib/api/api-error";
 
 export function useColaboradorMutations() {
   const queryClient = useQueryClient();

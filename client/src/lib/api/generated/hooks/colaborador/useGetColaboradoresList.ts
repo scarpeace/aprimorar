@@ -3,23 +3,23 @@
  * Do not edit manually.
  */
 
-import fetch from "@/lib/backend/client";
+import fetch from "@/lib/api/kubb-client";
 import type {
   GetColaboradoresListQueryResponse,
   GetColaboradoresList401,
   GetColaboradoresList500,
 } from "../../types/GetColaboradoresList.ts";
-import type { Client, RequestConfig, ResponseErrorConfig } from "@/lib/backend/client";
+import type { Client, RequestConfig, ResponseErrorConfig } from "@/lib/api/kubb-client";
 import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from "@tanstack/react-query";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
-export const getColaboradoresListQueryKey = () => [{ url: "/v1/colaboradores/list" }] as const;
+export const getColaboradoresListQueryKey = () => [{ url: "/colaboradores/list" }] as const;
 
 export type GetColaboradoresListQueryKey = ReturnType<typeof getColaboradoresListQueryKey>;
 
 /**
  * @description Retorna uma lista de opções de colaboradores para dropdown.
- * {@link /v1/colaboradores/list}
+ * {@link /colaboradores/list}
  */
 export async function getColaboradoresList(config: Partial<RequestConfig> & { client?: Client } = {}) {
   const { client: request = fetch, ...requestConfig } = config;
@@ -28,7 +28,7 @@ export async function getColaboradoresList(config: Partial<RequestConfig> & { cl
     GetColaboradoresListQueryResponse,
     ResponseErrorConfig<GetColaboradoresList401 | GetColaboradoresList500>,
     unknown
-  >({ method: "GET", url: `/v1/colaboradores/list`, ...requestConfig });
+  >({ method: "GET", url: `/colaboradores/list`, ...requestConfig });
   return res.data;
 }
 
@@ -49,7 +49,7 @@ export function getColaboradoresListQueryOptions(config: Partial<RequestConfig> 
 
 /**
  * @description Retorna uma lista de opções de colaboradores para dropdown.
- * {@link /v1/colaboradores/list}
+ * {@link /colaboradores/list}
  */
 export function useGetColaboradoresList<
   TData = GetColaboradoresListQueryResponse,

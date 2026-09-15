@@ -3,7 +3,7 @@
  * Do not edit manually.
  */
 
-import fetch from "@/lib/backend/client";
+import fetch from "@/lib/api/kubb-client";
 import type {
   UpdateColaboradorMutationRequest,
   UpdateColaboradorMutationResponse,
@@ -14,17 +14,17 @@ import type {
   UpdateColaborador409,
   UpdateColaborador500,
 } from "../../types/UpdateColaborador.ts";
-import type { Client, RequestConfig, ResponseErrorConfig } from "@/lib/backend/client";
+import type { Client, RequestConfig, ResponseErrorConfig } from "@/lib/api/kubb-client";
 import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
 import { mutationOptions, useMutation } from "@tanstack/react-query";
 
-export const updateColaboradorMutationKey = () => [{ url: "/v1/colaboradores/:colaboradorId" }] as const;
+export const updateColaboradorMutationKey = () => [{ url: "/colaboradores/:colaboradorId" }] as const;
 
 export type UpdateColaboradorMutationKey = ReturnType<typeof updateColaboradorMutationKey>;
 
 /**
  * @description Atualiza um colaborador por ID.
- * {@link /v1/colaboradores/:colaboradorId}
+ * {@link /colaboradores/:colaboradorId}
  */
 export async function updateColaborador(
   colaboradorId: UpdateColaboradorPathParams["colaboradorId"],
@@ -41,7 +41,7 @@ export async function updateColaborador(
       UpdateColaborador400 | UpdateColaborador401 | UpdateColaborador404 | UpdateColaborador409 | UpdateColaborador500
     >,
     UpdateColaboradorMutationRequest
-  >({ method: "PATCH", url: `/v1/colaboradores/${colaboradorId}`, data: requestData, ...requestConfig });
+  >({ method: "PATCH", url: `/colaboradores/${colaboradorId}`, data: requestData, ...requestConfig });
   return res.data;
 }
 
@@ -66,7 +66,7 @@ export function updateColaboradorMutationOptions<TContext = unknown>(
 
 /**
  * @description Atualiza um colaborador por ID.
- * {@link /v1/colaboradores/:colaboradorId}
+ * {@link /colaboradores/:colaboradorId}
  */
 export function useUpdateColaborador<TContext>(
   options: {

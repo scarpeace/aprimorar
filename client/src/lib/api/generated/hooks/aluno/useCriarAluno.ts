@@ -3,7 +3,7 @@
  * Do not edit manually.
  */
 
-import fetch from "@/lib/backend/client";
+import fetch from "@/lib/api/kubb-client";
 import type {
   CriarAlunoMutationRequest,
   CriarAlunoMutationResponse,
@@ -13,17 +13,17 @@ import type {
   CriarAluno409,
   CriarAluno500,
 } from "../../types/CriarAluno.ts";
-import type { Client, RequestConfig, ResponseErrorConfig } from "@/lib/backend/client";
+import type { Client, RequestConfig, ResponseErrorConfig } from "@/lib/api/kubb-client";
 import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
 import { mutationOptions, useMutation } from "@tanstack/react-query";
 
-export const criarAlunoMutationKey = () => [{ url: "/v1/alunos" }] as const;
+export const criarAlunoMutationKey = () => [{ url: "/alunos" }] as const;
 
 export type CriarAlunoMutationKey = ReturnType<typeof criarAlunoMutationKey>;
 
 /**
  * @description Cria um novo aluno com os dados fornecidos.
- * {@link /v1/alunos}
+ * {@link /alunos}
  */
 export async function criarAluno(
   data: CriarAlunoMutationRequest,
@@ -37,7 +37,7 @@ export async function criarAluno(
     CriarAlunoMutationResponse,
     ResponseErrorConfig<CriarAluno400 | CriarAluno401 | CriarAluno404 | CriarAluno409 | CriarAluno500>,
     CriarAlunoMutationRequest
-  >({ method: "POST", url: `/v1/alunos`, data: requestData, ...requestConfig });
+  >({ method: "POST", url: `/alunos`, data: requestData, ...requestConfig });
   return res.data;
 }
 
@@ -60,7 +60,7 @@ export function criarAlunoMutationOptions<TContext = unknown>(
 
 /**
  * @description Cria um novo aluno com os dados fornecidos.
- * {@link /v1/alunos}
+ * {@link /alunos}
  */
 export function useCriarAluno<TContext>(
   options: {

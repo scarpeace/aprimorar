@@ -3,7 +3,7 @@
  * Do not edit manually.
  */
 
-import fetch from "@/lib/backend/client";
+import fetch from "@/lib/api/kubb-client";
 import type {
   DeleteDespesaMutationResponse,
   DeleteDespesaPathParams,
@@ -11,17 +11,17 @@ import type {
   DeleteDespesa404,
   DeleteDespesa500,
 } from "../../types/DeleteDespesa.ts";
-import type { Client, RequestConfig, ResponseErrorConfig } from "@/lib/backend/client";
+import type { Client, RequestConfig, ResponseErrorConfig } from "@/lib/api/kubb-client";
 import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
 import { mutationOptions, useMutation } from "@tanstack/react-query";
 
-export const deleteDespesaMutationKey = () => [{ url: "/v1/despesas/:despesaId" }] as const;
+export const deleteDespesaMutationKey = () => [{ url: "/despesas/:despesaId" }] as const;
 
 export type DeleteDespesaMutationKey = ReturnType<typeof deleteDespesaMutationKey>;
 
 /**
  * @description Exclui uma despesa por ID
- * {@link /v1/despesas/:despesaId}
+ * {@link /despesas/:despesaId}
  */
 export async function deleteDespesa(
   despesaId: DeleteDespesaPathParams["despesaId"],
@@ -33,7 +33,7 @@ export async function deleteDespesa(
     DeleteDespesaMutationResponse,
     ResponseErrorConfig<DeleteDespesa401 | DeleteDespesa404 | DeleteDespesa500>,
     unknown
-  >({ method: "DELETE", url: `/v1/despesas/${despesaId}`, ...requestConfig });
+  >({ method: "DELETE", url: `/despesas/${despesaId}`, ...requestConfig });
   return res.data;
 }
 
@@ -54,7 +54,7 @@ export function deleteDespesaMutationOptions<TContext = unknown>(config: Partial
 
 /**
  * @description Exclui uma despesa por ID
- * {@link /v1/despesas/:despesaId}
+ * {@link /despesas/:despesaId}
  */
 export function useDeleteDespesa<TContext>(
   options: {

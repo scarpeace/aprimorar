@@ -33,7 +33,7 @@ export default defineConfig({
         name: ({ group }) => group.toLowerCase(),
       },
       client: {
-        importPath: "@/lib/backend/client",
+        importPath: "@/lib/api/kubb-client",
       },
       suspense: false,
       paramsCasing: "camelcase",

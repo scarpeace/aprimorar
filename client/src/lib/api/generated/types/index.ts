@@ -19,16 +19,6 @@ export type {
   ActivateColaboradorPathParams,
 } from "./ActivateColaborador.ts";
 export type {
-  ActivateUser204,
-  ActivateUser401,
-  ActivateUser404,
-  ActivateUser409,
-  ActivateUser500,
-  ActivateUserMutation,
-  ActivateUserMutationResponse,
-  ActivateUserPathParams,
-} from "./ActivateUser.ts";
-export type {
   AgendarAtendimentoIndividual201,
   AgendarAtendimentoIndividual400,
   AgendarAtendimentoIndividual401,
@@ -59,8 +49,7 @@ export type {
   AtualizarAtendimentoIndividualMutationResponse,
   AtualizarAtendimentoIndividualPathParams,
 } from "./AtualizarAtendimentoIndividual.ts";
-export type { AuthRequestDTO } from "./AuthRequestDTO.ts";
-export type { AuthResponseDTO } from "./AuthResponseDTO.ts";
+export type { AuthMeResponse, AuthMeResponseRoleEnumKey } from "./AuthMeResponse.ts";
 export type {
   BuscarAtendimentoIndividualPorId200,
   BuscarAtendimentoIndividualPorId401,
@@ -192,16 +181,6 @@ export type {
   CreateDespesaMutationResponse,
 } from "./CreateDespesa.ts";
 export type {
-  CreateUser201,
-  CreateUser400,
-  CreateUser401,
-  CreateUser409,
-  CreateUser500,
-  CreateUserMutation,
-  CreateUserMutationRequest,
-  CreateUserMutationResponse,
-} from "./CreateUser.ts";
-export type {
   CriarAluno201,
   CriarAluno400,
   CriarAluno401,
@@ -233,16 +212,6 @@ export type {
   DeactivateColaboradorPathParams,
 } from "./DeactivateColaborador.ts";
 export type {
-  DeactivateUser204,
-  DeactivateUser401,
-  DeactivateUser404,
-  DeactivateUser409,
-  DeactivateUser500,
-  DeactivateUserMutation,
-  DeactivateUserMutationResponse,
-  DeactivateUserPathParams,
-} from "./DeactivateUser.ts";
-export type {
   DeleteDespesa204,
   DeleteDespesa401,
   DeleteDespesa404,
@@ -251,16 +220,6 @@ export type {
   DeleteDespesaMutationResponse,
   DeleteDespesaPathParams,
 } from "./DeleteDespesa.ts";
-export type {
-  DeleteUser204,
-  DeleteUser401,
-  DeleteUser404,
-  DeleteUser409,
-  DeleteUser500,
-  DeleteUserMutation,
-  DeleteUserMutationResponse,
-  DeleteUserPathParams,
-} from "./DeleteUser.ts";
 export type {
   DespesaRequest,
   DespesaRequestCategoriaEnumKey,
@@ -333,6 +292,7 @@ export type {
   GetColaboradoresListQuery,
   GetColaboradoresListQueryResponse,
 } from "./GetColaboradoresList.ts";
+export type { GetCurrentUser200, GetCurrentUserQuery, GetCurrentUserQueryResponse } from "./GetCurrentUser.ts";
 export type {
   GetDespesaById200,
   GetDespesaById401,
@@ -363,17 +323,10 @@ export type {
   ListAlunosQuery,
   ListAlunosQueryResponse,
 } from "./ListAlunos.ts";
-export type { ListUsers200, ListUsers401, ListUsers500, ListUsersQuery, ListUsersQueryResponse } from "./ListUsers.ts";
-export type {
-  Login200,
-  Login400,
-  Login401,
-  Login500,
-  LoginMutation,
-  LoginMutationRequest,
-  LoginMutationResponse,
-} from "./Login.ts";
-export type { Me200, Me401, Me404, Me500, MePathParams, MeQuery, MeQueryResponse } from "./Me.ts";
+export type { Login200, LoginMutation, LoginMutationRequest, LoginMutationResponse } from "./Login.ts";
+export type { LoginRequest } from "./LoginRequest.ts";
+export type { LoginResponse } from "./LoginResponse.ts";
+export type { Logout200, LogoutMutation, LogoutMutationResponse } from "./Logout.ts";
 export type {
   PagarDespesa200,
   PagarDespesa401,
@@ -391,6 +344,11 @@ export type { PagedModelColaboradorListResponseDTO } from "./PagedModelColaborad
 export type { PagedModelDespesaResponse } from "./PagedModelDespesaResponse.ts";
 export type { PagedModelRepasseIndividualResponse } from "./PagedModelRepasseIndividualResponse.ts";
 export type { ProblemDetail } from "./ProblemDetail.ts";
+export type {
+  RefreshAccessToken200,
+  RefreshAccessTokenMutation,
+  RefreshAccessTokenMutationResponse,
+} from "./RefreshAccessToken.ts";
 export type {
   RegistrarPagamentoCobrancasIndividuais204,
   RegistrarPagamentoCobrancasIndividuais400,
@@ -463,11 +421,10 @@ export type {
   UpdateDespesaMutationResponse,
   UpdateDespesaPathParams,
 } from "./UpdateDespesa.ts";
-export type { UserRequestDTO, UserRequestDTORoleEnumKey } from "./UserRequestDTO.ts";
-export type { UserResponseDTO, UserResponseDTORoleEnumKey } from "./UserResponseDTO.ts";
 export { atendimentoIndividualCalendarioResponseTipoEnum } from "./AtendimentoIndividualCalendarioResponse.ts";
 export { atendimentoIndividualRequestTipoEnum } from "./AtendimentoIndividualRequest.ts";
 export { atendimentoIndividualResponseTipoEnum } from "./AtendimentoIndividualResponse.ts";
+export { authMeResponseRoleEnum } from "./AuthMeResponse.ts";
 export { buscarAtendimentosIndividuaisQueryParamsTipoEnum } from "./BuscarAtendimentosIndividuais.ts";
 export { buscarCobrancasIndividuaisQueryParamsFormaPagamentoEnum } from "./BuscarCobrancasIndividuais.ts";
 export { buscarCobrancasIndividuaisQueryParamsStatusEnum } from "./BuscarCobrancasIndividuais.ts";
@@ -491,5 +448,3 @@ export { registrarPagamentoIndividualRequestFormaPagamentoEnum } from "./Registr
 export { registrarRepasseIndividualRequestFormaPagamentoEnum } from "./RegistrarRepasseIndividualRequest.ts";
 export { repasseIndividualResponseFormaPagamentoEnum } from "./RepasseIndividualResponse.ts";
 export { repasseIndividualResponseStatusEnum } from "./RepasseIndividualResponse.ts";
-export { userRequestDTORoleEnum } from "./UserRequestDTO.ts";
-export { userResponseDTORoleEnum } from "./UserResponseDTO.ts";

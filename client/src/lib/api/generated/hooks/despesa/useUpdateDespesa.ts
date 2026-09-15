@@ -3,7 +3,7 @@
  * Do not edit manually.
  */
 
-import fetch from "@/lib/backend/client";
+import fetch from "@/lib/api/kubb-client";
 import type {
   UpdateDespesaMutationRequest,
   UpdateDespesaMutationResponse,
@@ -14,17 +14,17 @@ import type {
   UpdateDespesa409,
   UpdateDespesa500,
 } from "../../types/UpdateDespesa.ts";
-import type { Client, RequestConfig, ResponseErrorConfig } from "@/lib/backend/client";
+import type { Client, RequestConfig, ResponseErrorConfig } from "@/lib/api/kubb-client";
 import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
 import { mutationOptions, useMutation } from "@tanstack/react-query";
 
-export const updateDespesaMutationKey = () => [{ url: "/v1/despesas/:despesaId" }] as const;
+export const updateDespesaMutationKey = () => [{ url: "/despesas/:despesaId" }] as const;
 
 export type UpdateDespesaMutationKey = ReturnType<typeof updateDespesaMutationKey>;
 
 /**
  * @description Atualiza uma despesa por ID
- * {@link /v1/despesas/:despesaId}
+ * {@link /despesas/:despesaId}
  */
 export async function updateDespesa(
   despesaId: UpdateDespesaPathParams["despesaId"],
@@ -39,7 +39,7 @@ export async function updateDespesa(
     UpdateDespesaMutationResponse,
     ResponseErrorConfig<UpdateDespesa400 | UpdateDespesa401 | UpdateDespesa404 | UpdateDespesa409 | UpdateDespesa500>,
     UpdateDespesaMutationRequest
-  >({ method: "PATCH", url: `/v1/despesas/${despesaId}`, data: requestData, ...requestConfig });
+  >({ method: "PATCH", url: `/despesas/${despesaId}`, data: requestData, ...requestConfig });
   return res.data;
 }
 
@@ -62,7 +62,7 @@ export function updateDespesaMutationOptions<TContext = unknown>(
 
 /**
  * @description Atualiza uma despesa por ID
- * {@link /v1/despesas/:despesaId}
+ * {@link /despesas/:despesaId}
  */
 export function useUpdateDespesa<TContext>(
   options: {

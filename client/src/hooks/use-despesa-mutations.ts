@@ -8,7 +8,7 @@ import { getDespesaByIdQueryKey } from "@/lib/api/generated/hooks/despesa/useGet
 import { getDespesasQueryKey } from "@/lib/api/generated/hooks/despesa/useGetDespesas";
 import { useTogglePagamentoDespesa } from "@/lib/api/generated/hooks/despesa/useTogglePagamentoDespesa";
 import { useUpdateDespesa } from "@/lib/api/generated/hooks/despesa/useUpdateDespesa";
-import { getFriendlyErrorMessage } from "@/lib/backend/client";
+import { getFriendlyErrorMessage } from "@/lib/api/api-error";
 
 export function useDespesaMutations() {
   const queryClient = useQueryClient();

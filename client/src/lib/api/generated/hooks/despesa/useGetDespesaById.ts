@@ -3,7 +3,7 @@
  * Do not edit manually.
  */
 
-import fetch from "@/lib/backend/client";
+import fetch from "@/lib/api/kubb-client";
 import type {
   GetDespesaByIdQueryResponse,
   GetDespesaByIdPathParams,
@@ -11,18 +11,18 @@ import type {
   GetDespesaById404,
   GetDespesaById500,
 } from "../../types/GetDespesaById.ts";
-import type { Client, RequestConfig, ResponseErrorConfig } from "@/lib/backend/client";
+import type { Client, RequestConfig, ResponseErrorConfig } from "@/lib/api/kubb-client";
 import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from "@tanstack/react-query";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
 export const getDespesaByIdQueryKey = (despesaId: GetDespesaByIdPathParams["despesaId"]) =>
-  [{ url: "/v1/despesas/:despesaId", params: { despesaId: despesaId } }] as const;
+  [{ url: "/despesas/:despesaId", params: { despesaId: despesaId } }] as const;
 
 export type GetDespesaByIdQueryKey = ReturnType<typeof getDespesaByIdQueryKey>;
 
 /**
  * @description Retorna uma despesa por ID
- * {@link /v1/despesas/:despesaId}
+ * {@link /despesas/:despesaId}
  */
 export async function getDespesaById(
   despesaId: GetDespesaByIdPathParams["despesaId"],
@@ -34,7 +34,7 @@ export async function getDespesaById(
     GetDespesaByIdQueryResponse,
     ResponseErrorConfig<GetDespesaById401 | GetDespesaById404 | GetDespesaById500>,
     unknown
-  >({ method: "GET", url: `/v1/despesas/${despesaId}`, ...requestConfig });
+  >({ method: "GET", url: `/despesas/${despesaId}`, ...requestConfig });
   return res.data;
 }
 
@@ -59,7 +59,7 @@ export function getDespesaByIdQueryOptions(
 
 /**
  * @description Retorna uma despesa por ID
- * {@link /v1/despesas/:despesaId}
+ * {@link /despesas/:despesaId}
  */
 export function useGetDespesaById<
   TData = GetDespesaByIdQueryResponse,

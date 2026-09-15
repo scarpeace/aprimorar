@@ -8,7 +8,7 @@ import { useUpdateResponsavel } from "@/lib/api/generated/hooks/responsavel/useU
 import { getResponsaveisQueryKey } from "@/lib/api/generated/hooks/responsavel/useGetResponsaveis";
 import { getResponsavelByIdQueryKey } from "@/lib/api/generated/hooks/responsavel/useGetResponsavelById";
 import { listResponsaveisQueryKey } from "@/lib/api/generated/hooks/responsavel/useListResponsaveis";
-import { getFriendlyErrorMessage } from "@/lib/backend/client";
+import { getFriendlyErrorMessage } from "@/lib/api/api-error";
 
 export function useResponsavelMutations() {
   const queryClient = useQueryClient();

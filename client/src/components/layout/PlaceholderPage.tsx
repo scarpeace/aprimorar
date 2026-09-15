@@ -16,9 +16,7 @@ export function PlaceholderPage({ title, description }: Readonly<PlaceholderPage
         <Link className="btn btn-primary" href="/">
           Ir para dashboard
         </Link>
-        <Link className="btn btn-outline" href="/login">
-          Ver login placeholder
-        </Link>
+
       </div>
     </section>
   );

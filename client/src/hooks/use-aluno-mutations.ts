@@ -10,7 +10,7 @@ import { useUpdateAluno } from "@/lib/api/generated/hooks/aluno/useUpdateAluno";
 import { getAlunoByIdQueryKey } from "@/lib/api/generated/hooks/aluno/useGetAlunoById";
 import { getAlunosQueryKey } from "@/lib/api/generated/hooks/aluno/useGetAlunos";
 import { getAlunosKpisQueryKey } from "@/lib/api/generated/hooks/aluno/useGetAlunosKpis";
-import { getFriendlyErrorMessage } from "@/lib/backend/client";
+import { getFriendlyErrorMessage } from "@/lib/api/api-error";
 
 export function useAlunoMutations() {
   const queryClient = useQueryClient();

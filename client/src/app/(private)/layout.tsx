@@ -1,14 +1,11 @@
 import type { ReactNode } from "react";
 import { Nav } from "@/components/layout/Nav";
-import { requireSession } from "@/features/auth/session";
 
-export default async function PrivateLayout({
+export default function PrivateLayout({
   children,
 }: Readonly<{ children: ReactNode }>) {
-  const session = await requireSession();
-
   return (
-    <Nav user={session.user}>
+    <Nav>
       <div className="container">
         {children}
       </div>
