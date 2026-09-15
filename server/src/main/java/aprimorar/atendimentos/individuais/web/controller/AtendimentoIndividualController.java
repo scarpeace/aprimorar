@@ -41,7 +41,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/atendimentos-individuais")
-@Tag(name = "Atendimentos individuais")
+@Tag(
+    name = "Atendimentos individuais",
+    description = "APIs para gestão de atendimentos, cobranças e repasses individuais"
+)
 @CommonProblemResponses
 public class AtendimentoIndividualController {
 

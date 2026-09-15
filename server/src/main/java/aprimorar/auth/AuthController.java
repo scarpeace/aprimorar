@@ -5,6 +5,9 @@ import aprimorar.auth.dto.LoginRequest;
 import aprimorar.auth.dto.LoginResponse;
 import aprimorar.auth.dto.LoginResult;
 import aprimorar.auth.exception.AuthException;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirements;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import java.time.Duration;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/auth")
+@Tag(name = "Autenticação", description = "APIs de autenticação e sessão")
 public class AuthController {
 
     private final AuthService authService;
@@ -39,6 +43,8 @@ public class AuthController {
     }
 
     @PostMapping("/login")
+    @Operation(operationId = "login", description = "Autentica o usuário e retorna um access token JWT.")
+    @SecurityRequirements
     public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request) {
         LoginResult result = authService.login(request);
         ResponseCookie cookie = createRefreshCookie(result.refreshToken());
@@ -50,6 +56,8 @@ public class AuthController {
     }
 
     @PostMapping("/refresh")
+    @Operation(operationId = "refreshAccessToken", description = "Renova o access token usando o refresh token armazenado no cookie.")
+    @SecurityRequirements
     public LoginResponse refresh(
         @CookieValue(value = "refresh_token", required = false) String refreshToken
     ) {
@@ -61,6 +69,8 @@ public class AuthController {
     }
 
     @PostMapping("/logout")
+    @Operation(operationId = "logout", description = "Encerra a sessão e invalida o refresh token.")
+    @SecurityRequirements
     public ResponseEntity<Void> logout(
         @CookieValue(value = "refresh_token", required = false) String refreshToken
     ) {
@@ -75,6 +85,7 @@ public class AuthController {
     }
 
     @GetMapping("/me")
+    @Operation(operationId = "getCurrentUser", description = "Retorna os dados do usuário autenticado.")
     public AuthMeResponse me(@AuthenticationPrincipal Jwt jwt) {
         return authService.me(UUID.fromString(jwt.getSubject()));
     }
