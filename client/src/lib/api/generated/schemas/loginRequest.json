@@ -1,0 +1,9 @@
+{
+  "required": ["email", "password"],
+  "type": "object",
+  "properties": {
+    "email": { "minLength": 1, "type": "string", "description": "E-mail do usuário" },
+    "password": { "minLength": 1, "type": "string", "description": "Senha do usuário", "format": "password" }
+  },
+  "x-readme-ref-name": "LoginRequest"
+}

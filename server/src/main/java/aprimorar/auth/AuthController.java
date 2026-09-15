@@ -8,6 +8,7 @@ import aprimorar.auth.exception.AuthException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import io.swagger.v3.oas.annotations.tags.Tag;
+
 import java.time.Duration;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Value;
@@ -45,7 +46,7 @@ public class AuthController {
     @PostMapping("/login")
     @Operation(operationId = "login", description = "Autentica o usuário e retorna um access token JWT.")
     @SecurityRequirements
-    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request) {
+    public ResponseEntity<LoginResponse> login(@RequestBody @jakarta.validation.Valid LoginRequest request) {
         LoginResult result = authService.login(request);
         ResponseCookie cookie = createRefreshCookie(result.refreshToken());
 

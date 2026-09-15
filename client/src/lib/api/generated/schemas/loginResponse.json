@@ -1,0 +1,6 @@
+{
+  "required": ["accessToken"],
+  "type": "object",
+  "properties": { "accessToken": { "type": "string", "description": "Token de acesso JWT" } },
+  "x-readme-ref-name": "LoginResponse"
+}

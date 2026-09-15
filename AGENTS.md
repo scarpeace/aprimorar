@@ -6,6 +6,13 @@ Documento operacional do repositório. Mantenha este arquivo atualizado quando a
 
 - `server/`: backend Spring Boot
 - `client/`: frontend Next.js
+- `.opencode/skills/`: skills locais do opencode
+
+### Skills locais
+
+- `spring-boot-skill` e `spring-modulith-verifier`: práticas Spring Boot (SivaLabs)
+- `vercel-react-best-practices`: otimização de performance React/Next.js (Vercel)
+- `frontend-design`: direção visual e estética de UI (Anthropic)
 
 ## Regra básica
 

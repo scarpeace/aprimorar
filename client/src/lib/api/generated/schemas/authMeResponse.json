@@ -1,0 +1,10 @@
+{
+  "required": ["email", "id", "role"],
+  "type": "object",
+  "properties": {
+    "id": { "type": "string", "description": "ID do usuário", "format": "uuid" },
+    "email": { "type": "string", "description": "E-mail do usuário" },
+    "role": { "type": "string", "description": "Perfil do usuário", "enum": ["ADMIN", "SECRETARIA"] }
+  },
+  "x-readme-ref-name": "AuthMeResponse"
+}

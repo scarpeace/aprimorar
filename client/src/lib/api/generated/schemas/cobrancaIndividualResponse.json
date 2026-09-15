@@ -1,0 +1,19 @@
+{
+  "type": "object",
+  "properties": {
+    "id": { "type": "integer", "format": "int64" },
+    "atendimentoId": { "type": "integer", "format": "int64" },
+    "alunoId": { "type": "string", "format": "uuid" },
+    "valor": { "type": "number" },
+    "status": { "type": "string", "enum": ["PENDENTE", "PAGO"] },
+    "dataPagamento": { "type": "string", "format": "date-time" },
+    "formaPagamento": {
+      "type": "string",
+      "description": "Forma de pagamento",
+      "enum": ["PIX", "DINHEIRO", "CARTAO_CREDITO", "CARTAO_DEBITO", "BOLETO", "TRANSFERENCIA"]
+    },
+    "comprovanteUrl": { "type": "string" }
+  },
+  "description": "Cobrança de aluno",
+  "x-readme-ref-name": "CobrancaIndividualResponse"
+}

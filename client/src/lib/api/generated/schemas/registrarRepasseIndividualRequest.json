@@ -1,0 +1,15 @@
+{
+  "required": ["formaPagamento", "repasseIds"],
+  "type": "object",
+  "properties": {
+    "repasseIds": { "minItems": 1, "type": "array", "items": { "type": "integer", "format": "int64" } },
+    "formaPagamento": {
+      "type": "string",
+      "description": "Forma de pagamento",
+      "enum": ["PIX", "DINHEIRO", "CARTAO_CREDITO", "CARTAO_DEBITO", "BOLETO", "TRANSFERENCIA"]
+    },
+    "comprovanteUrl": { "maxLength": 500, "minLength": 0, "type": "string" }
+  },
+  "description": "Dados para registrar um ou mais repasses individuais",
+  "x-readme-ref-name": "RegistrarRepasseIndividualRequest"
+}

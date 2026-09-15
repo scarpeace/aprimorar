@@ -1,0 +1,11 @@
+{
+  "type": "object",
+  "properties": {
+    "id": { "type": "string", "format": "uuid" },
+    "nome": { "type": "string" },
+    "escola": { "type": "string" },
+    "ativo": { "type": "boolean" }
+  },
+  "description": "Dados resumidos do aluno para listagem",
+  "x-readme-ref-name": "AlunoListResponseDTO"
+}

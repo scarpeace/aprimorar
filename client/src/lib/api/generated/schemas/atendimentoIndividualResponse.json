@@ -1,0 +1,88 @@
+{
+  "required": [
+    "alunoResumo",
+    "cobranca",
+    "colaboradorResumo",
+    "createdAt",
+    "dataHoraFim",
+    "dataHoraInicio",
+    "id",
+    "repasse",
+    "tipo"
+  ],
+  "type": "object",
+  "properties": {
+    "id": { "type": "integer", "description": "Identificador unico do atendimento", "format": "int64" },
+    "tipo": {
+      "type": "string",
+      "description": "Tipo de conteudo ou categoria do atendimento",
+      "example": "MENTORIA",
+      "enum": ["AULA", "MENTORIA", "TERAPIA", "ORIENTACAO_VOCACIONAL", "ENEM", "PAS", "OUTRO"]
+    },
+    "dataHoraInicio": {
+      "type": "string",
+      "description": "Data/hora de inicio do atendimento",
+      "format": "date-time",
+      "example": "2023-11-20T14:00:00Z"
+    },
+    "dataHoraFim": {
+      "type": "string",
+      "description": "Data/hora de fim do atendimento",
+      "format": "date-time",
+      "example": "2023-11-20T16:00:00Z"
+    },
+    "alunoResumo": {
+      "type": "object",
+      "properties": { "id": { "type": "string", "format": "uuid" }, "nome": { "type": "string" } },
+      "description": "Resumo do aluno vinculado ao atendimento",
+      "x-readme-ref-name": "AlunoResumo"
+    },
+    "colaboradorResumo": {
+      "type": "object",
+      "properties": { "id": { "type": "string", "format": "uuid" }, "nome": { "type": "string" } },
+      "description": "Resumo do colaborador vinculado ao atendimento",
+      "x-readme-ref-name": "ColaboradorResumo"
+    },
+    "cobranca": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "integer", "format": "int64" },
+        "valor": { "type": "number" },
+        "status": { "type": "string" },
+        "dataPagamento": { "type": "string", "format": "date-time" },
+        "formaPagamento": { "type": "string" },
+        "comprovanteUrl": { "type": "string" }
+      },
+      "description": "Resumo da cobrança do atendimento",
+      "x-readme-ref-name": "CobrancaResumo"
+    },
+    "repasse": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "integer", "format": "int64" },
+        "valor": { "type": "number" },
+        "status": { "type": "string" },
+        "dataRepasse": { "type": "string", "format": "date-time" },
+        "formaPagamento": { "type": "string" },
+        "comprovanteUrl": { "type": "string" }
+      },
+      "description": "Resumo do repasse do atendimento",
+      "x-readme-ref-name": "RepasseResumo"
+    },
+    "createdAt": {
+      "type": "string",
+      "description": "Data de criacao do atendimento",
+      "format": "date-time",
+      "example": "2024-03-10T15:33:42Z"
+    },
+    "updatedAt": {
+      "type": "string",
+      "description": "Data de atualizacao do atendimento",
+      "format": "date-time",
+      "nullable": true,
+      "example": "2024-03-10T15:33:42Z"
+    }
+  },
+  "description": "Dados do atendimento retornados pela API",
+  "x-readme-ref-name": "AtendimentoIndividualResponse"
+}

@@ -1,0 +1,12 @@
+{
+  "type": "object",
+  "properties": {
+    "type": { "type": "string", "format": "uri" },
+    "title": { "type": "string" },
+    "status": { "type": "integer", "format": "int32" },
+    "detail": { "type": "string" },
+    "instance": { "type": "string", "format": "uri" },
+    "properties": { "type": "object", "additionalProperties": { "type": "object" } }
+  },
+  "x-readme-ref-name": "ProblemDetail"
+}
