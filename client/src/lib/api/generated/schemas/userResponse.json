@@ -1,0 +1,22 @@
+{
+  "required": ["email", "id", "role"],
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Identificador do usuário",
+      "format": "uuid",
+      "example": "550e8400-e29b-41d4-a716-446655440000"
+    },
+    "email": { "type": "string", "description": "E-mail do usuário", "example": "secretaria@aprimorar.com" },
+    "role": {
+      "type": "string",
+      "description": "Perfil de acesso do usuário",
+      "example": "SECRETARIA",
+      "enum": ["ADMIN", "SECRETARIA"]
+    },
+    "enabled": { "type": "boolean", "description": "Indica se o usuário está habilitado", "example": true }
+  },
+  "description": "Dados detalhados de um usuário",
+  "x-readme-ref-name": "UserResponse"
+}

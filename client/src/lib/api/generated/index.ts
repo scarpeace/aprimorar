@@ -37,6 +37,12 @@ export type { GetDespesaByIdQueryKey } from "./hooks/despesa/useGetDespesaById.t
 export type { GetDespesasQueryKey } from "./hooks/despesa/useGetDespesas.ts";
 export type { PagarDespesaMutationKey } from "./hooks/despesa/usePagarDespesa.ts";
 export type { UpdateDespesaMutationKey } from "./hooks/despesa/useUpdateDespesa.ts";
+export type { ActivateUserMutationKey } from "./hooks/usu\u00E1rio/useActivateUser.ts";
+export type { CreateUserMutationKey } from "./hooks/usu\u00E1rio/useCreateUser.ts";
+export type { DeactivateUserMutationKey } from "./hooks/usu\u00E1rio/useDeactivateUser.ts";
+export type { DeleteUserMutationKey } from "./hooks/usu\u00E1rio/useDeleteUser.ts";
+export type { GetUserByIdQueryKey } from "./hooks/usu\u00E1rio/useGetUserById.ts";
+export type { GetUsersQueryKey } from "./hooks/usu\u00E1rio/useGetUsers.ts";
 export type {
   ActivateAluno204,
   ActivateAluno400,
@@ -57,6 +63,15 @@ export type {
   ActivateColaboradorMutationResponse,
   ActivateColaboradorPathParams,
 } from "./types/ActivateColaborador.ts";
+export type {
+  ActivateUser204,
+  ActivateUser401,
+  ActivateUser404,
+  ActivateUser500,
+  ActivateUserMutation,
+  ActivateUserMutationResponse,
+  ActivateUserPathParams,
+} from "./types/ActivateUser.ts";
 export type {
   AgendarAtendimentoIndividual201,
   AgendarAtendimentoIndividual400,
@@ -229,6 +244,16 @@ export type {
   CreateDespesaMutationResponse,
 } from "./types/CreateDespesa.ts";
 export type {
+  CreateUser201,
+  CreateUser400,
+  CreateUser401,
+  CreateUser409,
+  CreateUser500,
+  CreateUserMutation,
+  CreateUserMutationRequest,
+  CreateUserMutationResponse,
+} from "./types/CreateUser.ts";
+export type {
   CriarAluno201,
   CriarAluno400,
   CriarAluno401,
@@ -260,6 +285,15 @@ export type {
   DeactivateColaboradorPathParams,
 } from "./types/DeactivateColaborador.ts";
 export type {
+  DeactivateUser204,
+  DeactivateUser401,
+  DeactivateUser404,
+  DeactivateUser500,
+  DeactivateUserMutation,
+  DeactivateUserMutationResponse,
+  DeactivateUserPathParams,
+} from "./types/DeactivateUser.ts";
+export type {
   DeleteDespesa204,
   DeleteDespesa401,
   DeleteDespesa404,
@@ -268,6 +302,15 @@ export type {
   DeleteDespesaMutationResponse,
   DeleteDespesaPathParams,
 } from "./types/DeleteDespesa.ts";
+export type {
+  DeleteUser204,
+  DeleteUser401,
+  DeleteUser404,
+  DeleteUser500,
+  DeleteUserMutation,
+  DeleteUserMutationResponse,
+  DeleteUserPathParams,
+} from "./types/DeleteUser.ts";
 export type {
   DespesaRequest,
   DespesaRequestCategoriaEnumKey,
@@ -361,6 +404,16 @@ export type {
   GetDespesasQueryParamsFormaPagamentoEnumKey,
   GetDespesasQueryResponse,
 } from "./types/GetDespesas.ts";
+export type {
+  GetUserById200,
+  GetUserById401,
+  GetUserById404,
+  GetUserById500,
+  GetUserByIdPathParams,
+  GetUserByIdQuery,
+  GetUserByIdQueryResponse,
+} from "./types/GetUserById.ts";
+export type { GetUsers200, GetUsers401, GetUsers500, GetUsersQuery, GetUsersQueryResponse } from "./types/GetUsers.ts";
 export type {
   ListAlunos200,
   ListAlunos400,
@@ -469,6 +522,9 @@ export type {
   UpdateDespesaMutationResponse,
   UpdateDespesaPathParams,
 } from "./types/UpdateDespesa.ts";
+export type { UserCreateRequest, UserCreateRequestRoleEnumKey } from "./types/UserCreateRequest.ts";
+export type { UserListResponse, UserListResponseRoleEnumKey } from "./types/UserListResponse.ts";
+export type { UserResponse, UserResponseRoleEnumKey } from "./types/UserResponse.ts";
 export { activateAluno } from "./hooks/aluno/useActivateAluno.ts";
 export { activateAlunoMutationKey } from "./hooks/aluno/useActivateAluno.ts";
 export { activateAlunoMutationOptions } from "./hooks/aluno/useActivateAluno.ts";
@@ -625,6 +681,30 @@ export { updateDespesa } from "./hooks/despesa/useUpdateDespesa.ts";
 export { updateDespesaMutationKey } from "./hooks/despesa/useUpdateDespesa.ts";
 export { updateDespesaMutationOptions } from "./hooks/despesa/useUpdateDespesa.ts";
 export { useUpdateDespesa } from "./hooks/despesa/useUpdateDespesa.ts";
+export { activateUser } from "./hooks/usu\u00E1rio/useActivateUser.ts";
+export { activateUserMutationKey } from "./hooks/usu\u00E1rio/useActivateUser.ts";
+export { activateUserMutationOptions } from "./hooks/usu\u00E1rio/useActivateUser.ts";
+export { useActivateUser } from "./hooks/usu\u00E1rio/useActivateUser.ts";
+export { createUser } from "./hooks/usu\u00E1rio/useCreateUser.ts";
+export { createUserMutationKey } from "./hooks/usu\u00E1rio/useCreateUser.ts";
+export { createUserMutationOptions } from "./hooks/usu\u00E1rio/useCreateUser.ts";
+export { useCreateUser } from "./hooks/usu\u00E1rio/useCreateUser.ts";
+export { deactivateUser } from "./hooks/usu\u00E1rio/useDeactivateUser.ts";
+export { deactivateUserMutationKey } from "./hooks/usu\u00E1rio/useDeactivateUser.ts";
+export { deactivateUserMutationOptions } from "./hooks/usu\u00E1rio/useDeactivateUser.ts";
+export { useDeactivateUser } from "./hooks/usu\u00E1rio/useDeactivateUser.ts";
+export { deleteUser } from "./hooks/usu\u00E1rio/useDeleteUser.ts";
+export { deleteUserMutationKey } from "./hooks/usu\u00E1rio/useDeleteUser.ts";
+export { deleteUserMutationOptions } from "./hooks/usu\u00E1rio/useDeleteUser.ts";
+export { useDeleteUser } from "./hooks/usu\u00E1rio/useDeleteUser.ts";
+export { getUserById } from "./hooks/usu\u00E1rio/useGetUserById.ts";
+export { getUserByIdQueryKey } from "./hooks/usu\u00E1rio/useGetUserById.ts";
+export { getUserByIdQueryOptions } from "./hooks/usu\u00E1rio/useGetUserById.ts";
+export { useGetUserById } from "./hooks/usu\u00E1rio/useGetUserById.ts";
+export { getUsers } from "./hooks/usu\u00E1rio/useGetUsers.ts";
+export { getUsersQueryKey } from "./hooks/usu\u00E1rio/useGetUsers.ts";
+export { getUsersQueryOptions } from "./hooks/usu\u00E1rio/useGetUsers.ts";
+export { useGetUsers } from "./hooks/usu\u00E1rio/useGetUsers.ts";
 export { atendimentoIndividualCalendarioResponseTipoEnum } from "./types/AtendimentoIndividualCalendarioResponse.ts";
 export { atendimentoIndividualRequestTipoEnum } from "./types/AtendimentoIndividualRequest.ts";
 export { atendimentoIndividualResponseTipoEnum } from "./types/AtendimentoIndividualResponse.ts";
@@ -652,6 +732,9 @@ export { registrarPagamentoIndividualRequestFormaPagamentoEnum } from "./types/R
 export { registrarRepasseIndividualRequestFormaPagamentoEnum } from "./types/RegistrarRepasseIndividualRequest.ts";
 export { repasseIndividualResponseFormaPagamentoEnum } from "./types/RepasseIndividualResponse.ts";
 export { repasseIndividualResponseStatusEnum } from "./types/RepasseIndividualResponse.ts";
+export { userCreateRequestRoleEnum } from "./types/UserCreateRequest.ts";
+export { userListResponseRoleEnum } from "./types/UserListResponse.ts";
+export { userResponseRoleEnum } from "./types/UserResponse.ts";
 export {
   activateAluno204Schema,
   activateAluno400Schema,
@@ -670,6 +753,14 @@ export {
   activateColaboradorMutationResponseSchema,
   activateColaboradorPathParamsSchema,
 } from "./zod/activateColaboradorSchema.ts";
+export {
+  activateUser204Schema,
+  activateUser401Schema,
+  activateUser404Schema,
+  activateUser500Schema,
+  activateUserMutationResponseSchema,
+  activateUserPathParamsSchema,
+} from "./zod/activateUserSchema.ts";
 export {
   agendarAtendimentoIndividual201Schema,
   agendarAtendimentoIndividual400Schema,
@@ -807,6 +898,15 @@ export {
   createDespesaMutationResponseSchema,
 } from "./zod/createDespesaSchema.ts";
 export {
+  createUser201Schema,
+  createUser400Schema,
+  createUser401Schema,
+  createUser409Schema,
+  createUser500Schema,
+  createUserMutationRequestSchema,
+  createUserMutationResponseSchema,
+} from "./zod/createUserSchema.ts";
+export {
   criarAluno201Schema,
   criarAluno400Schema,
   criarAluno401Schema,
@@ -835,6 +935,14 @@ export {
   deactivateColaboradorPathParamsSchema,
 } from "./zod/deactivateColaboradorSchema.ts";
 export {
+  deactivateUser204Schema,
+  deactivateUser401Schema,
+  deactivateUser404Schema,
+  deactivateUser500Schema,
+  deactivateUserMutationResponseSchema,
+  deactivateUserPathParamsSchema,
+} from "./zod/deactivateUserSchema.ts";
+export {
   deleteDespesa204Schema,
   deleteDespesa401Schema,
   deleteDespesa404Schema,
@@ -842,6 +950,14 @@ export {
   deleteDespesaMutationResponseSchema,
   deleteDespesaPathParamsSchema,
 } from "./zod/deleteDespesaSchema.ts";
+export {
+  deleteUser204Schema,
+  deleteUser401Schema,
+  deleteUser404Schema,
+  deleteUser500Schema,
+  deleteUserMutationResponseSchema,
+  deleteUserPathParamsSchema,
+} from "./zod/deleteUserSchema.ts";
 export { despesaRequestSchema } from "./zod/despesaRequestSchema.ts";
 export { despesaResponseSchema } from "./zod/despesaResponseSchema.ts";
 export { enderecoRequestDTOSchema } from "./zod/enderecoRequestDTOSchema.ts";
@@ -914,6 +1030,15 @@ export {
   getDespesasQueryParamsSchema,
   getDespesasQueryResponseSchema,
 } from "./zod/getDespesasSchema.ts";
+export {
+  getUserById200Schema,
+  getUserById401Schema,
+  getUserById404Schema,
+  getUserById500Schema,
+  getUserByIdPathParamsSchema,
+  getUserByIdQueryResponseSchema,
+} from "./zod/getUserByIdSchema.ts";
+export { getUsers200Schema, getUsers401Schema, getUsers500Schema, getUsersQueryResponseSchema } from "./zod/getUsersSchema.ts";
 export {
   listAlunos200Schema,
   listAlunos400Schema,
@@ -1001,3 +1126,6 @@ export {
   updateDespesaMutationResponseSchema,
   updateDespesaPathParamsSchema,
 } from "./zod/updateDespesaSchema.ts";
+export { userCreateRequestSchema } from "./zod/userCreateRequestSchema.ts";
+export { userListResponseSchema } from "./zod/userListResponseSchema.ts";
+export { userResponseSchema } from "./zod/userResponseSchema.ts";

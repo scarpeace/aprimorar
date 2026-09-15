@@ -17,6 +17,14 @@ export {
   activateColaboradorPathParamsSchema,
 } from "./activateColaboradorSchema.ts";
 export {
+  activateUser204Schema,
+  activateUser401Schema,
+  activateUser404Schema,
+  activateUser500Schema,
+  activateUserMutationResponseSchema,
+  activateUserPathParamsSchema,
+} from "./activateUserSchema.ts";
+export {
   agendarAtendimentoIndividual201Schema,
   agendarAtendimentoIndividual400Schema,
   agendarAtendimentoIndividual401Schema,
@@ -153,6 +161,15 @@ export {
   createDespesaMutationResponseSchema,
 } from "./createDespesaSchema.ts";
 export {
+  createUser201Schema,
+  createUser400Schema,
+  createUser401Schema,
+  createUser409Schema,
+  createUser500Schema,
+  createUserMutationRequestSchema,
+  createUserMutationResponseSchema,
+} from "./createUserSchema.ts";
+export {
   criarAluno201Schema,
   criarAluno400Schema,
   criarAluno401Schema,
@@ -181,6 +198,14 @@ export {
   deactivateColaboradorPathParamsSchema,
 } from "./deactivateColaboradorSchema.ts";
 export {
+  deactivateUser204Schema,
+  deactivateUser401Schema,
+  deactivateUser404Schema,
+  deactivateUser500Schema,
+  deactivateUserMutationResponseSchema,
+  deactivateUserPathParamsSchema,
+} from "./deactivateUserSchema.ts";
+export {
   deleteDespesa204Schema,
   deleteDespesa401Schema,
   deleteDespesa404Schema,
@@ -188,6 +213,14 @@ export {
   deleteDespesaMutationResponseSchema,
   deleteDespesaPathParamsSchema,
 } from "./deleteDespesaSchema.ts";
+export {
+  deleteUser204Schema,
+  deleteUser401Schema,
+  deleteUser404Schema,
+  deleteUser500Schema,
+  deleteUserMutationResponseSchema,
+  deleteUserPathParamsSchema,
+} from "./deleteUserSchema.ts";
 export { despesaRequestSchema } from "./despesaRequestSchema.ts";
 export { despesaResponseSchema } from "./despesaResponseSchema.ts";
 export { enderecoRequestDTOSchema } from "./enderecoRequestDTOSchema.ts";
@@ -260,6 +293,15 @@ export {
   getDespesasQueryParamsSchema,
   getDespesasQueryResponseSchema,
 } from "./getDespesasSchema.ts";
+export {
+  getUserById200Schema,
+  getUserById401Schema,
+  getUserById404Schema,
+  getUserById500Schema,
+  getUserByIdPathParamsSchema,
+  getUserByIdQueryResponseSchema,
+} from "./getUserByIdSchema.ts";
+export { getUsers200Schema, getUsers401Schema, getUsers500Schema, getUsersQueryResponseSchema } from "./getUsersSchema.ts";
 export {
   listAlunos200Schema,
   listAlunos400Schema,
@@ -347,3 +389,6 @@ export {
   updateDespesaMutationResponseSchema,
   updateDespesaPathParamsSchema,
 } from "./updateDespesaSchema.ts";
+export { userCreateRequestSchema } from "./userCreateRequestSchema.ts";
+export { userListResponseSchema } from "./userListResponseSchema.ts";
+export { userResponseSchema } from "./userResponseSchema.ts";

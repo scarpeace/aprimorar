@@ -59,6 +59,14 @@ public class User implements UserDetails {
         return role;
     }
 
+    public void activate() {
+        this.enabled = true;
+    }
+
+    public void deactivate() {
+        this.enabled = false;
+    }
+
     @Override
     public String getUsername() {
         return email;

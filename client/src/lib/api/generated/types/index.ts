@@ -19,6 +19,15 @@ export type {
   ActivateColaboradorPathParams,
 } from "./ActivateColaborador.ts";
 export type {
+  ActivateUser204,
+  ActivateUser401,
+  ActivateUser404,
+  ActivateUser500,
+  ActivateUserMutation,
+  ActivateUserMutationResponse,
+  ActivateUserPathParams,
+} from "./ActivateUser.ts";
+export type {
   AgendarAtendimentoIndividual201,
   AgendarAtendimentoIndividual400,
   AgendarAtendimentoIndividual401,
@@ -181,6 +190,16 @@ export type {
   CreateDespesaMutationResponse,
 } from "./CreateDespesa.ts";
 export type {
+  CreateUser201,
+  CreateUser400,
+  CreateUser401,
+  CreateUser409,
+  CreateUser500,
+  CreateUserMutation,
+  CreateUserMutationRequest,
+  CreateUserMutationResponse,
+} from "./CreateUser.ts";
+export type {
   CriarAluno201,
   CriarAluno400,
   CriarAluno401,
@@ -212,6 +231,15 @@ export type {
   DeactivateColaboradorPathParams,
 } from "./DeactivateColaborador.ts";
 export type {
+  DeactivateUser204,
+  DeactivateUser401,
+  DeactivateUser404,
+  DeactivateUser500,
+  DeactivateUserMutation,
+  DeactivateUserMutationResponse,
+  DeactivateUserPathParams,
+} from "./DeactivateUser.ts";
+export type {
   DeleteDespesa204,
   DeleteDespesa401,
   DeleteDespesa404,
@@ -220,6 +248,15 @@ export type {
   DeleteDespesaMutationResponse,
   DeleteDespesaPathParams,
 } from "./DeleteDespesa.ts";
+export type {
+  DeleteUser204,
+  DeleteUser401,
+  DeleteUser404,
+  DeleteUser500,
+  DeleteUserMutation,
+  DeleteUserMutationResponse,
+  DeleteUserPathParams,
+} from "./DeleteUser.ts";
 export type {
   DespesaRequest,
   DespesaRequestCategoriaEnumKey,
@@ -313,6 +350,16 @@ export type {
   GetDespesasQueryParamsFormaPagamentoEnumKey,
   GetDespesasQueryResponse,
 } from "./GetDespesas.ts";
+export type {
+  GetUserById200,
+  GetUserById401,
+  GetUserById404,
+  GetUserById500,
+  GetUserByIdPathParams,
+  GetUserByIdQuery,
+  GetUserByIdQueryResponse,
+} from "./GetUserById.ts";
+export type { GetUsers200, GetUsers401, GetUsers500, GetUsersQuery, GetUsersQueryResponse } from "./GetUsers.ts";
 export type {
   ListAlunos200,
   ListAlunos400,
@@ -421,6 +468,9 @@ export type {
   UpdateDespesaMutationResponse,
   UpdateDespesaPathParams,
 } from "./UpdateDespesa.ts";
+export type { UserCreateRequest, UserCreateRequestRoleEnumKey } from "./UserCreateRequest.ts";
+export type { UserListResponse, UserListResponseRoleEnumKey } from "./UserListResponse.ts";
+export type { UserResponse, UserResponseRoleEnumKey } from "./UserResponse.ts";
 export { atendimentoIndividualCalendarioResponseTipoEnum } from "./AtendimentoIndividualCalendarioResponse.ts";
 export { atendimentoIndividualRequestTipoEnum } from "./AtendimentoIndividualRequest.ts";
 export { atendimentoIndividualResponseTipoEnum } from "./AtendimentoIndividualResponse.ts";
@@ -448,3 +498,6 @@ export { registrarPagamentoIndividualRequestFormaPagamentoEnum } from "./Registr
 export { registrarRepasseIndividualRequestFormaPagamentoEnum } from "./RegistrarRepasseIndividualRequest.ts";
 export { repasseIndividualResponseFormaPagamentoEnum } from "./RepasseIndividualResponse.ts";
 export { repasseIndividualResponseStatusEnum } from "./RepasseIndividualResponse.ts";
+export { userCreateRequestRoleEnum } from "./UserCreateRequest.ts";
+export { userListResponseRoleEnum } from "./UserListResponse.ts";
+export { userResponseRoleEnum } from "./UserResponse.ts";

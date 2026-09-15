@@ -1,0 +1,22 @@
+{
+  "required": ["email", "password", "role"],
+  "type": "object",
+  "properties": {
+    "email": { "minLength": 1, "type": "string", "description": "E-mail do usuário", "example": "secretaria@aprimorar.com" },
+    "password": {
+      "minLength": 1,
+      "type": "string",
+      "description": "Senha do usuário",
+      "format": "password",
+      "example": "senha-segura"
+    },
+    "role": {
+      "type": "string",
+      "description": "Perfil de acesso do usuário",
+      "example": "SECRETARIA",
+      "enum": ["ADMIN", "SECRETARIA"]
+    }
+  },
+  "description": "Dados para criação de um usuário",
+  "x-readme-ref-name": "UserCreateRequest"
+}

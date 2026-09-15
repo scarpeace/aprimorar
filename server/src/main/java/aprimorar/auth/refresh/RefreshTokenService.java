@@ -63,6 +63,11 @@ public class RefreshTokenService {
         repository.findByTokenHash(hash(rawToken)).ifPresent(RefreshToken::revoke);
     }
 
+    @Transactional
+    public void revokeAll(UUID userId) {
+        repository.findAllByUserId(userId).forEach(RefreshToken::revoke);
+    }
+
     private String generateRandomToken() {
         byte[] bytes = new byte[32];
         random.nextBytes(bytes);
