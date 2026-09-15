@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { FormProvider, useForm } from "react-hook-form";
 import { Button } from "@/components/ui/Button";
 import { TextInput } from "@/components/ui/forms/TextInput";
-import { useAuthMutations } from "@/hooks/use-auth-mutations";
+import { useAuthMutations } from "@/features/auth/hooks/use-auth-mutations";
 import {
   loginFormSchema,
   type LoginFormData,

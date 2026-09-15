@@ -6,7 +6,8 @@ import { useCreateDespesa } from "@/lib/api/generated/hooks/despesa/useCreateDes
 import { useDeleteDespesa } from "@/lib/api/generated/hooks/despesa/useDeleteDespesa";
 import { getDespesaByIdQueryKey } from "@/lib/api/generated/hooks/despesa/useGetDespesaById";
 import { getDespesasQueryKey } from "@/lib/api/generated/hooks/despesa/useGetDespesas";
-import { useTogglePagamentoDespesa } from "@/lib/api/generated/hooks/despesa/useTogglePagamentoDespesa";
+import { usePagarDespesa } from "@/lib/api/generated/hooks/despesa/usePagarDespesa";
+import { useCancelarPagamentoDespesa } from "@/lib/api/generated/hooks/despesa/useCancelarPagamentoDespesa";
 import { useUpdateDespesa } from "@/lib/api/generated/hooks/despesa/useUpdateDespesa";
 import { getFriendlyErrorMessage } from "@/lib/api/api-error";
 
@@ -61,17 +62,26 @@ export function useDespesaMutations() {
     },
   });
 
-  const togglePagamentoDespesa = useTogglePagamentoDespesa({
+  const payDespesa = usePagarDespesa({
     mutation: {
       onError: (error) => {
-        toast.error(getFriendlyErrorMessage(error) || "Algo deu errado ao alterar o pagamento da despesa");
+        toast.error(getFriendlyErrorMessage(error) || "Algo deu errado ao marcar a despesa como paga");
       },
-      onSuccess: async (despesa) => {
-        toast.success(despesa.dataPagamento ? "Despesa marcada como paga" : "Despesa marcada como pendente");
-        await invalidateDespesas();
-        if (despesa.id) {
-          await invalidateDespesaDetail(despesa.id);
-        }
+      onSuccess: async (_, variables) => {
+        toast.success("Despesa marcada como paga");
+        await Promise.all([invalidateDespesas(), invalidateDespesaDetail(variables.despesaId)]);
+      },
+    },
+  });
+
+  const cancelPaymentDespesa = useCancelarPagamentoDespesa({
+    mutation: {
+      onError: (error) => {
+        toast.error(getFriendlyErrorMessage(error) || "Algo deu errado ao cancelar o pagamento da despesa");
+      },
+      onSuccess: async (_, variables) => {
+        toast.success("Pagamento da despesa cancelado com sucesso");
+        await Promise.all([invalidateDespesas(), invalidateDespesaDetail(variables.despesaId)]);
       },
     },
   });
@@ -80,6 +90,7 @@ export function useDespesaMutations() {
     createDespesa,
     updateDespesa,
     deleteDespesa,
-    togglePagamentoDespesa,
+    payDespesa,
+    cancelPaymentDespesa,
   };
 }

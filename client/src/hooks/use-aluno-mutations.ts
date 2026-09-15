@@ -2,14 +2,14 @@
 
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { useArchiveAluno } from "@/lib/api/generated/hooks/aluno/useArchiveAluno";
+import { useActivateAluno } from "@/lib/api/generated/hooks/aluno/useActivateAluno";
 import { useCriarAluno } from "@/lib/api/generated/hooks/aluno/useCriarAluno";
-import { useDeleteAluno } from "@/lib/api/generated/hooks/aluno/useDeleteAluno";
-import { useUnarchiveAluno } from "@/lib/api/generated/hooks/aluno/useUnarchiveAluno";
+
+import { useDeactivateAluno } from "@/lib/api/generated/hooks/aluno/useDeactivateAluno";
 import { useUpdateAluno } from "@/lib/api/generated/hooks/aluno/useUpdateAluno";
 import { getAlunoByIdQueryKey } from "@/lib/api/generated/hooks/aluno/useGetAlunoById";
 import { getAlunosQueryKey } from "@/lib/api/generated/hooks/aluno/useGetAlunos";
-import { getAlunosKpisQueryKey } from "@/lib/api/generated/hooks/aluno/useGetAlunosKpis";
+import { listAlunosQueryKey } from "@/lib/api/generated/hooks/aluno/useListAlunos";
 import { getFriendlyErrorMessage } from "@/lib/api/api-error";
 
 export function useAlunoMutations() {
@@ -17,7 +17,7 @@ export function useAlunoMutations() {
 
   function invalidateAlunos() {
     queryClient.invalidateQueries({ queryKey: getAlunosQueryKey() });
-    queryClient.invalidateQueries({ queryKey: getAlunosKpisQueryKey() });
+    queryClient.invalidateQueries({ queryKey: listAlunosQueryKey() });
   }
 
   function invalidateAlunoDetail(alunoId: string) {
@@ -36,25 +36,25 @@ export function useAlunoMutations() {
     },
   });
 
-  const archiveAluno = useArchiveAluno({
+  const deactivateAluno = useDeactivateAluno({
     mutation: {
       onError: (error) => {
-        toast.error(getFriendlyErrorMessage(error) || "Algo deu errado ao arquivar o aluno");
+        toast.error(getFriendlyErrorMessage(error) || "Algo deu errado ao desativar o aluno");
       },
       onSuccess: async (_, variables) => {
-        toast.success("Aluno arquivado com sucesso");
+        toast.success("Aluno desativado com sucesso");
         await Promise.all([invalidateAlunos(), invalidateAlunoDetail(variables.alunoId)]);
       },
     },
   });
 
-  const unarchiveAluno = useUnarchiveAluno({
+  const activateAluno = useActivateAluno({
     mutation: {
       onError: (error) => {
-        toast.error(getFriendlyErrorMessage(error) || "Algo deu errado ao desarquivar o aluno");
+        toast.error(getFriendlyErrorMessage(error) || "Algo deu errado ao ativar o aluno");
       },
       onSuccess: async (_, variables) => {
-        toast.success("Aluno desarquivado com sucesso");
+        toast.success("Aluno ativado com sucesso");
         await Promise.all([invalidateAlunos(), invalidateAlunoDetail(variables.alunoId)]);
       },
     },
@@ -72,23 +72,11 @@ export function useAlunoMutations() {
     },
   });
 
-  const deleteAluno = useDeleteAluno({
-    mutation: {
-      onError: (error) => {
-        toast.error(getFriendlyErrorMessage(error) || "Algo deu errado ao excluir o aluno");
-      },
-      onSuccess: async (_, variables) => {
-        toast.success("Aluno excluído com sucesso");
-        await Promise.all([invalidateAlunos(), invalidateAlunoDetail(variables.alunoId)]);
-      },
-    },
-  });
 
   return {
     createAluno,
-    archiveAluno,
-    unarchiveAluno,
+    activateAluno,
+    deactivateAluno,
     updateAluno,
-    deleteAluno,
   };
 }

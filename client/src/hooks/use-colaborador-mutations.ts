@@ -2,12 +2,13 @@
 
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { useArquivarColaborador } from "@/lib/api/generated/hooks/colaborador/useArquivarColaborador";
+import { useDeactivateColaborador } from "@/lib/api/generated/hooks/colaborador/useDeactivateColaborador";
 import { useCreateColaborador } from "@/lib/api/generated/hooks/colaborador/useCreateColaborador";
-import { useDeleteColaborador } from "@/lib/api/generated/hooks/colaborador/useDeleteColaborador";
-import { useDesarquivarColaborador } from "@/lib/api/generated/hooks/colaborador/useDesarquivarColaborador";
+
+import { useActivateColaborador } from "@/lib/api/generated/hooks/colaborador/useActivateColaborador";
 import { findColaboradorByIdQueryKey } from "@/lib/api/generated/hooks/colaborador/useFindColaboradorById";
 import { getColaboradoresQueryKey } from "@/lib/api/generated/hooks/colaborador/useGetColaboradores";
+import { getColaboradoresListQueryKey } from "@/lib/api/generated/hooks/colaborador/useGetColaboradoresList";
 import { useUpdateColaborador } from "@/lib/api/generated/hooks/colaborador/useUpdateColaborador";
 import { getFriendlyErrorMessage } from "@/lib/api/api-error";
 
@@ -16,6 +17,7 @@ export function useColaboradorMutations() {
 
   function invalidateColaboradores() {
     queryClient.invalidateQueries({ queryKey: getColaboradoresQueryKey() });
+    queryClient.invalidateQueries({ queryKey: getColaboradoresListQueryKey() });
   }
 
   function invalidateColaboradorDetail(colaboradorId: string) {
@@ -46,47 +48,35 @@ export function useColaboradorMutations() {
     },
   });
 
-  const archiveColaborador = useArquivarColaborador({
+  const deactivateColaborador = useDeactivateColaborador({
     mutation: {
       onError: (error) => {
-        toast.error(getFriendlyErrorMessage(error) || "Algo deu errado ao arquivar o colaborador");
+        toast.error(getFriendlyErrorMessage(error) || "Algo deu errado ao desativar o colaborador");
       },
       onSuccess: async (_, variables) => {
-        toast.success("Colaborador arquivado com sucesso");
+        toast.success("Colaborador desativado com sucesso");
         await Promise.all([invalidateColaboradores(), invalidateColaboradorDetail(variables.colaboradorId)]);
       },
     },
   });
 
-  const unarchiveColaborador = useDesarquivarColaborador({
+  const activateColaborador = useActivateColaborador({
     mutation: {
       onError: (error) => {
-        toast.error(getFriendlyErrorMessage(error) || "Algo deu errado ao desarquivar o colaborador");
+        toast.error(getFriendlyErrorMessage(error) || "Algo deu errado ao ativar o colaborador");
       },
       onSuccess: async (_, variables) => {
-        toast.success("Colaborador desarquivado com sucesso");
+        toast.success("Colaborador ativado com sucesso");
         await Promise.all([invalidateColaboradores(), invalidateColaboradorDetail(variables.colaboradorId)]);
       },
     },
   });
 
-  const deleteColaborador = useDeleteColaborador({
-    mutation: {
-      onError: (error) => {
-        toast.error(getFriendlyErrorMessage(error) || "Algo deu errado ao excluir o colaborador");
-      },
-      onSuccess: async (_, variables) => {
-        toast.success("Colaborador excluído com sucesso");
-        await Promise.all([invalidateColaboradores(), invalidateColaboradorDetail(variables.colaboradorId)]);
-      },
-    },
-  });
 
   return {
     createColaborador,
-    archiveColaborador,
-    unarchiveColaborador,
+    activateColaborador,
+    deactivateColaborador,
     updateColaborador,
-    deleteColaborador,
   };
 }

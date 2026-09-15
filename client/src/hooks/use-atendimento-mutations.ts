@@ -2,137 +2,128 @@
 
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { useAgendarAtendimento } from "@/lib/api/generated/hooks/atendimento/useAgendarAtendimento";
-import { useAgendarAtendimentosRecorrentes } from "@/lib/api/generated/hooks/atendimento/useAgendarAtendimentosRecorrentes";
-import { useCancelarAtendimento } from "@/lib/api/generated/hooks/atendimento/useCancelarAtendimento";
-import { useConcluirAtendimento } from "@/lib/api/generated/hooks/atendimento/useConcluirAtendimento";
-import { useExcluirAtendimento } from "@/lib/api/generated/hooks/atendimento/useExcluirAtendimento";
-import { getAtendimentoByIdQueryKey } from "@/lib/api/generated/hooks/atendimento/useGetAtendimentoById";
-import { getAtendimentosQueryKey } from "@/lib/api/generated/hooks/atendimento/useGetAtendimentos";
-import { useTogglePagamentoAluno } from "@/lib/api/generated/hooks/atendimento/useTogglePagamentoAluno";
-import { useToggleRepasseColaborador } from "@/lib/api/generated/hooks/atendimento/useToggleRepasseColaborador";
-import { useUpdateAtendimento } from "@/lib/api/generated/hooks/atendimento/useUpdateAtendimento";
+import { useAgendarAtendimentoIndividual } from "@/lib/api/generated/hooks/atendimentos individuais/useAgendarAtendimentoIndividual";
+import { useAtualizarAtendimentoIndividual } from "@/lib/api/generated/hooks/atendimentos individuais/useAtualizarAtendimentoIndividual";
+import { useExcluirAtendimentoIndividual } from "@/lib/api/generated/hooks/atendimentos individuais/useExcluirAtendimentoIndividual";
+import { useRegistrarPagamentoCobrancasIndividuais } from "@/lib/api/generated/hooks/atendimentos individuais/useRegistrarPagamentoCobrancasIndividuais";
+import { useCancelarPagamentoCobrancasIndividuais } from "@/lib/api/generated/hooks/atendimentos individuais/useCancelarPagamentoCobrancasIndividuais";
+import { useRegistrarRepassesIndividuais } from "@/lib/api/generated/hooks/atendimentos individuais/useRegistrarRepassesIndividuais";
+import { useCancelarRepassesIndividuais } from "@/lib/api/generated/hooks/atendimentos individuais/useCancelarRepassesIndividuais";
+import { buscarAtendimentoIndividualPorIdQueryKey } from "@/lib/api/generated/hooks/atendimentos individuais/useBuscarAtendimentoIndividualPorId";
+import { buscarAtendimentosIndividuaisQueryKey } from "@/lib/api/generated/hooks/atendimentos individuais/useBuscarAtendimentosIndividuais";
+
+import { buscarCobrancasIndividuaisQueryKey } from "@/lib/api/generated/hooks/atendimentos individuais/useBuscarCobrancasIndividuais";
+import { buscarRepassesIndividuaisQueryKey } from "@/lib/api/generated/hooks/atendimentos individuais/useBuscarRepassesIndividuais";
 import { getFriendlyErrorMessage } from "@/lib/api/api-error";
 
 export function useAtendimentoMutations() {
   const queryClient = useQueryClient();
 
   function invalidateAtendimentos() {
-    queryClient.invalidateQueries({ queryKey: getAtendimentosQueryKey() });
-    queryClient.invalidateQueries({ queryKey: [{ url: "/v1/atendimentos/relatorio" }] });
-    queryClient.invalidateQueries({ queryKey: [{ url: "/v1/atendimentos/alunos/:alunoId/relatorio" }] });
-    queryClient.invalidateQueries({ queryKey: [{ url: "/v1/atendimentos/colaboradores/:colaboradorId/resumo-financeiro" }] });
-    queryClient.invalidateQueries({ queryKey: [{ url: "/v1/atendimentos/calendario" }] });
+    queryClient.invalidateQueries({ queryKey: buscarAtendimentosIndividuaisQueryKey() });
+    queryClient.invalidateQueries({ queryKey: [{ url: "/atendimentos-individuais/calendario" }] });
+  }
+
+  function invalidateFinanceiro() {
+    queryClient.invalidateQueries({ queryKey: buscarCobrancasIndividuaisQueryKey() });
+    queryClient.invalidateQueries({ queryKey: buscarRepassesIndividuaisQueryKey() });
   }
 
   function invalidateAtendimentoDetail(atendimentoId: number) {
-    queryClient.invalidateQueries({ queryKey: getAtendimentoByIdQueryKey(atendimentoId) });
+    queryClient.invalidateQueries({ queryKey: buscarAtendimentoIndividualPorIdQueryKey(atendimentoId) });
   }
 
-  const createAtendimento = useAgendarAtendimento({
+  const createAtendimento = useAgendarAtendimentoIndividual({
     mutation: {
       onError: (error) => {
         toast.error(getFriendlyErrorMessage(error) || "Algo deu errado ao criar o atendimento");
       },
       onSuccess: async (createdAtendimento) => {
         toast.success("Atendimento criado com sucesso");
-        await Promise.all([invalidateAtendimentos(), invalidateAtendimentoDetail(createdAtendimento.id)]);
+        await Promise.all([invalidateAtendimentos(), invalidateFinanceiro(), invalidateAtendimentoDetail(createdAtendimento.id)]);
       },
     },
   });
 
-  const createAtendimentosRecorrentes = useAgendarAtendimentosRecorrentes({
-    mutation: {
-      onError: (error) => {
-        toast.error(getFriendlyErrorMessage(error) || "Algo deu errado ao criar os atendimentos recorrentes");
-      },
-      onSuccess: async (createdAtendimentos) => {
-        toast.success(`${createdAtendimentos.length} atendimento(s) criado(s) com sucesso`);
-        await invalidateAtendimentos();
-      },
-    },
-  });
-
-  const updateAtendimento = useUpdateAtendimento({
+  const updateAtendimento = useAtualizarAtendimentoIndividual({
     mutation: {
       onError: (error) => {
         toast.error(getFriendlyErrorMessage(error) || "Algo deu errado ao atualizar o atendimento");
       },
       onSuccess: async (_, variables) => {
         toast.success("Atendimento atualizado com sucesso");
-        await Promise.all([invalidateAtendimentos(), invalidateAtendimentoDetail(variables.id)]);
+        await Promise.all([invalidateAtendimentos(), invalidateFinanceiro(), invalidateAtendimentoDetail(variables.id)]);
       },
     },
   });
 
-  const concludeAtendimento = useConcluirAtendimento({
-    mutation: {
-      onError: (error) => {
-        toast.error(getFriendlyErrorMessage(error) || "Algo deu errado ao concluir o atendimento");
-      },
-      onSuccess: async (_, variables) => {
-        toast.success("Atendimento concluído com sucesso");
-        await Promise.all([invalidateAtendimentos(), invalidateAtendimentoDetail(variables.id)]);
-      },
-    },
-  });
-
-  const cancelAtendimento = useCancelarAtendimento({
-    mutation: {
-      onError: (error) => {
-        toast.error(getFriendlyErrorMessage(error) || "Algo deu errado ao cancelar o atendimento");
-      },
-      onSuccess: async (_, variables) => {
-        toast.success("Atendimento cancelado com sucesso");
-        await Promise.all([invalidateAtendimentos(), invalidateAtendimentoDetail(variables.id)]);
-      },
-    },
-  });
-
-  const togglePagamentoAluno = useTogglePagamentoAluno({
-    mutation: {
-      onError: (error) => {
-        toast.error(getFriendlyErrorMessage(error) || "Algo deu errado ao alterar o pagamento do aluno");
-      },
-      onSuccess: async (updatedAtendimento) => {
-        toast.success("Pagamento do aluno atualizado com sucesso");
-        await Promise.all([invalidateAtendimentos(), invalidateAtendimentoDetail(updatedAtendimento.id)]);
-      },
-    },
-  });
-
-  const toggleRepasseColaborador = useToggleRepasseColaborador({
-    mutation: {
-      onError: (error) => {
-        toast.error(getFriendlyErrorMessage(error) || "Algo deu errado ao alterar o repasse do colaborador");
-      },
-      onSuccess: async (updatedAtendimento) => {
-        toast.success("Repasse do colaborador atualizado com sucesso");
-        await Promise.all([invalidateAtendimentos(), invalidateAtendimentoDetail(updatedAtendimento.id)]);
-      },
-    },
-  });
-
-  const deleteAtendimento = useExcluirAtendimento({
+  const deleteAtendimento = useExcluirAtendimentoIndividual({
     mutation: {
       onError: (error) => {
         toast.error(getFriendlyErrorMessage(error) || "Algo deu errado ao excluir o atendimento");
       },
       onSuccess: async (_, variables) => {
         toast.success("Atendimento excluído com sucesso");
-        await Promise.all([invalidateAtendimentos(), invalidateAtendimentoDetail(variables.id)]);
+        await Promise.all([invalidateAtendimentos(), invalidateFinanceiro(), invalidateAtendimentoDetail(variables.id)]);
+      },
+    },
+  });
+
+  const registerStudentPayment = useRegistrarPagamentoCobrancasIndividuais({
+    mutation: {
+      onError: (error) => {
+        toast.error(getFriendlyErrorMessage(error) || "Algo deu errado ao registrar o pagamento do aluno");
+      },
+      onSuccess: async () => {
+        toast.success("Pagamento do aluno registrado com sucesso");
+        await Promise.all([invalidateAtendimentos(), invalidateFinanceiro()]);
+      },
+    },
+  });
+
+  const cancelStudentPayment = useCancelarPagamentoCobrancasIndividuais({
+    mutation: {
+      onError: (error) => {
+        toast.error(getFriendlyErrorMessage(error) || "Algo deu errado ao cancelar o pagamento do aluno");
+      },
+      onSuccess: async () => {
+        toast.success("Pagamento do aluno cancelado com sucesso");
+        await Promise.all([invalidateAtendimentos(), invalidateFinanceiro()]);
+      },
+    },
+  });
+
+  const registerCollaboratorPayment = useRegistrarRepassesIndividuais({
+    mutation: {
+      onError: (error) => {
+        toast.error(getFriendlyErrorMessage(error) || "Algo deu errado ao registrar o repasse do colaborador");
+      },
+      onSuccess: async () => {
+        toast.success("Repasse do colaborador registrado com sucesso");
+        await Promise.all([invalidateAtendimentos(), invalidateFinanceiro()]);
+      },
+    },
+  });
+
+  const cancelCollaboratorPayment = useCancelarRepassesIndividuais({
+    mutation: {
+      onError: (error) => {
+        toast.error(getFriendlyErrorMessage(error) || "Algo deu errado ao cancelar o repasse do colaborador");
+      },
+      onSuccess: async () => {
+        toast.success("Repasse do colaborador cancelado com sucesso");
+        await Promise.all([invalidateAtendimentos(), invalidateFinanceiro()]);
       },
     },
   });
 
   return {
     createAtendimento,
-    createAtendimentosRecorrentes,
     updateAtendimento,
-    concludeAtendimento,
-    cancelAtendimento,
-    togglePagamentoAluno,
-    toggleRepasseColaborador,
     deleteAtendimento,
+    registerStudentPayment,
+    cancelStudentPayment,
+    registerCollaboratorPayment,
+    cancelCollaboratorPayment,
   };
 }
