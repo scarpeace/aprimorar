@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { refreshOnce } from "@/auth/auth-refresh";
+import { refreshOnce } from "@/lib/api/kubb-client";
 import { getAccessToken } from "@/auth/token-store";
 
 export function AuthProvider({
