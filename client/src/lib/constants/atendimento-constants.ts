@@ -30,6 +30,12 @@ export const atendimentoStatusOptions = [
   })),
 ];
 
+export const statusCobrancaOptions = [
+  { value: "", label: "Todas as cobranças" },
+  { value: "PENDENTE", label: "Pendente" },
+  { value: "PAGO", label: "Pago" },
+] as const;
+
 export const atendimentoTipoBadgeClass = {
   AULA: "badge-primary",
   MENTORIA: "badge-info",

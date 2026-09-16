@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { AtendimentoPaymentBadge } from "@/features/atendimentos/components/AtendimentoPaymentBadge";
+import { PaymentStatusIndicator } from "@/components/ui/PaymentStatusIndicator";
 import { AtendimentoStatusBadge } from "@/features/atendimentos/components/AtendimentoStatusBadge";
 import { AtendimentoTipoBadge } from "@/features/atendimentos/components/AtendimentoTipoBadge";
 import { EmptyCard } from "@/components/ui/EmptyCard";
@@ -91,8 +91,8 @@ export function AtendimentosResults({ atendimentos, isLoading, error, pagination
                 <td className="text-right">{brl.format(atendimento.repasseColaborador)}</td>
                 <td>
                   <div className="flex flex-col gap-1">
-                    <AtendimentoPaymentBadge label="Aluno" paidAt={atendimento.dataPagamentoAluno} />
-                    <AtendimentoPaymentBadge label="Colab." paidAt={atendimento.dataRepasseColaborador} />
+                    <PaymentStatusIndicator label="Aluno" paidAt={atendimento.dataPagamentoAluno} />
+                    <PaymentStatusIndicator label="Colab." paidAt={atendimento.dataRepasseColaborador} />
                   </div>
                 </td>
               </tr>
@@ -135,8 +135,8 @@ export function AtendimentosResults({ atendimentos, isLoading, error, pagination
             </div>
 
             <div className="mt-3 flex flex-wrap gap-2">
-              <AtendimentoPaymentBadge label="Aluno" paidAt={atendimento.dataPagamentoAluno} />
-              <AtendimentoPaymentBadge label="Colab." paidAt={atendimento.dataRepasseColaborador} />
+              <PaymentStatusIndicator label="Aluno" paidAt={atendimento.dataPagamentoAluno} />
+              <PaymentStatusIndicator label="Colab." paidAt={atendimento.dataRepasseColaborador} />
             </div>
           </article>
         ))}

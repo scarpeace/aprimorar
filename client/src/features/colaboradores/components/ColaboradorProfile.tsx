@@ -1,10 +1,11 @@
 "use client";
 
 import { ActiveStatusIndicator } from "@/components/ui/ActiveStatusIndicator";
-import { BackButton } from "@/components/ui/BackButton";
+
 import { Card, CardActions, CardHeader, CardTitle } from "@/components/ui/Card";
 import { ErrorCard } from "@/components/ui/ErrorCard";
 import { LoadingSkeleton } from "@/components/ui/LoadingSkeleton";
+
 import { ColaboradorDetails } from "@/features/colaboradores/components/ColaboradorDetails";
 import { ColaboradorStatusButton } from "@/features/colaboradores/components/ColaboradorStatusButton";
 import { EditarColaboradorButton } from "@/features/colaboradores/components/EditarColaboradorButton";
@@ -58,7 +59,6 @@ export function ColaboradorProfile({ colaboradorId }: Readonly<ColaboradorProfil
         <CardActions>
           <EditarColaboradorButton colaborador={data} />
           <ColaboradorStatusButton colaboradorId={data.id} active={active} />
-          <BackButton href="/colaboradores" />
         </CardActions>
       </CardHeader>
 

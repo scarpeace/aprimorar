@@ -3,7 +3,7 @@
 import { PencilLine, Plus, Trash2 } from "lucide-react";
 import { useState, type MouseEvent } from "react";
 import { Button } from "@/components/ui/Button";
-import { AtendimentoPaymentBadge } from "@/features/atendimentos/components/AtendimentoPaymentBadge";
+import { PaymentStatusIndicator } from "@/components/ui/PaymentStatusIndicator";
 import { EmptyCard } from "@/components/ui/EmptyCard";
 import { ErrorCard } from "@/components/ui/ErrorCard";
 import { Modal } from "@/components/ui/Modal";
@@ -220,7 +220,7 @@ export function DespesasOverview() {
                       <td className="text-right font-semibold">{brl.format(despesa.valor ?? 0)}</td>
                       <td>
                         <div className="flex items-center gap-2">
-                          <AtendimentoPaymentBadge
+                          <PaymentStatusIndicator
                             label={despesa.dataPagamento ? "Pago" : "Pendente"}
                             paidAt={despesa.dataPagamento}
                           />

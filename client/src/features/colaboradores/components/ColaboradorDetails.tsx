@@ -11,8 +11,7 @@ type ColaboradorDetailsProps = {
 export function ColaboradorDetails({ colaborador }: Readonly<ColaboradorDetailsProps>) {
 
   return (
-    <div className="mt-6">
-      <div>
+      <div className="mt-3">
         <h2 className="text-lg font-bold text-base-content">Dados cadastrais</h2>
 
         <div className="mt-5 grid gap-6 lg:grid-cols-2 lg:gap-8">
@@ -34,6 +33,5 @@ export function ColaboradorDetails({ colaborador }: Readonly<ColaboradorDetailsP
           </div>
         </div>
       </div>
-    </div>
   );
 }

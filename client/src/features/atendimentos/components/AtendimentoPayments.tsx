@@ -1,7 +1,7 @@
 "use client";
 
 import type { AtendimentoResponse } from "@/lib/api/generated/types/AtendimentoResponse";
-import { AtendimentoPaymentBadge } from "@/features/atendimentos/components/AtendimentoPaymentBadge";
+import { PaymentStatusIndicator } from "@/components/ui/PaymentStatusIndicator";
 import { DetailField } from "@/components/ui/DetailField";
 import { useAtendimentoMutations } from "@/features/atendimentos/hooks/use-atendimento-mutations";
 import { formatDate } from "@/lib/utils/formatter";
@@ -31,7 +31,7 @@ export function AtendimentoPayments({ atendimento }: Readonly<AtendimentoPayment
       <div className="mt-5 grid gap-5 md:grid-cols-2">
         <div className="space-y-4">
           <div className="flex justify-between">
-            <AtendimentoPaymentBadge label="Aluno" paidAt={atendimento.dataPagamentoAluno} />
+            <PaymentStatusIndicator label="Aluno" paidAt={atendimento.dataPagamentoAluno} />
             <DetailField label="Data" value={formatDate(atendimento.dataPagamentoAluno)} />
           </div>
 
@@ -55,7 +55,7 @@ export function AtendimentoPayments({ atendimento }: Readonly<AtendimentoPayment
 
         <div className="space-y-4 md:border-l md:border-base-300 md:pl-6">
           <div className="flex justify-between gap-2">
-            <AtendimentoPaymentBadge label="Colab." paidAt={atendimento.dataRepasseColaborador} />
+            <PaymentStatusIndicator label="Colab." paidAt={atendimento.dataRepasseColaborador} />
             <DetailField label="Data" value={formatDate(atendimento.dataRepasseColaborador)} />
           </div>
 

@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { endOfMonth, format, startOfMonth } from "date-fns";
 import { useRouter } from "next/navigation";
-import { AtendimentoPaymentBadge } from "@/features/atendimentos/components/AtendimentoPaymentBadge";
+import { PaymentStatusIndicator } from "@/components/ui/PaymentStatusIndicator";
 import { AtendimentoStatusBadge } from "@/features/atendimentos/components/AtendimentoStatusBadge";
 import { AtendimentoTipoBadge } from "@/features/atendimentos/components/AtendimentoTipoBadge";
 import { EmptyCard } from "@/components/ui/EmptyCard";
@@ -281,7 +281,7 @@ export function AlunoAtendimentos({ alunoId }: Readonly<AlunoAtendimentosProps>)
                       <td className="text-right">{brl.format(atendimento.pagamentoAluno)}</td>
                       <td>
                         <div className="flex items-center gap-2">
-                          <AtendimentoPaymentBadge label="Aluno" paidAt={atendimento.dataPagamentoAluno} />
+                          <PaymentStatusIndicator label="Aluno" paidAt={atendimento.dataPagamentoAluno} />
                           <Toggle
                             checked={!!atendimento.dataPagamentoAluno}
                             disabled={togglePagamentoAluno.isPending || atendimento.status === "CANCELADO"}
@@ -328,7 +328,7 @@ export function AlunoAtendimentos({ alunoId }: Readonly<AlunoAtendimentosProps>)
                   </div>
 
                   <div className="mt-3 flex flex-wrap items-center gap-2">
-                    <AtendimentoPaymentBadge label="Aluno" paidAt={atendimento.dataPagamentoAluno} />
+                    <PaymentStatusIndicator label="Aluno" paidAt={atendimento.dataPagamentoAluno} />
                     <Toggle
                       checked={!!atendimento.dataPagamentoAluno}
                       disabled={togglePagamentoAluno.isPending || atendimento.status === "CANCELADO"}

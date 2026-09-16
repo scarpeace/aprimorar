@@ -1,7 +1,7 @@
 "use client";
 
 import { useParams } from "next/navigation";
-import { ColaboradorAtendimentosTable } from "@/features/colaboradores/components/ColaboradorAtendimentosTable";
+import { ColaboradorAtendimentos } from "@/features/colaboradores/components/ColaboradorAtendimentos";
 import { ColaboradorProfile } from "@/features/colaboradores/components/ColaboradorProfile";
 
 export default function ColaboradorPage() {
@@ -10,7 +10,7 @@ export default function ColaboradorPage() {
   return (
     <section className="space-y-6">
       <ColaboradorProfile colaboradorId={id} />
-      <ColaboradorAtendimentosTable colaboradorId={id} />
+      <ColaboradorAtendimentos colaboradorId={id} />
     </section>
   );
 }

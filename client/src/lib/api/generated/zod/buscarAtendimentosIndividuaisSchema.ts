@@ -9,7 +9,6 @@ import { z } from "zod/v4";
 
 export const buscarAtendimentosIndividuaisQueryParamsSchema = z.object({
   busca: z.string().describe("Texto livre de busca").nullish(),
-  anoMes: z.string().describe("Ano e mes do filtro").nullish(),
   inicio: z.iso.datetime().describe("Data inicial").nullish(),
   fim: z.iso.datetime().describe("Data final").nullish(),
   tipo: z
