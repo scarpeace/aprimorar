@@ -11,8 +11,10 @@ import { useRegistrarRepassesIndividuais } from "@/lib/api/generated/hooks/atend
 import { useCancelarRepassesIndividuais } from "@/lib/api/generated/hooks/atendimentos individuais/useCancelarRepassesIndividuais";
 import { buscarAtendimentoIndividualPorIdQueryKey } from "@/lib/api/generated/hooks/atendimentos individuais/useBuscarAtendimentoIndividualPorId";
 import { buscarAtendimentosIndividuaisQueryKey } from "@/lib/api/generated/hooks/atendimentos individuais/useBuscarAtendimentosIndividuais";
-
+import { buscarCalendarioAtendimentosIndividuaisQueryKey } from "@/lib/api/generated/hooks/atendimentos individuais/useBuscarCalendarioAtendimentosIndividuais";
 import { buscarCobrancasIndividuaisQueryKey } from "@/lib/api/generated/hooks/atendimentos individuais/useBuscarCobrancasIndividuais";
+import { buscarLotesDeCobrancaQueryKey } from "@/lib/api/generated/hooks/atendimentos individuais/useBuscarLotesDeCobranca";
+import { buscarLotesDeRepasseQueryKey } from "@/lib/api/generated/hooks/atendimentos individuais/useBuscarLotesDeRepasse";
 import { buscarRepassesIndividuaisQueryKey } from "@/lib/api/generated/hooks/atendimentos individuais/useBuscarRepassesIndividuais";
 import { getFriendlyErrorMessage } from "@/lib/api/api-error";
 
@@ -21,13 +23,22 @@ export function useAtendimentoMutations() {
 
   function invalidateAtendimentos() {
     queryClient.invalidateQueries({ queryKey: buscarAtendimentosIndividuaisQueryKey() });
-    queryClient.invalidateQueries({ queryKey: [{ url: "/atendimentos-individuais/calendario" }] });
+    queryClient.invalidateQueries({
+      queryKey: [
+        buscarCalendarioAtendimentosIndividuaisQueryKey({ inicio: "", fim: "" })[0],
+      ],
+    });
   }
 
   function invalidateFinanceiro() {
     queryClient.invalidateQueries({ queryKey: buscarCobrancasIndividuaisQueryKey() });
     queryClient.invalidateQueries({ queryKey: buscarRepassesIndividuaisQueryKey() });
-    queryClient.invalidateQueries({ queryKey: [{ url: "/atendimentos-individuais/repasses/lotes" }] });
+    queryClient.invalidateQueries({
+      queryKey: [buscarLotesDeCobrancaQueryKey({ alunoId: "" })[0]],
+    });
+    queryClient.invalidateQueries({
+      queryKey: [buscarLotesDeRepasseQueryKey({ colaboradorId: "" })[0]],
+    });
   }
 
   function invalidateAtendimentoDetail(atendimentoId: number) {

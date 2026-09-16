@@ -92,6 +92,14 @@ export {
   buscarCobrancasIndividuaisQueryResponseSchema,
 } from "./buscarCobrancasIndividuaisSchema.ts";
 export {
+  buscarLotesDeCobranca200Schema,
+  buscarLotesDeCobranca400Schema,
+  buscarLotesDeCobranca401Schema,
+  buscarLotesDeCobranca500Schema,
+  buscarLotesDeCobrancaQueryParamsSchema,
+  buscarLotesDeCobrancaQueryResponseSchema,
+} from "./buscarLotesDeCobrancaSchema.ts";
+export {
   buscarLotesDeRepasse200Schema,
   buscarLotesDeRepasse400Schema,
   buscarLotesDeRepasse401Schema,
@@ -144,6 +152,7 @@ export {
   cancelarRepassesIndividuaisMutationResponseSchema,
 } from "./cancelarRepassesIndividuaisSchema.ts";
 export { cobrancaIndividualResponseSchema } from "./cobrancaIndividualResponseSchema.ts";
+export { cobrancaLoteResponseSchema } from "./cobrancaLoteResponseSchema.ts";
 export { cobrancaResumoSchema } from "./cobrancaResumoSchema.ts";
 export { colaboradorDetailResponseDTOSchema } from "./colaboradorDetailResponseDTOSchema.ts";
 export { colaboradorListResponseDTOSchema } from "./colaboradorListResponseDTOSchema.ts";
@@ -335,6 +344,7 @@ export { pageMetadataSchema } from "./pageMetadataSchema.ts";
 export { pagedModelAlunoListResponseDTOSchema } from "./pagedModelAlunoListResponseDTOSchema.ts";
 export { pagedModelAtendimentoIndividualResponseSchema } from "./pagedModelAtendimentoIndividualResponseSchema.ts";
 export { pagedModelCobrancaIndividualResponseSchema } from "./pagedModelCobrancaIndividualResponseSchema.ts";
+export { pagedModelCobrancaLoteResponseSchema } from "./pagedModelCobrancaLoteResponseSchema.ts";
 export { pagedModelColaboradorListResponseDTOSchema } from "./pagedModelColaboradorListResponseDTOSchema.ts";
 export { pagedModelDespesaResponseSchema } from "./pagedModelDespesaResponseSchema.ts";
 export { pagedModelRepasseIndividualResponseSchema } from "./pagedModelRepasseIndividualResponseSchema.ts";

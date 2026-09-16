@@ -23,6 +23,13 @@ export function AlunoProfile({ alunoId }: Readonly<AlunoProfileProps>) {
           <CardTitle>Cadastro</CardTitle>
           <p className="mt-2 text-sm text-base-content/65">Consulte e gerencie os dados cadastrais deste aluno.</p>
         </div>
+
+        {aluno.data ? (
+          <CardActions>
+            <EditarAlunoButton aluno={aluno.data} />
+            <AlunoStatusButton alunoId={aluno.data.id} active={aluno.data.active !== false} />
+          </CardActions>
+        ) : null}
       </CardHeader>
 
       {aluno.isLoading ? (
@@ -41,11 +48,6 @@ export function AlunoProfile({ alunoId }: Readonly<AlunoProfileProps>) {
               <h2 className="text-xl font-bold uppercase text-base-content">{aluno.data.nome}</h2>
               <span className="text-sm font-semibold text-base-content/65">{aluno.data.escola}</span>
             </div>
-
-            <CardActions>
-              <EditarAlunoButton aluno={aluno.data} />
-              <AlunoStatusButton alunoId={aluno.data.id} active={aluno.data.active !== false} />
-            </CardActions>
           </div>
 
           <AlunoDetails aluno={aluno.data} />

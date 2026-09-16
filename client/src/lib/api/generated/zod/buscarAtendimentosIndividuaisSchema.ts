@@ -18,6 +18,7 @@ export const buscarAtendimentosIndividuaisQueryParamsSchema = z.object({
   alunoId: z.uuid().describe("ID do aluno").nullish(),
   colaboradorId: z.uuid().describe("ID do colaborador").nullish(),
   statusCobranca: z.string().describe("Status da cobrança").nullish(),
+  statusRepasse: z.string().describe("Status do repasse").nullish(),
   page: z.coerce.number().int().min(0).default(0).describe("Zero-based page index (0..N)"),
   size: z.coerce.number().int().min(1).default(20).describe("The size of the page to be returned"),
   sort: z.optional(

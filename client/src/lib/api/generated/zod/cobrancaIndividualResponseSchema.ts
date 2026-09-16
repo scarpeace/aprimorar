@@ -10,16 +10,17 @@ import { z } from "zod/v4";
  */
 export const cobrancaIndividualResponseSchema = z
   .object({
-    id: z.optional(z.int()),
-    atendimentoId: z.optional(z.int()),
-    alunoId: z.optional(z.uuid()),
-    valor: z.optional(z.number()),
-    status: z.optional(z.enum(["PENDENTE", "PAGO"])),
-    dataPagamento: z.optional(z.iso.datetime()),
-    formaPagamento: z.optional(
-      z.enum(["PIX", "DINHEIRO", "CARTAO_CREDITO", "CARTAO_DEBITO", "BOLETO", "TRANSFERENCIA"]).describe("Forma de pagamento"),
-    ),
-    comprovanteUrl: z.optional(z.string()),
-    loteId: z.optional(z.uuid()),
+    id: z.int(),
+    atendimentoId: z.int(),
+    alunoId: z.uuid(),
+    valor: z.number(),
+    status: z.enum(["PENDENTE", "PAGO"]),
+    dataPagamento: z.iso.datetime().nullish(),
+    formaPagamento: z
+      .enum(["PIX", "DINHEIRO", "CARTAO_CREDITO", "CARTAO_DEBITO", "BOLETO", "TRANSFERENCIA"])
+      .describe("Forma de pagamento")
+      .nullish(),
+    comprovanteUrl: z.string().nullish(),
+    loteId: z.uuid().nullish(),
   })
   .describe("Cobrança de aluno");

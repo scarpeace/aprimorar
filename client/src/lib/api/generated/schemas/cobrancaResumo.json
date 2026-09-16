@@ -1,13 +1,14 @@
 {
+  "required": ["id", "status", "valor"],
   "type": "object",
   "properties": {
-    "id": { "type": "integer", "format": "int64" },
+    "id": { "type": "integer", "description": "Identificador da cobrança", "format": "int64" },
     "valor": { "type": "number" },
     "status": { "type": "string" },
-    "dataPagamento": { "type": "string", "format": "date-time" },
-    "formaPagamento": { "type": "string" },
-    "comprovanteUrl": { "type": "string" },
-    "loteId": { "type": "string", "format": "uuid" }
+    "dataPagamento": { "type": "string", "format": "date-time", "nullable": true },
+    "formaPagamento": { "type": "string", "nullable": true },
+    "comprovanteUrl": { "type": "string", "nullable": true },
+    "loteId": { "type": "string", "format": "uuid", "nullable": true }
   },
   "description": "Resumo da cobrança do atendimento",
   "x-readme-ref-name": "CobrancaResumo"

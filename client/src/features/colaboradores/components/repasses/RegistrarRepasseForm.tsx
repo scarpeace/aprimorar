@@ -2,6 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FormProvider, useForm } from "react-hook-form";
+import { useEffect } from "react";
 import { Button } from "@/components/ui/Button";
 import { SelectInput } from "@/components/ui/forms/SelectInput";
 import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
@@ -44,6 +45,10 @@ export function RegistrarRepasseForm({
   });
   const { registerCollaboratorPayment } = useAtendimentoMutations();
 
+  useEffect(() => {
+    methods.setValue("repasseIds", repasseIds, { shouldValidate: true });
+  }, [methods, repasseIds]);
+
   const onSubmit = methods.handleSubmit((data) => {
     registerCollaboratorPayment.mutate(
       { data },
@@ -75,7 +80,7 @@ export function RegistrarRepasseForm({
           <Button type="button" variant="ghost" onClick={onCancel} disabled={registerCollaboratorPayment.isPending}>
             Voltar
           </Button>
-          <Button type="submit" disabled={registerCollaboratorPayment.isPending}>
+          <Button type="submit" disabled={repasseIds.length === 0 || registerCollaboratorPayment.isPending}>
             {registerCollaboratorPayment.isPending ? (
               <>
                 <LoadingSpinner />

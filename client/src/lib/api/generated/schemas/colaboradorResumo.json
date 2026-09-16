@@ -1,4 +1,5 @@
 {
+  "required": ["id", "nome"],
   "type": "object",
   "properties": { "id": { "type": "string", "format": "uuid" }, "nome": { "type": "string" } },
   "description": "Resumo do colaborador vinculado ao atendimento",

@@ -1,119 +1,195 @@
+"use client";
+
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { Card, CardActions, CardHeader, CardTitle } from "@/components/ui/Card";
+import { DateField } from "@/components/ui/DateField";
+import { EmptyCard } from "@/components/ui/EmptyCard";
+import { ErrorCard } from "@/components/ui/ErrorCard";
+import { LoadingSkeleton } from "@/components/ui/LoadingSkeleton";
+import { Pagination } from "@/components/ui/Pagination";
 import { PaymentStatusIndicator } from "@/components/ui/PaymentStatusIndicator";
+import { SearchInput } from "@/components/ui/SearchInput";
+import { SelectField } from "@/components/ui/SelectField";
+import { ColaboradorAtendimentoCard } from "@/features/colaboradores/components/atendimentos/ColaboradorAtendimentoCard";
 import { AtendimentoTipoBadge } from "@/features/atendimentos/components/AtendimentoTipoBadge";
-import type { AtendimentoIndividualResponse } from "@/lib/api/generated/types/AtendimentoIndividualResponse";
+import { RegistrarRepasseButton } from "@/features/colaboradores/components/repasses/RegistrarRepasseButton";
+import { useBuscarAtendimentosIndividuais } from "@/lib/api/generated/hooks/atendimentos individuais/useBuscarAtendimentosIndividuais";
+import type { BuscarAtendimentosIndividuaisQueryParamsTipoEnumKey } from "@/lib/api/generated/types/BuscarAtendimentosIndividuais";
+import { atendimentoTipoOptions, statusCobrancaOptions } from "@/lib/constants/atendimento-constants";
+import { useDebounce } from "@/lib/hooks/use-debounce";
 import { formatDateShortYear, formatTime } from "@/lib/utils/date-utils";
 import { brl } from "@/lib/utils/formatter";
 
+const PAGE_SIZE = 10;
+
+type ColaboradorAtendimentoTipo = BuscarAtendimentosIndividuaisQueryParamsTipoEnumKey | "";
+
 type ColaboradorAtendimentosTableProps = {
-  atendimentos: AtendimentoIndividualResponse[];
-  selectionMode: boolean;
-  selectedIds: number[];
-  onToggle: (repasseId: number) => void;
-  onTogglePage: (repasseIds: number[]) => void;
-  onOpen: (atendimentoId: number) => void;
+  colaboradorId: string;
 };
 
-export function ColaboradorAtendimentosTable({
-  atendimentos,
-  selectionMode,
-  selectedIds,
-  onToggle,
-  onTogglePage,
-  onOpen,
-}: Readonly<ColaboradorAtendimentosTableProps>) {
-  const selectablePageIds = atendimentos.flatMap((atendimento) => {
-    const repasseId = atendimento.repasse.id;
-    const isPending = atendimento.repasse.status === "PENDENTE";
+export function ColaboradorAtendimentosTable({ colaboradorId }: Readonly<ColaboradorAtendimentosTableProps>) {
+  const router = useRouter();
+  const [page, setPage] = useState(0);
+  const [searchInput, setSearchInput] = useState("");
+  const [tipo, setTipo] = useState<ColaboradorAtendimentoTipo>("");
+  const [statusCobranca, setStatusCobranca] = useState("");
+  const [dataInicio, setDataInicio] = useState("");
+  const [dataFim, setDataFim] = useState("");
+  const search = useDebounce(searchInput.trim(), 300);
 
-    return isPending && repasseId !== undefined ? [repasseId] : [];
+  const atendimentos = useBuscarAtendimentosIndividuais({
+    page,
+    size: PAGE_SIZE,
+    colaboradorId,
+    busca: search || undefined,
+    tipo: tipo || undefined,
+    statusCobranca: statusCobranca || undefined,
+    inicio: dataInicio ? `${dataInicio}T00:00:00` : undefined,
+    fim: dataFim ? `${dataFim}T23:59:59` : undefined,
   });
-  const allPageSelected =
-    selectablePageIds.length > 0 && selectablePageIds.every((repasseId) => selectedIds.includes(repasseId));
+
+  const content = atendimentos.data?.content ?? [];
+  const metadata = atendimentos.data?.page;
+  const totalPages = metadata?.totalPages ?? 0;
+  const totalElements = metadata?.totalElements ?? 0;
+  const currentPage = metadata?.number ?? page;
+
+  function changeFilter(updateFilter: () => void) {
+    setPage(0);
+    updateFilter();
+  }
+
+  function openAtendimento(atendimentoId: number) {
+    router.push(`/atendimentos/${atendimentoId}`);
+  }
 
   return (
-    <div className="hidden overflow-x-auto md:block">
-      <table className="table table-zebra">
-        <thead>
-          <tr>
-            <th>Aluno</th>
-            <th>Data</th>
-            <th>Horário</th>
-            <th>Tipo</th>
-            <th className="text-right">Repasse</th>
-            {selectionMode ? (
-              <th className="text-center">
-                <input
-                  type="checkbox"
-                  className="checkbox checkbox-sm"
-                  checked={allPageSelected}
-                  disabled={selectablePageIds.length === 0}
-                  onChange={() => onTogglePage(selectablePageIds)}
-                  aria-label="Selecionar repasses pendentes desta página"
-                />
-              </th>
-            ) : null}
-          </tr>
-        </thead>
+    <Card>
+      <CardHeader>
+        <div>
+          <CardTitle>Atendimentos do colaborador</CardTitle>
+          <p className="mt-2 text-sm text-base-content/65">
+            Consulte os atendimentos vinculados a este colaborador.
+          </p>
+        </div>
 
-        <tbody>
-          {atendimentos.map((atendimento) => {
-            const repasseId = atendimento.repasse.id;
-            const canSelect = atendimento.repasse.status === "PENDENTE" && repasseId !== undefined;
-            const selected = repasseId !== undefined && selectedIds.includes(repasseId);
+        <CardActions>
+          <RegistrarRepasseButton colaboradorId={colaboradorId} />
+        </CardActions>
+      </CardHeader>
 
-            function handleRowClick() {
-              if (!selectionMode) {
-                onOpen(atendimento.id);
-                return;
-              }
+      <div className="flex flex-wrap items-end gap-3">
+        <SearchInput
+          label="Buscar"
+          value={searchInput}
+          onChange={(value) => changeFilter(() => setSearchInput(value))}
+          placeholder="Busque pelo atendimento"
+          className="min-w-60 flex-1"
+        />
 
-              if (canSelect && repasseId !== undefined) {
-                onToggle(repasseId);
-              }
-            }
+        <SelectField
+          label="Tipo"
+          value={tipo}
+          options={atendimentoTipoOptions}
+          onChange={(value) => changeFilter(() => setTipo(value as ColaboradorAtendimentoTipo))}
+          className="w-full sm:w-48"
+        />
 
-            return (
-              <tr
+        <SelectField
+          label="Cobrança"
+          value={statusCobranca}
+          options={statusCobrancaOptions}
+          onChange={(value) => changeFilter(() => setStatusCobranca(value))}
+          className="w-full sm:w-48"
+        />
+
+        <DateField
+          label="Início"
+          value={dataInicio}
+          onChange={(value) => changeFilter(() => setDataInicio(value))}
+          className="w-full sm:w-44"
+        />
+
+        <DateField
+          label="Fim"
+          value={dataFim}
+          onChange={(value) => changeFilter(() => setDataFim(value))}
+          className="w-full sm:w-44"
+        />
+      </div>
+
+      {atendimentos.isLoading ? (
+        <LoadingSkeleton className="h-64 w-full" />
+      ) : atendimentos.error ? (
+        <ErrorCard
+          title="Não foi possível carregar os atendimentos do colaborador"
+          description="A consulta paginada falhou. Tente novamente."
+          error={atendimentos.error}
+        />
+      ) : content.length === 0 ? (
+        <EmptyCard title="Nenhum atendimento encontrado" description="Não existem atendimentos para os filtros informados." />
+      ) : (
+        <div className="space-y-4">
+          <div className="hidden overflow-x-auto md:block">
+            <table className="table table-zebra">
+              <thead>
+                <tr>
+                  <th>Aluno</th>
+                  <th>Data</th>
+                  <th>Horário</th>
+                  <th>Tipo</th>
+                  <th className="text-right">Repasse</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                {content.map((atendimento) => (
+                  <tr
+                    key={atendimento.id}
+                    className="cursor-pointer hover:bg-base-200/70"
+                    onClick={() => openAtendimento(atendimento.id)}
+                  >
+                    <td className="font-semibold">{atendimento.alunoResumo.nome}</td>
+                    <td>{formatDateShortYear(atendimento.dataHoraInicio)}</td>
+                    <td>
+                      {formatTime(atendimento.dataHoraInicio)} - {formatTime(atendimento.dataHoraFim)}
+                    </td>
+                    <td>
+                      <AtendimentoTipoBadge tipo={atendimento.tipo} />
+                    </td>
+                    <td className="w-10">
+                      <div className="flex items-center justify-between gap-3">
+                        <PaymentStatusIndicator status={atendimento.repasse.status} />
+                        <span>{brl.format(atendimento.repasse.valor)}</span>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          <div className="grid gap-4 md:hidden">
+            {content.map((atendimento) => (
+              <ColaboradorAtendimentoCard
                 key={atendimento.id}
-                className={`cursor-pointer ${selected ? "bg-primary/5" : "hover:bg-base-200/70"}`}
-                onClick={handleRowClick}
-              >
-                <td className="font-semibold">{atendimento.alunoResumo.nome ?? "Não informado"}</td>
-                <td>{formatDateShortYear(atendimento.dataHoraInicio)}</td>
-                <td>
-                  {formatTime(atendimento.dataHoraInicio)} - {formatTime(atendimento.dataHoraFim)}
-                </td>
-                <td>
-                  <AtendimentoTipoBadge tipo={atendimento.tipo} />
-                </td>
-                <td className="w-10">
-                  <div className="flex items-center justify-between gap-3">
-                    <PaymentStatusIndicator status={atendimento.repasse.status} />
-                    <span>{brl.format(atendimento.repasse.valor ?? 0)}</span>
-                  </div>
-                </td>
-                {selectionMode ? (
-                  <td className="text-center">
-                    <input
-                      type="checkbox"
-                      className="checkbox checkbox-sm"
-                      checked={selected}
-                      disabled={!canSelect}
-                      onClick={(event) => event.stopPropagation()}
-                      onChange={() => {
-                        if (repasseId !== undefined) {
-                          onToggle(repasseId);
-                        }
-                      }}
-                      aria-label={`Selecionar repasse do atendimento ${atendimento.id}`}
-                    />
-                  </td>
-                ) : null}
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
-    </div>
+                atendimento={atendimento}
+                onOpen={() => openAtendimento(atendimento.id)}
+              />
+            ))}
+          </div>
+
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            summary={<>Mostrando {content.length} de {totalElements} atendimento(s)</>}
+            onPrevious={() => setPage((value) => value - 1)}
+            onNext={() => setPage((value) => value + 1)}
+          />
+        </div>
+      )}
+    </Card>
   );
 }

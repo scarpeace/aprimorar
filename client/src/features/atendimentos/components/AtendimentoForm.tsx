@@ -3,11 +3,11 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { FormProvider, useForm, useWatch } from "react-hook-form";
-import type { AtendimentoResponse } from "@/lib/api/generated/types/AtendimentoResponse";
+import type { AtendimentoIndividualResponse } from "@/lib/api/generated/types/AtendimentoIndividualResponse";
 import { useListAlunos } from "@/lib/api/generated/hooks/aluno/useListAlunos";
 import { useGetColaboradoresList } from "@/lib/api/generated/hooks/colaborador/useGetColaboradoresList";
 import { Button } from "@/components/ui/Button";
-import { DateInput } from "@/components/ui/forms/DateInput";
+
 import { Field } from "@/components/ui/forms/Field";
 import { MonetaryInput } from "@/components/ui/forms/MonetaryInput";
 import { SelectInput } from "@/components/ui/forms/SelectInput";
@@ -24,13 +24,13 @@ function toApiDateTime(value: string) {
 }
 
 type AtendimentoFormProps = {
-  initialData?: AtendimentoResponse;
+  initialData?: AtendimentoIndividualResponse;
   onSuccess: () => void;
   onCancel: () => void;
 };
 
 export function AtendimentoForm({ initialData, onSuccess, onCancel }: Readonly<AtendimentoFormProps>) {
-  const { createAtendimento, createAtendimentosRecorrentes, updateAtendimento } = useAtendimentoMutations();
+  const { createAtendimento, updateAtendimento } = useAtendimentoMutations();
   const isEditMode = !!initialData;
   const alunos = useListAlunos();
   const colaboradores = useGetColaboradoresList();
@@ -39,22 +39,20 @@ export function AtendimentoForm({ initialData, onSuccess, onCancel }: Readonly<A
     resolver: zodResolver(atendimentoFormSchema),
     mode: "onBlur",
     defaultValues: {
-      alunoId: initialData?.alunoId ?? "",
-      colaboradorId: initialData?.colaboradorId ?? "",
+      alunoId: initialData?.alunoResumo.id ?? "",
+      colaboradorId: initialData?.colaboradorResumo.id ?? "",
       tipo: initialData?.tipo ?? "AULA",
       dataHoraInicio: formatDateTimeLocal(initialData?.dataHoraInicio ?? new Date()),
       duracao: initialData ? getDurationInHours(initialData.dataHoraInicio, initialData.dataHoraFim) : 1,
-      pagamentoAluno: initialData?.pagamentoAluno,
-      repasseColaborador: initialData?.repasseColaborador,
-      recorrente: false,
-      dataFimRecorrencia: "",
+      valorCobranca: initialData?.cobranca.valor,
+      valorRepasse: initialData?.repasse.valor,
     },
   });
 
-  const isPending = createAtendimento.isPending || createAtendimentosRecorrentes.isPending || updateAtendimento.isPending;
-  const [dataHoraInicio, duracao, recorrente] = useWatch({
+  const isPending = createAtendimento.isPending || updateAtendimento.isPending;
+  const [dataHoraInicio, duracao] = useWatch({
     control: methods.control,
-    name: ["dataHoraInicio", "duracao", "recorrente"],
+    name: ["dataHoraInicio", "duracao"],
   });
   const duracaoValue = Number(duracao);
   const dataHoraFimCalculada = addHoursToDateTimeLocal(dataHoraInicio, Number.isFinite(duracaoValue) ? duracaoValue : undefined);
@@ -81,8 +79,8 @@ export function AtendimentoForm({ initialData, onSuccess, onCancel }: Readonly<A
       tipo: data.tipo,
       dataHoraInicio: toApiDateTime(data.dataHoraInicio),
       dataHoraFim: toApiDateTime(dataHoraFimCalculada),
-      pagamentoAluno: data.pagamentoAluno,
-      repasseColaborador: data.repasseColaborador,
+      valorCobranca: data.valorCobranca,
+      valorRepasse: data.valorRepasse,
       alunoId: data.alunoId,
       colaboradorId: data.colaboradorId,
     };
@@ -100,20 +98,6 @@ export function AtendimentoForm({ initialData, onSuccess, onCancel }: Readonly<A
       return;
     }
 
-    if (data.recorrente && data.dataFimRecorrencia) {
-      createAtendimentosRecorrentes.mutate(
-        {
-          data: {
-            atendimento: payload,
-            dataFimRecorrencia: data.dataFimRecorrencia,
-          },
-        },
-        {
-          onSuccess,
-        },
-      );
-      return;
-    }
 
     createAtendimento.mutate(
       {
@@ -190,29 +174,10 @@ export function AtendimentoForm({ initialData, onSuccess, onCancel }: Readonly<A
             </Field>
           </div>
 
-          {!isEditMode ? (
-            <div className="grid gap-4 md:grid-cols-2">
-              <label className="label min-h-12 cursor-pointer justify-start gap-3 rounded-lg border border-base-300 px-3 py-2">
-                <input
-                  type="checkbox"
-                  className="checkbox checkbox-sm"
-                  disabled={isPending}
-                  {...methods.register("recorrente")}
-                />
-                <span className="label-text text-sm font-medium text-base-content/75">Repetir semanalmente</span>
-              </label>
-
-              {recorrente ? (
-                <DateInput name="dataFimRecorrencia" label="Repetir até" disabled={isPending} />
-              ) : (
-                <div className="hidden md:block" />
-              )}
-            </div>
-          ) : null}
 
           <div className="grid gap-4 md:grid-cols-2">
-            <MonetaryInput name="pagamentoAluno" label="Valor pago pelo aluno" disabled={isPending} />
-            <MonetaryInput name="repasseColaborador" label="Repasse ao colaborador" disabled={isPending} />
+            <MonetaryInput name="valorCobranca" label="Valor da cobrança" disabled={isPending} />
+            <MonetaryInput name="valorRepasse" label="Valor do repasse" disabled={isPending} />
           </div>
         </section>
 

@@ -72,30 +72,24 @@ export function ColaboradorRepassesHistory({ colaboradorId }: Readonly<Colaborad
                 {content.map((repasse) => (
                   <tr key={repasse.loteId}>
                     <td>
-                      {repasse.dataRepasse
-                        ? `${formatDateShortYear(repasse.dataRepasse)} às ${formatTime(repasse.dataRepasse)}`
-                        : "—"}
+                      {formatDateShortYear(repasse.dataRepasse)} às {formatTime(repasse.dataRepasse)}
                     </td>
-                    <td>{repasse.formaPagamento ? formaPagamentoLabels[repasse.formaPagamento] : "—"}</td>
-                    <td className="text-center">{repasse.quantidadeRepasses ?? 0}</td>
-                    <td className="text-right font-semibold">{brl.format(repasse.valorTotal ?? 0)}</td>
+                    <td>{formaPagamentoLabels[repasse.formaPagamento]}</td>
+                    <td className="text-center">{repasse.quantidadeRepasses}</td>
+                    <td className="text-right font-semibold">{brl.format(repasse.valorTotal)}</td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
 
-          <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-            <p className="text-sm text-base-content/70">
-              Mostrando {content.length} de {totalElements} pagamento(s)
-            </p>
-            <Pagination
-              currentPage={currentPage}
-              totalPages={totalPages}
-              onPrevious={() => setPage(currentPage - 1)}
-              onNext={() => setPage(currentPage + 1)}
-            />
-          </div>
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            summary={<>Mostrando {content.length} de {totalElements} pagamento(s)</>}
+            onPrevious={() => setPage(currentPage - 1)}
+            onNext={() => setPage(currentPage + 1)}
+          />
         </div>
       )}
     </Card>

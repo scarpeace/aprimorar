@@ -56,6 +56,11 @@ export type BuscarAtendimentosIndividuaisQueryParams = {
    */
   statusCobranca?: string | null;
   /**
+   * @description Status do repasse
+   * @type string
+   */
+  statusRepasse?: string | null;
+  /**
    * @description Zero-based page index (0..N)
    * @minLength 0
    * @default 0

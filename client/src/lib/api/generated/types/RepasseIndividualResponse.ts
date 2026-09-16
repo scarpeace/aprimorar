@@ -28,40 +28,40 @@ export type RepasseIndividualResponseFormaPagamentoEnumKey =
  */
 export type RepasseIndividualResponse = {
   /**
-   * @type integer | undefined, int64
+   * @type integer, int64
    */
-  id?: number;
+  id: number;
   /**
-   * @type integer | undefined, int64
+   * @type integer, int64
    */
-  atendimentoId?: number;
+  atendimentoId: number;
   /**
-   * @type string | undefined, uuid
+   * @type string, uuid
    */
-  colaboradorId?: string;
+  colaboradorId: string;
   /**
-   * @type number | undefined
+   * @type number
    */
-  valor?: number;
+  valor: number;
   /**
-   * @type string | undefined
+   * @type string
    */
-  status?: RepasseIndividualResponseStatusEnumKey;
+  status: RepasseIndividualResponseStatusEnumKey;
   /**
-   * @type string | undefined, date-time
+   * @type string, date-time
    */
-  dataRepasse?: string;
+  dataRepasse?: string | null;
   /**
    * @description Forma de pagamento
-   * @type string | undefined
+   * @type string
    */
-  formaPagamento?: RepasseIndividualResponseFormaPagamentoEnumKey;
+  formaPagamento?: RepasseIndividualResponseFormaPagamentoEnumKey | null;
   /**
-   * @type string | undefined
+   * @type string
    */
-  comprovanteUrl?: string;
+  comprovanteUrl?: string | null;
   /**
-   * @type string | undefined, uuid
+   * @type string, uuid
    */
-  loteId?: string;
+  loteId?: string | null;
 };

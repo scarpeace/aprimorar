@@ -8,31 +8,32 @@
  */
 export type RepasseResumo = {
   /**
-   * @type integer | undefined, int64
+   * @description Identificador do repasse
+   * @type integer, int64
    */
-  id?: number;
+  id: number;
   /**
-   * @type number | undefined
+   * @type number
    */
-  valor?: number;
+  valor: number;
   /**
-   * @type string | undefined
+   * @type string
    */
-  status?: string;
+  status: string;
   /**
-   * @type string | undefined, date-time
+   * @type string, date-time
    */
-  dataRepasse?: string;
+  dataRepasse?: string | null;
   /**
-   * @type string | undefined
+   * @type string
    */
-  formaPagamento?: string;
+  formaPagamento?: string | null;
   /**
-   * @type string | undefined
+   * @type string
    */
-  comprovanteUrl?: string;
+  comprovanteUrl?: string | null;
   /**
-   * @type string | undefined, uuid
+   * @type string, uuid
    */
-  loteId?: string;
+  loteId?: string | null;
 };

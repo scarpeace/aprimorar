@@ -108,6 +108,15 @@ export type {
   BuscarCobrancasIndividuaisQueryResponse,
 } from "./BuscarCobrancasIndividuais.ts";
 export type {
+  BuscarLotesDeCobranca200,
+  BuscarLotesDeCobranca400,
+  BuscarLotesDeCobranca401,
+  BuscarLotesDeCobranca500,
+  BuscarLotesDeCobrancaQuery,
+  BuscarLotesDeCobrancaQueryParams,
+  BuscarLotesDeCobrancaQueryResponse,
+} from "./BuscarLotesDeCobranca.ts";
+export type {
   BuscarLotesDeRepasse200,
   BuscarLotesDeRepasse400,
   BuscarLotesDeRepasse401,
@@ -172,6 +181,7 @@ export type {
   CobrancaIndividualResponseFormaPagamentoEnumKey,
   CobrancaIndividualResponseStatusEnumKey,
 } from "./CobrancaIndividualResponse.ts";
+export type { CobrancaLoteResponse, CobrancaLoteResponseFormaPagamentoEnumKey } from "./CobrancaLoteResponse.ts";
 export type { CobrancaResumo } from "./CobrancaResumo.ts";
 export type { ColaboradorDetailResponseDTO, ColaboradorDetailResponseDTOFuncaoEnumKey } from "./ColaboradorDetailResponseDTO.ts";
 export type { ColaboradorListResponseDTO, ColaboradorListResponseDTOFuncaoEnumKey } from "./ColaboradorListResponseDTO.ts";
@@ -396,6 +406,7 @@ export type { PageMetadata } from "./PageMetadata.ts";
 export type { PagedModelAlunoListResponseDTO } from "./PagedModelAlunoListResponseDTO.ts";
 export type { PagedModelAtendimentoIndividualResponse } from "./PagedModelAtendimentoIndividualResponse.ts";
 export type { PagedModelCobrancaIndividualResponse } from "./PagedModelCobrancaIndividualResponse.ts";
+export type { PagedModelCobrancaLoteResponse } from "./PagedModelCobrancaLoteResponse.ts";
 export type { PagedModelColaboradorListResponseDTO } from "./PagedModelColaboradorListResponseDTO.ts";
 export type { PagedModelDespesaResponse } from "./PagedModelDespesaResponse.ts";
 export type { PagedModelRepasseIndividualResponse } from "./PagedModelRepasseIndividualResponse.ts";
@@ -493,6 +504,7 @@ export { buscarRepassesIndividuaisQueryParamsFormaPagamentoEnum } from "./Buscar
 export { buscarRepassesIndividuaisQueryParamsStatusEnum } from "./BuscarRepassesIndividuais.ts";
 export { cobrancaIndividualResponseFormaPagamentoEnum } from "./CobrancaIndividualResponse.ts";
 export { cobrancaIndividualResponseStatusEnum } from "./CobrancaIndividualResponse.ts";
+export { cobrancaLoteResponseFormaPagamentoEnum } from "./CobrancaLoteResponse.ts";
 export { colaboradorDetailResponseDTOFuncaoEnum } from "./ColaboradorDetailResponseDTO.ts";
 export { colaboradorListResponseDTOFuncaoEnum } from "./ColaboradorListResponseDTO.ts";
 export { colaboradorRequestDTOFuncaoEnum } from "./ColaboradorRequestDTO.ts";

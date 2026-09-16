@@ -10,12 +10,12 @@ import { z } from "zod/v4";
  */
 export const repasseResumoSchema = z
   .object({
-    id: z.optional(z.int()),
-    valor: z.optional(z.number()),
-    status: z.optional(z.string()),
-    dataRepasse: z.optional(z.iso.datetime()),
-    formaPagamento: z.optional(z.string()),
-    comprovanteUrl: z.optional(z.string()),
-    loteId: z.optional(z.uuid()),
+    id: z.int().describe("Identificador do repasse"),
+    valor: z.number(),
+    status: z.string(),
+    dataRepasse: z.iso.datetime().nullish(),
+    formaPagamento: z.string().nullish(),
+    comprovanteUrl: z.string().nullish(),
+    loteId: z.uuid().nullish(),
   })
   .describe("Resumo do repasse do atendimento");

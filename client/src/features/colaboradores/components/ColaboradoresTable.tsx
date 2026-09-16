@@ -123,18 +123,13 @@ export function ColaboradoresTable() {
             </table>
           </div>
 
-          <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-            <p className="text-sm text-base-content/70">
-              Mostrando {content.length} de {totalElements} colaborador(es)
-            </p>
-
-            <Pagination
-              currentPage={currentPage}
-              totalPages={totalPages}
-              onPrevious={() => setPage((value) => value - 1)}
-              onNext={() => setPage((value) => value + 1)}
-            />
-          </div>
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            summary={<>Mostrando {content.length} de {totalElements} colaborador(es)</>}
+            onPrevious={() => setPage((value) => value - 1)}
+            onNext={() => setPage((value) => value + 1)}
+          />
         </div>
       )}
     </Card>

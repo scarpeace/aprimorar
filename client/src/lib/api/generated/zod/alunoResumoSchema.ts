@@ -10,7 +10,7 @@ import { z } from "zod/v4";
  */
 export const alunoResumoSchema = z
   .object({
-    id: z.optional(z.uuid()),
-    nome: z.optional(z.string()),
+    id: z.uuid(),
+    nome: z.string(),
   })
   .describe("Resumo do aluno vinculado ao atendimento");

@@ -4,6 +4,7 @@
     "content": {
       "type": "array",
       "items": {
+        "required": ["colaboradorId", "dataRepasse", "formaPagamento", "loteId", "quantidadeRepasses", "valorTotal"],
         "type": "object",
         "properties": {
           "loteId": { "type": "string", "format": "uuid" },
@@ -14,7 +15,7 @@
             "description": "Forma de pagamento",
             "enum": ["PIX", "DINHEIRO", "CARTAO_CREDITO", "CARTAO_DEBITO", "BOLETO", "TRANSFERENCIA"]
           },
-          "comprovanteUrl": { "type": "string" },
+          "comprovanteUrl": { "type": "string", "nullable": true },
           "valorTotal": { "type": "number" },
           "quantidadeRepasses": { "type": "integer", "format": "int64" }
         },

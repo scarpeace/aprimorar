@@ -1,7 +1,7 @@
 "use client";
 
 import { useParams } from "next/navigation";
-import { ColaboradorAtendimentos } from "@/features/colaboradores/components/atendimentos/ColaboradorAtendimentos";
+import { ColaboradorAtendimentosTable } from "@/features/colaboradores/components/atendimentos/ColaboradorAtendimentosTable";
 import { ColaboradorCalendar } from "@/features/colaboradores/components/atendimentos/ColaboradorCalendar";
 import { ColaboradorProfile } from "@/features/colaboradores/components/ColaboradorProfile";
 import { ColaboradorRepassesHistory } from "@/features/colaboradores/components/repasses/ColaboradorRepassesHistory";
@@ -22,7 +22,7 @@ export default function ColaboradorPage() {
       </div>
 
       <ColaboradorCalendar colaboradorId={id} />
-      <ColaboradorAtendimentos colaboradorId={id} />
+      <ColaboradorAtendimentosTable colaboradorId={id} />
     </section>
   );
 }

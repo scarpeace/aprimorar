@@ -10,14 +10,14 @@ import { z } from "zod/v4";
  */
 export const repasseLoteResponseSchema = z
   .object({
-    loteId: z.optional(z.uuid()),
-    colaboradorId: z.optional(z.uuid()),
-    dataRepasse: z.optional(z.iso.datetime()),
-    formaPagamento: z.optional(
-      z.enum(["PIX", "DINHEIRO", "CARTAO_CREDITO", "CARTAO_DEBITO", "BOLETO", "TRANSFERENCIA"]).describe("Forma de pagamento"),
-    ),
-    comprovanteUrl: z.optional(z.string()),
-    valorTotal: z.optional(z.number()),
-    quantidadeRepasses: z.optional(z.int()),
+    loteId: z.uuid(),
+    colaboradorId: z.uuid(),
+    dataRepasse: z.iso.datetime(),
+    formaPagamento: z
+      .enum(["PIX", "DINHEIRO", "CARTAO_CREDITO", "CARTAO_DEBITO", "BOLETO", "TRANSFERENCIA"])
+      .describe("Forma de pagamento"),
+    comprovanteUrl: z.string().nullish(),
+    valorTotal: z.number(),
+    quantidadeRepasses: z.int(),
   })
   .describe("Lote de repasses pagos");

@@ -25,6 +25,13 @@ export function ColaboradorProfile({ colaboradorId }: Readonly<ColaboradorProfil
           <CardTitle>Cadastro</CardTitle>
           <p className="mt-2 text-sm text-base-content/65">Consulte e gerencie os dados cadastrais deste colaborador.</p>
         </div>
+
+        {colaborador.data ? (
+          <CardActions>
+            <EditarColaboradorButton colaborador={colaborador.data} />
+            <ColaboradorStatusButton colaboradorId={colaborador.data.id} active={colaborador.data.active !== false} />
+          </CardActions>
+        ) : null}
       </CardHeader>
 
       {colaborador.isLoading ? (
@@ -43,11 +50,6 @@ export function ColaboradorProfile({ colaboradorId }: Readonly<ColaboradorProfil
               <h2 className="text-xl font-bold uppercase text-base-content">{colaborador.data.nome}</h2>
               <span className="text-sm font-semibold text-base-content/65">{colaborador.data.funcao}</span>
             </div>
-
-            <CardActions>
-              <EditarColaboradorButton colaborador={colaborador.data} />
-              <ColaboradorStatusButton colaboradorId={colaborador.data.id} active={colaborador.data.active !== false} />
-            </CardActions>
           </div>
 
           <ColaboradorDetails colaborador={colaborador.data} />

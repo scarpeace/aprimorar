@@ -20,32 +20,32 @@ export type RepasseLoteResponseFormaPagamentoEnumKey =
  */
 export type RepasseLoteResponse = {
   /**
-   * @type string | undefined, uuid
+   * @type string, uuid
    */
-  loteId?: string;
+  loteId: string;
   /**
-   * @type string | undefined, uuid
+   * @type string, uuid
    */
-  colaboradorId?: string;
+  colaboradorId: string;
   /**
-   * @type string | undefined, date-time
+   * @type string, date-time
    */
-  dataRepasse?: string;
+  dataRepasse: string;
   /**
    * @description Forma de pagamento
-   * @type string | undefined
+   * @type string
    */
-  formaPagamento?: RepasseLoteResponseFormaPagamentoEnumKey;
+  formaPagamento: RepasseLoteResponseFormaPagamentoEnumKey;
   /**
-   * @type string | undefined
+   * @type string
    */
-  comprovanteUrl?: string;
+  comprovanteUrl?: string | null;
   /**
-   * @type number | undefined
+   * @type number
    */
-  valorTotal?: number;
+  valorTotal: number;
   /**
-   * @type integer | undefined, int64
+   * @type integer, int64
    */
-  quantidadeRepasses?: number;
+  quantidadeRepasses: number;
 };

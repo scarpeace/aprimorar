@@ -5,6 +5,7 @@ export type { BuscarAtendimentosIndividuaisQueryKey } from "./useBuscarAtendimen
 export type { BuscarCalendarioAtendimentosIndividuaisQueryKey } from "./useBuscarCalendarioAtendimentosIndividuais.ts";
 export type { BuscarCobrancaIndividualPorIdQueryKey } from "./useBuscarCobrancaIndividualPorId.ts";
 export type { BuscarCobrancasIndividuaisQueryKey } from "./useBuscarCobrancasIndividuais.ts";
+export type { BuscarLotesDeCobrancaQueryKey } from "./useBuscarLotesDeCobranca.ts";
 export type { BuscarLotesDeRepasseQueryKey } from "./useBuscarLotesDeRepasse.ts";
 export type { BuscarRepasseIndividualPorIdQueryKey } from "./useBuscarRepasseIndividualPorId.ts";
 export type { BuscarRepassesIndividuaisQueryKey } from "./useBuscarRepassesIndividuais.ts";
@@ -41,6 +42,10 @@ export { buscarCobrancasIndividuais } from "./useBuscarCobrancasIndividuais.ts";
 export { buscarCobrancasIndividuaisQueryKey } from "./useBuscarCobrancasIndividuais.ts";
 export { buscarCobrancasIndividuaisQueryOptions } from "./useBuscarCobrancasIndividuais.ts";
 export { useBuscarCobrancasIndividuais } from "./useBuscarCobrancasIndividuais.ts";
+export { buscarLotesDeCobranca } from "./useBuscarLotesDeCobranca.ts";
+export { buscarLotesDeCobrancaQueryKey } from "./useBuscarLotesDeCobranca.ts";
+export { buscarLotesDeCobrancaQueryOptions } from "./useBuscarLotesDeCobranca.ts";
+export { useBuscarLotesDeCobranca } from "./useBuscarLotesDeCobranca.ts";
 export { buscarLotesDeRepasse } from "./useBuscarLotesDeRepasse.ts";
 export { buscarLotesDeRepasseQueryKey } from "./useBuscarLotesDeRepasse.ts";
 export { buscarLotesDeRepasseQueryOptions } from "./useBuscarLotesDeRepasse.ts";

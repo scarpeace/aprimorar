@@ -10,12 +10,12 @@ import { z } from "zod/v4";
  */
 export const cobrancaResumoSchema = z
   .object({
-    id: z.optional(z.int()),
-    valor: z.optional(z.number()),
-    status: z.optional(z.string()),
-    dataPagamento: z.optional(z.iso.datetime()),
-    formaPagamento: z.optional(z.string()),
-    comprovanteUrl: z.optional(z.string()),
-    loteId: z.optional(z.uuid()),
+    id: z.int().describe("Identificador da cobrança"),
+    valor: z.number(),
+    status: z.string(),
+    dataPagamento: z.iso.datetime().nullish(),
+    formaPagamento: z.string().nullish(),
+    comprovanteUrl: z.string().nullish(),
+    loteId: z.uuid().nullish(),
   })
   .describe("Resumo da cobrança do atendimento");
