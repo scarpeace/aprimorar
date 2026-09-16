@@ -6,20 +6,18 @@
 import { z } from "zod/v4";
 
 /**
- * @description Repasse individual
+ * @description Lote de repasses pagos
  */
-export const repasseIndividualResponseSchema = z
+export const repasseLoteResponseSchema = z
   .object({
-    id: z.optional(z.int()),
-    atendimentoId: z.optional(z.int()),
+    loteId: z.optional(z.uuid()),
     colaboradorId: z.optional(z.uuid()),
-    valor: z.optional(z.number()),
-    status: z.optional(z.enum(["PENDENTE", "PAGO"])),
     dataRepasse: z.optional(z.iso.datetime()),
     formaPagamento: z.optional(
       z.enum(["PIX", "DINHEIRO", "CARTAO_CREDITO", "CARTAO_DEBITO", "BOLETO", "TRANSFERENCIA"]).describe("Forma de pagamento"),
     ),
     comprovanteUrl: z.optional(z.string()),
-    loteId: z.optional(z.uuid()),
+    valorTotal: z.optional(z.number()),
+    quantidadeRepasses: z.optional(z.int()),
   })
-  .describe("Repasse individual");
+  .describe("Lote de repasses pagos");

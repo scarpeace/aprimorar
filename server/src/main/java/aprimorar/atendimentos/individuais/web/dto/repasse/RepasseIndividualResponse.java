@@ -18,12 +18,14 @@ public record RepasseIndividualResponse(
     StatusRepasseIndividual status,
     LocalDateTime dataRepasse,
     FormaPagamento formaPagamento,
-    String comprovanteUrl
+    String comprovanteUrl,
+    UUID loteId
 ) {
     public static RepasseIndividualResponse toDto(RepasseIndividualEntity entity) {
         return new RepasseIndividualResponse(
             entity.getId(), entity.getAtendimentoId(), entity.getColaboradorId(), entity.getValor(),
-            entity.getStatus(), entity.getDataRepasse(), entity.getFormaPagamento(), entity.getComprovanteUrl()
+            entity.getStatus(), entity.getDataRepasse(), entity.getFormaPagamento(), entity.getComprovanteUrl(),
+            entity.getLoteId()
         );
     }
 
@@ -32,7 +34,8 @@ public record RepasseIndividualResponse(
             view.getRepasseId(), view.getId(), view.getColaboradorId(), view.getRepasseValor(),
             StatusRepasseIndividual.valueOf(view.getRepasseStatus()), view.getRepasseDataRepasse(),
             view.getRepasseFormaPagamento() == null ? null : FormaPagamento.valueOf(view.getRepasseFormaPagamento()),
-            view.getRepasseComprovanteUrl()
+            view.getRepasseComprovanteUrl(),
+            view.getRepasseLoteId()
         );
     }
 }

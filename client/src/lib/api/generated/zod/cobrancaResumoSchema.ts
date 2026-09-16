@@ -16,5 +16,6 @@ export const cobrancaResumoSchema = z
     dataPagamento: z.optional(z.iso.datetime()),
     formaPagamento: z.optional(z.string()),
     comprovanteUrl: z.optional(z.string()),
+    loteId: z.optional(z.uuid()),
   })
   .describe("Resumo da cobrança do atendimento");

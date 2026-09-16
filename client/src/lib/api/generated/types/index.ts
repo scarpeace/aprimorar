@@ -108,6 +108,15 @@ export type {
   BuscarCobrancasIndividuaisQueryResponse,
 } from "./BuscarCobrancasIndividuais.ts";
 export type {
+  BuscarLotesDeRepasse200,
+  BuscarLotesDeRepasse400,
+  BuscarLotesDeRepasse401,
+  BuscarLotesDeRepasse500,
+  BuscarLotesDeRepasseQuery,
+  BuscarLotesDeRepasseQueryParams,
+  BuscarLotesDeRepasseQueryResponse,
+} from "./BuscarLotesDeRepasse.ts";
+export type {
   BuscarRepasseIndividualPorId200,
   BuscarRepasseIndividualPorId401,
   BuscarRepasseIndividualPorId404,
@@ -390,6 +399,7 @@ export type { PagedModelCobrancaIndividualResponse } from "./PagedModelCobrancaI
 export type { PagedModelColaboradorListResponseDTO } from "./PagedModelColaboradorListResponseDTO.ts";
 export type { PagedModelDespesaResponse } from "./PagedModelDespesaResponse.ts";
 export type { PagedModelRepasseIndividualResponse } from "./PagedModelRepasseIndividualResponse.ts";
+export type { PagedModelRepasseLoteResponse } from "./PagedModelRepasseLoteResponse.ts";
 export type { ProblemDetail } from "./ProblemDetail.ts";
 export type {
   RefreshAccessToken200,
@@ -429,6 +439,7 @@ export type {
   RepasseIndividualResponseFormaPagamentoEnumKey,
   RepasseIndividualResponseStatusEnumKey,
 } from "./RepasseIndividualResponse.ts";
+export type { RepasseLoteResponse, RepasseLoteResponseFormaPagamentoEnumKey } from "./RepasseLoteResponse.ts";
 export type { RepasseResumo } from "./RepasseResumo.ts";
 export type { ResponsavelRequestDTO } from "./ResponsavelRequestDTO.ts";
 export type { ResponsavelResponseDTO } from "./ResponsavelResponseDTO.ts";
@@ -498,6 +509,7 @@ export { registrarPagamentoIndividualRequestFormaPagamentoEnum } from "./Registr
 export { registrarRepasseIndividualRequestFormaPagamentoEnum } from "./RegistrarRepasseIndividualRequest.ts";
 export { repasseIndividualResponseFormaPagamentoEnum } from "./RepasseIndividualResponse.ts";
 export { repasseIndividualResponseStatusEnum } from "./RepasseIndividualResponse.ts";
+export { repasseLoteResponseFormaPagamentoEnum } from "./RepasseLoteResponse.ts";
 export { userCreateRequestRoleEnum } from "./UserCreateRequest.ts";
 export { userListResponseRoleEnum } from "./UserListResponse.ts";
 export { userResponseRoleEnum } from "./UserResponse.ts";

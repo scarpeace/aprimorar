@@ -92,6 +92,14 @@ export {
   buscarCobrancasIndividuaisQueryResponseSchema,
 } from "./buscarCobrancasIndividuaisSchema.ts";
 export {
+  buscarLotesDeRepasse200Schema,
+  buscarLotesDeRepasse400Schema,
+  buscarLotesDeRepasse401Schema,
+  buscarLotesDeRepasse500Schema,
+  buscarLotesDeRepasseQueryParamsSchema,
+  buscarLotesDeRepasseQueryResponseSchema,
+} from "./buscarLotesDeRepasseSchema.ts";
+export {
   buscarRepasseIndividualPorId200Schema,
   buscarRepasseIndividualPorId401Schema,
   buscarRepasseIndividualPorId404Schema,
@@ -330,6 +338,7 @@ export { pagedModelCobrancaIndividualResponseSchema } from "./pagedModelCobranca
 export { pagedModelColaboradorListResponseDTOSchema } from "./pagedModelColaboradorListResponseDTOSchema.ts";
 export { pagedModelDespesaResponseSchema } from "./pagedModelDespesaResponseSchema.ts";
 export { pagedModelRepasseIndividualResponseSchema } from "./pagedModelRepasseIndividualResponseSchema.ts";
+export { pagedModelRepasseLoteResponseSchema } from "./pagedModelRepasseLoteResponseSchema.ts";
 export { problemDetailSchema } from "./problemDetailSchema.ts";
 export { refreshAccessToken200Schema, refreshAccessTokenMutationResponseSchema } from "./refreshAccessTokenSchema.ts";
 export {
@@ -353,6 +362,7 @@ export {
   registrarRepassesIndividuaisMutationResponseSchema,
 } from "./registrarRepassesIndividuaisSchema.ts";
 export { repasseIndividualResponseSchema } from "./repasseIndividualResponseSchema.ts";
+export { repasseLoteResponseSchema } from "./repasseLoteResponseSchema.ts";
 export { repasseResumoSchema } from "./repasseResumoSchema.ts";
 export { responsavelRequestDTOSchema } from "./responsavelRequestDTOSchema.ts";
 export { responsavelResponseDTOSchema } from "./responsavelResponseDTOSchema.ts";

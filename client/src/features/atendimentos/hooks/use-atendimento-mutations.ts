@@ -27,6 +27,7 @@ export function useAtendimentoMutations() {
   function invalidateFinanceiro() {
     queryClient.invalidateQueries({ queryKey: buscarCobrancasIndividuaisQueryKey() });
     queryClient.invalidateQueries({ queryKey: buscarRepassesIndividuaisQueryKey() });
+    queryClient.invalidateQueries({ queryKey: [{ url: "/atendimentos-individuais/repasses/lotes" }] });
   }
 
   function invalidateAtendimentoDetail(atendimentoId: number) {

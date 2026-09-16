@@ -154,7 +154,8 @@ public class AtendimentoIndividualService {
             );
         }
 
-        cobrancas.forEach(c -> c.registrarPagamento(request.formaPagamento(), request.comprovanteUrl()));
+        UUID loteId = UUID.randomUUID();
+        cobrancas.forEach(c -> c.registrarPagamento(loteId, request.formaPagamento(), request.comprovanteUrl()));
     }
 
     @Transactional
@@ -195,7 +196,8 @@ public class AtendimentoIndividualService {
             );
         }
 
-        repasses.forEach(r -> r.registrarRepasse(request.formaPagamento(), request.comprovanteUrl()));
+        UUID loteId = UUID.randomUUID();
+        repasses.forEach(r -> r.registrarRepasse(loteId, request.formaPagamento(), request.comprovanteUrl()));
     }
 
     @Transactional

@@ -12,7 +12,8 @@
       "description": "Forma de pagamento",
       "enum": ["PIX", "DINHEIRO", "CARTAO_CREDITO", "CARTAO_DEBITO", "BOLETO", "TRANSFERENCIA"]
     },
-    "comprovanteUrl": { "type": "string" }
+    "comprovanteUrl": { "type": "string" },
+    "loteId": { "type": "string", "format": "uuid" }
   },
   "description": "Cobrança de aluno",
   "x-readme-ref-name": "CobrancaIndividualResponse"

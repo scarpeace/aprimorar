@@ -65,7 +65,8 @@ public record AtendimentoIndividualResponse(
                 atendimento.getCobrancaStatus(),
                 atendimento.getCobrancaDataPagamento(),
                 atendimento.getCobrancaFormaPagamento(),
-                atendimento.getCobrancaComprovanteUrl()
+                atendimento.getCobrancaComprovanteUrl(),
+                atendimento.getCobrancaLoteId()
             ),
             new RepasseResumo(
                 atendimento.getRepasseId(),
@@ -73,7 +74,8 @@ public record AtendimentoIndividualResponse(
                 atendimento.getRepasseStatus(),
                 atendimento.getRepasseDataRepasse(),
                 atendimento.getRepasseFormaPagamento(),
-                atendimento.getRepasseComprovanteUrl()
+                atendimento.getRepasseComprovanteUrl(),
+                atendimento.getRepasseLoteId()
             ),
             atendimento.getCreatedAt(),
             atendimento.getUpdatedAt()
@@ -92,7 +94,8 @@ public record AtendimentoIndividualResponse(
         String status,
         LocalDateTime dataPagamento,
         String formaPagamento,
-        String comprovanteUrl
+        String comprovanteUrl,
+        UUID loteId
     ) {
     }
 
@@ -102,7 +105,8 @@ public record AtendimentoIndividualResponse(
         String status,
         LocalDateTime dataRepasse,
         String formaPagamento,
-        String comprovanteUrl
+        String comprovanteUrl,
+        UUID loteId
     ) {
     }
 }

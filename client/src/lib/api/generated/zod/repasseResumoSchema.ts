@@ -16,5 +16,6 @@ export const repasseResumoSchema = z
     dataRepasse: z.optional(z.iso.datetime()),
     formaPagamento: z.optional(z.string()),
     comprovanteUrl: z.optional(z.string()),
+    loteId: z.optional(z.uuid()),
   })
   .describe("Resumo do repasse do atendimento");

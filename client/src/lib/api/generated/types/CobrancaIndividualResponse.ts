@@ -60,4 +60,8 @@ export type CobrancaIndividualResponse = {
    * @type string | undefined
    */
   comprovanteUrl?: string;
+  /**
+   * @type string | undefined, uuid
+   */
+  loteId?: string;
 };

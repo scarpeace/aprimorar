@@ -9,8 +9,6 @@ type EnderecoDetailsProps = {
 export function EnderecoDetails({ endereco }: Readonly<EnderecoDetailsProps>) {
   return (
     <div className="space-y-4">
-      <h4 className="text-sm font-bold uppercase tracking-wider text-base-content/60">Endereço</h4>
-
       <div className="grid gap-5 sm:grid-cols-2">
         <DetailField label="Rua" value={endereco.rua} />
         <DetailField label="Número" value={endereco.numero} />

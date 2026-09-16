@@ -12,6 +12,7 @@ export type { BuscarAtendimentosIndividuaisQueryKey } from "./atendimentos indiv
 export type { BuscarCalendarioAtendimentosIndividuaisQueryKey } from "./atendimentos individuais/useBuscarCalendarioAtendimentosIndividuais.ts";
 export type { BuscarCobrancaIndividualPorIdQueryKey } from "./atendimentos individuais/useBuscarCobrancaIndividualPorId.ts";
 export type { BuscarCobrancasIndividuaisQueryKey } from "./atendimentos individuais/useBuscarCobrancasIndividuais.ts";
+export type { BuscarLotesDeRepasseQueryKey } from "./atendimentos individuais/useBuscarLotesDeRepasse.ts";
 export type { BuscarRepasseIndividualPorIdQueryKey } from "./atendimentos individuais/useBuscarRepasseIndividualPorId.ts";
 export type { BuscarRepassesIndividuaisQueryKey } from "./atendimentos individuais/useBuscarRepassesIndividuais.ts";
 export type { CancelarPagamentoCobrancasIndividuaisMutationKey } from "./atendimentos individuais/useCancelarPagamentoCobrancasIndividuais.ts";
@@ -99,6 +100,10 @@ export { buscarCobrancasIndividuais } from "./atendimentos individuais/useBuscar
 export { buscarCobrancasIndividuaisQueryKey } from "./atendimentos individuais/useBuscarCobrancasIndividuais.ts";
 export { buscarCobrancasIndividuaisQueryOptions } from "./atendimentos individuais/useBuscarCobrancasIndividuais.ts";
 export { useBuscarCobrancasIndividuais } from "./atendimentos individuais/useBuscarCobrancasIndividuais.ts";
+export { buscarLotesDeRepasse } from "./atendimentos individuais/useBuscarLotesDeRepasse.ts";
+export { buscarLotesDeRepasseQueryKey } from "./atendimentos individuais/useBuscarLotesDeRepasse.ts";
+export { buscarLotesDeRepasseQueryOptions } from "./atendimentos individuais/useBuscarLotesDeRepasse.ts";
+export { useBuscarLotesDeRepasse } from "./atendimentos individuais/useBuscarLotesDeRepasse.ts";
 export { buscarRepasseIndividualPorId } from "./atendimentos individuais/useBuscarRepasseIndividualPorId.ts";
 export { buscarRepasseIndividualPorIdQueryKey } from "./atendimentos individuais/useBuscarRepasseIndividualPorId.ts";
 export { buscarRepasseIndividualPorIdQueryOptions } from "./atendimentos individuais/useBuscarRepasseIndividualPorId.ts";

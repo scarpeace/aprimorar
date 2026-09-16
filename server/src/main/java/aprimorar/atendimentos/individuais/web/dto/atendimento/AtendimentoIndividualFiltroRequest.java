@@ -2,7 +2,7 @@ package aprimorar.atendimentos.individuais.web.dto.atendimento;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDateTime;
-import java.time.YearMonth;
+
 import java.util.UUID;
 
 import aprimorar.atendimentos.individuais.domain.enums.TipoAtendimento;
@@ -11,8 +11,7 @@ import aprimorar.atendimentos.individuais.domain.enums.TipoAtendimento;
 public record AtendimentoIndividualFiltroRequest(
     @Schema(description = "Texto livre de busca", nullable = true)
     String busca,
-    @Schema(description = "Ano e mes do filtro", example = "2026-06", nullable = true)
-    YearMonth anoMes,
+
     @Schema(description = "Data inicial", format = "date-time", nullable = true)
     LocalDateTime inicio,
     @Schema(description = "Data final", format = "date-time", nullable = true)

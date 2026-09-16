@@ -18,7 +18,8 @@ public record CobrancaIndividualResponse(
     StatusCobrancaIndividual status,
     LocalDateTime dataPagamento,
     FormaPagamento formaPagamento,
-    String comprovanteUrl
+    String comprovanteUrl,
+    UUID loteId
 ) {
     public static CobrancaIndividualResponse toDto(CobrancaIndividualEntity entity) {
         return new CobrancaIndividualResponse(
@@ -29,7 +30,8 @@ public record CobrancaIndividualResponse(
             entity.getStatus(),
             entity.getDataPagamento(),
             entity.getFormaPagamento(),
-            entity.getComprovanteUrl()
+            entity.getComprovanteUrl(),
+            entity.getLoteId()
         );
     }
 
@@ -44,7 +46,8 @@ public record CobrancaIndividualResponse(
             view.getCobrancaFormaPagamento() == null
                 ? null
                 : FormaPagamento.valueOf(view.getCobrancaFormaPagamento()),
-            view.getCobrancaComprovanteUrl()
+            view.getCobrancaComprovanteUrl(),
+            view.getCobrancaLoteId()
         );
     }
 }

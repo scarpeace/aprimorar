@@ -31,4 +31,8 @@ export type CobrancaResumo = {
    * @type string | undefined
    */
   comprovanteUrl?: string;
+  /**
+   * @type string | undefined, uuid
+   */
+  loteId?: string;
 };

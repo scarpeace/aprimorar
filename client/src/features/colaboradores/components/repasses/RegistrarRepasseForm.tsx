@@ -7,18 +7,19 @@ import { SelectInput } from "@/components/ui/forms/SelectInput";
 import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 import { useAtendimentoMutations } from "@/features/atendimentos/hooks/use-atendimento-mutations";
 import { brl } from "@/lib/utils/formatter";
+import { formaPagamentoLabels } from "@/lib/constants/pagamento-constants";
 import {
   registrarRepasseFormSchema,
   type RegistrarRepasseFormData,
 } from "@/features/colaboradores/schemas/registrar-repasse-form-schema";
 
 const formaPagamentoOptions = [
-  { value: "PIX", label: "PIX" },
-  { value: "DINHEIRO", label: "Dinheiro" },
-  { value: "CARTAO_CREDITO", label: "Cartão de crédito" },
-  { value: "CARTAO_DEBITO", label: "Cartão de débito" },
-  { value: "BOLETO", label: "Boleto" },
-  { value: "TRANSFERENCIA", label: "Transferência" },
+  { value: "PIX", label: formaPagamentoLabels.PIX },
+  { value: "DINHEIRO", label: formaPagamentoLabels.DINHEIRO },
+  { value: "CARTAO_CREDITO", label: formaPagamentoLabels.CARTAO_CREDITO },
+  { value: "CARTAO_DEBITO", label: formaPagamentoLabels.CARTAO_DEBITO },
+  { value: "BOLETO", label: formaPagamentoLabels.BOLETO },
+  { value: "TRANSFERENCIA", label: formaPagamentoLabels.TRANSFERENCIA },
 ];
 
 type RegistrarRepasseFormProps = {

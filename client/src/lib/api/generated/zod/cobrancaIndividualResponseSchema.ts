@@ -20,5 +20,6 @@ export const cobrancaIndividualResponseSchema = z
       z.enum(["PIX", "DINHEIRO", "CARTAO_CREDITO", "CARTAO_DEBITO", "BOLETO", "TRANSFERENCIA"]).describe("Forma de pagamento"),
     ),
     comprovanteUrl: z.optional(z.string()),
+    loteId: z.optional(z.uuid()),
   })
   .describe("Cobrança de aluno");

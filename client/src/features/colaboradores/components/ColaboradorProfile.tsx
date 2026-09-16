@@ -48,7 +48,7 @@ export function ColaboradorProfile({ colaboradorId }: Readonly<ColaboradorProfil
   const active = data.active !== false;
 
   return (
-    <Card>
+    <Card className="">
       <CardHeader>
         <div className="flex flex-wrap items-center gap-3">
           <ActiveStatusIndicator active={active} />

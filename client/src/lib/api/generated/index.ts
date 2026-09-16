@@ -12,6 +12,7 @@ export type { BuscarAtendimentosIndividuaisQueryKey } from "./hooks/atendimentos
 export type { BuscarCalendarioAtendimentosIndividuaisQueryKey } from "./hooks/atendimentos individuais/useBuscarCalendarioAtendimentosIndividuais.ts";
 export type { BuscarCobrancaIndividualPorIdQueryKey } from "./hooks/atendimentos individuais/useBuscarCobrancaIndividualPorId.ts";
 export type { BuscarCobrancasIndividuaisQueryKey } from "./hooks/atendimentos individuais/useBuscarCobrancasIndividuais.ts";
+export type { BuscarLotesDeRepasseQueryKey } from "./hooks/atendimentos individuais/useBuscarLotesDeRepasse.ts";
 export type { BuscarRepasseIndividualPorIdQueryKey } from "./hooks/atendimentos individuais/useBuscarRepasseIndividualPorId.ts";
 export type { BuscarRepassesIndividuaisQueryKey } from "./hooks/atendimentos individuais/useBuscarRepassesIndividuais.ts";
 export type { CancelarPagamentoCobrancasIndividuaisMutationKey } from "./hooks/atendimentos individuais/useCancelarPagamentoCobrancasIndividuais.ts";
@@ -158,6 +159,15 @@ export type {
   BuscarCobrancasIndividuaisQueryParamsStatusEnumKey,
   BuscarCobrancasIndividuaisQueryResponse,
 } from "./types/BuscarCobrancasIndividuais.ts";
+export type {
+  BuscarLotesDeRepasse200,
+  BuscarLotesDeRepasse400,
+  BuscarLotesDeRepasse401,
+  BuscarLotesDeRepasse500,
+  BuscarLotesDeRepasseQuery,
+  BuscarLotesDeRepasseQueryParams,
+  BuscarLotesDeRepasseQueryResponse,
+} from "./types/BuscarLotesDeRepasse.ts";
 export type {
   BuscarRepasseIndividualPorId200,
   BuscarRepasseIndividualPorId401,
@@ -444,6 +454,7 @@ export type { PagedModelCobrancaIndividualResponse } from "./types/PagedModelCob
 export type { PagedModelColaboradorListResponseDTO } from "./types/PagedModelColaboradorListResponseDTO.ts";
 export type { PagedModelDespesaResponse } from "./types/PagedModelDespesaResponse.ts";
 export type { PagedModelRepasseIndividualResponse } from "./types/PagedModelRepasseIndividualResponse.ts";
+export type { PagedModelRepasseLoteResponse } from "./types/PagedModelRepasseLoteResponse.ts";
 export type { ProblemDetail } from "./types/ProblemDetail.ts";
 export type {
   RefreshAccessToken200,
@@ -483,6 +494,7 @@ export type {
   RepasseIndividualResponseFormaPagamentoEnumKey,
   RepasseIndividualResponseStatusEnumKey,
 } from "./types/RepasseIndividualResponse.ts";
+export type { RepasseLoteResponse, RepasseLoteResponseFormaPagamentoEnumKey } from "./types/RepasseLoteResponse.ts";
 export type { RepasseResumo } from "./types/RepasseResumo.ts";
 export type { ResponsavelRequestDTO } from "./types/ResponsavelRequestDTO.ts";
 export type { ResponsavelResponseDTO } from "./types/ResponsavelResponseDTO.ts";
@@ -581,6 +593,10 @@ export { buscarCobrancasIndividuais } from "./hooks/atendimentos individuais/use
 export { buscarCobrancasIndividuaisQueryKey } from "./hooks/atendimentos individuais/useBuscarCobrancasIndividuais.ts";
 export { buscarCobrancasIndividuaisQueryOptions } from "./hooks/atendimentos individuais/useBuscarCobrancasIndividuais.ts";
 export { useBuscarCobrancasIndividuais } from "./hooks/atendimentos individuais/useBuscarCobrancasIndividuais.ts";
+export { buscarLotesDeRepasse } from "./hooks/atendimentos individuais/useBuscarLotesDeRepasse.ts";
+export { buscarLotesDeRepasseQueryKey } from "./hooks/atendimentos individuais/useBuscarLotesDeRepasse.ts";
+export { buscarLotesDeRepasseQueryOptions } from "./hooks/atendimentos individuais/useBuscarLotesDeRepasse.ts";
+export { useBuscarLotesDeRepasse } from "./hooks/atendimentos individuais/useBuscarLotesDeRepasse.ts";
 export { buscarRepasseIndividualPorId } from "./hooks/atendimentos individuais/useBuscarRepasseIndividualPorId.ts";
 export { buscarRepasseIndividualPorIdQueryKey } from "./hooks/atendimentos individuais/useBuscarRepasseIndividualPorId.ts";
 export { buscarRepasseIndividualPorIdQueryOptions } from "./hooks/atendimentos individuais/useBuscarRepasseIndividualPorId.ts";
@@ -732,6 +748,7 @@ export { registrarPagamentoIndividualRequestFormaPagamentoEnum } from "./types/R
 export { registrarRepasseIndividualRequestFormaPagamentoEnum } from "./types/RegistrarRepasseIndividualRequest.ts";
 export { repasseIndividualResponseFormaPagamentoEnum } from "./types/RepasseIndividualResponse.ts";
 export { repasseIndividualResponseStatusEnum } from "./types/RepasseIndividualResponse.ts";
+export { repasseLoteResponseFormaPagamentoEnum } from "./types/RepasseLoteResponse.ts";
 export { userCreateRequestRoleEnum } from "./types/UserCreateRequest.ts";
 export { userListResponseRoleEnum } from "./types/UserListResponse.ts";
 export { userResponseRoleEnum } from "./types/UserResponse.ts";
@@ -828,6 +845,14 @@ export {
   buscarCobrancasIndividuaisQueryParamsSchema,
   buscarCobrancasIndividuaisQueryResponseSchema,
 } from "./zod/buscarCobrancasIndividuaisSchema.ts";
+export {
+  buscarLotesDeRepasse200Schema,
+  buscarLotesDeRepasse400Schema,
+  buscarLotesDeRepasse401Schema,
+  buscarLotesDeRepasse500Schema,
+  buscarLotesDeRepasseQueryParamsSchema,
+  buscarLotesDeRepasseQueryResponseSchema,
+} from "./zod/buscarLotesDeRepasseSchema.ts";
 export {
   buscarRepasseIndividualPorId200Schema,
   buscarRepasseIndividualPorId401Schema,
@@ -1067,6 +1092,7 @@ export { pagedModelCobrancaIndividualResponseSchema } from "./zod/pagedModelCobr
 export { pagedModelColaboradorListResponseDTOSchema } from "./zod/pagedModelColaboradorListResponseDTOSchema.ts";
 export { pagedModelDespesaResponseSchema } from "./zod/pagedModelDespesaResponseSchema.ts";
 export { pagedModelRepasseIndividualResponseSchema } from "./zod/pagedModelRepasseIndividualResponseSchema.ts";
+export { pagedModelRepasseLoteResponseSchema } from "./zod/pagedModelRepasseLoteResponseSchema.ts";
 export { problemDetailSchema } from "./zod/problemDetailSchema.ts";
 export { refreshAccessToken200Schema, refreshAccessTokenMutationResponseSchema } from "./zod/refreshAccessTokenSchema.ts";
 export {
@@ -1090,6 +1116,7 @@ export {
   registrarRepassesIndividuaisMutationResponseSchema,
 } from "./zod/registrarRepassesIndividuaisSchema.ts";
 export { repasseIndividualResponseSchema } from "./zod/repasseIndividualResponseSchema.ts";
+export { repasseLoteResponseSchema } from "./zod/repasseLoteResponseSchema.ts";
 export { repasseResumoSchema } from "./zod/repasseResumoSchema.ts";
 export { responsavelRequestDTOSchema } from "./zod/responsavelRequestDTOSchema.ts";
 export { responsavelResponseDTOSchema } from "./zod/responsavelResponseDTOSchema.ts";

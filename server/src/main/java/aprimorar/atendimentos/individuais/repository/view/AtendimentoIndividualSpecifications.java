@@ -9,7 +9,7 @@ import aprimorar.atendimentos.individuais.web.dto.repasse.RepasseIndividualFiltr
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.YearMonth;
+
 import java.util.UUID;
 import org.springframework.data.jpa.domain.Specification;
 
@@ -23,9 +23,8 @@ public final class AtendimentoIndividualSpecifications {
     ) {
         return Specification
             .where(buscaContem(filtro.busca()))
-            .and(anoMesEntre(filtro.anoMes()))
-            .and(inicioMaiorOuIgual(filtro.anoMes() == null ? filtro.inicio() : null))
-            .and(fimMenorOuIgual(filtro.anoMes() == null ? filtro.fim() : null))
+            .and(inicioMaiorOuIgual(filtro.inicio()))
+            .and(fimMenorOuIgual(filtro.fim()))
             .and(tipoIgual(filtro.tipo()))
             .and(alunoIdIgual(filtro.alunoId()))
             .and(colaboradorIdIgual(filtro.colaboradorId()))
@@ -79,20 +78,6 @@ public final class AtendimentoIndividualSpecifications {
         };
     }
 
-    private static Specification<AtendimentoIndividualViewEntity> anoMesEntre(YearMonth anoMes) {
-        return (root, query, cb) -> {
-            if (anoMes == null) {
-                return null;
-            }
-
-            LocalDateTime inicio = anoMes.atDay(1).atStartOfDay();
-            LocalDateTime fim = anoMes.atEndOfMonth().atTime(LocalTime.MAX);
-            return cb.and(
-                cb.greaterThanOrEqualTo(root.get("dataHoraInicio"), inicio),
-                cb.lessThanOrEqualTo(root.get("dataHoraFim"), fim)
-            );
-        };
-    }
 
     private static Specification<AtendimentoIndividualViewEntity> inicioMaiorOuIgual(LocalDateTime inicio) {
         return (root, query, cb) -> inicio == null

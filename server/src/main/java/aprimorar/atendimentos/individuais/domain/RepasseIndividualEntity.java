@@ -50,6 +50,9 @@ public class RepasseIndividualEntity {
     @Column(name = "comprovante_url", length = 500)
     private String comprovanteUrl;
 
+    @Column(name = "lote_id")
+    private UUID loteId;
+
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
@@ -66,14 +69,18 @@ public class RepasseIndividualEntity {
         this.status = StatusRepasseIndividual.PENDENTE;
     }
 
-    public void registrarRepasse(FormaPagamento formaPagamento, String comprovanteUrl) {
+    public void registrarRepasse(UUID loteId, FormaPagamento formaPagamento, String comprovanteUrl) {
         if (status == StatusRepasseIndividual.PAGO) {
             throw new RepasseIndividualDadosInvalidosException("Repasse já está pago");
         }
         if (formaPagamento == null) {
             throw new RepasseIndividualDadosInvalidosException("Forma de pagamento é obrigatória");
         }
+        if (loteId == null) {
+            throw new RepasseIndividualDadosInvalidosException("O lote do repasse é obrigatório");
+        }
 
+        this.loteId = loteId;
         this.formaPagamento = formaPagamento;
         this.comprovanteUrl = comprovanteUrl;
         this.dataRepasse = LocalDateTime.now();
@@ -88,6 +95,7 @@ public class RepasseIndividualEntity {
         }
 
         this.status = StatusRepasseIndividual.PENDENTE;
+        this.loteId = null;
         this.dataRepasse = null;
         this.formaPagamento = null;
         this.comprovanteUrl = null;

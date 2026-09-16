@@ -61,6 +61,9 @@ public class AtendimentoIndividualViewEntity {
     @Column(name = "cobranca_comprovante_url")
     private String cobrancaComprovanteUrl;
 
+    @Column(name = "cobranca_lote_id")
+    private UUID cobrancaLoteId;
+
     @Column(name = "repasse_id")
     private Long repasseId;
 
@@ -78,6 +81,9 @@ public class AtendimentoIndividualViewEntity {
 
     @Column(name = "repasse_comprovante_url")
     private String repasseComprovanteUrl;
+
+    @Column(name = "repasse_lote_id")
+    private UUID repasseLoteId;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;

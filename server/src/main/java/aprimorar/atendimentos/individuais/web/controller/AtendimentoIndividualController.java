@@ -15,6 +15,7 @@ import aprimorar.atendimentos.individuais.web.dto.repasse.CancelarRepasseIndivid
 import aprimorar.atendimentos.individuais.web.dto.repasse.RegistrarRepasseIndividualRequest;
 import aprimorar.atendimentos.individuais.web.dto.repasse.RepasseIndividualFiltroRequest;
 import aprimorar.atendimentos.individuais.web.dto.repasse.RepasseIndividualResponse;
+import aprimorar.atendimentos.individuais.web.dto.repasse.RepasseLoteResponse;
 import aprimorar.common.openapi.BadRequestProblemResponse;
 import aprimorar.common.openapi.CommonProblemResponses;
 import aprimorar.common.openapi.NotFoundProblemResponse;
@@ -24,6 +25,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import java.net.URI;
 import java.util.List;
+import java.util.UUID;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -37,6 +39,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -172,6 +175,20 @@ public class AtendimentoIndividualController {
         @ParameterObject @PageableDefault(sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable
     ) {
         return ResponseEntity.ok(queryService.buscarRepasses(filtro, pageable));
+    }
+
+    @GetMapping("/repasses/lotes")
+    @Operation(
+        operationId = "buscarLotesDeRepasse",
+        description = "Lista os repasses pagos agrupados por lote."
+    )
+    @ApiResponse(responseCode = "200", description = "Lotes de repasse encontrados.")
+    @BadRequestProblemResponse
+    public ResponseEntity<Page<RepasseLoteResponse>> buscarLotesDeRepasse(
+        @RequestParam UUID colaboradorId,
+        @ParameterObject @PageableDefault(size = 10) Pageable pageable
+    ) {
+        return ResponseEntity.ok(queryService.buscarLotesDeRepasse(colaboradorId, pageable));
     }
 
     @GetMapping("/repasses/{id}")

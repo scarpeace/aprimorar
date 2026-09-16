@@ -1,9 +1,11 @@
 package aprimorar.atendimentos.individuais.service;
 
 import aprimorar.atendimentos.individuais.domain.AtendimentoIndividualViewEntity;
+import aprimorar.atendimentos.individuais.domain.enums.StatusRepasseIndividual;
 import aprimorar.atendimentos.individuais.domain.exception.CobrancaIndividualNaoEncontradoException;
 import aprimorar.atendimentos.individuais.domain.exception.RepasseIndividualNaoEncontradoException;
 import aprimorar.atendimentos.individuais.domain.exception.AtendimentoIndividualNaoEncontradoException;
+import aprimorar.atendimentos.individuais.repository.repasse.RepasseIndividualRepository;
 import aprimorar.atendimentos.individuais.repository.view.AtendimentoIndividualSpecifications;
 import aprimorar.atendimentos.individuais.repository.view.AtendimentoIndividualViewRepository;
 import aprimorar.atendimentos.individuais.web.dto.atendimento.AtendimentoIndividualFiltroRequest;
@@ -14,8 +16,11 @@ import aprimorar.atendimentos.individuais.web.dto.cobranca.CobrancaIndividualFil
 import aprimorar.atendimentos.individuais.web.dto.cobranca.CobrancaIndividualResponse;
 import aprimorar.atendimentos.individuais.web.dto.repasse.RepasseIndividualFiltroRequest;
 import aprimorar.atendimentos.individuais.web.dto.repasse.RepasseIndividualResponse;
+import aprimorar.atendimentos.individuais.web.dto.repasse.RepasseLoteResponse;
 import java.util.List;
+import java.util.UUID;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
@@ -26,9 +31,14 @@ import org.springframework.transaction.annotation.Transactional;
 public class AtendimentoIndividualQueryService {
 
     private final AtendimentoIndividualViewRepository atendimentoConsultaRepository;
+    private final RepasseIndividualRepository repasseRepository;
 
-    public AtendimentoIndividualQueryService(AtendimentoIndividualViewRepository atendimentoConsultaRepository) {
+    public AtendimentoIndividualQueryService(
+        AtendimentoIndividualViewRepository atendimentoConsultaRepository,
+        RepasseIndividualRepository repasseRepository
+    ) {
         this.atendimentoConsultaRepository = atendimentoConsultaRepository;
+        this.repasseRepository = repasseRepository;
     }
 
     @Transactional(readOnly = true)
@@ -83,6 +93,17 @@ public class AtendimentoIndividualQueryService {
         return atendimentoConsultaRepository.findAll(
             AtendimentoIndividualSpecifications.paraRepasses(filtro), pageable
         ).map(RepasseIndividualResponse::toDto);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<RepasseLoteResponse> buscarLotesDeRepasse(UUID colaboradorId, Pageable pageable) {
+        Pageable pagination = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize());
+
+        return repasseRepository.findLotesPorColaboradorId(
+            colaboradorId,
+            StatusRepasseIndividual.PAGO,
+            pagination
+        ).map(RepasseLoteResponse::toDto);
     }
 
     @Transactional(readOnly = true)

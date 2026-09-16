@@ -45,6 +45,9 @@ public class CobrancaIndividualEntity {
     @Column(name = "comprovante_url", length = 500)
     private String comprovanteUrl;
 
+    @Column(name = "lote_id")
+    private UUID loteId;
+
     @Column(name = "data_pagamento")
     private LocalDateTime dataPagamento;
 
@@ -68,14 +71,18 @@ public class CobrancaIndividualEntity {
         this.status = StatusCobrancaIndividual.PENDENTE;
     }
 
-    public void registrarPagamento(FormaPagamento formaPagamento, String comprovanteUrl) {
+    public void registrarPagamento(UUID loteId, FormaPagamento formaPagamento, String comprovanteUrl) {
         if (status == StatusCobrancaIndividual.PAGO) {
             throw new CobrancaIndividualDadosInvalidosException("Cobrança já está paga");
         }
         if (formaPagamento == null) {
             throw new CobrancaIndividualDadosInvalidosException("Forma de pagamento é obrigatória");
         }
+        if (loteId == null) {
+            throw new CobrancaIndividualDadosInvalidosException("O lote do pagamento é obrigatório");
+        }
 
+        this.loteId = loteId;
         this.formaPagamento = formaPagamento;
         this.comprovanteUrl = comprovanteUrl;
         this.dataPagamento = LocalDateTime.now();
@@ -90,6 +97,7 @@ public class CobrancaIndividualEntity {
         }
 
         this.status = StatusCobrancaIndividual.PENDENTE;
+        this.loteId = null;
         this.dataPagamento = null;
         this.formaPagamento = null;
         this.comprovanteUrl = null;

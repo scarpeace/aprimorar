@@ -6,7 +6,8 @@
     "status": { "type": "string" },
     "dataRepasse": { "type": "string", "format": "date-time" },
     "formaPagamento": { "type": "string" },
-    "comprovanteUrl": { "type": "string" }
+    "comprovanteUrl": { "type": "string" },
+    "loteId": { "type": "string", "format": "uuid" }
   },
   "description": "Resumo do repasse do atendimento",
   "x-readme-ref-name": "RepasseResumo"

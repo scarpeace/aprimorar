@@ -2,6 +2,7 @@ import {
   despesaRequestCategoriaEnum,
   despesaRequestFormaPagamentoEnum,
 } from "@/lib/api/generated/types/DespesaRequest";
+import { formaPagamentoLabels } from "@/lib/constants/pagamento-constants";
 
 export const categoriaDespesaLabels: Record<string, string> = {
   CONTAS: "Contas",
@@ -13,14 +14,7 @@ export const categoriaDespesaLabels: Record<string, string> = {
   ASSINATURAS: "Assinaturas",
 };
 
-export const formaPagamentoDespesaLabels: Record<string, string> = {
-  PIX: "Pix",
-  DINHEIRO: "Dinheiro",
-  CARTAO_CREDITO: "Cartão de crédito",
-  CARTAO_DEBITO: "Cartão de débito",
-  BOLETO: "Boleto",
-  TRANSFERENCIA: "Transferência",
-};
+export const formaPagamentoDespesaLabels = formaPagamentoLabels;
 
 export const categoriaDespesaOptions = [
   { value: "", label: "Todas as categorias" },
