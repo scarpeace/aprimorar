@@ -105,29 +105,9 @@ export function ColaboradorCalendar({ colaboradorId }: Readonly<ColaboradorCalen
     router.push(`/atendimentos/${info.event.id}`);
   }
 
-  if (calendario.isError) {
-    return (
-      <ErrorCard
-        title="Não foi possível carregar o calendário do colaborador"
-        description={getFriendlyErrorMessage(calendario.error)}
-        error={calendario.error}
-      />
-    );
-  }
-
-  if (calendario.isLoading) {
-    return (
-      <Card>
-        <CardHeader>
-          <CardTitle>Calendário</CardTitle>
-        </CardHeader>
-        <LoadingSkeleton className="h-64 w-full" />
-      </Card>
-    );
-  }
 
   return (
-    <Card className="">
+    <Card>
       <CardHeader>
         <div>
           <CardTitle>Calendário</CardTitle>
@@ -135,27 +115,37 @@ export function ColaboradorCalendar({ colaboradorId }: Readonly<ColaboradorCalen
         </div>
       </CardHeader>
 
-      <div className={styles.calendar}>
-        {calendario.isFetching ? <LoadingSkeleton className="absolute right-0 top-0 z-10 h-2 w-20" /> : null}
-
-        <FullCalendar
-          plugins={[dayGridPlugin, interactionPlugin]}
-          eventContent={renderEventContent}
-          initialView="dayGridMonth"
-          locale={ptBrLocale}
-          headerToolbar={{
-            left: "prev,next",
-            center: "title",
-            right: "today",
-          }}
-          buttonText={{ today: "Hoje" }}
-          events={events}
-          datesSet={handleDatesSet}
-          eventClick={handleEventClick}
-          aspectRatio={2.2}
-          dayMaxEvents={3}
+      {calendario.isLoading ? (
+        <LoadingSkeleton className="h-64 w-full" />
+      ) : calendario.isError ? (
+        <ErrorCard
+          title="Não foi possível carregar o calendário do colaborador"
+          description={getFriendlyErrorMessage(calendario.error)}
+          error={calendario.error}
         />
-      </div>
+      ) : (
+        <div className={styles.calendar}>
+          {calendario.isFetching ? <LoadingSkeleton className="absolute right-0 top-0 z-10 h-2 w-20" /> : null}
+
+          <FullCalendar
+            plugins={[dayGridPlugin, interactionPlugin]}
+            eventContent={renderEventContent}
+            initialView="dayGridMonth"
+            locale={ptBrLocale}
+            headerToolbar={{
+              left: "prev,next",
+              center: "title",
+              right: "today",
+            }}
+            buttonText={{ today: "Hoje" }}
+            events={events}
+            datesSet={handleDatesSet}
+            eventClick={handleEventClick}
+            aspectRatio={2.2}
+            dayMaxEvents={3}
+          />
+        </div>
+      )}
     </Card>
   );
 }

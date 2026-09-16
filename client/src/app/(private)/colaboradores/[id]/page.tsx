@@ -1,8 +1,8 @@
 "use client";
 
 import { useParams } from "next/navigation";
-import { ColaboradorAtendimentos } from "@/features/colaboradores/components/ColaboradorAtendimentos";
-import { ColaboradorCalendar } from "@/features/colaboradores/components/ColaboradorCalendar";
+import { ColaboradorAtendimentos } from "@/features/colaboradores/components/atendimentos/ColaboradorAtendimentos";
+import { ColaboradorCalendar } from "@/features/colaboradores/components/atendimentos/ColaboradorCalendar";
 import { ColaboradorProfile } from "@/features/colaboradores/components/ColaboradorProfile";
 import { ColaboradorRepassesHistory } from "@/features/colaboradores/components/repasses/ColaboradorRepassesHistory";
 

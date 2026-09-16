@@ -10,12 +10,12 @@ import { ErrorCard } from "@/components/ui/ErrorCard";
 import { LoadingSkeleton } from "@/components/ui/LoadingSkeleton";
 import { Modal } from "@/components/ui/Modal";
 import { Pagination } from "@/components/ui/Pagination";
-import { ColaboradorAtendimentoCard } from "@/features/colaboradores/components/ColaboradorAtendimentoCard";
+import { ColaboradorAtendimentoCard } from "@/features/colaboradores/components/atendimentos/ColaboradorAtendimentoCard";
 import {
   ColaboradorAtendimentosFilters,
   type ColaboradorAtendimentoTipo,
-} from "@/features/colaboradores/components/ColaboradorAtendimentosFilters";
-import { ColaboradorAtendimentosTable } from "@/features/colaboradores/components/ColaboradorAtendimentosTable";
+} from "@/features/colaboradores/components/atendimentos/ColaboradorAtendimentosFilters";
+import { ColaboradorAtendimentosTable } from "@/features/colaboradores/components/atendimentos/ColaboradorAtendimentosTable";
 import { RegistrarRepasseForm } from "@/features/colaboradores/components/repasses/RegistrarRepasseForm";
 import { useBuscarAtendimentosIndividuais } from "@/lib/api/generated/hooks/atendimentos individuais/useBuscarAtendimentosIndividuais";
 import { useDebounce } from "@/lib/hooks/use-debounce";
