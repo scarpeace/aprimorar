@@ -15,54 +15,46 @@ type ColaboradorProfileProps = {
   colaboradorId: string;
 };
 
-function ColaboradorProfileSkeleton() {
-  return (
-    <Card>
-      <LoadingSkeleton className="h-56 w-full" />
-    </Card>
-  );
-}
-
 export function ColaboradorProfile({ colaboradorId }: Readonly<ColaboradorProfileProps>) {
   const colaborador = useFindColaboradorById(colaboradorId);
 
-  if (colaborador.isLoading) {
-    return <ColaboradorProfileSkeleton />;
-  }
-
-  if (colaborador.error) {
-    return (
-      <ErrorCard
-        title="Não foi possível carregar o colaborador"
-        description="A consulta do detalhe falhou para o identificador informado."
-        error={colaborador.error}
-      />
-    );
-  }
-
-  if (!colaborador.data) {
-    return <ErrorCard title="Colaborador não encontrado" description="A API respondeu sem conteúdo para este cadastro." />;
-  }
-
-  const { data } = colaborador;
-  const active = data.active !== false;
-
   return (
-    <Card className="">
+    <Card>
       <CardHeader>
-        <div className="flex flex-wrap items-center gap-3">
-          <ActiveStatusIndicator active={active} />
-          <CardTitle>{data.nome}</CardTitle>
-          <span className="text-sm font-semibold text-base-content/65">{data.funcao}</span>
+        <div>
+          <CardTitle>Cadastro</CardTitle>
+          <p className="mt-2 text-sm text-base-content/65">Consulte e gerencie os dados cadastrais deste colaborador.</p>
         </div>
-
-        <CardActions>
-          <EditarColaboradorButton colaborador={data} />
-          <ColaboradorStatusButton colaboradorId={data.id} active={active} />
-        </CardActions>
       </CardHeader>
 
-      <ColaboradorDetails colaborador={data} />
+      {colaborador.isLoading ? (
+        <LoadingSkeleton className="h-56 w-full" />
+      ) : colaborador.error ? (
+        <ErrorCard
+          title="Não foi possível carregar o colaborador"
+          description="A consulta do detalhe falhou para o identificador informado."
+          error={colaborador.error}
+        />
+      ) : colaborador.data ? (
+        <>
+          <div className="flex flex-col gap-4 mt-3 md:flex-row md:items-start md:justify-between">
+            <div className="flex flex-wrap items-center justify-center gap-3">
+              <ActiveStatusIndicator active={colaborador.data.active !== false} />
+              <h2 className="text-xl font-bold uppercase text-base-content">{colaborador.data.nome}</h2>
+              <span className="text-sm font-semibold text-base-content/65">{colaborador.data.funcao}</span>
+            </div>
+
+            <CardActions>
+              <EditarColaboradorButton colaborador={colaborador.data} />
+              <ColaboradorStatusButton colaboradorId={colaborador.data.id} active={colaborador.data.active !== false} />
+            </CardActions>
+          </div>
+
+          <ColaboradorDetails colaborador={colaborador.data} />
+        </>
+      ) : (
+        <ErrorCard title="Colaborador não encontrado" description="A API respondeu sem conteúdo para este cadastro." />
+      )}
     </Card>
   );
 }

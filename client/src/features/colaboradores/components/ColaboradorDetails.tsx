@@ -10,10 +10,7 @@ type ColaboradorDetailsProps = {
 
 export function ColaboradorDetails({ colaborador }: Readonly<ColaboradorDetailsProps>) {
   return (
-    <div className="mt-3">
-      <h2 className="text-lg font-bold text-base-content">Dados cadastrais</h2>
-
-      <div className="mt-5 space-y-6">
+    <div className="mt-3 space-y-6">
         <div className="space-y-4">
           <h3 className="text-sm font-bold uppercase tracking-wider text-base-content/60">Dados pessoais</h3>
 
@@ -27,10 +24,9 @@ export function ColaboradorDetails({ colaborador }: Readonly<ColaboradorDetailsP
           </div>
         </div>
 
-        <Collapse title="Endereço">
-          <EnderecoDetails endereco={colaborador.endereco} />
-        </Collapse>
-      </div>
+      <Collapse title="Endereço">
+        <EnderecoDetails endereco={colaborador.endereco} />
+      </Collapse>
     </div>
   );
 }

@@ -1,5 +1,6 @@
-import { AlunoAtendimentos } from "@/features/alunos/components/AlunoAtendimentos";
-import { AlunoInfo } from "@/features/alunos/components/AlunoInfo";
+
+import { AlunoCalendar } from "@/features/alunos/components/atendimentos/AlunoCalendar";
+import { AlunoProfile } from "@/features/alunos/components/AlunoProfile";
 
 export default async function AlunoPage({
   params,
@@ -10,8 +11,8 @@ export default async function AlunoPage({
 
   return (
     <section className="space-y-6">
-      <AlunoInfo alunoId={id} />
-      <AlunoAtendimentos alunoId={id} />
+      <AlunoProfile alunoId={id} />
+      <AlunoCalendar alunoId={id} />
     </section>
   );
 }
