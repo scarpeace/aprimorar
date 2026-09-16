@@ -12,8 +12,9 @@ import { ErrorCard } from "@/components/ui/ErrorCard";
 import { LoadingSkeleton } from "@/components/ui/LoadingSkeleton";
 import { getFriendlyErrorMessage } from "@/lib/api/api-error";
 import { useBuscarCalendarioAtendimentosIndividuais } from "@/lib/api/generated/hooks/atendimentos individuais/useBuscarCalendarioAtendimentosIndividuais";
-import { atendimentoTipoCalendarClass } from "@/lib/constants/atendimento-constants";
+import { atendimentoTipoCalendarClass, tipoAtendimentoLabels } from "@/lib/constants/atendimento-constants";
 import { formatDateTimeLocal } from "@/lib/utils/date-utils";
+import styles from "@/features/atendimentos/components/calendarios/AtendimentoCalendar.module.css";
 
 type CalendarRange = {
   inicio: string;
@@ -22,6 +23,11 @@ type CalendarRange = {
 
 type ColaboradorCalendarProps = {
   colaboradorId: string;
+};
+
+type ColaboradorCalendarEventData = {
+  alunoNome: string;
+  tipo: keyof typeof tipoAtendimentoLabels;
 };
 
 function getInitialRange(): CalendarRange {
@@ -35,15 +41,22 @@ function getInitialRange(): CalendarRange {
   };
 }
 
-function renderEventContent(eventInfo: EventContentArg) {
-  const { alunoNome } = eventInfo.event.extendedProps;
-
+function ColaboradorCalendarEventContent({
+  alunoNome,
+  tipo,
+}: Readonly<ColaboradorCalendarEventData>) {
   return (
-    <div className="atendimento-event-content">
-      <span className="atendimento-event-time">{eventInfo.timeText}</span>
-      <span className="atendimento-event-aluno">{alunoNome}</span>
+    <div className={styles.eventContent}>
+      <span className={styles.eventType}>{tipoAtendimentoLabels[tipo]}</span>
+      <span className={styles.eventStudent}>A: {alunoNome}</span>
     </div>
   );
+}
+
+function renderEventContent(eventInfo: EventContentArg) {
+  const eventData = eventInfo.event.extendedProps as ColaboradorCalendarEventData;
+
+  return <ColaboradorCalendarEventContent {...eventData} />;
 }
 
 export function ColaboradorCalendar({ colaboradorId }: Readonly<ColaboradorCalendarProps>) {
@@ -67,6 +80,7 @@ export function ColaboradorCalendar({ colaboradorId }: Readonly<ColaboradorCalen
         ],
         extendedProps: {
           alunoNome: atendimento.alunoNome,
+          tipo: atendimento.tipo,
         },
       })),
     [calendario.data],
@@ -121,7 +135,7 @@ export function ColaboradorCalendar({ colaboradorId }: Readonly<ColaboradorCalen
         </div>
       </CardHeader>
 
-      <div className="relative">
+      <div className={styles.calendar}>
         {calendario.isFetching ? <LoadingSkeleton className="absolute right-0 top-0 z-10 h-2 w-20" /> : null}
 
         <FullCalendar
@@ -138,7 +152,7 @@ export function ColaboradorCalendar({ colaboradorId }: Readonly<ColaboradorCalen
           events={events}
           datesSet={handleDatesSet}
           eventClick={handleEventClick}
-          height="auto"
+          aspectRatio={2.2}
           dayMaxEvents={3}
         />
       </div>

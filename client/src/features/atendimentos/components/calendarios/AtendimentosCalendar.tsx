@@ -14,6 +14,7 @@ import { getFriendlyErrorMessage } from "@/lib/api/api-error";
 import { useBuscarCalendarioAtendimentosIndividuais } from "@/lib/api/generated/hooks/atendimentos individuais/useBuscarCalendarioAtendimentosIndividuais";
 import { atendimentoTipoCalendarClass } from "@/lib/constants/atendimento-constants";
 import { formatDateTimeLocal } from "@/lib/utils/date-utils";
+import styles from "./AtendimentoCalendar.module.css";
 
 type CalendarRange = {
   inicio: string;
@@ -24,10 +25,10 @@ function renderEventContent(eventInfo: EventContentArg) {
   const { colaboradorNome, alunoNome } = eventInfo.event.extendedProps;
 
   return (
-    <div className="atendimento-event-content">
-      <span className="atendimento-event-time">{eventInfo.timeText}</span>
-      <span className="atendimento-event-colaborador">{colaboradorNome}</span>
-      <span className="atendimento-event-aluno">{alunoNome}</span>
+    <div className={styles.eventContent}>
+      <span className={styles.eventTime}>{eventInfo.timeText}</span>
+      <span className={styles.eventCollaborator}>{colaboradorNome}</span>
+      <span className={styles.eventStudent}>{alunoNome}</span>
     </div>
   );
 }
@@ -106,7 +107,7 @@ export function AtendimentosCalendar() {
 
   return (
     <section className="rounded-2xl border border-base-300 bg-base-100 p-6 shadow-sm">
-      <div className="relative">
+      <div className={styles.calendar}>
         {calendario.isFetching ? (
           <div className="absolute right-0 top-0 z-10 flex items-center gap-2 rounded-lg bg-base-100/90 px-3 py-2 text-xs text-base-content/65 shadow-sm">
             <LoadingSpinner />

@@ -1,0 +1,82 @@
+.calendar {
+  position: relative;
+}
+
+.calendar :global(.fc .atendimento-event) {
+  border: none;
+  border-radius: 0.5rem;
+}
+
+.eventContent {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+  overflow: hidden;
+  padding: 0.25rem 0.375rem;
+  line-height: 1.2;
+}
+
+.eventTime {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  opacity: 0.8;
+}
+
+.eventCollaborator,
+.eventStudent,
+.eventType {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.eventCollaborator {
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.eventStudent {
+  font-size: 0.6875rem;
+  font-weight: 500;
+  opacity: 0.9;
+}
+
+.eventType {
+  font-size: 0.6875rem;
+  font-weight: 700;
+}
+
+.calendar :global(.fc .atendimento-event--aula) {
+  background-color: var(--color-primary);
+  color: var(--color-primary-content);
+}
+
+.calendar :global(.fc .atendimento-event--mentoria) {
+  background-color: var(--color-info);
+  color: var(--color-info-content);
+}
+
+.calendar :global(.fc .atendimento-event--terapia) {
+  background-color: var(--color-success);
+  color: var(--color-success-content);
+}
+
+.calendar :global(.fc .atendimento-event--orientacao) {
+  background-color: var(--color-secondary);
+  color: var(--color-secondary-content);
+}
+
+.calendar :global(.fc .atendimento-event--enem) {
+  background-color: var(--color-error);
+  color: var(--color-error-content);
+}
+
+.calendar :global(.fc .atendimento-event--pas) {
+  background-color: var(--color-accent);
+  color: var(--color-accent-content);
+}
+
+.calendar :global(.fc .atendimento-event--outro) {
+  background-color: var(--color-neutral);
+  color: var(--color-neutral-content);
+}
