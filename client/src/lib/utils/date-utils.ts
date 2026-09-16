@@ -34,6 +34,7 @@ export function formatDateTimeLocal(date: string | Date): string {
   return format(value, "yyyy-MM-dd'T'HH:mm");
 }
 
+
 export function toAnoMes(date: string | Date): string {
   const value = toDate(date);
 

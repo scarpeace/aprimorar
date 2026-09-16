@@ -8,9 +8,7 @@ export default function PrivateLayout({
   return (
     <AuthProvider>
       <Nav>
-        <div className="container">
           {children}
-        </div>
       </Nav>
     </AuthProvider>
   );

@@ -39,4 +39,77 @@
   .app-shell-card {
     @apply rounded-2xl border border-base-300 bg-base-100 shadow-xl;
   }
+
+  .fc .atendimento-event {
+    border: none;
+    border-radius: 0.5rem;
+  }
+
+  .fc .atendimento-event-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+    overflow: hidden;
+    padding: 0.25rem 0.375rem;
+    line-height: 1.2;
+  }
+
+  .fc .atendimento-event-time {
+    font-size: 0.6875rem;
+    font-weight: 700;
+    opacity: 0.8;
+  }
+
+  .fc .atendimento-event-colaborador,
+  .fc .atendimento-event-aluno {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .fc .atendimento-event-colaborador {
+    font-size: 0.75rem;
+    font-weight: 700;
+  }
+
+  .fc .atendimento-event-aluno {
+    font-size: 0.6875rem;
+    font-weight: 500;
+    opacity: 0.9;
+  }
+
+  .fc .atendimento-event--aula {
+    background-color: var(--color-primary);
+    color: var(--color-primary-content);
+  }
+
+  .fc .atendimento-event--mentoria {
+    background-color: var(--color-info);
+    color: var(--color-info-content);
+  }
+
+  .fc .atendimento-event--terapia {
+    background-color: var(--color-success);
+    color: var(--color-success-content);
+  }
+
+  .fc .atendimento-event--orientacao {
+    background-color: var(--color-secondary);
+    color: var(--color-secondary-content);
+  }
+
+  .fc .atendimento-event--enem {
+    background-color: var(--color-error);
+    color: var(--color-error-content);
+  }
+
+  .fc .atendimento-event--pas {
+    background-color: var(--color-accent);
+    color: var(--color-accent-content);
+  }
+
+  .fc .atendimento-event--outro {
+    background-color: var(--color-neutral);
+    color: var(--color-neutral-content);
+  }
 }

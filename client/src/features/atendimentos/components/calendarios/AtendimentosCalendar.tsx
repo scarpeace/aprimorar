@@ -1,7 +1,8 @@
 "use client";
 
-import type { DatesSetArg, EventClickArg, EventInput } from "@fullcalendar/core";
+import type { DatesSetArg, EventClickArg, EventContentArg, EventInput } from "@fullcalendar/core";
 import dayGridPlugin from "@fullcalendar/daygrid";
+import timeGridPlugin from "@fullcalendar/timegrid";
 import ptBrLocale from "@fullcalendar/core/locales/pt-br";
 import interactionPlugin from "@fullcalendar/interaction";
 import FullCalendar from "@fullcalendar/react";
@@ -11,11 +12,25 @@ import { ErrorCard } from "@/components/ui/ErrorCard";
 import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 import { getFriendlyErrorMessage } from "@/lib/api/api-error";
 import { useBuscarCalendarioAtendimentosIndividuais } from "@/lib/api/generated/hooks/atendimentos individuais/useBuscarCalendarioAtendimentosIndividuais";
+import { atendimentoTipoCalendarClass } from "@/lib/constants/atendimento-constants";
+import { formatDateTimeLocal } from "@/lib/utils/date-utils";
 
 type CalendarRange = {
   inicio: string;
   fim: string;
 };
+
+function renderEventContent(eventInfo: EventContentArg) {
+  const { colaboradorNome, alunoNome } = eventInfo.event.extendedProps;
+
+  return (
+    <div className="atendimento-event-content">
+      <span className="atendimento-event-time">{eventInfo.timeText}</span>
+      <span className="atendimento-event-colaborador">{colaboradorNome}</span>
+      <span className="atendimento-event-aluno">{alunoNome}</span>
+    </div>
+  );
+}
 
 function getInitialRange(): CalendarRange {
   const now = new Date();
@@ -23,8 +38,8 @@ function getInitialRange(): CalendarRange {
   const fim = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59);
 
   return {
-    inicio: inicio.toISOString(),
-    fim: fim.toISOString(),
+    inicio: formatDateTimeLocal(inicio),
+    fim: formatDateTimeLocal(fim),
   };
 }
 
@@ -40,14 +55,22 @@ export function AtendimentosCalendar() {
         title: `${atendimento.alunoNome} - ${atendimento.colaboradorNome}`,
         start: atendimento.dataHoraInicio,
         end: atendimento.dataHoraFim,
+        classNames: [
+          "atendimento-event",
+          atendimentoTipoCalendarClass[atendimento.tipo] ?? "atendimento-event--outro",
+        ],
+        extendedProps: {
+          colaboradorNome: atendimento.colaboradorNome,
+          alunoNome: atendimento.alunoNome,
+        },
       })),
     [calendario.data],
   );
 
   function handleDatesSet(info: DatesSetArg) {
     const nextRange = {
-      inicio: info.start.toISOString(),
-      fim: info.end.toISOString(),
+      inicio: formatDateTimeLocal(info.start),
+      fim: formatDateTimeLocal(info.end),
     };
 
     setRange((currentRange) => {
@@ -92,13 +115,14 @@ export function AtendimentosCalendar() {
         ) : null}
 
         <FullCalendar
-          plugins={[dayGridPlugin, interactionPlugin]}
+          plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
+          eventContent={renderEventContent}
           initialView="dayGridMonth"
           locale={ptBrLocale}
           headerToolbar={{
             left: "prev,next today",
             center: "title",
-            right: "dayGridMonth",
+            right: "dayGridMonth,timeGridWeek,timeGridDay",
           }}
           events={events}
           datesSet={handleDatesSet}
