@@ -1,17 +1,16 @@
-import { ColaboradorAtendimentos } from "@/features/colaboradores/components/ColaboradorAtendimentos";
-import { ColaboradorInfo } from "@/features/colaboradores/components/ColaboradorInfo";
+"use client";
 
-export default async function ColaboradorPage({
-  params,
-}: Readonly<{
-  params: Promise<{ id: string }>;
-}>) {
-  const { id } = await params;
+import { useParams } from "next/navigation";
+import { ColaboradorAtendimentosTable } from "@/features/colaboradores/components/ColaboradorAtendimentosTable";
+import { ColaboradorProfile } from "@/features/colaboradores/components/ColaboradorProfile";
+
+export default function ColaboradorPage() {
+  const { id } = useParams<{ id: string }>();
 
   return (
     <section className="space-y-6">
-      <ColaboradorInfo colaboradorId={id} />
-      <ColaboradorAtendimentos colaboradorId={id} />
+      <ColaboradorProfile colaboradorId={id} />
+      <ColaboradorAtendimentosTable colaboradorId={id} />
     </section>
   );
 }

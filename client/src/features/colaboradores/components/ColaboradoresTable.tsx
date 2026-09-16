@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useGetColaboradores } from "@/lib/api/generated/hooks/colaborador/useGetColaboradores";
+import { ActiveStatusBadge } from "@/components/ui/ActiveStatusBadge";
 import { EmptyCard } from "@/components/ui/EmptyCard";
 import { ErrorCard } from "@/components/ui/ErrorCard";
 import { PageLoading } from "@/components/ui/PageLoading";
@@ -103,9 +104,7 @@ export function ColaboradoresTable() {
                     <td className="font-semibold text-base-content">{colaborador.nome}</td>
                     <td>{colaborador.funcao}</td>
                     <td>
-                      <span className={`badge badge-sm ${colaborador.ativo ? "badge-success" : "badge-ghost"}`}>
-                        {colaborador.ativo ? "Ativo" : "Inativo"}
-                      </span>
+                      <ActiveStatusBadge active={colaborador.ativo ?? false} />
                     </td>
                   </tr>
                 ))}

@@ -1,8 +1,8 @@
-import type { AtendimentoResponseTipoEnumKey } from "@/lib/api/generated/types/AtendimentoResponse";
+import type { AtendimentoIndividualResponseTipoEnumKey } from "@/lib/api/generated/types/AtendimentoIndividualResponse";
 import { atendimentoTipoBadgeClass, tipoAtendimentoLabels } from "@/lib/constants/atendimento-constants";
 
 type AtendimentoTipoBadgeProps = {
-  tipo: AtendimentoResponseTipoEnumKey;
+  tipo: AtendimentoIndividualResponseTipoEnumKey;
 };
 
 export function AtendimentoTipoBadge({ tipo }: Readonly<AtendimentoTipoBadgeProps>) {

@@ -1,15 +1,13 @@
 import type { ReactNode } from "react";
 import { AuthProvider } from "@/auth/components/AuthProvider";
-import { Nav } from "@/components/layout/Nav";
+import { AppDrawer } from "@/components/layout/AppDrawer";
 
 export default function PrivateLayout({
   children,
 }: Readonly<{ children: ReactNode }>) {
   return (
     <AuthProvider>
-      <Nav>
-          {children}
-      </Nav>
+      <AppDrawer>{children}</AppDrawer>
     </AuthProvider>
   );
 }

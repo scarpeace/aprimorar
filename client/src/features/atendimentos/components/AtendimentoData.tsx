@@ -1,10 +1,11 @@
 "use client";
 
-import Link from "next/link";
+
 import { useRouter } from "next/navigation";
 import type { AtendimentoResponseStatusEnumKey, AtendimentoResponse } from "@/lib/api/generated/types/AtendimentoResponse";
 import { AtendimentoStatusBadge } from "@/features/atendimentos/components/AtendimentoStatusBadge";
 import { AtendimentoTipoBadge } from "@/features/atendimentos/components/AtendimentoTipoBadge";
+import { BackButton } from "@/components/ui/BackButton";
 import { Button } from "@/components/ui/Button";
 import { DetailField } from "@/components/ui/DetailField";
 import { useAtendimentoMutations } from "@/features/atendimentos/hooks/use-atendimento-mutations";
@@ -86,9 +87,7 @@ export function AtendimentoData({ atendimento, onEdit }: Readonly<AtendimentoDat
             {deleteAtendimento.isPending ? "Processando..." : "Excluir"}
           </Button>
 
-          <Link className="btn btn-outline btn-sm" href="/atendimentos">
-            Voltar
-          </Link>
+          <BackButton href="/atendimentos" />
         </div>
       </div>
 

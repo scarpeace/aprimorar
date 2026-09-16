@@ -2,7 +2,6 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FormProvider, useForm } from "react-hook-form";
-import type { ColaboradorResponseDTO } from "@/lib/api/generated/types/ColaboradorResponseDTO";
 import { Button } from "@/components/ui/Button";
 import { DateInput } from "@/components/ui/forms/DateInput";
 import { MaskedInput } from "@/components/ui/forms/MaskedInput";
@@ -11,6 +10,7 @@ import { TextInput } from "@/components/ui/forms/TextInput";
 import { useColaboradorMutations } from "@/features/colaboradores/hooks/use-colaborador-mutations";
 import { BRAZILIAN_STATES } from "@/lib/constants/endereco-constants";
 import { colaboradorFormSchema, type ColaboradorFormData } from "@/features/colaboradores/schemas/colaborador-form-schema";
+import { ColaboradorDetailResponseDTO } from "@/lib/api/generated";
 
 const FUNCAO_OPTIONS: { value: string; label: string }[] = [
   { value: "PROFESSOR", label: "Professor" },
@@ -20,7 +20,7 @@ const FUNCAO_OPTIONS: { value: string; label: string }[] = [
 ];
 
 type ColaboradorFormProps = {
-  initialData?: ColaboradorResponseDTO;
+  initialData?: ColaboradorDetailResponseDTO;
   onSuccess: () => void;
   onCancel: () => void;
 };

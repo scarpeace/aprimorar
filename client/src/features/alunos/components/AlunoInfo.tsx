@@ -7,6 +7,7 @@ import { useState } from "react";
 import { AlunoForm } from "@/features/alunos/components/AlunoForm";
 import { useGetAlunoById } from "@/lib/api/generated/hooks/aluno/useGetAlunoById";
 import { useGetResponsavelById } from "@/lib/api/generated/hooks/responsavel/useGetResponsavelById";
+import { BackButton } from "@/components/ui/BackButton";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 import { DetailField } from "@/components/ui/DetailField";
@@ -118,9 +119,7 @@ export function AlunoInfo({ alunoId }: Readonly<{ alunoId: string }>) {
               <Trash2 size={18} />
             </Button>
 
-            <Link className="btn btn-outline btn-sm" href="/alunos">
-              Voltar
-            </Link>
+            <BackButton href="/alunos" />
           </div>
         </div>
 
