@@ -12,7 +12,7 @@ import { ErrorCard } from "@/components/ui/ErrorCard";
 import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 import { getFriendlyErrorMessage } from "@/lib/api/api-error";
 import { useBuscarCalendarioAtendimentosIndividuais } from "@/lib/api/generated/hooks/atendimentos individuais/useBuscarCalendarioAtendimentosIndividuais";
-import { atendimentoTipoCalendarClass } from "@/lib/constants/atendimento-constants";
+import { atendimentoTipoCalendarClass, tipoAtendimentoLabels } from "@/lib/constants/atendimento-constants";
 import { formatDateTimeLocal } from "@/lib/utils/date-utils";
 import styles from "./AtendimentoCalendar.module.css";
 
@@ -21,16 +21,30 @@ type CalendarRange = {
   fim: string;
 };
 
-function renderEventContent(eventInfo: EventContentArg) {
-  const { colaboradorNome, alunoNome } = eventInfo.event.extendedProps;
+type AtendimentoCalendarEventData = {
+  alunoNome: string;
+  colaboradorNome: string;
+  tipo: keyof typeof tipoAtendimentoLabels;
+};
 
+function AtendimentoCalendarEventContent({
+  alunoNome,
+  colaboradorNome,
+  tipo,
+}: Readonly<AtendimentoCalendarEventData>) {
   return (
     <div className={styles.eventContent}>
-      <span className={styles.eventTime}>{eventInfo.timeText}</span>
-      <span className={styles.eventCollaborator}>{colaboradorNome}</span>
-      <span className={styles.eventStudent}>{alunoNome}</span>
+      <span className={styles.eventType}>{tipoAtendimentoLabels[tipo]}</span>
+      <span className={styles.eventStudent}>A: {alunoNome}</span>
+      <span className={styles.eventCollaborator}>C: {colaboradorNome}</span>
     </div>
   );
+}
+
+function renderEventContent(eventInfo: EventContentArg) {
+  const eventData = eventInfo.event.extendedProps as AtendimentoCalendarEventData;
+
+  return <AtendimentoCalendarEventContent {...eventData} />;
 }
 
 function getInitialRange(): CalendarRange {
@@ -53,7 +67,7 @@ export function AtendimentosCalendar() {
     () =>
       (calendario.data ?? []).map((atendimento) => ({
         id: String(atendimento.id),
-        title: `${atendimento.alunoNome} - ${atendimento.colaboradorNome}`,
+        title: `${tipoAtendimentoLabels[atendimento.tipo]} — A: ${atendimento.alunoNome} — C: ${atendimento.colaboradorNome}`,
         start: atendimento.dataHoraInicio,
         end: atendimento.dataHoraFim,
         classNames: [
@@ -61,8 +75,9 @@ export function AtendimentosCalendar() {
           atendimentoTipoCalendarClass[atendimento.tipo] ?? "atendimento-event--outro",
         ],
         extendedProps: {
-          colaboradorNome: atendimento.colaboradorNome,
           alunoNome: atendimento.alunoNome,
+          colaboradorNome: atendimento.colaboradorNome,
+          tipo: atendimento.tipo,
         },
       })),
     [calendario.data],
