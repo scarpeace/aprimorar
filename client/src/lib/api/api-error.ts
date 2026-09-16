@@ -1,9 +1,6 @@
-type ProblemDetail = {
-  type?: string;
-  title?: string;
-  status?: number;
-  detail?: string;
-  instance?: string;
+import type { ProblemDetail } from "@/lib/api/generated/types/ProblemDetail";
+
+type ApiProblemDetail = ProblemDetail & {
   errors?: string[];
 };
 
@@ -17,7 +14,7 @@ export function getFriendlyErrorMessage(error: unknown): string {
   }
 
   if (error && typeof error === "object") {
-    const problem = error as ProblemDetail;
+    const problem = error as ApiProblemDetail;
 
     return (
       problem.errors?.[0] ??

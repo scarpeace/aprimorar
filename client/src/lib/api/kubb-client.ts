@@ -28,7 +28,6 @@ export const publicClient: Client = async <TData, TError = unknown, TVariables =
 ) => {
   const response = await kubbFetchClient<TData, TError, TVariables>({
     ...config,
-    credentials: "include",
   });
 
   if (response.status < 200 || response.status >= 300) {
@@ -72,13 +71,12 @@ export function refreshOnce() {
   return refreshPromise;
 }
 
-async function request<TData, TError, TVariables>(
+async function authenticatedRequest<TData, TError, TVariables>(
   config: RequestConfig<TVariables>,
   token: string,
 ): Promise<ResponseConfig<TData>> {
   return kubbFetchClient<TData, TError, TVariables>({
     ...config,
-    credentials: "include",
     headers: {
       ...getHeaders(config.headers),
       Authorization: `Bearer ${token}`,
@@ -99,13 +97,13 @@ export const client: Client = async <TData, TError = unknown, TVariables = unkno
     throw new Error("Usuário não autenticado.");
   }
 
-  let response = await request<TData, TError, TVariables>(config, token);
+  let response = await authenticatedRequest<TData, TError, TVariables>(config, token);
 
   if (response.status === 401) {
     const refreshedToken = await refreshOnce();
 
     if (refreshedToken) {
-      response = await request<TData, TError, TVariables>(config, refreshedToken);
+      response = await authenticatedRequest<TData, TError, TVariables>(config, refreshedToken);
     }
   }
 

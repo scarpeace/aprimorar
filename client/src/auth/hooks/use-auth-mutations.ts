@@ -15,6 +15,11 @@ import {
 export function useAuthMutations() {
   const queryClient = useQueryClient();
 
+  function clearSession() {
+    clearAccessToken();
+    queryClient.clear();
+  }
+
   const login = useLogin({
     client: {
       client: publicClient,
@@ -37,13 +42,11 @@ export function useAuthMutations() {
     },
     mutation: {
       onSuccess: () => {
-        clearAccessToken();
-        queryClient.clear();
+        clearSession();
         toast.success("Logout realizado com sucesso");
       },
       onError: (error) => {
-        clearAccessToken();
-        queryClient.clear();
+        clearSession();
         toast.error(getFriendlyErrorMessage(error) || "Não foi possível fazer logout.");
       },
     },
