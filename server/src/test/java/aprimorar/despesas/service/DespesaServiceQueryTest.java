@@ -6,13 +6,15 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
-import aprimorar.despesas.domain.DespesaEntity;
-import aprimorar.despesas.domain.enums.CategoriaDespesa;
 import aprimorar.despesas.domain.enums.FormaPagamento;
 import aprimorar.despesas.domain.enums.TipoDespesa;
-import aprimorar.despesas.domain.exception.DespesaNaoEncontradaException;
 import aprimorar.despesas.repository.DespesaRepository;
 import aprimorar.despesas.web.dto.DespesaFiltroRequest;
+import aprimorar.financeiro.despesas.domain.enums.TipoDespesa;
+import aprimorar.financeiro.despesas.domain.exception.DespesaNaoEncontradaException;
+import aprimorar.financeiro.despesas.repository.DespesaRepository;
+import aprimorar.financeiro.despesas.service.DespesaService;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;

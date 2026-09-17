@@ -1,13 +1,14 @@
 package aprimorar.atendimentos.individuais.config;
 
-import aprimorar.atendimentos.individuais.domain.exception.CobrancaIndividualDadosInvalidosException;
-import aprimorar.atendimentos.individuais.domain.exception.CobrancaIndividualNaoEncontradoException;
-import aprimorar.atendimentos.individuais.domain.exception.RepasseIndividualDadosInvalidosException;
-import aprimorar.atendimentos.individuais.domain.exception.RepasseIndividualNaoEncontradoException;
-import aprimorar.atendimentos.individuais.domain.exception.AtendimentoIndividualConflitanteException;
-import aprimorar.atendimentos.individuais.domain.exception.AtendimentoIndividualDadosInvalidosException;
-import aprimorar.atendimentos.individuais.domain.exception.AtendimentoIndividualEdicaoExpiradaException;
-import aprimorar.atendimentos.individuais.domain.exception.AtendimentoIndividualNaoEncontradoException;
+import aprimorar.atendimentos.individuais.atendimentos.domain.exception.AtendimentoIndividualConflitanteException;
+import aprimorar.atendimentos.individuais.atendimentos.domain.exception.AtendimentoIndividualDadosInvalidosException;
+import aprimorar.atendimentos.individuais.atendimentos.domain.exception.AtendimentoIndividualEdicaoExpiradaException;
+import aprimorar.atendimentos.individuais.atendimentos.domain.exception.AtendimentoIndividualNaoEncontradoException;
+
+import aprimorar.financeiro.repasses.domain.exception.RepasseIndividualDadosInvalidosException;
+import aprimorar.financeiro.cobrancas.domain.exception.CobrancaIndividualDadosInvalidosException;
+import aprimorar.financeiro.cobrancas.domain.exception.CobrancaIndividualNaoEncontradoException;
+import aprimorar.financeiro.repasses.domain.exception.RepasseIndividualNaoEncontradoException;
 import jakarta.servlet.http.HttpServletRequest;
 import java.net.URI;
 import org.springframework.core.Ordered;
@@ -19,7 +20,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @Order(Ordered.HIGHEST_PRECEDENCE)
-@RestControllerAdvice(basePackages = "aprimorar.atendimentos.individuais.web.controller")
+@RestControllerAdvice(basePackages = "aprimorar.atendimentos.individuais")
 public class AtendimentosExceptionHandler {
 
     @ExceptionHandler(AtendimentoIndividualNaoEncontradoException.class)

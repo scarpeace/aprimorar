@@ -6,6 +6,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.time.LocalDate;
 import org.junit.jupiter.api.Test;
 
+import aprimorar.financeiro.despesas.web.dto.DespesaFiltroRequest;
+
 class DespesaFiltroRequestTest {
 
     @Test

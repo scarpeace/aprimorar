@@ -52,6 +52,4 @@ target/
 **/target/
 server/bin/
 
-docs
-
 codebook.toml
