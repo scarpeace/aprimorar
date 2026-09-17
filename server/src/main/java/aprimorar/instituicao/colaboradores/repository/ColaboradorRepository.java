@@ -1,20 +1,20 @@
 package aprimorar.instituicao.colaboradores.repository;
 
-import aprimorar.instituicao.colaboradores.domain.ColaboradorEntity;
+import aprimorar.instituicao.colaboradores.domain.Colaborador;
 import java.util.Optional;
 import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 
-public interface ColaboradorRepository extends JpaRepository<ColaboradorEntity, UUID>, JpaSpecificationExecutor<ColaboradorEntity> {
+public interface ColaboradorRepository extends JpaRepository<Colaborador, UUID>, JpaSpecificationExecutor<Colaborador> {
     boolean existsByCpf(String cpf);
 
     boolean existsByEmail(String email);
 
     boolean existsByEmailAndIdNot(String email, UUID id);
 
-    @Query("SELECT c.nome FROM ColaboradorEntity c WHERE c.id = :id")
+    @Query("SELECT c.nome FROM Colaborador c WHERE c.id = :id")
     Optional<String> getNomeById(UUID id);
 
 }

@@ -10,7 +10,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import aprimorar.financeiro.api.cobrancas.CobrancaApi;
-import aprimorar.instituicao.alunos.domain.AlunoEntity;
+import aprimorar.instituicao.alunos.domain.Aluno;
 import aprimorar.instituicao.alunos.domain.Responsavel;
 import aprimorar.instituicao.alunos.domain.exception.AlunoDuplicadoException;
 import aprimorar.instituicao.alunos.domain.exception.AlunoPossuiPendenciaFinanceiraException;
@@ -165,8 +165,8 @@ class AlunoServiceImplMutationTest {
         return new ResponsavelRequestDTO("João Pereira", "joao@example.com", "(61) 99999-9999", "987.654.321-00");
     }
 
-    private static AlunoEntity aluno(Responsavel responsavel) {
-        return new AlunoEntity(
+    private static Aluno aluno(Responsavel responsavel) {
+        return new Aluno(
             "Ana Silva",
             LocalDate.of(2010, 1, 1),
             "61999999999",
@@ -191,7 +191,7 @@ class AlunoServiceImplMutationTest {
         );
     }
 
-    private static void setId(AlunoEntity aluno, UUID id) {
+    private static void setId(Aluno aluno, UUID id) {
         ReflectionTestUtils.setField(aluno, "id", id);
     }
 

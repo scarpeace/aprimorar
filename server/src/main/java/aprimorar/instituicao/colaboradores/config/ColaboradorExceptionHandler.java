@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @Order(Ordered.HIGHEST_PRECEDENCE)
-@RestControllerAdvice(basePackages = "aprimorar.instituicao.colaboradores.web.controller")
+@RestControllerAdvice(basePackages = "aprimorar.instituicao.colaboradores.web")
 public class ColaboradorExceptionHandler {
 
     @ExceptionHandler(ColaboradorNaoEncontradoException.class)

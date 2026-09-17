@@ -32,7 +32,7 @@ Inclui entidades, value objects, enums, exceções, repositories, specifications
 Mover `aprimorar.atendimentos.individuais.atendimentos` para:
 
 ```text
-aprimorar.instituicao.atendimentos
+aprimorar.instituicao.atendimentos_individuais
 ```
 
 Preservar o sufixo `Individual`, que continua descrevendo o tipo de atendimento.
@@ -44,11 +44,11 @@ Substituir os IDs escalares de aluno e colaborador na entidade de atendimento po
 ```java
 @ManyToOne(fetch = FetchType.LAZY, optional = false)
 @JoinColumn(name = "aluno_id", nullable = false)
-private AlunoEntity aluno;
+private Aluno aluno;
 
 @ManyToOne(fetch = FetchType.LAZY, optional = false)
 @JoinColumn(name = "colaborador_id", nullable = false)
-private ColaboradorEntity colaborador;
+private Colaborador colaborador;
 ```
 
 Regras:
@@ -112,7 +112,7 @@ O request continua recebendo:
 - valor da cobrança;
 - valor do repasse.
 
-Os valores financeiros não são persistidos em `AtendimentoIndividualEntity`; instituição também não persiste `cobrancaId` nem `repasseId`.
+Os valores financeiros não são persistidos em `AtendimentoIndividual`; instituição também não persiste `cobrancaId` nem `repasseId`.
 
 Fluxo:
 
@@ -200,16 +200,16 @@ Aplicar regras equivalentes às de aluno. Colaborador não é excluído fisicame
 Alterar `AtendimentoIndividualSpecifications` para operar sobre:
 
 ```java
-Specification<AtendimentoIndividualEntity>
+Specification<AtendimentoIndividual>
 ```
 
 Permitir joins internos:
 
 ```java
-Join<AtendimentoIndividualEntity, AlunoEntity> aluno =
+Join<AtendimentoIndividual, Aluno> aluno =
     root.join("aluno", JoinType.INNER);
 
-Join<AtendimentoIndividualEntity, ColaboradorEntity> colaborador =
+Join<AtendimentoIndividual, Colaborador> colaborador =
     root.join("colaborador", JoinType.INNER);
 ```
 
@@ -228,7 +228,7 @@ Filtros financeiros deixam de pertencer à specification institucional.
 
 ## 11. Composição do response
 
-1. Buscar `Page<AtendimentoIndividualEntity>` com aluno e colaborador via `EntityGraph`, projection ou fetch controlado.
+1. Buscar `Page<AtendimentoIndividual>` com aluno e colaborador via `EntityGraph`, projection ou fetch controlado.
 2. Coletar IDs dos atendimentos.
 3. Consultar cobranças em lote:
    ```java

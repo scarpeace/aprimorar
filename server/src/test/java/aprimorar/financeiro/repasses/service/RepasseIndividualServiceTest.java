@@ -11,7 +11,7 @@ import aprimorar.financeiro.api.repasses.AtualizarRepasseCommand;
 import aprimorar.financeiro.api.repasses.CriarRepasseCommand;
 import aprimorar.financeiro.api.repasses.RepasseResumo;
 import aprimorar.financeiro.common.FormaPagamentoEnum;
-import aprimorar.financeiro.repasses.domain.RepasseIndividualEntity;
+import aprimorar.financeiro.repasses.domain.RepasseIndividual;
 import aprimorar.financeiro.repasses.domain.enums.StatusRepasseIndividual;
 import aprimorar.financeiro.repasses.domain.exception.RepasseIndividualDadosInvalidosException;
 import aprimorar.financeiro.repasses.repository.RepasseIndividualRepository;
@@ -49,7 +49,7 @@ class RepasseIndividualServiceTest {
 
         service.criar(new CriarRepasseCommand(10L, COLABORADOR_ID, new BigDecimal("80.00")));
 
-        ArgumentCaptor<RepasseIndividualEntity> captor = ArgumentCaptor.forClass(RepasseIndividualEntity.class);
+        ArgumentCaptor<RepasseIndividual> captor = ArgumentCaptor.forClass(RepasseIndividual.class);
         verify(repasseRepository).save(captor.capture());
         assertEquals(10L, captor.getValue().getAtendimentoId());
         assertEquals(COLABORADOR_ID, captor.getValue().getColaboradorId());
@@ -66,12 +66,12 @@ class RepasseIndividualServiceTest {
             () -> service.criar(new CriarRepasseCommand(10L, COLABORADOR_ID, new BigDecimal("80.00")))
         );
 
-        verify(repasseRepository, never()).save(any(RepasseIndividualEntity.class));
+        verify(repasseRepository, never()).save(any(RepasseIndividual.class));
     }
 
     @Test
     void deveAtualizarRepassePendente() {
-        RepasseIndividualEntity repasse = repasse(10L);
+        RepasseIndividual repasse = repasse(10L);
         when(repasseRepository.findByAtendimentoIdForUpdate(10L)).thenReturn(Optional.of(repasse));
 
         UUID novoColaboradorId = UUID.fromString("44444444-4444-4444-4444-444444444444");
@@ -83,7 +83,7 @@ class RepasseIndividualServiceTest {
 
     @Test
     void naoDeveAtualizarRepassePago() {
-        RepasseIndividualEntity repasse = repasse(10L);
+        RepasseIndividual repasse = repasse(10L);
         repasse.registrarRepasse(UUID.randomUUID(), FormaPagamentoEnum.PIX, null);
         when(repasseRepository.findByAtendimentoIdForUpdate(10L)).thenReturn(Optional.of(repasse));
 
@@ -95,7 +95,7 @@ class RepasseIndividualServiceTest {
 
     @Test
     void deveCancelarRepassePendente() {
-        RepasseIndividualEntity repasse = repasse(10L);
+        RepasseIndividual repasse = repasse(10L);
         when(repasseRepository.findByAtendimentoIdForUpdate(10L)).thenReturn(Optional.of(repasse));
 
         service.cancelarPorAtendimento(10L);
@@ -105,7 +105,7 @@ class RepasseIndividualServiceTest {
 
     @Test
     void naoDeveCancelarRepassePago() {
-        RepasseIndividualEntity repasse = repasse(10L);
+        RepasseIndividual repasse = repasse(10L);
         repasse.registrarRepasse(UUID.randomUUID(), FormaPagamentoEnum.PIX, null);
         when(repasseRepository.findByAtendimentoIdForUpdate(10L)).thenReturn(Optional.of(repasse));
 
@@ -124,8 +124,8 @@ class RepasseIndividualServiceTest {
 
     @Test
     void deveBuscarResumosEmLote() {
-        RepasseIndividualEntity primeiro = repasse(10L);
-        RepasseIndividualEntity segundo = repasse(20L);
+        RepasseIndividual primeiro = repasse(10L);
+        RepasseIndividual segundo = repasse(20L);
         when(repasseRepository.findAllByAtendimentoIdIn(Set.of(10L, 20L)))
             .thenReturn(List.of(primeiro, segundo));
 
@@ -144,7 +144,7 @@ class RepasseIndividualServiceTest {
         verify(repasseRepository, never()).findAllByAtendimentoIdIn(any());
     }
 
-    private static RepasseIndividualEntity repasse(Long atendimentoId) {
-        return new RepasseIndividualEntity(atendimentoId, COLABORADOR_ID, new BigDecimal("80.00"));
+    private static RepasseIndividual repasse(Long atendimentoId) {
+        return new RepasseIndividual(atendimentoId, COLABORADOR_ID, new BigDecimal("80.00"));
     }
 }

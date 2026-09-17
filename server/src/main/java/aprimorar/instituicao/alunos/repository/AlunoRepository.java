@@ -7,9 +7,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 
-import aprimorar.instituicao.alunos.domain.AlunoEntity;
+import aprimorar.instituicao.alunos.domain.Aluno;
 
-public interface AlunoRepository extends JpaRepository<AlunoEntity, UUID>, JpaSpecificationExecutor<AlunoEntity> {
+public interface AlunoRepository extends JpaRepository<Aluno, UUID>, JpaSpecificationExecutor<Aluno> {
 
     boolean existsByCpf(String cpf);
     boolean existsByCpfAndIdNot(String cpf, UUID id);
@@ -17,6 +17,6 @@ public interface AlunoRepository extends JpaRepository<AlunoEntity, UUID>, JpaSp
     boolean existsByEmail(String email);
     boolean existsByEmailAndIdNot(String email, UUID id);
 
-    @Query("SELECT a.nome FROM AlunoEntity a WHERE a.id = :id")
+    @Query("SELECT a.nome FROM Aluno a WHERE a.id = :id")
     Optional<String> getNomeById(UUID id);
 }

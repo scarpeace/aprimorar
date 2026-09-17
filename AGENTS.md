@@ -54,30 +54,18 @@ Estrutura atual dos módulos:
 ```text
 aprimorar/
 ├── auth/
-├── atendimentos/
-│   └── individuais/
-│       ├── config/
-│       ├── domain/{enums,exception}
-│       ├── repository/{atendimento,cobranca,repasse,view}
-│       ├── service/
-│       └── web/
-│           ├── controller/AtendimentoIndividualController.java
-│           └── dto/{atendimento,calendario,cobranca,repasse}
-├── pessoas/
-│   ├── api/
-│   ├── domain/{enums,exception}
-│   ├── repository/specifications/
-│   ├── service/
-│   └── web/
-│       ├── controller/
-│       └── dto/{aluno,colaborador,endereco}
-├── despesas/
-│   ├── config/
-│   ├── domain/{enums,exception}
-│   ├── repository/specifications/
-│   ├── service/
-│   └── web/{controller,dto}
 ├── common/
+├── financeiro/
+│   ├── api/{cobrancas,repasses}
+│   ├── cobrancas/{domain,repository,service,web}
+│   ├── repasses/{domain,repository,service,web}
+│   ├── despesas/{domain,repository,service,web}
+│   └── config/
+├── instituicao/
+│   ├── common/
+│   ├── alunos/{domain,repository,service,web}
+│   ├── colaboradores/{domain,repository,service,web}
+│   └── atendimentos_individuais/{domain,repository,service,web}
 └── config/
 ```
 
@@ -88,21 +76,20 @@ aprimorar/
   O refresh token fica no cookie `refresh_token` (`HttpOnly`, `SameSite=Lax`,
   escopo `/auth`) e somente seu hash é persistido. O usuário atual é retornado
   por `/auth/me` como `id`, `email` e `role`.
-- `atendimentos/individuais` concentra atendimento, cobrança e repasse
-  individuais. Há um controller HTTP único, um service de escrita e um service
-  de consulta pela view `vw_atendimentos_individuais`.
+- `instituicao/atendimentos_individuais` concentra alunos, colaboradores e
+  atendimentos individuais. O atendimento usa relações JPA internas com aluno e
+  colaborador e integra cobranças e repasses somente por contratos de
+  `financeiro.api`.
 - o calendário de atendimentos individuais é uma consulta própria em
-  `GET /atendimentos-individuais/calendario`; seu contrato é neutro em
-  relação ao FullCalendar e aceita intervalo, `alunoId` e `colaboradorId`.
-- `pessoas` expõe `AlunoService` e `ColaboradorService` em uma única `api`; esses
-  contratos oferecem apenas verificação de existência por ID. As implementações
-  de aluno e colaborador permanecem separadas em `service` e `web`, com DTOs
-  organizados em `web/dto/aluno`, `web/dto/colaborador` e `web/dto/endereco`.
-- `pessoas/domain/Endereco` contém o value object de endereço; não é uma entidade
-  nem possui ciclo de vida próprio.
-- `Responsavel` é um value object embutido em `AlunoEntity`, sem tabela própria.
-- `despesas` é um módulo independente para lançamentos operacionais de entrada
-  e saída, sem relação com atendimentos.
+  `GET /instituicao/atendimentos/calendario`; seu contrato é neutro em relação
+  ao FullCalendar e aceita intervalo, `alunoId` e `colaboradorId`.
+- `instituicao/alunos` e `instituicao/colaboradores` mantêm suas implementações
+  separadas em `service` e `web`, com DTOs organizados por capacidade.
+- `instituicao/common/domain/Endereco` contém o value object de endereço; não é
+  uma entidade nem possui ciclo de vida próprio.
+- `Responsavel` é um value object embutido em `Aluno`, sem tabela própria.
+- `financeiro/despesas` é responsável por lançamentos operacionais de entrada e
+  saída, sem relação JPA com instituição.
 - `common` é aberto para modelos, utilitários e anotações compartilhadas.
 - `config` contém configuração transversal, não regras de domínio.
 
@@ -121,12 +108,12 @@ Dentro de `server/`:
 
 ### Observações do domínio
 
-- `AtendimentoIndividualEntity` armazena `alunoId` e `colaboradorId` como escalares, sem
-  relações JPA com outros módulos
+- `AtendimentoIndividual` armazena referências JPA internas para aluno e colaborador;
+  as integrações financeiras usam IDs escalares e contratos de `financeiro.api`
 - a criação, atualização e exclusão do atendimento, da cobrança e do repasse
   individual acontecem no `AtendimentoIndividualService`
-- `AlunoEntity` e `ColaboradorEntity` usam `Endereco` com `@Embedded`
-- `AlunoEntity` usa `Responsavel` com `@Embedded`; não existe tabela ou ID próprio
+- `Aluno` e `Colaborador` usam `Endereco` com `@Embedded`
+- `Aluno` usa `Responsavel` com `@Embedded`; não existe tabela ou ID próprio
   para responsável
 - o valor da cobrança vive em `cobrancas_individuais`; o valor do repasse vive
   em `repasses_individuais`
@@ -145,8 +132,8 @@ Dentro de `server/`:
 - respostas de erro usam `org.springframework.http.ProblemDetail`
 - `GlobalExceptionHandler` em `aprimorar.config` tem baixa precedência e trata
   apenas erros transversais
-- handlers de `pessoas`, `atendimentos/individuais` e `despesas` ficam nos
-  pacotes dos respectivos módulos e tratam suas exceções próprias
+- handlers de `instituicao`, `atendimentos_individuais` e `financeiro/despesas`
+  ficam nos pacotes dos respectivos módulos e tratam suas exceções próprias
 - `AuthException` é tratada pelo handler global como `401 Unauthorized`
 - anotações OpenAPI reutilizáveis ficam em `common/openapi`; os controllers de
   domínio usam `@CommonProblemResponses` e documentam erros específicos com as

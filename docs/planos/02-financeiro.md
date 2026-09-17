@@ -186,14 +186,14 @@ Cancelamento preserva o lançamento.
 Adicionar:
 
 ```java
-Optional<CobrancaIndividualEntity> findByAtendimentoId(Long atendimentoId);
-Optional<RepasseIndividualEntity> findByAtendimentoId(Long atendimentoId);
+Optional<CobrancaIndividual> findByAtendimentoId(Long atendimentoId);
+Optional<RepasseIndividual> findByAtendimentoId(Long atendimentoId);
 
 boolean existsByAlunoIdAndStatus(UUID alunoId, StatusCobrancaIndividual status);
 boolean existsByColaboradorIdAndStatus(UUID colaboradorId, StatusRepasseIndividual status);
 
-List<CobrancaIndividualEntity> findAllByAtendimentoIdIn(Collection<Long> ids);
-List<RepasseIndividualEntity> findAllByAtendimentoIdIn(Collection<Long> ids);
+List<CobrancaIndividual> findAllByAtendimentoIdIn(Collection<Long> ids);
+List<RepasseIndividual> findAllByAtendimentoIdIn(Collection<Long> ids);
 ```
 
 Adicionar constraints únicas para `atendimento_id` nas duas tabelas.
@@ -205,8 +205,8 @@ Os services convertem resultados em mapas por atendimento. Coleção vazia retor
 Manter:
 
 ```java
-Specification<CobrancaIndividualEntity>
-Specification<RepasseIndividualEntity>
+Specification<CobrancaIndividual>
+Specification<RepasseIndividual>
 ```
 
 Usar somente campos próprios:

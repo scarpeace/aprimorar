@@ -79,7 +79,7 @@ Adicionar testes de bloqueio por pendência.
 1. Mover packages para instituição.
 2. Adicionar relações JPA com aluno e colaborador.
 3. Remover contratos antigos de existência de pessoas.
-4. Alterar specifications para `AtendimentoIndividualEntity`.
+4. Alterar specifications para `AtendimentoIndividual`.
 5. Adicionar status e métodos de domínio.
 6. Implementar realizar e cancelar.
 

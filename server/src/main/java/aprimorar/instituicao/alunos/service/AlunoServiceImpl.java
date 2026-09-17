@@ -1,12 +1,12 @@
 package aprimorar.instituicao.alunos.service;
 
 import aprimorar.financeiro.api.cobrancas.CobrancaApi;
-import aprimorar.instituicao.alunos.domain.AlunoEntity;
+import aprimorar.instituicao.alunos.domain.Aluno;
 import aprimorar.instituicao.alunos.domain.exception.AlunoDuplicadoException;
 import aprimorar.instituicao.alunos.domain.exception.AlunoNaoEncontradoException;
 import aprimorar.instituicao.alunos.domain.exception.AlunoPossuiPendenciaFinanceiraException;
 import aprimorar.instituicao.alunos.repository.AlunoRepository;
-import aprimorar.instituicao.alunos.repository.specifications.AlunoSpecifications;
+import aprimorar.instituicao.alunos.repository.AlunoSpecifications;
 import aprimorar.instituicao.alunos.web.dto.aluno.AlunoDetailResponseDTO;
 import aprimorar.instituicao.alunos.web.dto.aluno.AlunoFiltroRequest;
 import aprimorar.instituicao.alunos.web.dto.aluno.AlunoListResponseDTO;
@@ -44,14 +44,14 @@ public class AlunoServiceImpl {
     }
 
     @Transactional(readOnly = true)
-    public Optional<AlunoEntity> findEntityById(UUID alunoId) {
+    public Optional<Aluno> findEntityById(UUID alunoId) {
         return alunoRepo.findById(alunoId);
     }
 
     @Transactional(readOnly = true)
     public Page<AlunoListResponseDTO> getAlunos(AlunoFiltroRequest filtro, Pageable pageable) {
-        Specification<AlunoEntity> spec = AlunoSpecifications.comFiltros(filtro);
-        Page<AlunoEntity> alunosPage = alunoRepo.findAll(spec, pageable);
+        Specification<Aluno> spec = AlunoSpecifications.comFiltros(filtro);
+        Page<Aluno> alunosPage = alunoRepo.findAll(spec, pageable);
 
         log.info("Consulta de alunos finalizada, {} registros encontrados.", alunosPage.getTotalElements());
         return alunosPage.map(AlunoListResponseDTO::from);
@@ -72,14 +72,14 @@ public class AlunoServiceImpl {
 
     @Transactional(readOnly = true)
     public AlunoDetailResponseDTO findAlunoById(UUID alunoId) {
-        AlunoEntity aluno = findAlunoOrThrow(alunoId);
+        Aluno aluno = findAlunoOrThrow(alunoId);
         log.info("Aluno {} consultado com sucesso.", aluno.getNome());
         return AlunoDetailResponseDTO.from(aluno);
     }
 
     @Transactional
     public UUID createAluno(AlunoRequestDTO dto) {
-        AlunoEntity aluno = dto.toEntity();
+        Aluno aluno = dto.toEntity();
 
         if (alunoRepo.existsByCpf(aluno.getCpf())) {
             throw new AlunoDuplicadoException("Já existe um aluno cadastrado com este CPF.");
@@ -89,7 +89,7 @@ public class AlunoServiceImpl {
             throw new AlunoDuplicadoException("Já existe um aluno cadastrado com este e-mail.");
         }
 
-        AlunoEntity savedAluno = alunoRepo.save(aluno);
+        Aluno savedAluno = alunoRepo.save(aluno);
 
         log.info("Aluno {} cadastrado com sucesso.", savedAluno.getNome().toUpperCase());
         return savedAluno.getId();
@@ -97,8 +97,8 @@ public class AlunoServiceImpl {
 
     @Transactional
     public void updateAluno(UUID alunoId, AlunoRequestDTO dto) {
-        AlunoEntity aluno = findAlunoOrThrow(alunoId);
-        AlunoEntity requestedAluno = dto.toEntity();
+        Aluno aluno = findAlunoOrThrow(alunoId);
+        Aluno requestedAluno = dto.toEntity();
 
         if (alunoRepo.existsByCpfAndIdNot(requestedAluno.getCpf(), alunoId)) {
             throw new AlunoDuplicadoException("Já existe um aluno utilizando este CPF.");
@@ -123,7 +123,7 @@ public class AlunoServiceImpl {
 
     @Transactional
     public void deactivateAluno(UUID alunoId) {
-        AlunoEntity aluno = findAlunoOrThrow(alunoId);
+        Aluno aluno = findAlunoOrThrow(alunoId);
 
         if (cobrancaApi.possuiPendenciaPorAlunoId(alunoId)) {
             throw new AlunoPossuiPendenciaFinanceiraException();
@@ -135,12 +135,12 @@ public class AlunoServiceImpl {
 
     @Transactional
     public void activateAluno(UUID alunoId) {
-        AlunoEntity aluno = findAlunoOrThrow(alunoId);
+        Aluno aluno = findAlunoOrThrow(alunoId);
         aluno.activate();
         log.info("Aluno {} ativado com sucesso.", aluno.getNome().toUpperCase());
     }
 
-    private AlunoEntity findAlunoOrThrow(UUID alunoId) {
+    private Aluno findAlunoOrThrow(UUID alunoId) {
         return alunoRepo.findById(alunoId)
             .orElseThrow(() -> new AlunoNaoEncontradoException("Aluno não encontrado no banco de dados"));
     }

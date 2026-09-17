@@ -10,7 +10,7 @@ import aprimorar.instituicao.common.web.dto.endereco.EnderecoRequestDTO;
 class AlunoRequestDTOTest {
 
     @Test
-    void shouldConvertToAlunoEntity() {
+    void shouldConvertToAluno() {
         var dto = new AlunoRequestDTO(
             "Ana Silva",
             LocalDate.of(2000, 1, 1),

@@ -3,13 +3,13 @@ package aprimorar.instituicao.colaboradores.repository.specifications;
 import org.springframework.data.jpa.domain.Specification;
 
 import aprimorar.instituicao.colaboradores.web.dto.colaborador.ColaboradorFiltroRequest;
-import aprimorar.instituicao.colaboradores.domain.ColaboradorEntity;
+import aprimorar.instituicao.colaboradores.domain.Colaborador;
 
 public final class ColaboradorSpecifications {
 
     private ColaboradorSpecifications() {}
 
-    public static Specification<ColaboradorEntity> comFiltros(ColaboradorFiltroRequest filtro) {
+    public static Specification<Colaborador> comFiltros(ColaboradorFiltroRequest filtro) {
         return Specification
             .where(nomeContem(filtro.nome()))
             .and(emailContem(filtro.email()))
@@ -17,7 +17,7 @@ public final class ColaboradorSpecifications {
             .and(ativosContem(filtro.ativos()));
     }
 
-    public static Specification<ColaboradorEntity> nomeContem(String nome) {
+    public static Specification<Colaborador> nomeContem(String nome) {
         return (root, query, cb) -> {
             if (nome == null || nome.isBlank()) return null;
             String pattern = "%" + nome.toLowerCase() + "%";
@@ -25,7 +25,7 @@ public final class ColaboradorSpecifications {
         };
     }
 
-    public static Specification<ColaboradorEntity> emailContem(String email) {
+    public static Specification<Colaborador> emailContem(String email) {
         return (root, query, cb) -> {
             if (email == null || email.isBlank()) return null;
             String pattern = "%" + email.toLowerCase() + "%";
@@ -33,7 +33,7 @@ public final class ColaboradorSpecifications {
         };
     }
 
-    public static Specification<ColaboradorEntity> cpfContem(String cpf) {
+    public static Specification<Colaborador> cpfContem(String cpf) {
         return (root, query, cb) -> {
             if (cpf == null || cpf.isBlank()) return null;
             String pattern = "%" + cpf.toLowerCase() + "%";
@@ -41,14 +41,14 @@ public final class ColaboradorSpecifications {
         };
     }
 
-    public static Specification<ColaboradorEntity> ativosContem(Boolean ativos) {
+    public static Specification<Colaborador> ativosContem(Boolean ativos) {
         return (root, query, cb) -> {
             if (ativos == null) return null;
             return cb.equal(root.get("active"), ativos);
         };
     }
 
-    public static Specification<ColaboradorEntity> isActive() {
+    public static Specification<Colaborador> isActive() {
         return (root, query, cb) -> cb.isTrue(root.get("active"));
     }
 }

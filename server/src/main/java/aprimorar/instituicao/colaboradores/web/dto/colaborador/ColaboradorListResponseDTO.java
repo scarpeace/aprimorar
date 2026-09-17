@@ -1,7 +1,7 @@
 package aprimorar.instituicao.colaboradores.web.dto.colaborador;
 
 import aprimorar.instituicao.colaboradores.domain.enums.FuncoesColaborador;
-import aprimorar.instituicao.colaboradores.domain.ColaboradorEntity;
+import aprimorar.instituicao.colaboradores.domain.Colaborador;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.UUID;
 
@@ -13,7 +13,7 @@ public record ColaboradorListResponseDTO(
     boolean ativo
 ) {
 
-    public static ColaboradorListResponseDTO from(ColaboradorEntity colaborador) {
+    public static ColaboradorListResponseDTO from(Colaborador colaborador) {
         return new ColaboradorListResponseDTO(
             colaborador.getId(),
             colaborador.getNome(),

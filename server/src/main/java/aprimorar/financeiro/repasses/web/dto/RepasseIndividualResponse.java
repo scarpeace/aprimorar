@@ -3,7 +3,7 @@ package aprimorar.financeiro.repasses.web.dto;
 
 import aprimorar.financeiro.repasses.domain.enums.StatusRepasseIndividual;
 import aprimorar.financeiro.common.FormaPagamentoEnum;
-import aprimorar.financeiro.repasses.domain.RepasseIndividualEntity;
+import aprimorar.financeiro.repasses.domain.RepasseIndividual;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotNull;
@@ -49,7 +49,7 @@ public record RepasseIndividualResponse(
     @Schema(nullable = true)
     UUID loteId
 ) {
-    public static RepasseIndividualResponse toDto(RepasseIndividualEntity entity) {
+    public static RepasseIndividualResponse toDto(RepasseIndividual entity) {
         return new RepasseIndividualResponse(
             entity.getId(), entity.getAtendimentoId(), entity.getColaboradorId(), entity.getValor(),
             entity.getStatus(), entity.getDataRepasse(), entity.getFormaPagamento(), entity.getComprovanteUrl(),

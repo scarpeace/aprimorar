@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
 class ColaboradorRequestDTOTest {
 
     @Test
-    void shouldConvertToColaboradorEntity() {
+    void shouldConvertToColaborador() {
         var dto = new ColaboradorRequestDTO(
             "João Pereira",
             LocalDate.of(1990, 5, 21),

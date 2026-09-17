@@ -4,7 +4,7 @@ import java.time.LocalDate;
 import aprimorar.common.utils.CpfUtils;
 import aprimorar.common.utils.EmailUtils;
 import aprimorar.common.utils.PhoneUtils;
-import aprimorar.instituicao.alunos.domain.AlunoEntity;
+import aprimorar.instituicao.alunos.domain.Aluno;
 import aprimorar.instituicao.common.web.dto.endereco.EnderecoRequestDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;
@@ -51,8 +51,8 @@ public record AlunoRequestDTO(
     @Schema(nullable = false, description = "Dados do responsável do aluno", implementation = ResponsavelRequestDTO.class)
     ResponsavelRequestDTO responsavel
 ) {
-    public AlunoEntity toEntity() {
-        return new AlunoEntity(
+    public Aluno toEntity() {
+        return new Aluno(
             this.nome(),
             this.dataNascimento(),
             PhoneUtils.normalize(this.telefone()),

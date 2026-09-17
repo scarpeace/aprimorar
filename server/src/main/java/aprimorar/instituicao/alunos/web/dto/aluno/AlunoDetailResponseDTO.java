@@ -1,6 +1,6 @@
 package aprimorar.instituicao.alunos.web.dto.aluno;
 
-import aprimorar.instituicao.alunos.domain.AlunoEntity;
+import aprimorar.instituicao.alunos.domain.Aluno;
 import aprimorar.instituicao.common.web.dto.endereco.EnderecoResponseDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -58,7 +58,7 @@ public record AlunoDetailResponseDTO(
     @Schema(example = "2023-01-01T00:00:00", description = "Data e hora de criação do aluno")
     LocalDateTime createdAt
 ) {
-    public static AlunoDetailResponseDTO from(AlunoEntity aluno) {
+    public static AlunoDetailResponseDTO from(Aluno aluno) {
         return new AlunoDetailResponseDTO(
             aluno.getId(),
             aluno.getNome(),

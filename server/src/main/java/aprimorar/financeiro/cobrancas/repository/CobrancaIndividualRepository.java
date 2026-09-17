@@ -1,6 +1,6 @@
 package aprimorar.financeiro.cobrancas.repository;
 
-import aprimorar.financeiro.cobrancas.domain.CobrancaIndividualEntity;
+import aprimorar.financeiro.cobrancas.domain.CobrancaIndividual;
 import aprimorar.financeiro.cobrancas.domain.enums.StatusCobrancaIndividual;
 import aprimorar.financeiro.cobrancas.repository.projections.CobrancaLoteProjection;
 import jakarta.persistence.LockModeType;
@@ -17,21 +17,21 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 public interface CobrancaIndividualRepository
-    extends JpaRepository<CobrancaIndividualEntity, Long>, JpaSpecificationExecutor<CobrancaIndividualEntity> {
+    extends JpaRepository<CobrancaIndividual, Long>, JpaSpecificationExecutor<CobrancaIndividual> {
 
     @Lock(LockModeType.PESSIMISTIC_WRITE)
-    @Query("select c from CobrancaIndividualEntity c where c.id in :ids")
-    List<CobrancaIndividualEntity> findAllByIdInForUpdate(@Param("ids") Collection<Long> ids);
+    @Query("select c from CobrancaIndividual c where c.id in :ids")
+    List<CobrancaIndividual> findAllByIdInForUpdate(@Param("ids") Collection<Long> ids);
 
     @Lock(LockModeType.PESSIMISTIC_WRITE)
-    @Query("select c from CobrancaIndividualEntity c where c.atendimentoId = :atendimentoId")
-    Optional<CobrancaIndividualEntity> findByAtendimentoIdForUpdate(@Param("atendimentoId") Long atendimentoId);
+    @Query("select c from CobrancaIndividual c where c.atendimentoId = :atendimentoId")
+    Optional<CobrancaIndividual> findByAtendimentoIdForUpdate(@Param("atendimentoId") Long atendimentoId);
 
     boolean existsByAtendimentoId(Long atendimentoId);
 
     boolean existsByAlunoIdAndStatus(UUID alunoId, StatusCobrancaIndividual status);
 
-    List<CobrancaIndividualEntity> findAllByAtendimentoIdIn(Collection<Long> atendimentoIds);
+    List<CobrancaIndividual> findAllByAtendimentoIdIn(Collection<Long> atendimentoIds);
 
     @Query(
         value = """
@@ -43,7 +43,7 @@ public interface CobrancaIndividualRepository
                 c.comprovanteUrl as comprovanteUrl,
                 sum(c.valor) as valorTotal,
                 count(c.id) as quantidadeCobrancas
-            from CobrancaIndividualEntity c
+            from CobrancaIndividual c
             where c.alunoId = :alunoId
               and c.status = :status
               and c.loteId is not null
@@ -56,7 +56,7 @@ public interface CobrancaIndividualRepository
             """,
         countQuery = """
             select count(distinct c.loteId)
-            from CobrancaIndividualEntity c
+            from CobrancaIndividual c
             where c.alunoId = :alunoId
               and c.status = :status
               and c.loteId is not null
@@ -78,7 +78,7 @@ public interface CobrancaIndividualRepository
                 c.comprovanteUrl as comprovanteUrl,
                 sum(c.valor) as valorTotal,
                 count(c.id) as quantidadeCobrancas
-            from CobrancaIndividualEntity c
+            from CobrancaIndividual c
             where c.loteId = :loteId
               and c.status = :status
             group by

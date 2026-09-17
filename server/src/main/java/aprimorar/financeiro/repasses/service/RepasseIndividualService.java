@@ -4,12 +4,12 @@ import aprimorar.financeiro.api.repasses.AtualizarRepasseCommand;
 import aprimorar.financeiro.api.repasses.CriarRepasseCommand;
 import aprimorar.financeiro.api.repasses.RepasseApi;
 import aprimorar.financeiro.api.repasses.RepasseResumo;
-import aprimorar.financeiro.repasses.domain.RepasseIndividualEntity;
+import aprimorar.financeiro.repasses.domain.RepasseIndividual;
 import aprimorar.financeiro.repasses.domain.enums.StatusRepasseIndividual;
 import aprimorar.financeiro.repasses.domain.exception.RepasseIndividualDadosInvalidosException;
 import aprimorar.financeiro.repasses.domain.exception.RepasseIndividualNaoEncontradoException;
 import aprimorar.financeiro.repasses.repository.RepasseIndividualRepository;
-import aprimorar.financeiro.repasses.repository.specifications.RepasseIndividualSpecifications;
+import aprimorar.financeiro.repasses.repository.RepasseIndividualSpecifications;
 import aprimorar.financeiro.repasses.web.dto.CancelarRepasseIndividualRequest;
 import aprimorar.financeiro.repasses.web.dto.RegistrarRepasseIndividualRequest;
 import aprimorar.financeiro.repasses.web.dto.RepasseIndividualFiltroRequest;
@@ -50,7 +50,7 @@ public class RepasseIndividualService implements RepasseApi {
         }
 
         repasseRepository.save(
-            new RepasseIndividualEntity(command.atendimentoId(), command.colaboradorId(), command.valor())
+            new RepasseIndividual(command.atendimentoId(), command.colaboradorId(), command.valor())
         );
     }
 
@@ -62,7 +62,7 @@ public class RepasseIndividualService implements RepasseApi {
         }
         validarDados(command.atendimentoId(), command.colaboradorId(), command.valor());
 
-        RepasseIndividualEntity repasse = repasseRepository
+        RepasseIndividual repasse = repasseRepository
             .findByAtendimentoIdForUpdate(command.atendimentoId())
             .orElseThrow(RepasseIndividualNaoEncontradoException::new);
 
@@ -76,7 +76,7 @@ public class RepasseIndividualService implements RepasseApi {
             throw new RepasseIndividualDadosInvalidosException("ID do atendimento é obrigatório");
         }
 
-        RepasseIndividualEntity repasse = repasseRepository
+        RepasseIndividual repasse = repasseRepository
             .findByAtendimentoIdForUpdate(atendimentoId)
             .orElseThrow(RepasseIndividualNaoEncontradoException::new);
 
@@ -106,7 +106,7 @@ public class RepasseIndividualService implements RepasseApi {
         return repasseRepository.findAllByAtendimentoIdIn(atendimentoIds)
             .stream()
             .collect(Collectors.toUnmodifiableMap(
-                RepasseIndividualEntity::getAtendimentoId,
+                RepasseIndividual::getAtendimentoId,
                 RepasseIndividualService::toResumo
             ));
     }
@@ -155,11 +155,11 @@ public class RepasseIndividualService implements RepasseApi {
             throw new RepasseIndividualDadosInvalidosException("Não informe o mesmo repasse mais de uma vez");
         }
 
-        List<RepasseIndividualEntity> repasses = repasseRepository.findAllByIdInForUpdate(ids);
+        List<RepasseIndividual> repasses = repasseRepository.findAllByIdInForUpdate(ids);
         if (repasses.size() != ids.size()) {
             throw new RepasseIndividualNaoEncontradoException();
         }
-        if (repasses.stream().map(RepasseIndividualEntity::getColaboradorId).distinct().count() > 1) {
+        if (repasses.stream().map(RepasseIndividual::getColaboradorId).distinct().count() > 1) {
             throw new RepasseIndividualDadosInvalidosException(
                 "Todos os repasses precisam pertencer ao mesmo colaborador"
             );
@@ -179,15 +179,15 @@ public class RepasseIndividualService implements RepasseApi {
             throw new RepasseIndividualDadosInvalidosException("Não informe o mesmo repasse mais de uma vez");
         }
 
-        List<RepasseIndividualEntity> repasses = repasseRepository.findAllByIdInForUpdate(ids);
+        List<RepasseIndividual> repasses = repasseRepository.findAllByIdInForUpdate(ids);
         if (repasses.size() != ids.size()) {
             throw new RepasseIndividualNaoEncontradoException();
         }
 
-        repasses.forEach(RepasseIndividualEntity::cancelarRepasse);
+        repasses.forEach(RepasseIndividual::cancelarRepasse);
     }
 
-    private static RepasseResumo toResumo(RepasseIndividualEntity repasse) {
+    private static RepasseResumo toResumo(RepasseIndividual repasse) {
         return new RepasseResumo(
             repasse.getId(),
             repasse.getAtendimentoId(),

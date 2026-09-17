@@ -3,7 +3,7 @@ package aprimorar.instituicao.alunos.web.dto.aluno;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.UUID;
 
-import aprimorar.instituicao.alunos.domain.AlunoEntity;
+import aprimorar.instituicao.alunos.domain.Aluno;
 
 @Schema(description = "Dados resumidos do aluno para listagem")
 public record AlunoListResponseDTO(
@@ -13,7 +13,7 @@ public record AlunoListResponseDTO(
     boolean ativo
 ) {
 
-    public static AlunoListResponseDTO from(AlunoEntity aluno) {
+    public static AlunoListResponseDTO from(Aluno aluno) {
         return new AlunoListResponseDTO(
             aluno.getId(),
             aluno.getNome(),

@@ -1,6 +1,6 @@
 package aprimorar.financeiro.despesas.web.dto;
 
-import aprimorar.financeiro.despesas.domain.DespesaEntity;
+import aprimorar.financeiro.despesas.domain.Despesa;
 import aprimorar.financeiro.despesas.domain.enums.CategoriaDespesa;
 import aprimorar.financeiro.despesas.domain.enums.FormaPagamento;
 import aprimorar.financeiro.despesas.domain.enums.StatusDespesa;
@@ -37,7 +37,7 @@ public record DespesaResponse(
     @Schema(nullable = true, description = "Data de atualização", example = "2026-07-22T10:00:00")
     LocalDateTime updatedAt
 ) {
-    public static DespesaResponse toDto(DespesaEntity despesa) {
+    public static DespesaResponse toDto(Despesa despesa) {
         return new DespesaResponse(
             despesa.getId(),
             despesa.getTitulo(),

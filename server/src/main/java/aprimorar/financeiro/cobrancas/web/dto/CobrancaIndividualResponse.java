@@ -1,7 +1,7 @@
 package aprimorar.financeiro.cobrancas.web.dto;
 
 
-import aprimorar.financeiro.cobrancas.domain.CobrancaIndividualEntity;
+import aprimorar.financeiro.cobrancas.domain.CobrancaIndividual;
 import aprimorar.financeiro.cobrancas.domain.enums.StatusCobrancaIndividual;
 import aprimorar.financeiro.common.FormaPagamentoEnum;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -49,7 +49,7 @@ public record CobrancaIndividualResponse(
     @Schema(nullable = true)
     UUID loteId
 ) {
-    public static CobrancaIndividualResponse toDto(CobrancaIndividualEntity entity) {
+    public static CobrancaIndividualResponse toDto(CobrancaIndividual entity) {
         return new CobrancaIndividualResponse(
             entity.getId(),
             entity.getAtendimentoId(),

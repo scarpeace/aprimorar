@@ -6,7 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
-import aprimorar.financeiro.despesas.domain.DespesaEntity;
+import aprimorar.financeiro.despesas.domain.Despesa;
 import aprimorar.financeiro.despesas.domain.enums.CategoriaDespesa;
 import aprimorar.financeiro.despesas.domain.enums.FormaPagamento;
 import aprimorar.financeiro.despesas.domain.enums.TipoDespesa;
@@ -49,7 +49,7 @@ class DespesaServiceQueryTest {
         var pageable = PageRequest.of(0, 10);
         var filtro = new DespesaFiltroRequest(null, null, null, null, null);
 
-        when(despesaRepo.findAll(ArgumentMatchers.<Specification<DespesaEntity>>any(), eq(pageable)))
+        when(despesaRepo.findAll(ArgumentMatchers.<Specification<Despesa>>any(), eq(pageable)))
             .thenReturn(new PageImpl<>(List.of(despesa), pageable, 1));
 
         var response = service.getDespesas(filtro, pageable);
@@ -81,8 +81,8 @@ class DespesaServiceQueryTest {
         assertEquals("Despesa não encontrada no banco de dados", ex.getMessage());
     }
 
-    private static DespesaEntity despesa() {
-        return new DespesaEntity(
+    private static Despesa despesa() {
+        return new Despesa(
             "Conta de energia",
             TipoDespesa.SAIDA,
             CategoriaDespesa.CONTAS,
@@ -93,7 +93,7 @@ class DespesaServiceQueryTest {
         );
     }
 
-    private static void setId(DespesaEntity despesa, Long id) {
+    private static void setId(Despesa despesa, Long id) {
         ReflectionTestUtils.setField(despesa, "id", id);
     }
 }

@@ -10,7 +10,7 @@ import static org.mockito.Mockito.when;
 import aprimorar.financeiro.api.cobrancas.AtualizarCobrancaCommand;
 import aprimorar.financeiro.api.cobrancas.CriarCobrancaCommand;
 import aprimorar.financeiro.api.cobrancas.CobrancaResumo;
-import aprimorar.financeiro.cobrancas.domain.CobrancaIndividualEntity;
+import aprimorar.financeiro.cobrancas.domain.CobrancaIndividual;
 import aprimorar.financeiro.cobrancas.domain.enums.StatusCobrancaIndividual;
 import aprimorar.financeiro.cobrancas.domain.exception.CobrancaIndividualDadosInvalidosException;
 import aprimorar.financeiro.cobrancas.repository.CobrancaIndividualRepository;
@@ -49,7 +49,7 @@ class CobrancaIndividualServiceTest {
 
         service.criar(new CriarCobrancaCommand(10L, ALUNO_ID, new BigDecimal("100.00")));
 
-        ArgumentCaptor<CobrancaIndividualEntity> captor = ArgumentCaptor.forClass(CobrancaIndividualEntity.class);
+        ArgumentCaptor<CobrancaIndividual> captor = ArgumentCaptor.forClass(CobrancaIndividual.class);
         verify(cobrancaRepository).save(captor.capture());
         assertEquals(10L, captor.getValue().getAtendimentoId());
         assertEquals(ALUNO_ID, captor.getValue().getAlunoId());
@@ -66,12 +66,12 @@ class CobrancaIndividualServiceTest {
             () -> service.criar(new CriarCobrancaCommand(10L, ALUNO_ID, new BigDecimal("100.00")))
         );
 
-        verify(cobrancaRepository, never()).save(any(CobrancaIndividualEntity.class));
+        verify(cobrancaRepository, never()).save(any(CobrancaIndividual.class));
     }
 
     @Test
     void deveAtualizarCobrancaPendente() {
-        CobrancaIndividualEntity cobranca = cobranca(10L);
+        CobrancaIndividual cobranca = cobranca(10L);
         when(cobrancaRepository.findByAtendimentoIdForUpdate(10L)).thenReturn(Optional.of(cobranca));
 
         UUID novoAlunoId = UUID.fromString("22222222-2222-2222-2222-222222222222");
@@ -83,7 +83,7 @@ class CobrancaIndividualServiceTest {
 
     @Test
     void naoDeveAtualizarCobrancaPaga() {
-        CobrancaIndividualEntity cobranca = cobranca(10L);
+        CobrancaIndividual cobranca = cobranca(10L);
         cobranca.registrarPagamento(UUID.randomUUID(), FormaPagamentoEnum.PIX, null);
         when(cobrancaRepository.findByAtendimentoIdForUpdate(10L)).thenReturn(Optional.of(cobranca));
 
@@ -95,7 +95,7 @@ class CobrancaIndividualServiceTest {
 
     @Test
     void deveCancelarCobrancaPendente() {
-        CobrancaIndividualEntity cobranca = cobranca(10L);
+        CobrancaIndividual cobranca = cobranca(10L);
         when(cobrancaRepository.findByAtendimentoIdForUpdate(10L)).thenReturn(Optional.of(cobranca));
 
         service.cancelarPorAtendimento(10L);
@@ -105,7 +105,7 @@ class CobrancaIndividualServiceTest {
 
     @Test
     void naoDeveCancelarCobrancaPaga() {
-        CobrancaIndividualEntity cobranca = cobranca(10L);
+        CobrancaIndividual cobranca = cobranca(10L);
         cobranca.registrarPagamento(UUID.randomUUID(), FormaPagamentoEnum.PIX, null);
         when(cobrancaRepository.findByAtendimentoIdForUpdate(10L)).thenReturn(Optional.of(cobranca));
 
@@ -124,8 +124,8 @@ class CobrancaIndividualServiceTest {
 
     @Test
     void deveBuscarResumosEmLote() {
-        CobrancaIndividualEntity primeira = cobranca(10L);
-        CobrancaIndividualEntity segunda = cobranca(20L);
+        CobrancaIndividual primeira = cobranca(10L);
+        CobrancaIndividual segunda = cobranca(20L);
         when(cobrancaRepository.findAllByAtendimentoIdIn(Set.of(10L, 20L)))
             .thenReturn(List.of(primeira, segunda));
 
@@ -144,7 +144,7 @@ class CobrancaIndividualServiceTest {
         verify(cobrancaRepository, never()).findAllByAtendimentoIdIn(any());
     }
 
-    private static CobrancaIndividualEntity cobranca(Long atendimentoId) {
-        return new CobrancaIndividualEntity(atendimentoId, ALUNO_ID, new BigDecimal("100.00"));
+    private static CobrancaIndividual cobranca(Long atendimentoId) {
+        return new CobrancaIndividual(atendimentoId, ALUNO_ID, new BigDecimal("100.00"));
     }
 }

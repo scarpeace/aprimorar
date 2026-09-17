@@ -2,7 +2,7 @@ package aprimorar.instituicao.colaboradores.web.dto.colaborador;
 
 import aprimorar.instituicao.colaboradores.domain.enums.FuncoesColaborador;
 import aprimorar.instituicao.common.web.dto.endereco.EnderecoResponseDTO;
-import aprimorar.instituicao.colaboradores.domain.ColaboradorEntity;
+import aprimorar.instituicao.colaboradores.domain.Colaborador;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotNull;
@@ -49,7 +49,7 @@ public record ColaboradorDetailResponseDTO(
     LocalDateTime updatedAt
 ) {
 
-    public static ColaboradorDetailResponseDTO from(ColaboradorEntity colaborador) {
+    public static ColaboradorDetailResponseDTO from(Colaborador colaborador) {
         return new ColaboradorDetailResponseDTO(
             colaborador.getId(),
             colaborador.getNome(),

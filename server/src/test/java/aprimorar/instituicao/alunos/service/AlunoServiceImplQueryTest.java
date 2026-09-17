@@ -8,7 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
 import aprimorar.financeiro.api.cobrancas.CobrancaApi;
-import aprimorar.instituicao.alunos.domain.AlunoEntity;
+import aprimorar.instituicao.alunos.domain.Aluno;
 import aprimorar.instituicao.alunos.domain.Responsavel;
 import aprimorar.instituicao.alunos.domain.exception.AlunoNaoEncontradoException;
 import aprimorar.instituicao.alunos.repository.AlunoRepository;
@@ -53,7 +53,7 @@ class AlunoServiceImplQueryTest {
         var aluno = aluno("Ana Silva");
 
         when(alunoRepo.findAll(
-                    ArgumentMatchers.<Specification<AlunoEntity>>any(),
+                    ArgumentMatchers.<Specification<Aluno>>any(),
                     ArgumentMatchers.any(Sort.class)
                 )).thenReturn(List.of(aluno));
 
@@ -93,7 +93,7 @@ class AlunoServiceImplQueryTest {
     }
 
     @Test
-    void shouldFindAlunoEntityById() {
+    void shouldFindAlunoDomainObjectById() {
         var id = UUID.randomUUID();
         var aluno = aluno("Ana Silva");
         setId(aluno, id);
@@ -107,7 +107,7 @@ class AlunoServiceImplQueryTest {
     }
 
     @Test
-    void shouldReturnEmptyWhenAlunoEntityDoesNotExist() {
+    void shouldReturnEmptyWhenAlunoDoesNotExist() {
         var id = UUID.randomUUID();
 
         when(alunoRepo.findById(id)).thenReturn(Optional.empty());
@@ -128,8 +128,8 @@ class AlunoServiceImplQueryTest {
         assertEquals("Aluno não encontrado no banco de dados", ex.getMessage());
     }
 
-    private static AlunoEntity aluno(String nome) {
-        var aluno = new AlunoEntity(
+    private static Aluno aluno(String nome) {
+        var aluno = new Aluno(
             nome,
             LocalDate.of(2010, 1, 1),
             "61999999999",
@@ -152,7 +152,7 @@ class AlunoServiceImplQueryTest {
         );
     }
 
-    private static void setId(AlunoEntity aluno, UUID id) {
+    private static void setId(Aluno aluno, UUID id) {
         ReflectionTestUtils.setField(aluno, "id", id);
     }
 

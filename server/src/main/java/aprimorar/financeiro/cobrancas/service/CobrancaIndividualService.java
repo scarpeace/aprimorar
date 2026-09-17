@@ -4,12 +4,12 @@ import aprimorar.financeiro.api.cobrancas.AtualizarCobrancaCommand;
 import aprimorar.financeiro.api.cobrancas.CobrancaApi;
 import aprimorar.financeiro.api.cobrancas.CobrancaResumo;
 import aprimorar.financeiro.api.cobrancas.CriarCobrancaCommand;
-import aprimorar.financeiro.cobrancas.domain.CobrancaIndividualEntity;
+import aprimorar.financeiro.cobrancas.domain.CobrancaIndividual;
 import aprimorar.financeiro.cobrancas.domain.enums.StatusCobrancaIndividual;
 import aprimorar.financeiro.cobrancas.domain.exception.CobrancaIndividualDadosInvalidosException;
 import aprimorar.financeiro.cobrancas.domain.exception.CobrancaIndividualNaoEncontradoException;
 import aprimorar.financeiro.cobrancas.repository.CobrancaIndividualRepository;
-import aprimorar.financeiro.cobrancas.repository.specifications.CobrancaIndividualSpecifications;
+import aprimorar.financeiro.cobrancas.repository.CobrancaIndividualSpecifications;
 import aprimorar.financeiro.cobrancas.web.dto.CancelarCobrancasIndividualRequest;
 import aprimorar.financeiro.cobrancas.web.dto.CobrancaIndividualFiltroRequest;
 import aprimorar.financeiro.cobrancas.web.dto.CobrancaIndividualResponse;
@@ -50,7 +50,7 @@ public class CobrancaIndividualService implements CobrancaApi {
         }
 
         cobrancaRepository.save(
-            new CobrancaIndividualEntity(command.atendimentoId(), command.alunoId(), command.valor())
+            new CobrancaIndividual(command.atendimentoId(), command.alunoId(), command.valor())
         );
     }
 
@@ -62,7 +62,7 @@ public class CobrancaIndividualService implements CobrancaApi {
         }
         validarDados(command.atendimentoId(), command.alunoId(), command.valor());
 
-        CobrancaIndividualEntity cobranca = cobrancaRepository
+        CobrancaIndividual cobranca = cobrancaRepository
             .findByAtendimentoIdForUpdate(command.atendimentoId())
             .orElseThrow(CobrancaIndividualNaoEncontradoException::new);
 
@@ -77,7 +77,7 @@ public class CobrancaIndividualService implements CobrancaApi {
             throw new CobrancaIndividualDadosInvalidosException("ID do atendimento é obrigatório");
         }
 
-        CobrancaIndividualEntity cobranca = cobrancaRepository
+        CobrancaIndividual cobranca = cobrancaRepository
             .findByAtendimentoIdForUpdate(atendimentoId)
             .orElseThrow(CobrancaIndividualNaoEncontradoException::new);
 
@@ -107,7 +107,7 @@ public class CobrancaIndividualService implements CobrancaApi {
         return cobrancaRepository.findAllByAtendimentoIdIn(atendimentoIds)
             .stream()
             .collect(Collectors.toUnmodifiableMap(
-                CobrancaIndividualEntity::getAtendimentoId,
+                CobrancaIndividual::getAtendimentoId,
                 CobrancaIndividualService::toResumo
             ));
     }
@@ -156,11 +156,11 @@ public class CobrancaIndividualService implements CobrancaApi {
             throw new CobrancaIndividualDadosInvalidosException("Não informe a mesma cobrança mais de uma vez");
         }
 
-        List<CobrancaIndividualEntity> cobrancas = cobrancaRepository.findAllByIdInForUpdate(ids);
+        List<CobrancaIndividual> cobrancas = cobrancaRepository.findAllByIdInForUpdate(ids);
         if (cobrancas.size() != ids.size()) {
             throw new CobrancaIndividualNaoEncontradoException();
         }
-        if (cobrancas.stream().map(CobrancaIndividualEntity::getAlunoId).distinct().count() > 1) {
+        if (cobrancas.stream().map(CobrancaIndividual::getAlunoId).distinct().count() > 1) {
             throw new CobrancaIndividualDadosInvalidosException(
                 "Todas as cobranças precisam pertencer ao mesmo aluno"
             );
@@ -180,15 +180,15 @@ public class CobrancaIndividualService implements CobrancaApi {
             throw new CobrancaIndividualDadosInvalidosException("Não informe a mesma cobrança mais de uma vez");
         }
 
-        List<CobrancaIndividualEntity> cobrancas = cobrancaRepository.findAllByIdInForUpdate(ids);
+        List<CobrancaIndividual> cobrancas = cobrancaRepository.findAllByIdInForUpdate(ids);
         if (cobrancas.size() != ids.size()) {
             throw new CobrancaIndividualNaoEncontradoException();
         }
 
-        cobrancas.forEach(CobrancaIndividualEntity::cancelarPagamento);
+        cobrancas.forEach(CobrancaIndividual::cancelarPagamento);
     }
 
-    private static CobrancaResumo toResumo(CobrancaIndividualEntity cobranca) {
+    private static CobrancaResumo toResumo(CobrancaIndividual cobranca) {
         return new CobrancaResumo(
             cobranca.getId(),
             cobranca.getAtendimentoId(),

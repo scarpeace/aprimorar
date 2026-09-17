@@ -1,7 +1,7 @@
 package aprimorar.financeiro.repasses.repository;
 
 import aprimorar.financeiro.repasses.domain.enums.StatusRepasseIndividual;
-import aprimorar.financeiro.repasses.domain.RepasseIndividualEntity;
+import aprimorar.financeiro.repasses.domain.RepasseIndividual;
 import aprimorar.financeiro.repasses.repository.projections.RepasseLoteProjection;
 import jakarta.persistence.LockModeType;
 import java.util.Collection;
@@ -17,21 +17,21 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 public interface RepasseIndividualRepository
-    extends JpaRepository<RepasseIndividualEntity, Long>, JpaSpecificationExecutor<RepasseIndividualEntity> {
+    extends JpaRepository<RepasseIndividual, Long>, JpaSpecificationExecutor<RepasseIndividual> {
 
     @Lock(LockModeType.PESSIMISTIC_WRITE)
-    @Query("select r from RepasseIndividualEntity r where r.id in :ids")
-    List<RepasseIndividualEntity> findAllByIdInForUpdate(@Param("ids") Collection<Long> ids);
+    @Query("select r from RepasseIndividual r where r.id in :ids")
+    List<RepasseIndividual> findAllByIdInForUpdate(@Param("ids") Collection<Long> ids);
 
     @Lock(LockModeType.PESSIMISTIC_WRITE)
-    @Query("select r from RepasseIndividualEntity r where r.atendimentoId = :atendimentoId")
-    Optional<RepasseIndividualEntity> findByAtendimentoIdForUpdate(@Param("atendimentoId") Long atendimentoId);
+    @Query("select r from RepasseIndividual r where r.atendimentoId = :atendimentoId")
+    Optional<RepasseIndividual> findByAtendimentoIdForUpdate(@Param("atendimentoId") Long atendimentoId);
 
     boolean existsByAtendimentoId(Long atendimentoId);
 
     boolean existsByColaboradorIdAndStatus(UUID colaboradorId, StatusRepasseIndividual status);
 
-    List<RepasseIndividualEntity> findAllByAtendimentoIdIn(Collection<Long> atendimentoIds);
+    List<RepasseIndividual> findAllByAtendimentoIdIn(Collection<Long> atendimentoIds);
 
     @Query(
         value = """
@@ -43,7 +43,7 @@ public interface RepasseIndividualRepository
                 r.comprovanteUrl as comprovanteUrl,
                 sum(r.valor) as valorTotal,
                 count(r.id) as quantidadeRepasses
-            from RepasseIndividualEntity r
+            from RepasseIndividual r
             where r.colaboradorId = :colaboradorId
               and r.status = :status
               and r.loteId is not null
@@ -56,7 +56,7 @@ public interface RepasseIndividualRepository
             """,
         countQuery = """
             select count(distinct r.loteId)
-            from RepasseIndividualEntity r
+            from RepasseIndividual r
             where r.colaboradorId = :colaboradorId
               and r.status = :status
               and r.loteId is not null
@@ -78,7 +78,7 @@ public interface RepasseIndividualRepository
                 r.comprovanteUrl as comprovanteUrl,
                 sum(r.valor) as valorTotal,
                 count(r.id) as quantidadeRepasses
-            from RepasseIndividualEntity r
+            from RepasseIndividual r
             where r.loteId = :loteId
               and r.status = :status
             group by

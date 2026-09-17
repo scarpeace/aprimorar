@@ -1,7 +1,7 @@
 package aprimorar.instituicao.colaboradores.service;
 
 import aprimorar.financeiro.api.repasses.RepasseApi;
-import aprimorar.instituicao.colaboradores.domain.ColaboradorEntity;
+import aprimorar.instituicao.colaboradores.domain.Colaborador;
 import aprimorar.instituicao.colaboradores.domain.exception.ColaboradorDuplicadoException;
 import aprimorar.instituicao.colaboradores.domain.exception.ColaboradorNaoEncontradoException;
 import aprimorar.instituicao.colaboradores.domain.exception.ColaboradorPossuiRepassePendenteException;
@@ -43,14 +43,14 @@ public class ColaboradorServiceImpl {
     }
 
     @Transactional(readOnly = true)
-    public Optional<ColaboradorEntity> findEntityById(UUID colaboradorId) {
+    public Optional<Colaborador> findEntityById(UUID colaboradorId) {
         return colaboradorRepo.findById(colaboradorId);
     }
 
     @Transactional(readOnly = true)
     public Page<ColaboradorListResponseDTO> getColaboradores(ColaboradorFiltroRequest filtro, Pageable pageable) {
-        Specification<ColaboradorEntity> spec = ColaboradorSpecifications.comFiltros(filtro);
-        Page<ColaboradorEntity> colaboradoresPage = colaboradorRepo.findAll(spec, pageable);
+        Specification<Colaborador> spec = ColaboradorSpecifications.comFiltros(filtro);
+        Page<Colaborador> colaboradoresPage = colaboradorRepo.findAll(spec, pageable);
 
         log.info("Consulta de colaboradores finalizada, {} registros encontrados.", colaboradoresPage.getTotalElements());
         return colaboradoresPage.map(ColaboradorListResponseDTO::from);
@@ -58,7 +58,7 @@ public class ColaboradorServiceImpl {
 
     @Transactional(readOnly = true)
     public ColaboradorDetailResponseDTO findById(UUID colaboradorId) {
-        ColaboradorEntity colaborador = findByIdOrThrow(colaboradorId);
+        Colaborador colaborador = findByIdOrThrow(colaboradorId);
         log.info("Colaborador {} consultado com sucesso.", colaborador.getNome().toUpperCase());
         return ColaboradorDetailResponseDTO.from(colaborador);
     }
@@ -76,7 +76,7 @@ public class ColaboradorServiceImpl {
 
     @Transactional
     public UUID createColaborador(ColaboradorRequestDTO dto) {
-        ColaboradorEntity colaborador = dto.toEntity();
+        Colaborador colaborador = dto.toEntity();
 
         if (colaboradorRepo.existsByCpf(colaborador.getCpf())) {
             throw new ColaboradorDuplicadoException("Já existe um colaborador cadastrado com este CPF.");
@@ -86,15 +86,15 @@ public class ColaboradorServiceImpl {
             throw new ColaboradorDuplicadoException("Já existe um colaborador cadastrado com este e-mail.");
         }
 
-        ColaboradorEntity savedColaborador = colaboradorRepo.save(colaborador);
+        Colaborador savedColaborador = colaboradorRepo.save(colaborador);
         log.info("Colaborador {} cadastrado com sucesso.", savedColaborador.getNome().toUpperCase());
         return savedColaborador.getId();
     }
 
     @Transactional
     public void updateColaborador(UUID colaboradorId, ColaboradorRequestDTO dto) {
-        ColaboradorEntity colaborador = findByIdOrThrow(colaboradorId);
-        ColaboradorEntity requestedColaborador = dto.toEntity();
+        Colaborador colaborador = findByIdOrThrow(colaboradorId);
+        Colaborador requestedColaborador = dto.toEntity();
 
         if (colaboradorRepo.existsByEmailAndIdNot(requestedColaborador.getEmail(), colaboradorId)) {
             throw new ColaboradorDuplicadoException("Já existe um colaborador utilizando este e-mail.");
@@ -115,7 +115,7 @@ public class ColaboradorServiceImpl {
 
     @Transactional
     public void deactivateColaborador(UUID colaboradorId) {
-        ColaboradorEntity colaborador = findByIdOrThrow(colaboradorId);
+        Colaborador colaborador = findByIdOrThrow(colaboradorId);
 
         if (repasseApi.possuiPendenciaPorColaboradorId(colaboradorId)) {
             throw new ColaboradorPossuiRepassePendenteException();
@@ -127,12 +127,12 @@ public class ColaboradorServiceImpl {
 
     @Transactional
     public void activateColaborador(UUID colaboradorId) {
-        ColaboradorEntity colaborador = findByIdOrThrow(colaboradorId);
+        Colaborador colaborador = findByIdOrThrow(colaboradorId);
         colaborador.activate();
         log.info("Colaborador {} ativado com sucesso.", colaborador.getNome().toUpperCase());
     }
 
-    private ColaboradorEntity findByIdOrThrow(UUID colaboradorId) {
+    private Colaborador findByIdOrThrow(UUID colaboradorId) {
         return colaboradorRepo.findById(colaboradorId)
             .orElseThrow(() -> new ColaboradorNaoEncontradoException("Colaborador não encontrado no banco de dados"));
     }

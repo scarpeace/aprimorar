@@ -3,7 +3,7 @@ package aprimorar.financeiro.despesas.web.dto;
 import aprimorar.financeiro.despesas.domain.enums.CategoriaDespesa;
 import aprimorar.financeiro.despesas.domain.enums.FormaPagamento;
 import aprimorar.financeiro.despesas.domain.enums.TipoDespesa;
-import aprimorar.financeiro.despesas.domain.DespesaEntity;
+import aprimorar.financeiro.despesas.domain.Despesa;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
@@ -44,8 +44,8 @@ public record DespesaRequest(
     @Schema(nullable = true, description = "Descrição curta da despesa", example = "Pagamento referente ao mês de julho")
     String descricao
 ) {
-    public DespesaEntity toEntity() {
-        return new DespesaEntity(
+    public Despesa toEntity() {
+        return new Despesa(
             titulo,
             tipo,
             categoria,

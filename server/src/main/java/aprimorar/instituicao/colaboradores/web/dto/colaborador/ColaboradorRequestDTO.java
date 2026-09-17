@@ -7,7 +7,7 @@ import aprimorar.common.utils.EmailUtils;
 import aprimorar.common.utils.PhoneUtils;
 import aprimorar.instituicao.colaboradores.domain.enums.FuncoesColaborador;
 import aprimorar.instituicao.common.web.dto.endereco.EnderecoRequestDTO;
-import aprimorar.instituicao.colaboradores.domain.ColaboradorEntity;
+import aprimorar.instituicao.colaboradores.domain.Colaborador;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
@@ -52,8 +52,8 @@ public record ColaboradorRequestDTO(
         @Schema(nullable = false, description = "Endereço do colaborador", implementation = EnderecoRequestDTO.class)
         EnderecoRequestDTO endereco) {
 
-    public ColaboradorEntity toEntity() {
-        return new ColaboradorEntity(
+    public Colaborador toEntity() {
+        return new Colaborador(
             this.nome(),
             this.dataNascimento(),
             this.pix(),

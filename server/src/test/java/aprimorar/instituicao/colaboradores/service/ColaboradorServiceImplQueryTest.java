@@ -14,7 +14,7 @@ import aprimorar.instituicao.colaboradores.repository.ColaboradorRepository;
 
 import aprimorar.instituicao.colaboradores.web.dto.colaborador.ColaboradorFiltroRequest;
 import aprimorar.instituicao.common.domain.Endereco;
-import aprimorar.instituicao.colaboradores.domain.ColaboradorEntity;
+import aprimorar.instituicao.colaboradores.domain.Colaborador;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -55,7 +55,7 @@ class ColaboradorServiceImplQueryTest {
         var pageable = PageRequest.of(0, 10);
 
         when(colaboradorRepo.findAll(
-                    ArgumentMatchers.<Specification<ColaboradorEntity>>any(),
+                    ArgumentMatchers.<Specification<Colaborador>>any(),
                     eq(pageable)
                 )).thenReturn(new PageImpl<>(List.of(colaborador), pageable, 1));
 
@@ -94,7 +94,7 @@ class ColaboradorServiceImplQueryTest {
     }
 
     @Test
-    void shouldFindColaboradorEntityById() {
+    void shouldFindColaboradorById() {
         var id = UUID.randomUUID();
         var colaborador = colaborador("João Pereira");
         setId(colaborador, id);
@@ -108,7 +108,7 @@ class ColaboradorServiceImplQueryTest {
     }
 
     @Test
-    void shouldReturnEmptyWhenColaboradorEntityDoesNotExist() {
+    void shouldReturnEmptyWhenColaboradorDoesNotExist() {
         var id = UUID.randomUUID();
 
         when(colaboradorRepo.findById(id)).thenReturn(Optional.empty());
@@ -134,7 +134,7 @@ class ColaboradorServiceImplQueryTest {
         var colaborador = colaborador("João Pereira");
 
         when(colaboradorRepo.findAll(
-                    ArgumentMatchers.<Specification<ColaboradorEntity>>any(),
+                    ArgumentMatchers.<Specification<Colaborador>>any(),
                     ArgumentMatchers.any(Sort.class)
                 )).thenReturn(List.of(colaborador));
 
@@ -145,8 +145,8 @@ class ColaboradorServiceImplQueryTest {
         assertEquals("João Pereira", response.getFirst().nome());
     }
 
-    private static ColaboradorEntity colaborador(String nome) {
-        var colaborador = new ColaboradorEntity(
+    private static Colaborador colaborador(String nome) {
+        var colaborador = new Colaborador(
             nome,
             LocalDate.of(1990, 5, 21),
             "joao@example.com",
@@ -160,7 +160,7 @@ class ColaboradorServiceImplQueryTest {
         return colaborador;
     }
 
-    private static void setId(ColaboradorEntity colaborador, UUID id) {
+    private static void setId(Colaborador colaborador, UUID id) {
         ReflectionTestUtils.setField(colaborador, "id", id);
     }
 }

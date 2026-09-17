@@ -18,7 +18,7 @@ import aprimorar.instituicao.colaboradores.repository.ColaboradorRepository;
 import aprimorar.instituicao.colaboradores.web.dto.colaborador.ColaboradorRequestDTO;
 import aprimorar.instituicao.common.domain.Endereco;
 import aprimorar.instituicao.common.web.dto.endereco.EnderecoRequestDTO;
-import aprimorar.instituicao.colaboradores.domain.ColaboradorEntity;
+import aprimorar.instituicao.colaboradores.domain.Colaborador;
 
 import java.time.LocalDate;
 import java.util.Optional;
@@ -143,8 +143,8 @@ class ColaboradorServiceImplMutationTest {
         );
     }
 
-    private static ColaboradorEntity collaborator() {
-        return new ColaboradorEntity(
+    private static Colaborador collaborator() {
+        return new Colaborador(
             "João Pereira",
             LocalDate.of(1990, 5, 21),
             "joao@example.com",
@@ -156,7 +156,7 @@ class ColaboradorServiceImplMutationTest {
         );
     }
 
-    private static void setId(ColaboradorEntity colaborador, UUID id) {
+    private static void setId(Colaborador colaborador, UUID id) {
         ReflectionTestUtils.setField(colaborador, "id", id);
     }
 }
