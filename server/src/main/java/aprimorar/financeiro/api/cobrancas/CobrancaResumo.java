@@ -11,6 +11,7 @@ public record CobrancaResumo(
     String status,
     LocalDateTime dataPagamento,
     String formaPagamento,
+    String comprovanteUrl,
     UUID loteId
 ) {
 }

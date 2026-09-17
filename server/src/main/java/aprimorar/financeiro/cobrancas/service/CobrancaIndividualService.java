@@ -196,6 +196,7 @@ public class CobrancaIndividualService implements CobrancaApi {
             cobranca.getStatus().name(),
             cobranca.getDataPagamento(),
             cobranca.getFormaPagamento() == null ? null : cobranca.getFormaPagamento().name(),
+            cobranca.getComprovanteUrl(),
             cobranca.getLoteId()
         );
     }

@@ -11,6 +11,7 @@ public record RepasseResumo(
     String status,
     LocalDateTime dataRepasse,
     String formaPagamento,
+    String comprovanteUrl,
     UUID loteId
 ) {
 }

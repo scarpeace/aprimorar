@@ -195,6 +195,7 @@ public class RepasseIndividualService implements RepasseApi {
             repasse.getStatus().name(),
             repasse.getDataRepasse(),
             repasse.getFormaPagamento() == null ? null : repasse.getFormaPagamento().name(),
+            repasse.getComprovanteUrl(),
             repasse.getLoteId()
         );
     }
