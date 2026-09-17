@@ -15,18 +15,13 @@ import { AtendimentoCard } from "@/features/atendimentos/components/atendimentos
 import { AtendimentoTipoBadge } from "@/features/atendimentos/components/AtendimentoTipoBadge";
 import { useBuscarAtendimentosIndividuais } from "@/lib/api/generated/hooks/atendimentos individuais/useBuscarAtendimentosIndividuais";
 import type { BuscarAtendimentosIndividuaisQueryParamsTipoEnumKey } from "@/lib/api/generated/types/BuscarAtendimentosIndividuais";
-import { atendimentoTipoOptions, statusCobrancaOptions } from "@/lib/constants/atendimento-constants";
+import { atendimentoTipoOptions } from "@/lib/constants/atendimento-constants";
 import { useDebounce } from "@/lib/hooks/use-debounce";
 import { formatDateShortYear, formatTime } from "@/lib/utils/date-utils";
 import { brl } from "@/lib/utils/formatter";
 
 const PAGE_SIZE = 10;
 
-const statusRepasseOptions = [
-  { value: "", label: "Todos os repasses" },
-  { value: "PENDENTE", label: "Pendente" },
-  { value: "PAGO", label: "Pago" },
-] as const;
 
 type AtendimentoTipo = BuscarAtendimentosIndividuaisQueryParamsTipoEnumKey | "";
 
@@ -35,8 +30,7 @@ export function AtendimentosTable() {
   const [page, setPage] = useState(0);
   const [searchInput, setSearchInput] = useState("");
   const [tipo, setTipo] = useState<AtendimentoTipo>("");
-  const [statusCobranca, setStatusCobranca] = useState("");
-  const [statusRepasse, setStatusRepasse] = useState("");
+
   const [dataInicio, setDataInicio] = useState("");
   const [dataFim, setDataFim] = useState("");
   const search = useDebounce(searchInput.trim(), 300);
@@ -46,8 +40,7 @@ export function AtendimentosTable() {
     size: PAGE_SIZE,
     busca: search || undefined,
     tipo: tipo || undefined,
-    statusCobranca: statusCobranca || undefined,
-    statusRepasse: statusRepasse || undefined,
+
     inicio: dataInicio ? `${dataInicio}T00:00:00` : undefined,
     fim: dataFim ? `${dataFim}T23:59:59` : undefined,
   });
@@ -95,21 +88,6 @@ export function AtendimentosTable() {
           className="w-full sm:w-48"
         />
 
-        <SelectField
-          label="Cobrança"
-          value={statusCobranca}
-          options={statusCobrancaOptions}
-          onChange={(value) => changeFilter(() => setStatusCobranca(value))}
-          className="w-full sm:w-48"
-        />
-
-        <SelectField
-          label="Repasse"
-          value={statusRepasse}
-          options={statusRepasseOptions}
-          onChange={(value) => changeFilter(() => setStatusRepasse(value))}
-          className="w-full sm:w-48"
-        />
 
         <DateField
           label="Início"

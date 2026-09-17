@@ -6,10 +6,10 @@ import { EmptyCard } from "@/components/ui/EmptyCard";
 import { ErrorCard } from "@/components/ui/ErrorCard";
 import { LoadingSkeleton } from "@/components/ui/LoadingSkeleton";
 import { Pagination } from "@/components/ui/Pagination";
-import { useBuscarLotesDeRepasse } from "@/lib/api/generated/hooks/atendimentos individuais/useBuscarLotesDeRepasse";
+import { useBuscarLotesDeRepasse } from "@/lib/api/generated/hooks/repasses individuais/useBuscarLotesDeRepasse";
 import { formatDateShortYear, formatTime } from "@/lib/utils/date-utils";
 import { brl } from "@/lib/utils/formatter";
-import { formaPagamentoLabels } from "@/lib/constants/pagamento-constants";
+
 
 const PAGE_SIZE = 10;
 

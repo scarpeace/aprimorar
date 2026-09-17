@@ -6,7 +6,7 @@ import { useEffect } from "react";
 import { Button } from "@/components/ui/Button";
 import { SelectInput } from "@/components/ui/forms/SelectInput";
 import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
-import { useAtendimentoMutations } from "@/features/atendimentos/hooks/use-atendimento-mutations";
+import { useRepasseMutations } from "@/features/colaboradores/hooks/use-repasse-mutations";
 import { brl } from "@/lib/utils/formatter";
 import { formaPagamentoLabels } from "@/lib/constants/pagamento-constants";
 import {
@@ -43,7 +43,7 @@ export function RegistrarRepasseForm({
       formaPagamento: "PIX",
     },
   });
-  const { registerCollaboratorPayment } = useAtendimentoMutations();
+  const { registerCollaboratorPayment } = useRepasseMutations();
 
   useEffect(() => {
     methods.setValue("repasseIds", repasseIds, { shouldValidate: true });

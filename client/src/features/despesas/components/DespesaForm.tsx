@@ -12,6 +12,7 @@ import { useDespesaMutations } from "@/features/despesas/hooks/use-despesa-mutat
 import {
   createCategoriaDespesaOptions,
   createFormaPagamentoDespesaOptions,
+  tipoDespesaOptions,
 } from "@/lib/constants/despesa-constants";
 import type { DespesaResponse } from "@/lib/api/generated/types/DespesaResponse";
 import { despesaFormSchema, type DespesaFormData } from "@/features/despesas/schemas/despesa-form-schema";
@@ -31,9 +32,10 @@ export function DespesaForm({ initialData, onSuccess, onCancel }: Readonly<Despe
     mode: "onBlur",
     defaultValues: {
       titulo: initialData?.titulo ?? "",
+      tipo: initialData?.tipo ?? "SAIDA",
       categoria: initialData?.categoria ?? "CONTAS",
       valor: initialData?.valor,
-      dataPagamento: initialData?.dataPagamento ?? "",
+      dataVencimento: initialData?.dataVencimento ?? "",
       formaPagamento: initialData?.formaPagamento ?? "PIX",
       descricao: initialData?.descricao ?? "",
     },
@@ -44,7 +46,6 @@ export function DespesaForm({ initialData, onSuccess, onCancel }: Readonly<Despe
   const onSubmit = methods.handleSubmit((data) => {
     const payload = {
       ...data,
-      dataPagamento: data.dataPagamento || null,
       descricao: data.descricao?.trim() || undefined,
     };
 
@@ -72,14 +73,15 @@ export function DespesaForm({ initialData, onSuccess, onCancel }: Readonly<Despe
         <section className="space-y-4">
           <div>
             <h4 className="text-base font-bold text-base-content">Dados da despesa</h4>
-            <p className="text-sm text-base-content/60">Registre título, categoria, pagamento e valor.</p>
+            <p className="text-sm text-base-content/60">Registre tipo, categoria, vencimento e valor.</p>
           </div>
 
           <div className="grid gap-4 md:grid-cols-2">
             <TextInput name="titulo" label="Título" disabled={isPending} />
+            <SelectInput name="tipo" label="Tipo" options={tipoDespesaOptions} disabled={isPending} />
             <SelectInput name="categoria" label="Categoria" options={createCategoriaDespesaOptions} disabled={isPending} />
             <MonetaryInput name="valor" label="Valor" disabled={isPending} />
-            <DateInput name="dataPagamento" label="Data do pagamento" disabled={isPending} />
+            <DateInput name="dataVencimento" label="Data de vencimento" disabled={isPending} />
             <SelectInput
               name="formaPagamento"
               label="Forma de pagamento"

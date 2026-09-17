@@ -13,7 +13,7 @@ type UserFormProps = {
   onCancel: () => void;
 };
 
-const roleOptions = [{ value: "COLABORADOR", label: "Colaborador" }];
+const roleOptions = [{ value: "SECRETARIA", label: "Secretaria" }];
 
 export function UserForm({ onSuccess, onCancel }: Readonly<UserFormProps>) {
   const { createUser } = useUserMutations();
@@ -22,9 +22,9 @@ export function UserForm({ onSuccess, onCancel }: Readonly<UserFormProps>) {
     resolver: zodResolver(userFormSchema),
     mode: "onBlur",
     defaultValues: {
-      username: "",
+      email: "",
       password: "",
-      role: "COLABORADOR",
+      role: "SECRETARIA",
     },
   });
 
@@ -43,11 +43,11 @@ export function UserForm({ onSuccess, onCancel }: Readonly<UserFormProps>) {
         <section className="space-y-4">
           <div>
             <h4 className="text-base font-bold text-base-content">Novo usuário</h4>
-            <p className="text-sm text-base-content/60">O backend atual permite criar apenas usuário colaborador.</p>
+            <p className="text-sm text-base-content/60">O backend atual permite criar apenas usuário secretaria.</p>
           </div>
 
           <div className="grid gap-4">
-            <TextInput name="username" type="email" label="E-mail" disabled={createUser.isPending} />
+            <TextInput name="email" type="email" label="E-mail" disabled={createUser.isPending} />
             <TextInput name="password" type="password" label="Senha" disabled={createUser.isPending} />
             <SelectInput name="role" label="Perfil" options={roleOptions} disabled={createUser.isPending} />
           </div>

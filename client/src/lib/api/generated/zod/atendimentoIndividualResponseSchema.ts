@@ -18,6 +18,7 @@ export const atendimentoIndividualResponseSchema = z
     tipo: z
       .enum(["AULA", "MENTORIA", "TERAPIA", "ORIENTACAO_VOCACIONAL", "ENEM", "PAS", "OUTRO"])
       .describe("Tipo de conteudo ou categoria do atendimento"),
+    status: z.enum(["AGENDADO", "REALIZADO", "CANCELADO"]).describe("Status do atendimento individual"),
     dataHoraInicio: z.iso.datetime().describe("Data/hora de inicio do atendimento"),
     dataHoraFim: z.iso.datetime().describe("Data/hora de fim do atendimento"),
     get alunoResumo() {

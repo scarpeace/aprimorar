@@ -15,13 +15,13 @@ import type { Client, RequestConfig, ResponseErrorConfig } from "@/lib/api/kubb-
 import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
 import { mutationOptions, useMutation } from "@tanstack/react-query";
 
-export const agendarAtendimentoIndividualMutationKey = () => [{ url: "/atendimentos-individuais" }] as const;
+export const agendarAtendimentoIndividualMutationKey = () => [{ url: "/instituicao/atendimentos" }] as const;
 
 export type AgendarAtendimentoIndividualMutationKey = ReturnType<typeof agendarAtendimentoIndividualMutationKey>;
 
 /**
  * @description Cria um atendimento individual.
- * {@link /atendimentos-individuais}
+ * {@link /instituicao/atendimentos}
  */
 export async function agendarAtendimentoIndividual(
   data: AgendarAtendimentoIndividualMutationRequest,
@@ -35,7 +35,7 @@ export async function agendarAtendimentoIndividual(
     AgendarAtendimentoIndividualMutationResponse,
     ResponseErrorConfig<AgendarAtendimentoIndividual400 | AgendarAtendimentoIndividual401 | AgendarAtendimentoIndividual500>,
     AgendarAtendimentoIndividualMutationRequest
-  >({ method: "POST", url: `/atendimentos-individuais`, data: requestData, ...requestConfig });
+  >({ method: "POST", url: `/instituicao/atendimentos`, data: requestData, ...requestConfig });
   return res.data;
 }
 
@@ -58,7 +58,7 @@ export function agendarAtendimentoIndividualMutationOptions<TContext = unknown>(
 
 /**
  * @description Cria um atendimento individual.
- * {@link /atendimentos-individuais}
+ * {@link /instituicao/atendimentos}
  */
 export function useAgendarAtendimentoIndividual<TContext>(
   options: {

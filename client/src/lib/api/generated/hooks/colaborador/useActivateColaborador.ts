@@ -15,13 +15,13 @@ import type { Client, RequestConfig, ResponseErrorConfig } from "@/lib/api/kubb-
 import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
 import { mutationOptions, useMutation } from "@tanstack/react-query";
 
-export const activateColaboradorMutationKey = () => [{ url: "/colaboradores/:colaboradorId/activate" }] as const;
+export const activateColaboradorMutationKey = () => [{ url: "/instituicao/colaboradores/:colaboradorId/activate" }] as const;
 
 export type ActivateColaboradorMutationKey = ReturnType<typeof activateColaboradorMutationKey>;
 
 /**
  * @description Ativa um colaborador por ID.
- * {@link /colaboradores/:colaboradorId/activate}
+ * {@link /instituicao/colaboradores/:colaboradorId/activate}
  */
 export async function activateColaborador(
   colaboradorId: ActivateColaboradorPathParams["colaboradorId"],
@@ -33,7 +33,7 @@ export async function activateColaborador(
     ActivateColaboradorMutationResponse,
     ResponseErrorConfig<ActivateColaborador401 | ActivateColaborador404 | ActivateColaborador500>,
     unknown
-  >({ method: "PATCH", url: `/colaboradores/${colaboradorId}/activate`, ...requestConfig });
+  >({ method: "PATCH", url: `/instituicao/colaboradores/${colaboradorId}/activate`, ...requestConfig });
   return res.data;
 }
 
@@ -56,7 +56,7 @@ export function activateColaboradorMutationOptions<TContext = unknown>(
 
 /**
  * @description Ativa um colaborador por ID.
- * {@link /colaboradores/:colaboradorId/activate}
+ * {@link /instituicao/colaboradores/:colaboradorId/activate}
  */
 export function useActivateColaborador<TContext>(
   options: {

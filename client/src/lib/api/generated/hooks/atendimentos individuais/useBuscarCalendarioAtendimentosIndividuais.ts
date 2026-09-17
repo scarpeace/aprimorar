@@ -16,13 +16,13 @@ import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
 export const buscarCalendarioAtendimentosIndividuaisQueryKey = (params: BuscarCalendarioAtendimentosIndividuaisQueryParams) =>
-  [{ url: "/atendimentos-individuais/calendario" }, ...(params ? [params] : [])] as const;
+  [{ url: "/instituicao/atendimentos/calendario" }, ...(params ? [params] : [])] as const;
 
 export type BuscarCalendarioAtendimentosIndividuaisQueryKey = ReturnType<typeof buscarCalendarioAtendimentosIndividuaisQueryKey>;
 
 /**
  * @description Lista atendimentos individuais para um intervalo de calendário.
- * {@link /atendimentos-individuais/calendario}
+ * {@link /instituicao/atendimentos/calendario}
  */
 export async function buscarCalendarioAtendimentosIndividuais(
   params: BuscarCalendarioAtendimentosIndividuaisQueryParams,
@@ -38,7 +38,7 @@ export async function buscarCalendarioAtendimentosIndividuais(
       | BuscarCalendarioAtendimentosIndividuais500
     >,
     unknown
-  >({ method: "GET", url: `/atendimentos-individuais/calendario`, params, ...requestConfig });
+  >({ method: "GET", url: `/instituicao/atendimentos/calendario`, params, ...requestConfig });
   return res.data;
 }
 
@@ -67,7 +67,7 @@ export function buscarCalendarioAtendimentosIndividuaisQueryOptions(
 
 /**
  * @description Lista atendimentos individuais para um intervalo de calendário.
- * {@link /atendimentos-individuais/calendario}
+ * {@link /instituicao/atendimentos/calendario}
  */
 export function useBuscarCalendarioAtendimentosIndividuais<
   TData = BuscarCalendarioAtendimentosIndividuaisQueryResponse,

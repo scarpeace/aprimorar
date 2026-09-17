@@ -16,13 +16,13 @@ import type { Client, RequestConfig, ResponseErrorConfig } from "@/lib/api/kubb-
 import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from "@tanstack/react-query";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
-export const listAlunosQueryKey = () => [{ url: "/alunos/options" }] as const;
+export const listAlunosQueryKey = () => [{ url: "/instituicao/alunos/options" }] as const;
 
 export type ListAlunosQueryKey = ReturnType<typeof listAlunosQueryKey>;
 
 /**
  * @description Retorna uma lista de opções de alunos.
- * {@link /alunos/options}
+ * {@link /instituicao/alunos/options}
  */
 export async function listAlunos(config: Partial<RequestConfig> & { client?: Client } = {}) {
   const { client: request = fetch, ...requestConfig } = config;
@@ -31,7 +31,7 @@ export async function listAlunos(config: Partial<RequestConfig> & { client?: Cli
     ListAlunosQueryResponse,
     ResponseErrorConfig<ListAlunos400 | ListAlunos401 | ListAlunos404 | ListAlunos409 | ListAlunos500>,
     unknown
-  >({ method: "GET", url: `/alunos/options`, ...requestConfig });
+  >({ method: "GET", url: `/instituicao/alunos/options`, ...requestConfig });
   return res.data;
 }
 
@@ -52,7 +52,7 @@ export function listAlunosQueryOptions(config: Partial<RequestConfig> & { client
 
 /**
  * @description Retorna uma lista de opções de alunos.
- * {@link /alunos/options}
+ * {@link /instituicao/alunos/options}
  */
 export function useListAlunos<
   TData = ListAlunosQueryResponse,

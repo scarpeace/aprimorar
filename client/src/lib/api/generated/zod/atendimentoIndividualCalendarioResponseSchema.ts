@@ -16,11 +16,10 @@ export const atendimentoIndividualCalendarioResponseSchema = z
     tipo: z
       .enum(["AULA", "MENTORIA", "TERAPIA", "ORIENTACAO_VOCACIONAL", "ENEM", "PAS", "OUTRO"])
       .describe("Tipo de conteudo ou categoria do atendimento"),
+    status: z.enum(["AGENDADO", "REALIZADO", "CANCELADO"]).describe("Status do atendimento individual"),
     alunoId: z.uuid().describe("Identificador do aluno"),
     alunoNome: z.string().describe("Nome do aluno"),
     colaboradorId: z.uuid().describe("Identificador do colaborador"),
     colaboradorNome: z.string().describe("Nome do colaborador"),
-    statusCobranca: z.string().describe("Status da cobrança"),
-    statusRepasse: z.string().describe("Status do repasse"),
   })
   .describe("Atendimento individual no formato de consulta de calendário");

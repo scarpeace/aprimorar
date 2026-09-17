@@ -6,6 +6,7 @@
 export const repasseIndividualResponseStatusEnum = {
   PENDENTE: "PENDENTE",
   PAGO: "PAGO",
+  CANCELADO: "CANCELADO",
 } as const;
 
 export type RepasseIndividualResponseStatusEnumKey =

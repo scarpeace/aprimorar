@@ -21,6 +21,15 @@ export const atendimentoIndividualResponseTipoEnum = {
 export type AtendimentoIndividualResponseTipoEnumKey =
   (typeof atendimentoIndividualResponseTipoEnum)[keyof typeof atendimentoIndividualResponseTipoEnum];
 
+export const atendimentoIndividualResponseStatusEnum = {
+  AGENDADO: "AGENDADO",
+  REALIZADO: "REALIZADO",
+  CANCELADO: "CANCELADO",
+} as const;
+
+export type AtendimentoIndividualResponseStatusEnumKey =
+  (typeof atendimentoIndividualResponseStatusEnum)[keyof typeof atendimentoIndividualResponseStatusEnum];
+
 /**
  * @description Dados do atendimento retornados pela API
  */
@@ -35,6 +44,11 @@ export type AtendimentoIndividualResponse = {
    * @type string
    */
   tipo: AtendimentoIndividualResponseTipoEnumKey;
+  /**
+   * @description Status do atendimento individual
+   * @type string
+   */
+  status: AtendimentoIndividualResponseStatusEnumKey;
   /**
    * @description Data/hora de inicio do atendimento
    * @type string, date-time

@@ -15,13 +15,13 @@ import type { Client, RequestConfig, ResponseErrorConfig } from "@/lib/api/kubb-
 import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
 import { mutationOptions, useMutation } from "@tanstack/react-query";
 
-export const cancelarPagamentoDespesaMutationKey = () => [{ url: "/despesas/:despesaId/cancelarPagamento" }] as const;
+export const cancelarPagamentoDespesaMutationKey = () => [{ url: "/financeiro/despesas/:despesaId/cancelarPagamento" }] as const;
 
 export type CancelarPagamentoDespesaMutationKey = ReturnType<typeof cancelarPagamentoDespesaMutationKey>;
 
 /**
  * @description Cancela o pagamento da despesa
- * {@link /despesas/:despesaId/cancelarPagamento}
+ * {@link /financeiro/despesas/:despesaId/cancelarPagamento}
  */
 export async function cancelarPagamentoDespesa(
   despesaId: CancelarPagamentoDespesaPathParams["despesaId"],
@@ -33,7 +33,7 @@ export async function cancelarPagamentoDespesa(
     CancelarPagamentoDespesaMutationResponse,
     ResponseErrorConfig<CancelarPagamentoDespesa401 | CancelarPagamentoDespesa404 | CancelarPagamentoDespesa500>,
     unknown
-  >({ method: "PATCH", url: `/despesas/${despesaId}/cancelarPagamento`, ...requestConfig });
+  >({ method: "PATCH", url: `/financeiro/despesas/${despesaId}/cancelarPagamento`, ...requestConfig });
   return res.data;
 }
 
@@ -56,7 +56,7 @@ export function cancelarPagamentoDespesaMutationOptions<TContext = unknown>(
 
 /**
  * @description Cancela o pagamento da despesa
- * {@link /despesas/:despesaId/cancelarPagamento}
+ * {@link /financeiro/despesas/:despesaId/cancelarPagamento}
  */
 export function useCancelarPagamentoDespesa<TContext>(
   options: {

@@ -1,16 +1,14 @@
-import { AtendimentoTipoBadge } from "@/features/atendimentos/components/AtendimentoTipoBadge";
-import type { AtendimentoIndividualResponse } from "@/lib/api/generated/types/AtendimentoIndividualResponse";
-import { formatDateShortYear } from "@/lib/utils/date-utils";
+import type { RepasseIndividualResponse } from "@/lib/api/generated/types/RepasseIndividualResponse";
 import { brl } from "@/lib/utils/formatter";
 
 type RegistrarRepasseTableProps = {
-  atendimentos: AtendimentoIndividualResponse[];
+  repasses: RepasseIndividualResponse[];
   selectedIds: number[];
   onToggle: (repasseId: number) => void;
 };
 
 export function RegistrarRepasseTable({
-  atendimentos,
+  repasses,
   selectedIds,
   onToggle,
 }: Readonly<RegistrarRepasseTableProps>) {
@@ -19,38 +17,28 @@ export function RegistrarRepasseTable({
       <table className="table table-zebra table-sm">
         <thead>
           <tr>
-            <th>Aluno</th>
-            <th>Data</th>
-            <th>Tipo</th>
+            <th>Atendimento</th>
             <th className="text-right">Valor</th>
             <th className="text-center">Selecionar</th>
           </tr>
         </thead>
 
         <tbody>
-          {atendimentos.map((atendimento) => {
-            const repasseId = atendimento.repasse.id;
-
-            return (
-              <tr key={atendimento.id}>
-                <td className="font-semibold">{atendimento.alunoResumo.nome}</td>
-                <td>{formatDateShortYear(atendimento.dataHoraInicio)}</td>
-                <td>
-                  <AtendimentoTipoBadge tipo={atendimento.tipo} />
-                </td>
-                <td className="text-right">{brl.format(atendimento.repasse.valor)}</td>
-                <td className="text-center">
-                  <input
-                    type="checkbox"
-                    className="checkbox checkbox-sm"
-                    checked={selectedIds.includes(repasseId)}
-                    onChange={() => onToggle(repasseId)}
-                    aria-label={`Selecionar repasse do atendimento ${atendimento.id}`}
-                  />
-                </td>
-              </tr>
-            );
-          })}
+          {repasses.map((repasse) => (
+            <tr key={repasse.id}>
+              <td className="font-semibold">#{repasse.atendimentoId}</td>
+              <td className="text-right">{brl.format(repasse.valor)}</td>
+              <td className="text-center">
+                <input
+                  type="checkbox"
+                  className="checkbox checkbox-sm"
+                  checked={selectedIds.includes(repasse.id)}
+                  onChange={() => onToggle(repasse.id)}
+                  aria-label={`Selecionar repasse do atendimento ${repasse.atendimentoId}`}
+                />
+              </td>
+            </tr>
+          ))}
         </tbody>
       </table>
     </div>

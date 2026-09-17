@@ -1,13 +1,14 @@
 "use client";
 
+import { SquareArrowOutUpRight } from "lucide-react";
+import Link from "next/link";
 import { useState } from "react";
 import { Card, CardHeader, CardTitle } from "@/components/ui/Card";
 import { EmptyCard } from "@/components/ui/EmptyCard";
 import { ErrorCard } from "@/components/ui/ErrorCard";
 import { LoadingSkeleton } from "@/components/ui/LoadingSkeleton";
 import { Pagination } from "@/components/ui/Pagination";
-import { useBuscarLotesDeCobranca } from "@/lib/api/generated/hooks/atendimentos individuais/useBuscarLotesDeCobranca";
-import { formaPagamentoLabels } from "@/lib/constants/pagamento-constants";
+import { useBuscarLotesDeCobranca } from "@/lib/api/generated/hooks/cobranças individuais/useBuscarLotesDeCobranca";
 import { formatDateShortYear, formatTime } from "@/lib/utils/date-utils";
 import { brl } from "@/lib/utils/formatter";
 
@@ -65,6 +66,7 @@ export function AlunoCobrancasHistory({ alunoId }: Readonly<AlunoCobrancasHistor
                   {/*<th>Pgto</th>*/}
                   <th className="text-center">Atendimentos</th>
                   <th className="text-right">Valor total</th>
+                  <th className="text-right">Registro</th>
                 </tr>
               </thead>
 
@@ -77,6 +79,15 @@ export function AlunoCobrancasHistory({ alunoId }: Readonly<AlunoCobrancasHistor
                     {/*<td>{formaPagamentoLabels[cobranca.formaPagamento]}</td>*/}
                     <td className="text-center">{cobranca.quantidadeCobrancas}</td>
                     <td className="text-right font-semibold">{brl.format(cobranca.valorTotal)}</td>
+                    <td className="text-right">
+                      <Link
+                        className="btn btn-link btn-xs gap-1"
+                        href={`/financeiro/cobrancas/lotes/${cobranca.loteId}`}
+                      >
+                        Ver detalhes
+                        <SquareArrowOutUpRight size={14} aria-hidden="true" />
+                      </Link>
+                    </td>
                   </tr>
                 ))}
               </tbody>

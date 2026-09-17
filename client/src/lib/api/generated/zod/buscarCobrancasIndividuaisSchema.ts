@@ -9,7 +9,7 @@ import { z } from "zod/v4";
 
 export const buscarCobrancasIndividuaisQueryParamsSchema = z.object({
   alunoId: z.optional(z.uuid().describe("ID do aluno")),
-  status: z.optional(z.enum(["PENDENTE", "PAGO"]).describe("Status da cobrança")),
+  status: z.optional(z.enum(["PENDENTE", "PAGO", "CANCELADO"]).describe("Status da cobrança")),
   formaPagamento: z.optional(
     z.enum(["PIX", "DINHEIRO", "CARTAO_CREDITO", "CARTAO_DEBITO", "BOLETO", "TRANSFERENCIA"]).describe("Forma de pagamento"),
   ),

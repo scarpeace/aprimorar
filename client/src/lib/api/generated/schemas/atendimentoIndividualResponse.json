@@ -8,6 +8,7 @@
     "dataHoraInicio",
     "id",
     "repasse",
+    "status",
     "tipo"
   ],
   "type": "object",
@@ -18,6 +19,12 @@
       "description": "Tipo de conteudo ou categoria do atendimento",
       "example": "MENTORIA",
       "enum": ["AULA", "MENTORIA", "TERAPIA", "ORIENTACAO_VOCACIONAL", "ENEM", "PAS", "OUTRO"]
+    },
+    "status": {
+      "type": "string",
+      "description": "Status do atendimento individual",
+      "example": "AGENDADO",
+      "enum": ["AGENDADO", "REALIZADO", "CANCELADO"]
     },
     "dataHoraInicio": {
       "type": "string",

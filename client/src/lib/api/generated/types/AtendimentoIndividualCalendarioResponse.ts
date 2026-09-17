@@ -16,6 +16,15 @@ export const atendimentoIndividualCalendarioResponseTipoEnum = {
 export type AtendimentoIndividualCalendarioResponseTipoEnumKey =
   (typeof atendimentoIndividualCalendarioResponseTipoEnum)[keyof typeof atendimentoIndividualCalendarioResponseTipoEnum];
 
+export const atendimentoIndividualCalendarioResponseStatusEnum = {
+  AGENDADO: "AGENDADO",
+  REALIZADO: "REALIZADO",
+  CANCELADO: "CANCELADO",
+} as const;
+
+export type AtendimentoIndividualCalendarioResponseStatusEnumKey =
+  (typeof atendimentoIndividualCalendarioResponseStatusEnum)[keyof typeof atendimentoIndividualCalendarioResponseStatusEnum];
+
 /**
  * @description Atendimento individual no formato de consulta de calendário
  */
@@ -41,6 +50,11 @@ export type AtendimentoIndividualCalendarioResponse = {
    */
   tipo: AtendimentoIndividualCalendarioResponseTipoEnumKey;
   /**
+   * @description Status do atendimento individual
+   * @type string
+   */
+  status: AtendimentoIndividualCalendarioResponseStatusEnumKey;
+  /**
    * @description Identificador do aluno
    * @type string, uuid
    */
@@ -60,14 +74,4 @@ export type AtendimentoIndividualCalendarioResponse = {
    * @type string
    */
   colaboradorNome: string;
-  /**
-   * @description Status da cobrança
-   * @type string
-   */
-  statusCobranca: string;
-  /**
-   * @description Status do repasse
-   * @type string
-   */
-  statusRepasse: string;
 };

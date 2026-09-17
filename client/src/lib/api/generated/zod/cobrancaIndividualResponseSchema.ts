@@ -14,7 +14,7 @@ export const cobrancaIndividualResponseSchema = z
     atendimentoId: z.int(),
     alunoId: z.uuid(),
     valor: z.number(),
-    status: z.enum(["PENDENTE", "PAGO"]),
+    status: z.enum(["PENDENTE", "PAGO", "CANCELADO"]),
     dataPagamento: z.iso.datetime().nullish(),
     formaPagamento: z
       .enum(["PIX", "DINHEIRO", "CARTAO_CREDITO", "CARTAO_DEBITO", "BOLETO", "TRANSFERENCIA"])

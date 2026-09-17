@@ -11,7 +11,7 @@
           "atendimentoId": { "type": "integer", "format": "int64" },
           "colaboradorId": { "type": "string", "format": "uuid" },
           "valor": { "type": "number" },
-          "status": { "type": "string", "enum": ["PENDENTE", "PAGO"] },
+          "status": { "type": "string", "enum": ["PENDENTE", "PAGO", "CANCELADO"] },
           "dataRepasse": { "type": "string", "format": "date-time", "nullable": true },
           "formaPagamento": {
             "type": "string",

@@ -92,6 +92,22 @@ export {
   buscarCobrancasIndividuaisQueryResponseSchema,
 } from "./buscarCobrancasIndividuaisSchema.ts";
 export {
+  buscarLoteDeCobrancaPorId200Schema,
+  buscarLoteDeCobrancaPorId401Schema,
+  buscarLoteDeCobrancaPorId404Schema,
+  buscarLoteDeCobrancaPorId500Schema,
+  buscarLoteDeCobrancaPorIdPathParamsSchema,
+  buscarLoteDeCobrancaPorIdQueryResponseSchema,
+} from "./buscarLoteDeCobrancaPorIdSchema.ts";
+export {
+  buscarLoteDeRepassePorId200Schema,
+  buscarLoteDeRepassePorId401Schema,
+  buscarLoteDeRepassePorId404Schema,
+  buscarLoteDeRepassePorId500Schema,
+  buscarLoteDeRepassePorIdPathParamsSchema,
+  buscarLoteDeRepassePorIdQueryResponseSchema,
+} from "./buscarLoteDeRepassePorIdSchema.ts";
+export {
   buscarLotesDeCobranca200Schema,
   buscarLotesDeCobranca400Schema,
   buscarLotesDeCobranca401Schema,
@@ -123,6 +139,15 @@ export {
   buscarRepassesIndividuaisQueryParamsSchema,
   buscarRepassesIndividuaisQueryResponseSchema,
 } from "./buscarRepassesIndividuaisSchema.ts";
+export {
+  cancelarAtendimentoIndividual204Schema,
+  cancelarAtendimentoIndividual400Schema,
+  cancelarAtendimentoIndividual401Schema,
+  cancelarAtendimentoIndividual404Schema,
+  cancelarAtendimentoIndividual500Schema,
+  cancelarAtendimentoIndividualMutationResponseSchema,
+  cancelarAtendimentoIndividualPathParamsSchema,
+} from "./cancelarAtendimentoIndividualSchema.ts";
 export { cancelarCobrancasIndividualRequestSchema } from "./cancelarCobrancasIndividualRequestSchema.ts";
 export {
   cancelarPagamentoCobrancasIndividuais204Schema,
@@ -152,6 +177,8 @@ export {
   cancelarRepassesIndividuaisMutationResponseSchema,
 } from "./cancelarRepassesIndividuaisSchema.ts";
 export { cobrancaIndividualResponseSchema } from "./cobrancaIndividualResponseSchema.ts";
+export { cobrancaLoteDetalheResponseSchema } from "./cobrancaLoteDetalheResponseSchema.ts";
+export { cobrancaLoteItemResponseSchema } from "./cobrancaLoteItemResponseSchema.ts";
 export { cobrancaLoteResponseSchema } from "./cobrancaLoteResponseSchema.ts";
 export { cobrancaResumoSchema } from "./cobrancaResumoSchema.ts";
 export { colaboradorDetailResponseDTOSchema } from "./colaboradorDetailResponseDTOSchema.ts";
@@ -242,15 +269,6 @@ export { despesaRequestSchema } from "./despesaRequestSchema.ts";
 export { despesaResponseSchema } from "./despesaResponseSchema.ts";
 export { enderecoRequestDTOSchema } from "./enderecoRequestDTOSchema.ts";
 export { enderecoResponseDTOSchema } from "./enderecoResponseDTOSchema.ts";
-export {
-  excluirAtendimentoIndividual204Schema,
-  excluirAtendimentoIndividual400Schema,
-  excluirAtendimentoIndividual401Schema,
-  excluirAtendimentoIndividual404Schema,
-  excluirAtendimentoIndividual500Schema,
-  excluirAtendimentoIndividualMutationResponseSchema,
-  excluirAtendimentoIndividualPathParamsSchema,
-} from "./excluirAtendimentoIndividualSchema.ts";
 export {
   findColaboradorById200Schema,
   findColaboradorById401Schema,
@@ -350,6 +368,15 @@ export { pagedModelDespesaResponseSchema } from "./pagedModelDespesaResponseSche
 export { pagedModelRepasseIndividualResponseSchema } from "./pagedModelRepasseIndividualResponseSchema.ts";
 export { pagedModelRepasseLoteResponseSchema } from "./pagedModelRepasseLoteResponseSchema.ts";
 export { problemDetailSchema } from "./problemDetailSchema.ts";
+export {
+  realizarAtendimentoIndividual204Schema,
+  realizarAtendimentoIndividual400Schema,
+  realizarAtendimentoIndividual401Schema,
+  realizarAtendimentoIndividual404Schema,
+  realizarAtendimentoIndividual500Schema,
+  realizarAtendimentoIndividualMutationResponseSchema,
+  realizarAtendimentoIndividualPathParamsSchema,
+} from "./realizarAtendimentoIndividualSchema.ts";
 export { refreshAccessToken200Schema, refreshAccessTokenMutationResponseSchema } from "./refreshAccessTokenSchema.ts";
 export {
   registrarPagamentoCobrancasIndividuais204Schema,

@@ -16,13 +16,13 @@ import type { Client, RequestConfig, ResponseErrorConfig } from "@/lib/api/kubb-
 import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
 import { mutationOptions, useMutation } from "@tanstack/react-query";
 
-export const createDespesaMutationKey = () => [{ url: "/despesas" }] as const;
+export const createDespesaMutationKey = () => [{ url: "/financeiro/despesas" }] as const;
 
 export type CreateDespesaMutationKey = ReturnType<typeof createDespesaMutationKey>;
 
 /**
  * @description Cria uma nova despesa operacional
- * {@link /despesas}
+ * {@link /financeiro/despesas}
  */
 export async function createDespesa(
   data: CreateDespesaMutationRequest,
@@ -36,7 +36,7 @@ export async function createDespesa(
     CreateDespesaMutationResponse,
     ResponseErrorConfig<CreateDespesa400 | CreateDespesa401 | CreateDespesa409 | CreateDespesa500>,
     CreateDespesaMutationRequest
-  >({ method: "POST", url: `/despesas`, data: requestData, ...requestConfig });
+  >({ method: "POST", url: `/financeiro/despesas`, data: requestData, ...requestConfig });
   return res.data;
 }
 
@@ -59,7 +59,7 @@ export function createDespesaMutationOptions<TContext = unknown>(
 
 /**
  * @description Cria uma nova despesa operacional
- * {@link /despesas}
+ * {@link /financeiro/despesas}
  */
 export function useCreateDespesa<TContext>(
   options: {

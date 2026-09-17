@@ -9,6 +9,7 @@ import type { ProblemDetail } from "./ProblemDetail.ts";
 export const buscarRepassesIndividuaisQueryParamsStatusEnum = {
   PENDENTE: "PENDENTE",
   PAGO: "PAGO",
+  CANCELADO: "CANCELADO",
 } as const;
 
 export type BuscarRepassesIndividuaisQueryParamsStatusEnumKey =

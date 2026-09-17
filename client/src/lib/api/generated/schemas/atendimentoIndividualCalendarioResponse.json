@@ -7,8 +7,7 @@
     "dataHoraFim",
     "dataHoraInicio",
     "id",
-    "statusCobranca",
-    "statusRepasse",
+    "status",
     "tipo"
   ],
   "type": "object",
@@ -21,12 +20,15 @@
       "description": "Tipo de conteudo ou categoria do atendimento",
       "enum": ["AULA", "MENTORIA", "TERAPIA", "ORIENTACAO_VOCACIONAL", "ENEM", "PAS", "OUTRO"]
     },
+    "status": {
+      "type": "string",
+      "description": "Status do atendimento individual",
+      "enum": ["AGENDADO", "REALIZADO", "CANCELADO"]
+    },
     "alunoId": { "type": "string", "description": "Identificador do aluno", "format": "uuid" },
     "alunoNome": { "type": "string", "description": "Nome do aluno" },
     "colaboradorId": { "type": "string", "description": "Identificador do colaborador", "format": "uuid" },
-    "colaboradorNome": { "type": "string", "description": "Nome do colaborador" },
-    "statusCobranca": { "type": "string", "description": "Status da cobrança" },
-    "statusRepasse": { "type": "string", "description": "Status do repasse" }
+    "colaboradorNome": { "type": "string", "description": "Nome do colaborador" }
   },
   "description": "Atendimento individual no formato de consulta de calendário",
   "x-readme-ref-name": "AtendimentoIndividualCalendarioResponse"

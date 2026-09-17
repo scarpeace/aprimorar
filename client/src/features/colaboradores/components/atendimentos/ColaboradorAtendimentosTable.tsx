@@ -16,7 +16,7 @@ import { AtendimentoTipoBadge } from "@/features/atendimentos/components/Atendim
 import { RegistrarRepasseButton } from "@/features/colaboradores/components/repasses/RegistrarRepasseButton";
 import { useBuscarAtendimentosIndividuais } from "@/lib/api/generated/hooks/atendimentos individuais/useBuscarAtendimentosIndividuais";
 import type { BuscarAtendimentosIndividuaisQueryParamsTipoEnumKey } from "@/lib/api/generated/types/BuscarAtendimentosIndividuais";
-import { atendimentoTipoOptions, statusCobrancaOptions } from "@/lib/constants/atendimento-constants";
+import { atendimentoTipoOptions } from "@/lib/constants/atendimento-constants";
 import { useDebounce } from "@/lib/hooks/use-debounce";
 import { formatDateShortYear, formatTime } from "@/lib/utils/date-utils";
 import { brl } from "@/lib/utils/formatter";
@@ -34,7 +34,7 @@ export function ColaboradorAtendimentosTable({ colaboradorId }: Readonly<Colabor
   const [page, setPage] = useState(0);
   const [searchInput, setSearchInput] = useState("");
   const [tipo, setTipo] = useState<ColaboradorAtendimentoTipo>("");
-  const [statusCobranca, setStatusCobranca] = useState("");
+
   const [dataInicio, setDataInicio] = useState("");
   const [dataFim, setDataFim] = useState("");
   const search = useDebounce(searchInput.trim(), 300);
@@ -45,7 +45,7 @@ export function ColaboradorAtendimentosTable({ colaboradorId }: Readonly<Colabor
     colaboradorId,
     busca: search || undefined,
     tipo: tipo || undefined,
-    statusCobranca: statusCobranca || undefined,
+
     inicio: dataInicio ? `${dataInicio}T00:00:00` : undefined,
     fim: dataFim ? `${dataFim}T23:59:59` : undefined,
   });
@@ -97,13 +97,6 @@ export function ColaboradorAtendimentosTable({ colaboradorId }: Readonly<Colabor
           className="w-full sm:w-48"
         />
 
-        <SelectField
-          label="Cobrança"
-          value={statusCobranca}
-          options={statusCobrancaOptions}
-          onChange={(value) => changeFilter(() => setStatusCobranca(value))}
-          className="w-full sm:w-48"
-        />
 
         <DateField
           label="Início"

@@ -16,13 +16,13 @@ import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
 export const findColaboradorByIdQueryKey = (colaboradorId: FindColaboradorByIdPathParams["colaboradorId"]) =>
-  [{ url: "/colaboradores/:colaboradorId", params: { colaboradorId: colaboradorId } }] as const;
+  [{ url: "/instituicao/colaboradores/:colaboradorId", params: { colaboradorId: colaboradorId } }] as const;
 
 export type FindColaboradorByIdQueryKey = ReturnType<typeof findColaboradorByIdQueryKey>;
 
 /**
  * @description Retorna um colaborador por ID.
- * {@link /colaboradores/:colaboradorId}
+ * {@link /instituicao/colaboradores/:colaboradorId}
  */
 export async function findColaboradorById(
   colaboradorId: FindColaboradorByIdPathParams["colaboradorId"],
@@ -34,7 +34,7 @@ export async function findColaboradorById(
     FindColaboradorByIdQueryResponse,
     ResponseErrorConfig<FindColaboradorById401 | FindColaboradorById404 | FindColaboradorById500>,
     unknown
-  >({ method: "GET", url: `/colaboradores/${colaboradorId}`, ...requestConfig });
+  >({ method: "GET", url: `/instituicao/colaboradores/${colaboradorId}`, ...requestConfig });
   return res.data;
 }
 
@@ -59,7 +59,7 @@ export function findColaboradorByIdQueryOptions(
 
 /**
  * @description Retorna um colaborador por ID.
- * {@link /colaboradores/:colaboradorId}
+ * {@link /instituicao/colaboradores/:colaboradorId}
  */
 export function useFindColaboradorById<
   TData = FindColaboradorByIdQueryResponse,

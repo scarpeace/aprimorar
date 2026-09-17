@@ -16,13 +16,13 @@ import type { Client, RequestConfig, ResponseErrorConfig } from "@/lib/api/kubb-
 import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
 import { mutationOptions, useMutation } from "@tanstack/react-query";
 
-export const createColaboradorMutationKey = () => [{ url: "/colaboradores" }] as const;
+export const createColaboradorMutationKey = () => [{ url: "/instituicao/colaboradores" }] as const;
 
 export type CreateColaboradorMutationKey = ReturnType<typeof createColaboradorMutationKey>;
 
 /**
  * @description Cria um novo colaborador com os dados fornecidos.
- * {@link /colaboradores}
+ * {@link /instituicao/colaboradores}
  */
 export async function createColaborador(
   data: CreateColaboradorMutationRequest,
@@ -36,7 +36,7 @@ export async function createColaborador(
     CreateColaboradorMutationResponse,
     ResponseErrorConfig<CreateColaborador400 | CreateColaborador401 | CreateColaborador409 | CreateColaborador500>,
     CreateColaboradorMutationRequest
-  >({ method: "POST", url: `/colaboradores`, data: requestData, ...requestConfig });
+  >({ method: "POST", url: `/instituicao/colaboradores`, data: requestData, ...requestConfig });
   return res.data;
 }
 
@@ -59,7 +59,7 @@ export function createColaboradorMutationOptions<TContext = unknown>(
 
 /**
  * @description Cria um novo colaborador com os dados fornecidos.
- * {@link /colaboradores}
+ * {@link /instituicao/colaboradores}
  */
 export function useCreateColaborador<TContext>(
   options: {

@@ -86,6 +86,11 @@ export function AtendimentoDetails({ atendimentoId }: Readonly<AtendimentoDetail
               loteId={atendimento.data.cobranca.loteId}
               paymentDate={atendimento.data.cobranca.dataPagamento}
               formaPagamento={atendimento.data.cobranca.formaPagamento}
+              paymentRecordHref={
+                atendimento.data.cobranca.loteId
+                  ? `/financeiro/cobrancas/lotes/${atendimento.data.cobranca.loteId}`
+                  : undefined
+              }
             />
             <AtendimentoFinancialCard
               title="Repasse"

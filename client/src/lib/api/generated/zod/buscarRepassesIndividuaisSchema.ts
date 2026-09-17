@@ -9,7 +9,7 @@ import { z } from "zod/v4";
 
 export const buscarRepassesIndividuaisQueryParamsSchema = z.object({
   colaboradorId: z.optional(z.uuid().describe("ID do colaborador")),
-  status: z.optional(z.enum(["PENDENTE", "PAGO"]).describe("Status do repasse")),
+  status: z.optional(z.enum(["PENDENTE", "PAGO", "CANCELADO"]).describe("Status do repasse")),
   formaPagamento: z.optional(
     z.enum(["PIX", "DINHEIRO", "CARTAO_CREDITO", "CARTAO_DEBITO", "BOLETO", "TRANSFERENCIA"]).describe("Forma de pagamento"),
   ),

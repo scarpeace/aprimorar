@@ -15,13 +15,13 @@ import type { Client, RequestConfig, ResponseErrorConfig } from "@/lib/api/kubb-
 import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
 import { mutationOptions, useMutation } from "@tanstack/react-query";
 
-export const deactivateColaboradorMutationKey = () => [{ url: "/colaboradores/:colaboradorId/deactivate" }] as const;
+export const deactivateColaboradorMutationKey = () => [{ url: "/instituicao/colaboradores/:colaboradorId/deactivate" }] as const;
 
 export type DeactivateColaboradorMutationKey = ReturnType<typeof deactivateColaboradorMutationKey>;
 
 /**
  * @description Desativa um colaborador por ID.
- * {@link /colaboradores/:colaboradorId/deactivate}
+ * {@link /instituicao/colaboradores/:colaboradorId/deactivate}
  */
 export async function deactivateColaborador(
   colaboradorId: DeactivateColaboradorPathParams["colaboradorId"],
@@ -33,7 +33,7 @@ export async function deactivateColaborador(
     DeactivateColaboradorMutationResponse,
     ResponseErrorConfig<DeactivateColaborador401 | DeactivateColaborador404 | DeactivateColaborador500>,
     unknown
-  >({ method: "PATCH", url: `/colaboradores/${colaboradorId}/deactivate`, ...requestConfig });
+  >({ method: "PATCH", url: `/instituicao/colaboradores/${colaboradorId}/deactivate`, ...requestConfig });
   return res.data;
 }
 
@@ -56,7 +56,7 @@ export function deactivateColaboradorMutationOptions<TContext = unknown>(
 
 /**
  * @description Desativa um colaborador por ID.
- * {@link /colaboradores/:colaboradorId/deactivate}
+ * {@link /instituicao/colaboradores/:colaboradorId/deactivate}
  */
 export function useDeactivateColaborador<TContext>(
   options: {

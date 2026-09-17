@@ -16,13 +16,13 @@ import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
 export const buscarAtendimentoIndividualPorIdQueryKey = (id: BuscarAtendimentoIndividualPorIdPathParams["id"]) =>
-  [{ url: "/atendimentos-individuais/:id", params: { id: id } }] as const;
+  [{ url: "/instituicao/atendimentos/:id", params: { id: id } }] as const;
 
 export type BuscarAtendimentoIndividualPorIdQueryKey = ReturnType<typeof buscarAtendimentoIndividualPorIdQueryKey>;
 
 /**
  * @description Busca um atendimento individual por ID.
- * {@link /atendimentos-individuais/:id}
+ * {@link /instituicao/atendimentos/:id}
  */
 export async function buscarAtendimentoIndividualPorId(
   id: BuscarAtendimentoIndividualPorIdPathParams["id"],
@@ -36,7 +36,7 @@ export async function buscarAtendimentoIndividualPorId(
       BuscarAtendimentoIndividualPorId401 | BuscarAtendimentoIndividualPorId404 | BuscarAtendimentoIndividualPorId500
     >,
     unknown
-  >({ method: "GET", url: `/atendimentos-individuais/${id}`, ...requestConfig });
+  >({ method: "GET", url: `/instituicao/atendimentos/${id}`, ...requestConfig });
   return res.data;
 }
 
@@ -63,7 +63,7 @@ export function buscarAtendimentoIndividualPorIdQueryOptions(
 
 /**
  * @description Busca um atendimento individual por ID.
- * {@link /atendimentos-individuais/:id}
+ * {@link /instituicao/atendimentos/:id}
  */
 export function useBuscarAtendimentoIndividualPorId<
   TData = BuscarAtendimentoIndividualPorIdQueryResponse,

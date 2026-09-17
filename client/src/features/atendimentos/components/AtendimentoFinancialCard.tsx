@@ -1,3 +1,5 @@
+import { SquareArrowOutUpRight } from "lucide-react";
+import Link from "next/link";
 import { DetailField } from "@/components/ui/DetailField";
 import { PaymentStatusBadge } from "@/components/ui/PaymentStatusBadge";
 import { formaPagamentoLabels } from "@/lib/constants/pagamento-constants";
@@ -10,6 +12,7 @@ type AtendimentoFinancialCardProps = {
   loteId?: string | null;
   paymentDate?: string | null;
   formaPagamento?: string | null;
+  paymentRecordHref?: string;
 };
 
 export function AtendimentoFinancialCard({
@@ -19,6 +22,7 @@ export function AtendimentoFinancialCard({
   loteId,
   paymentDate,
   formaPagamento,
+  paymentRecordHref,
 }: Readonly<AtendimentoFinancialCardProps>) {
   const isPaid = status === "PAGO";
 
@@ -44,6 +48,13 @@ export function AtendimentoFinancialCard({
               label="Forma de pagamento"
               value={formaPagamento ? formaPagamentoLabels[formaPagamento] : null}
             />
+
+            {loteId && paymentRecordHref ? (
+              <Link className="btn btn-outline btn-sm w-fit gap-2" href={paymentRecordHref}>
+                Ver registro de pagamento
+                <SquareArrowOutUpRight size={15} aria-hidden="true" />
+              </Link>
+            ) : null}
           </div>
         ) : (
           <p className="mt-3 text-sm text-base-content/60">Pagamento ainda não registrado.</p>

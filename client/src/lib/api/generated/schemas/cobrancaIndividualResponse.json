@@ -6,7 +6,7 @@
     "atendimentoId": { "type": "integer", "format": "int64" },
     "alunoId": { "type": "string", "format": "uuid" },
     "valor": { "type": "number" },
-    "status": { "type": "string", "enum": ["PENDENTE", "PAGO"] },
+    "status": { "type": "string", "enum": ["PENDENTE", "PAGO", "CANCELADO"] },
     "dataPagamento": { "type": "string", "format": "date-time", "nullable": true },
     "formaPagamento": {
       "type": "string",

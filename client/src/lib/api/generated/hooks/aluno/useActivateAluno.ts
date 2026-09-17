@@ -17,13 +17,13 @@ import type { Client, RequestConfig, ResponseErrorConfig } from "@/lib/api/kubb-
 import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
 import { mutationOptions, useMutation } from "@tanstack/react-query";
 
-export const activateAlunoMutationKey = () => [{ url: "/alunos/:alunoId/activate" }] as const;
+export const activateAlunoMutationKey = () => [{ url: "/instituicao/alunos/:alunoId/activate" }] as const;
 
 export type ActivateAlunoMutationKey = ReturnType<typeof activateAlunoMutationKey>;
 
 /**
  * @description Ativa um aluno por ID.
- * {@link /alunos/:alunoId/activate}
+ * {@link /instituicao/alunos/:alunoId/activate}
  */
 export async function activateAluno(
   alunoId: ActivateAlunoPathParams["alunoId"],
@@ -35,7 +35,7 @@ export async function activateAluno(
     ActivateAlunoMutationResponse,
     ResponseErrorConfig<ActivateAluno400 | ActivateAluno401 | ActivateAluno404 | ActivateAluno409 | ActivateAluno500>,
     unknown
-  >({ method: "PATCH", url: `/alunos/${alunoId}/activate`, ...requestConfig });
+  >({ method: "PATCH", url: `/instituicao/alunos/${alunoId}/activate`, ...requestConfig });
   return res.data;
 }
 
@@ -56,7 +56,7 @@ export function activateAlunoMutationOptions<TContext = unknown>(config: Partial
 
 /**
  * @description Ativa um aluno por ID.
- * {@link /alunos/:alunoId/activate}
+ * {@link /instituicao/alunos/:alunoId/activate}
  */
 export function useActivateAluno<TContext>(
   options: {

@@ -16,13 +16,13 @@ import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
 export const getDespesasQueryKey = (params?: GetDespesasQueryParams) =>
-  [{ url: "/despesas" }, ...(params ? [params] : [])] as const;
+  [{ url: "/financeiro/despesas" }, ...(params ? [params] : [])] as const;
 
 export type GetDespesasQueryKey = ReturnType<typeof getDespesasQueryKey>;
 
 /**
  * @description Lista despesas com paginação, ordenação e filtros opcionais
- * {@link /despesas}
+ * {@link /financeiro/despesas}
  */
 export async function getDespesas(params?: GetDespesasQueryParams, config: Partial<RequestConfig> & { client?: Client } = {}) {
   const { client: request = fetch, ...requestConfig } = config;
@@ -31,7 +31,7 @@ export async function getDespesas(params?: GetDespesasQueryParams, config: Parti
     GetDespesasQueryResponse,
     ResponseErrorConfig<GetDespesas400 | GetDespesas401 | GetDespesas500>,
     unknown
-  >({ method: "GET", url: `/despesas`, params, ...requestConfig });
+  >({ method: "GET", url: `/financeiro/despesas`, params, ...requestConfig });
   return res.data;
 }
 
@@ -55,7 +55,7 @@ export function getDespesasQueryOptions(
 
 /**
  * @description Lista despesas com paginação, ordenação e filtros opcionais
- * {@link /despesas}
+ * {@link /financeiro/despesas}
  */
 export function useGetDespesas<
   TData = GetDespesasQueryResponse,

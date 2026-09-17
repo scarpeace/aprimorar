@@ -16,13 +16,13 @@ import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
 export const getColaboradoresQueryKey = (params?: GetColaboradoresQueryParams) =>
-  [{ url: "/colaboradores" }, ...(params ? [params] : [])] as const;
+  [{ url: "/instituicao/colaboradores" }, ...(params ? [params] : [])] as const;
 
 export type GetColaboradoresQueryKey = ReturnType<typeof getColaboradoresQueryKey>;
 
 /**
  * @description Retorna uma lista paginada de colaboradores.
- * {@link /colaboradores}
+ * {@link /instituicao/colaboradores}
  */
 export async function getColaboradores(
   params?: GetColaboradoresQueryParams,
@@ -34,7 +34,7 @@ export async function getColaboradores(
     GetColaboradoresQueryResponse,
     ResponseErrorConfig<GetColaboradores400 | GetColaboradores401 | GetColaboradores500>,
     unknown
-  >({ method: "GET", url: `/colaboradores`, params, ...requestConfig });
+  >({ method: "GET", url: `/instituicao/colaboradores`, params, ...requestConfig });
   return res.data;
 }
 
@@ -58,7 +58,7 @@ export function getColaboradoresQueryOptions(
 
 /**
  * @description Retorna uma lista paginada de colaboradores.
- * {@link /colaboradores}
+ * {@link /instituicao/colaboradores}
  */
 export function useGetColaboradores<
   TData = GetColaboradoresQueryResponse,

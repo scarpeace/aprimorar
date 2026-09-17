@@ -16,13 +16,13 @@ import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
 export const getDespesaByIdQueryKey = (despesaId: GetDespesaByIdPathParams["despesaId"]) =>
-  [{ url: "/despesas/:despesaId", params: { despesaId: despesaId } }] as const;
+  [{ url: "/financeiro/despesas/:despesaId", params: { despesaId: despesaId } }] as const;
 
 export type GetDespesaByIdQueryKey = ReturnType<typeof getDespesaByIdQueryKey>;
 
 /**
  * @description Retorna uma despesa por ID
- * {@link /despesas/:despesaId}
+ * {@link /financeiro/despesas/:despesaId}
  */
 export async function getDespesaById(
   despesaId: GetDespesaByIdPathParams["despesaId"],
@@ -34,7 +34,7 @@ export async function getDespesaById(
     GetDespesaByIdQueryResponse,
     ResponseErrorConfig<GetDespesaById401 | GetDespesaById404 | GetDespesaById500>,
     unknown
-  >({ method: "GET", url: `/despesas/${despesaId}`, ...requestConfig });
+  >({ method: "GET", url: `/financeiro/despesas/${despesaId}`, ...requestConfig });
   return res.data;
 }
 
@@ -59,7 +59,7 @@ export function getDespesaByIdQueryOptions(
 
 /**
  * @description Retorna uma despesa por ID
- * {@link /despesas/:despesaId}
+ * {@link /financeiro/despesas/:despesaId}
  */
 export function useGetDespesaById<
   TData = GetDespesaByIdQueryResponse,

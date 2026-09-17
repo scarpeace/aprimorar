@@ -17,13 +17,13 @@ import type { Client, RequestConfig, ResponseErrorConfig } from "@/lib/api/kubb-
 import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
 import { mutationOptions, useMutation } from "@tanstack/react-query";
 
-export const atualizarAtendimentoIndividualMutationKey = () => [{ url: "/atendimentos-individuais/:id" }] as const;
+export const atualizarAtendimentoIndividualMutationKey = () => [{ url: "/instituicao/atendimentos/:id" }] as const;
 
 export type AtualizarAtendimentoIndividualMutationKey = ReturnType<typeof atualizarAtendimentoIndividualMutationKey>;
 
 /**
  * @description Atualiza um atendimento individual.
- * {@link /atendimentos-individuais/:id}
+ * {@link /instituicao/atendimentos/:id}
  */
 export async function atualizarAtendimentoIndividual(
   id: AtualizarAtendimentoIndividualPathParams["id"],
@@ -43,7 +43,7 @@ export async function atualizarAtendimentoIndividual(
       | AtualizarAtendimentoIndividual500
     >,
     AtualizarAtendimentoIndividualMutationRequest
-  >({ method: "PATCH", url: `/atendimentos-individuais/${id}`, data: requestData, ...requestConfig });
+  >({ method: "PATCH", url: `/instituicao/atendimentos/${id}`, data: requestData, ...requestConfig });
   return res.data;
 }
 
@@ -71,7 +71,7 @@ export function atualizarAtendimentoIndividualMutationOptions<TContext = unknown
 
 /**
  * @description Atualiza um atendimento individual.
- * {@link /atendimentos-individuais/:id}
+ * {@link /instituicao/atendimentos/:id}
  */
 export function useAtualizarAtendimentoIndividual<TContext>(
   options: {

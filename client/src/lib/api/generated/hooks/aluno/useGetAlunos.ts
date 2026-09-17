@@ -17,13 +17,14 @@ import type { Client, RequestConfig, ResponseErrorConfig } from "@/lib/api/kubb-
 import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from "@tanstack/react-query";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
-export const getAlunosQueryKey = (params?: GetAlunosQueryParams) => [{ url: "/alunos" }, ...(params ? [params] : [])] as const;
+export const getAlunosQueryKey = (params?: GetAlunosQueryParams) =>
+  [{ url: "/instituicao/alunos" }, ...(params ? [params] : [])] as const;
 
 export type GetAlunosQueryKey = ReturnType<typeof getAlunosQueryKey>;
 
 /**
  * @description Retorna uma lista paginada de alunos.
- * {@link /alunos}
+ * {@link /instituicao/alunos}
  */
 export async function getAlunos(params?: GetAlunosQueryParams, config: Partial<RequestConfig> & { client?: Client } = {}) {
   const { client: request = fetch, ...requestConfig } = config;
@@ -32,7 +33,7 @@ export async function getAlunos(params?: GetAlunosQueryParams, config: Partial<R
     GetAlunosQueryResponse,
     ResponseErrorConfig<GetAlunos400 | GetAlunos401 | GetAlunos404 | GetAlunos409 | GetAlunos500>,
     unknown
-  >({ method: "GET", url: `/alunos`, params, ...requestConfig });
+  >({ method: "GET", url: `/instituicao/alunos`, params, ...requestConfig });
   return res.data;
 }
 
@@ -53,7 +54,7 @@ export function getAlunosQueryOptions(params?: GetAlunosQueryParams, config: Par
 
 /**
  * @description Retorna uma lista paginada de alunos.
- * {@link /alunos}
+ * {@link /instituicao/alunos}
  */
 export function useGetAlunos<
   TData = GetAlunosQueryResponse,

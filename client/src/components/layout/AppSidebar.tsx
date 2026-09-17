@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { LogoutButton } from "@/auth/components/LogoutButton";
 import { navigationItems } from "@/components/layout/navigation-items";
+import { useGetCurrentUser } from "@/lib/api/generated/hooks/autenticação/useGetCurrentUser";
 
 type AppSidebarProps = {
   onNavigate: () => void;
@@ -20,6 +21,8 @@ function isActive(pathname: string, href: string) {
 
 export function AppSidebar({ onNavigate }: Readonly<AppSidebarProps>) {
   const pathname = usePathname();
+  const currentUser = useGetCurrentUser();
+  const visibleItems = navigationItems.filter((item) => !item.adminOnly || currentUser.data?.role === "ADMIN");
 
   return (
     <aside className="flex min-h-full w-72 flex-col border-r border-base-300 bg-base-100 p-4">
@@ -29,7 +32,7 @@ export function AppSidebar({ onNavigate }: Readonly<AppSidebarProps>) {
 
       <nav className="flex-1" aria-label="Navegação principal">
         <ul className="menu w-full gap-1 p-0">
-          {navigationItems.map(({ href, label, icon: Icon }) => (
+          {visibleItems.map(({ href, label, icon: Icon }) => (
             <li key={href}>
               <Link href={href} className={isActive(pathname, href) ? "menu-active" : undefined} onClick={onNavigate}>
                 <Icon size={18} />

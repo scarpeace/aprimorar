@@ -1,0 +1,12 @@
+{
+  "required": ["atendimentoId", "id", "status", "valor"],
+  "type": "object",
+  "properties": {
+    "id": { "type": "integer", "format": "int64" },
+    "atendimentoId": { "type": "integer", "format": "int64" },
+    "valor": { "type": "number" },
+    "status": { "type": "string", "enum": ["PENDENTE", "PAGO", "CANCELADO"] }
+  },
+  "description": "Cobrança individual pertencente a um lote de pagamento",
+  "x-readme-ref-name": "CobrancaLoteItemResponse"
+}

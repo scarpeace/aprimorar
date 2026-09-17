@@ -8,7 +8,7 @@ import { Modal } from "@/components/ui/Modal";
 import { Pagination } from "@/components/ui/Pagination";
 import { RegistrarCobrancaForm } from "@/features/alunos/components/cobrancas/RegistrarCobrancaForm";
 import { RegistrarCobrancaTable } from "@/features/alunos/components/cobrancas/RegistrarCobrancaTable";
-import { useBuscarAtendimentosIndividuais } from "@/lib/api/generated/hooks/atendimentos individuais/useBuscarAtendimentosIndividuais";
+import { useBuscarCobrancasIndividuais } from "@/lib/api/generated/hooks/cobranças individuais/useBuscarCobrancasIndividuais";
 
 const PAGE_SIZE = 10;
 
@@ -21,10 +21,10 @@ type RegistrarCobrancaModalProps = {
 export function RegistrarCobrancaModal({ alunoId, isOpen, onClose }: Readonly<RegistrarCobrancaModalProps>) {
   const [page, setPage] = useState(0);
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
-  const cobrancas = useBuscarAtendimentosIndividuais(
+  const cobrancas = useBuscarCobrancasIndividuais(
     {
       alunoId,
-      statusCobranca: "PENDENTE",
+      status: "PENDENTE",
       page,
       size: PAGE_SIZE,
     },
@@ -41,8 +41,7 @@ export function RegistrarCobrancaModal({ alunoId, isOpen, onClose }: Readonly<Re
   const totalPages = metadata?.totalPages ?? 0;
   const totalElements = metadata?.totalElements ?? 0;
   const selectedTotal = content.reduce(
-    (total, atendimento) =>
-      selectedIds.includes(atendimento.cobranca.id) ? total + atendimento.cobranca.valor : total,
+    (total, cobranca) => selectedIds.includes(cobranca.id) ? total + cobranca.valor : total,
     0,
   );
 
@@ -88,7 +87,7 @@ export function RegistrarCobrancaModal({ alunoId, isOpen, onClose }: Readonly<Re
         ) : (
           <>
             <RegistrarCobrancaTable
-              atendimentos={content}
+              cobrancas={content}
               selectedIds={selectedIds}
               onToggle={toggleCobranca}
             />

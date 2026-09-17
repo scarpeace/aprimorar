@@ -6,7 +6,7 @@ import { FormProvider, useForm } from "react-hook-form";
 import { Button } from "@/components/ui/Button";
 import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 import { SelectInput } from "@/components/ui/forms/SelectInput";
-import { useAtendimentoMutations } from "@/features/atendimentos/hooks/use-atendimento-mutations";
+import { useCobrancaMutations } from "@/features/alunos/hooks/use-cobranca-mutations";
 import {
   registrarCobrancaFormSchema,
   type RegistrarCobrancaFormData,
@@ -43,7 +43,7 @@ export function RegistrarCobrancaForm({
       formaPagamento: "PIX",
     },
   });
-  const { registerStudentPayment } = useAtendimentoMutations();
+  const { registerStudentPayment } = useCobrancaMutations();
 
   useEffect(() => {
     methods.setValue("cobrancaIds", cobrancaIds, { shouldValidate: true });

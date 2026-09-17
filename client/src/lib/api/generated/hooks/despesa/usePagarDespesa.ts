@@ -15,13 +15,13 @@ import type { Client, RequestConfig, ResponseErrorConfig } from "@/lib/api/kubb-
 import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
 import { mutationOptions, useMutation } from "@tanstack/react-query";
 
-export const pagarDespesaMutationKey = () => [{ url: "/despesas/:despesaId/pagar" }] as const;
+export const pagarDespesaMutationKey = () => [{ url: "/financeiro/despesas/:despesaId/pagar" }] as const;
 
 export type PagarDespesaMutationKey = ReturnType<typeof pagarDespesaMutationKey>;
 
 /**
  * @description Marca a despesa como paga
- * {@link /despesas/:despesaId/pagar}
+ * {@link /financeiro/despesas/:despesaId/pagar}
  */
 export async function pagarDespesa(
   despesaId: PagarDespesaPathParams["despesaId"],
@@ -33,7 +33,7 @@ export async function pagarDespesa(
     PagarDespesaMutationResponse,
     ResponseErrorConfig<PagarDespesa401 | PagarDespesa404 | PagarDespesa500>,
     unknown
-  >({ method: "PATCH", url: `/despesas/${despesaId}/pagar`, ...requestConfig });
+  >({ method: "PATCH", url: `/financeiro/despesas/${despesaId}/pagar`, ...requestConfig });
   return res.data;
 }
 
@@ -54,7 +54,7 @@ export function pagarDespesaMutationOptions<TContext = unknown>(config: Partial<
 
 /**
  * @description Marca a despesa como paga
- * {@link /despesas/:despesaId/pagar}
+ * {@link /financeiro/despesas/:despesaId/pagar}
  */
 export function usePagarDespesa<TContext>(
   options: {

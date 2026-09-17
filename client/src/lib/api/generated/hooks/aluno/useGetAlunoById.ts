@@ -18,13 +18,13 @@ import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
 export const getAlunoByIdQueryKey = (alunoId: GetAlunoByIdPathParams["alunoId"]) =>
-  [{ url: "/alunos/:alunoId", params: { alunoId: alunoId } }] as const;
+  [{ url: "/instituicao/alunos/:alunoId", params: { alunoId: alunoId } }] as const;
 
 export type GetAlunoByIdQueryKey = ReturnType<typeof getAlunoByIdQueryKey>;
 
 /**
  * @description Retorna um aluno por ID.
- * {@link /alunos/:alunoId}
+ * {@link /instituicao/alunos/:alunoId}
  */
 export async function getAlunoById(
   alunoId: GetAlunoByIdPathParams["alunoId"],
@@ -36,7 +36,7 @@ export async function getAlunoById(
     GetAlunoByIdQueryResponse,
     ResponseErrorConfig<GetAlunoById400 | GetAlunoById401 | GetAlunoById404 | GetAlunoById409 | GetAlunoById500>,
     unknown
-  >({ method: "GET", url: `/alunos/${alunoId}`, ...requestConfig });
+  >({ method: "GET", url: `/instituicao/alunos/${alunoId}`, ...requestConfig });
   return res.data;
 }
 
@@ -61,7 +61,7 @@ export function getAlunoByIdQueryOptions(
 
 /**
  * @description Retorna um aluno por ID.
- * {@link /alunos/:alunoId}
+ * {@link /instituicao/alunos/:alunoId}
  */
 export function useGetAlunoById<
   TData = GetAlunoByIdQueryResponse,

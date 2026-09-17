@@ -6,6 +6,7 @@
 export const cobrancaIndividualResponseStatusEnum = {
   PENDENTE: "PENDENTE",
   PAGO: "PAGO",
+  CANCELADO: "CANCELADO",
 } as const;
 
 export type CobrancaIndividualResponseStatusEnumKey =

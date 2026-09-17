@@ -18,13 +18,13 @@ import type { Client, RequestConfig, ResponseErrorConfig } from "@/lib/api/kubb-
 import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
 import { mutationOptions, useMutation } from "@tanstack/react-query";
 
-export const updateAlunoMutationKey = () => [{ url: "/alunos/:alunoId" }] as const;
+export const updateAlunoMutationKey = () => [{ url: "/instituicao/alunos/:alunoId" }] as const;
 
 export type UpdateAlunoMutationKey = ReturnType<typeof updateAlunoMutationKey>;
 
 /**
  * @description Atualiza um aluno por ID.
- * {@link /alunos/:alunoId}
+ * {@link /instituicao/alunos/:alunoId}
  */
 export async function updateAluno(
   alunoId: UpdateAlunoPathParams["alunoId"],
@@ -39,7 +39,7 @@ export async function updateAluno(
     UpdateAlunoMutationResponse,
     ResponseErrorConfig<UpdateAluno400 | UpdateAluno401 | UpdateAluno404 | UpdateAluno409 | UpdateAluno500>,
     UpdateAlunoMutationRequest
-  >({ method: "PUT", url: `/alunos/${alunoId}`, data: requestData, ...requestConfig });
+  >({ method: "PUT", url: `/instituicao/alunos/${alunoId}`, data: requestData, ...requestConfig });
   return res.data;
 }
 
@@ -62,7 +62,7 @@ export function updateAlunoMutationOptions<TContext = unknown>(
 
 /**
  * @description Atualiza um aluno por ID.
- * {@link /alunos/:alunoId}
+ * {@link /instituicao/alunos/:alunoId}
  */
 export function useUpdateAluno<TContext>(
   options: {

@@ -8,8 +8,7 @@ import { Modal } from "@/components/ui/Modal";
 import { Pagination } from "@/components/ui/Pagination";
 import { RegistrarRepasseForm } from "@/features/colaboradores/components/repasses/RegistrarRepasseForm";
 import { RegistrarRepasseTable } from "@/features/colaboradores/components/repasses/RegistrarRepasseTable";
-import { useBuscarAtendimentosIndividuais } from "@/lib/api/generated/hooks/atendimentos individuais/useBuscarAtendimentosIndividuais";
-
+import { useBuscarRepassesIndividuais } from "@/lib/api/generated/hooks/repasses individuais/useBuscarRepassesIndividuais";
 
 const PAGE_SIZE = 10;
 
@@ -22,10 +21,10 @@ type RegistrarRepasseModalProps = {
 export function RegistrarRepasseModal({ colaboradorId, isOpen, onClose }: Readonly<RegistrarRepasseModalProps>) {
   const [page, setPage] = useState(0);
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
-  const repasses = useBuscarAtendimentosIndividuais(
+  const repasses = useBuscarRepassesIndividuais(
     {
       colaboradorId,
-      statusRepasse: "PENDENTE",
+      status: "PENDENTE",
       page,
       size: PAGE_SIZE,
     },
@@ -42,8 +41,7 @@ export function RegistrarRepasseModal({ colaboradorId, isOpen, onClose }: Readon
   const totalPages = metadata?.totalPages ?? 0;
   const totalElements = metadata?.totalElements ?? 0;
   const selectedTotal = content.reduce(
-    (total, atendimento) =>
-      selectedIds.includes(atendimento.repasse.id) ? total + atendimento.repasse.valor : total,
+    (total, repasse) => selectedIds.includes(repasse.id) ? total + repasse.valor : total,
     0,
   );
 
@@ -88,7 +86,7 @@ export function RegistrarRepasseModal({ colaboradorId, isOpen, onClose }: Readon
           />
         ) : (
           <>
-            <RegistrarRepasseTable atendimentos={content} selectedIds={selectedIds} onToggle={toggleRepasse} />
+            <RegistrarRepasseTable repasses={content} selectedIds={selectedIds} onToggle={toggleRepasse} />
 
             <Pagination
               currentPage={currentPage}

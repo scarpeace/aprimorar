@@ -16,13 +16,13 @@ import type { QueryKey, QueryClient, QueryObserverOptions, UseQueryResult } from
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
 export const buscarAtendimentosIndividuaisQueryKey = (params?: BuscarAtendimentosIndividuaisQueryParams) =>
-  [{ url: "/atendimentos-individuais" }, ...(params ? [params] : [])] as const;
+  [{ url: "/instituicao/atendimentos" }, ...(params ? [params] : [])] as const;
 
 export type BuscarAtendimentosIndividuaisQueryKey = ReturnType<typeof buscarAtendimentosIndividuaisQueryKey>;
 
 /**
  * @description Lista atendimentos individuais.
- * {@link /atendimentos-individuais}
+ * {@link /instituicao/atendimentos}
  */
 export async function buscarAtendimentosIndividuais(
   params?: BuscarAtendimentosIndividuaisQueryParams,
@@ -34,7 +34,7 @@ export async function buscarAtendimentosIndividuais(
     BuscarAtendimentosIndividuaisQueryResponse,
     ResponseErrorConfig<BuscarAtendimentosIndividuais400 | BuscarAtendimentosIndividuais401 | BuscarAtendimentosIndividuais500>,
     unknown
-  >({ method: "GET", url: `/atendimentos-individuais`, params, ...requestConfig });
+  >({ method: "GET", url: `/instituicao/atendimentos`, params, ...requestConfig });
   return res.data;
 }
 
@@ -58,7 +58,7 @@ export function buscarAtendimentosIndividuaisQueryOptions(
 
 /**
  * @description Lista atendimentos individuais.
- * {@link /atendimentos-individuais}
+ * {@link /instituicao/atendimentos}
  */
 export function useBuscarAtendimentosIndividuais<
   TData = BuscarAtendimentosIndividuaisQueryResponse,

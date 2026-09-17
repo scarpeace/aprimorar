@@ -17,13 +17,13 @@ import type { Client, RequestConfig, ResponseErrorConfig } from "@/lib/api/kubb-
 import type { UseMutationOptions, UseMutationResult, QueryClient } from "@tanstack/react-query";
 import { mutationOptions, useMutation } from "@tanstack/react-query";
 
-export const deactivateAlunoMutationKey = () => [{ url: "/alunos/:alunoId/deactivate" }] as const;
+export const deactivateAlunoMutationKey = () => [{ url: "/instituicao/alunos/:alunoId/deactivate" }] as const;
 
 export type DeactivateAlunoMutationKey = ReturnType<typeof deactivateAlunoMutationKey>;
 
 /**
  * @description Desativa um aluno por ID.
- * {@link /alunos/:alunoId/deactivate}
+ * {@link /instituicao/alunos/:alunoId/deactivate}
  */
 export async function deactivateAluno(
   alunoId: DeactivateAlunoPathParams["alunoId"],
@@ -35,7 +35,7 @@ export async function deactivateAluno(
     DeactivateAlunoMutationResponse,
     ResponseErrorConfig<DeactivateAluno400 | DeactivateAluno401 | DeactivateAluno404 | DeactivateAluno409 | DeactivateAluno500>,
     unknown
-  >({ method: "PATCH", url: `/alunos/${alunoId}/deactivate`, ...requestConfig });
+  >({ method: "PATCH", url: `/instituicao/alunos/${alunoId}/deactivate`, ...requestConfig });
   return res.data;
 }
 
@@ -56,7 +56,7 @@ export function deactivateAlunoMutationOptions<TContext = unknown>(config: Parti
 
 /**
  * @description Desativa um aluno por ID.
- * {@link /alunos/:alunoId/deactivate}
+ * {@link /instituicao/alunos/:alunoId/deactivate}
  */
 export function useDeactivateAluno<TContext>(
   options: {
