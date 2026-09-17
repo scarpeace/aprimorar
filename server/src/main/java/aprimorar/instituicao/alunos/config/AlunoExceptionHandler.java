@@ -2,7 +2,7 @@ package aprimorar.instituicao.alunos.config;
 
 import aprimorar.instituicao.alunos.domain.exception.AlunoNaoEncontradoException;
 import aprimorar.instituicao.alunos.domain.exception.AlunoDuplicadoException;
-import aprimorar.instituicao.alunos.domain.exception.AlunoEstadoInvalidoException;
+
 import aprimorar.instituicao.alunos.domain.exception.AlunoPossuiPendenciaFinanceiraException;
 import jakarta.servlet.http.HttpServletRequest;
 import java.net.URI;
@@ -28,9 +28,12 @@ public class AlunoExceptionHandler {
         return response(HttpStatus.CONFLICT, "Aluno duplicado", ex.getMessage(), request);
     }
 
-    @ExceptionHandler({ AlunoEstadoInvalidoException.class, AlunoPossuiPendenciaFinanceiraException.class })
-    public ResponseEntity<ProblemDetail> handleBadRequest(AlunoEstadoInvalidoException ex, HttpServletRequest request) {
-        return response(HttpStatus.BAD_REQUEST, "Estado inválido do aluno", ex.getMessage(), request);
+    @ExceptionHandler(AlunoPossuiPendenciaFinanceiraException.class)
+    public ResponseEntity<ProblemDetail> handleBadRequest(
+        AlunoPossuiPendenciaFinanceiraException ex,
+        HttpServletRequest request
+    ) {
+        return response(HttpStatus.BAD_REQUEST, "Pendência financeira do aluno", ex.getMessage(), request);
     }
 
     private ResponseEntity<ProblemDetail> response(

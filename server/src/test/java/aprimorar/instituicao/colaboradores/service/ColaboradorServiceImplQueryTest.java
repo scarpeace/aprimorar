@@ -3,10 +3,11 @@ package aprimorar.instituicao.colaboradores.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
+
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
+import aprimorar.financeiro.api.repasses.RepasseApi;
 import aprimorar.instituicao.colaboradores.domain.enums.FuncoesColaborador;
 import aprimorar.instituicao.colaboradores.domain.exception.ColaboradorNaoEncontradoException;
 import aprimorar.instituicao.colaboradores.repository.ColaboradorRepository;
@@ -22,6 +23,7 @@ import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.PageImpl;
@@ -37,11 +39,14 @@ class ColaboradorServiceImplQueryTest {
     @Mock
     private ColaboradorRepository colaboradorRepo;
 
+    @Mock
+    private RepasseApi repasseApi;
+
     private ColaboradorServiceImpl service;
 
     @BeforeEach
     void setUp() {
-        service = new ColaboradorServiceImpl(colaboradorRepo);
+        service = new ColaboradorServiceImpl(colaboradorRepo, repasseApi);
     }
 
     @Test
@@ -49,7 +54,10 @@ class ColaboradorServiceImplQueryTest {
         var colaborador = colaborador("João Pereira");
         var pageable = PageRequest.of(0, 10);
 
-        when(colaboradorRepo.findAll(any(Specification.class), eq(pageable))).thenReturn(new PageImpl<>(List.of(colaborador), pageable, 1));
+        when(colaboradorRepo.findAll(
+                    ArgumentMatchers.<Specification<ColaboradorEntity>>any(),
+                    eq(pageable)
+                )).thenReturn(new PageImpl<>(List.of(colaborador), pageable, 1));
 
         var response = service.getColaboradores(new ColaboradorFiltroRequest(null, null, null, true), pageable);
 
@@ -125,7 +133,10 @@ class ColaboradorServiceImplQueryTest {
     void shouldGetColaboradoresOptions() {
         var colaborador = colaborador("João Pereira");
 
-        when(colaboradorRepo.findAll(any(Specification.class), any(Sort.class))).thenReturn(List.of(colaborador));
+        when(colaboradorRepo.findAll(
+                    ArgumentMatchers.<Specification<ColaboradorEntity>>any(),
+                    ArgumentMatchers.any(Sort.class)
+                )).thenReturn(List.of(colaborador));
 
         var response = service.getColaboradoresOptions();
 

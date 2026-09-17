@@ -1,20 +1,18 @@
-package aprimorar.despesas.service;
+package aprimorar.financeiro.despesas.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
+
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
-import aprimorar.despesas.domain.enums.FormaPagamento;
-import aprimorar.despesas.domain.enums.TipoDespesa;
-import aprimorar.despesas.repository.DespesaRepository;
-import aprimorar.despesas.web.dto.DespesaFiltroRequest;
+import aprimorar.financeiro.despesas.domain.DespesaEntity;
+import aprimorar.financeiro.despesas.domain.enums.CategoriaDespesa;
+import aprimorar.financeiro.despesas.domain.enums.FormaPagamento;
 import aprimorar.financeiro.despesas.domain.enums.TipoDespesa;
 import aprimorar.financeiro.despesas.domain.exception.DespesaNaoEncontradaException;
 import aprimorar.financeiro.despesas.repository.DespesaRepository;
-import aprimorar.financeiro.despesas.service.DespesaService;
-
+import aprimorar.financeiro.despesas.web.dto.DespesaFiltroRequest;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
@@ -22,11 +20,13 @@ import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
+
 import org.springframework.test.util.ReflectionTestUtils;
 
 @ExtendWith(MockitoExtension.class)
@@ -49,7 +49,8 @@ class DespesaServiceQueryTest {
         var pageable = PageRequest.of(0, 10);
         var filtro = new DespesaFiltroRequest(null, null, null, null, null);
 
-        when(despesaRepo.findAll(any(Specification.class), eq(pageable))).thenReturn(new PageImpl<>(List.of(despesa), pageable, 1));
+        when(despesaRepo.findAll(ArgumentMatchers.<Specification<DespesaEntity>>any(), eq(pageable)))
+            .thenReturn(new PageImpl<>(List.of(despesa), pageable, 1));
 
         var response = service.getDespesas(filtro, pageable);
 

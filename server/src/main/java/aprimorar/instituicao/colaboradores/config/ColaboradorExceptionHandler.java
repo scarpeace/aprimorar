@@ -1,6 +1,6 @@
 package aprimorar.instituicao.colaboradores.config;
 
-import aprimorar.instituicao.colaboradores.domain.exception.ColaboradorEstadoInvalidoException;
+
 import aprimorar.instituicao.colaboradores.domain.exception.ColaboradorPossuiRepassePendenteException;
 import aprimorar.instituicao.colaboradores.domain.exception.ColaboradorNaoEncontradoException;
 import aprimorar.instituicao.colaboradores.domain.exception.ColaboradorDuplicadoException;
@@ -28,9 +28,12 @@ public class ColaboradorExceptionHandler {
         return response(HttpStatus.CONFLICT, "Colaborador duplicado", ex.getMessage(), request);
     }
 
-    @ExceptionHandler({ ColaboradorEstadoInvalidoException.class, ColaboradorPossuiRepassePendenteException.class })
-    public ResponseEntity<ProblemDetail> handleBadRequest(ColaboradorEstadoInvalidoException ex, HttpServletRequest request) {
-        return response(HttpStatus.BAD_REQUEST, "Estado inválido do colaborador", ex.getMessage(), request);
+    @ExceptionHandler(ColaboradorPossuiRepassePendenteException.class)
+    public ResponseEntity<ProblemDetail> handleBadRequest(
+        ColaboradorPossuiRepassePendenteException ex,
+        HttpServletRequest request
+    ) {
+        return response(HttpStatus.BAD_REQUEST, "Pendência financeira do colaborador", ex.getMessage(), request);
     }
 
     private ResponseEntity<ProblemDetail> response(

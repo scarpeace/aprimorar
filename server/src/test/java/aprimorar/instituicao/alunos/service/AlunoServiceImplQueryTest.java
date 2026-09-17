@@ -3,16 +3,17 @@ package aprimorar.instituicao.alunos.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
+
+
 import static org.mockito.Mockito.when;
 
+import aprimorar.financeiro.api.cobrancas.CobrancaApi;
 import aprimorar.instituicao.alunos.domain.AlunoEntity;
 import aprimorar.instituicao.alunos.domain.Responsavel;
 import aprimorar.instituicao.alunos.domain.exception.AlunoNaoEncontradoException;
 import aprimorar.instituicao.alunos.repository.AlunoRepository;
-import aprimorar.instituicao.alunos.service.AlunoServiceImpl;
-import aprimorar.instituicao.alunos.web.dto.aluno.AlunoFiltroRequest;
+
+
 import aprimorar.instituicao.common.domain.Endereco;
 
 import java.time.LocalDate;
@@ -22,10 +23,11 @@ import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
+
+
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.test.util.ReflectionTestUtils;
@@ -36,18 +38,24 @@ class AlunoServiceImplQueryTest {
     @Mock
     private AlunoRepository alunoRepo;
 
+    @Mock
+    private CobrancaApi cobrancaApi;
+
     private AlunoServiceImpl service;
 
     @BeforeEach
     void setUp() {
-        service = new AlunoServiceImpl(alunoRepo);
+        service = new AlunoServiceImpl(alunoRepo, cobrancaApi);
     }
 
     @Test
     void shouldListAlunos() {
         var aluno = aluno("Ana Silva");
 
-        when(alunoRepo.findAll(any(Specification.class), any(Sort.class))).thenReturn(List.of(aluno));
+        when(alunoRepo.findAll(
+                    ArgumentMatchers.<Specification<AlunoEntity>>any(),
+                    ArgumentMatchers.any(Sort.class)
+                )).thenReturn(List.of(aluno));
 
         var response = service.listAlunos();
 
