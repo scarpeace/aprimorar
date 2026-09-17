@@ -137,7 +137,6 @@ export function AlunoCalendar({ alunoId }: Readonly<AlunoCalendarProps>) {
             events={events}
             datesSet={handleDatesSet}
             eventClick={handleEventClick}
-            aspectRatio={2.2}
             dayMaxEvents={3}
           />
         </div>

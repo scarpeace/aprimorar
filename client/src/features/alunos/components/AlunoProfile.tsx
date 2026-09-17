@@ -17,7 +17,7 @@ export function AlunoProfile({ alunoId }: Readonly<AlunoProfileProps>) {
   const aluno = useGetAlunoById(alunoId);
 
   return (
-    <Card>
+    <Card className="h-full">
       <CardHeader>
         <div>
           <CardTitle>Cadastro</CardTitle>

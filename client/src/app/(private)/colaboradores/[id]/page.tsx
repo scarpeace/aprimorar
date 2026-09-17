@@ -12,17 +12,24 @@ export default function ColaboradorPage() {
   return (
     <section className="space-y-6">
       <div className="flex flex-col gap-6 lg:flex-row lg:items-stretch">
-        <div className="min-w-0 lg:flex-2">
+        <div className="min-w-0 lg:flex-3">
           <ColaboradorProfile colaboradorId={id} />
         </div>
 
-        <div className="min-w-0 lg:flex-1">
-          <ColaboradorRepassesHistory colaboradorId={id} />
+        <div className="min-w-0 lg:flex-3">
+          <ColaboradorCalendar colaboradorId={id} />
         </div>
       </div>
 
-      <ColaboradorCalendar colaboradorId={id} />
-      <ColaboradorAtendimentosTable colaboradorId={id} />
+      <div className="flex flex-col gap-6 lg:flex-row lg:items-stretch">
+        <div className="min-w-0 lg:flex-3">
+          <ColaboradorAtendimentosTable colaboradorId={id} />
+        </div>
+
+        <div className="min-w-0 lg:flex-[1.5]">
+          <ColaboradorRepassesHistory colaboradorId={id} />
+        </div>
+      </div>
     </section>
   );
 }

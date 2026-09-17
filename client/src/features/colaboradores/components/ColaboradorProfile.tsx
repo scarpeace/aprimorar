@@ -19,7 +19,7 @@ export function ColaboradorProfile({ colaboradorId }: Readonly<ColaboradorProfil
   const colaborador = useFindColaboradorById(colaboradorId);
 
   return (
-    <Card>
+    <Card className="h-full">
       <CardHeader>
         <div>
           <CardTitle>Cadastro</CardTitle>

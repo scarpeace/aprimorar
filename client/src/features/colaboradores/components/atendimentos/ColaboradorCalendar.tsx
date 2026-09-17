@@ -141,7 +141,6 @@ export function ColaboradorCalendar({ colaboradorId }: Readonly<ColaboradorCalen
             events={events}
             datesSet={handleDatesSet}
             eventClick={handleEventClick}
-            aspectRatio={2.2}
             dayMaxEvents={3}
           />
         </div>

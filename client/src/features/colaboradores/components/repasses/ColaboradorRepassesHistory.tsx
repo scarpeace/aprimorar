@@ -62,7 +62,7 @@ export function ColaboradorRepassesHistory({ colaboradorId }: Readonly<Colaborad
               <thead>
                 <tr>
                   <th>Data</th>
-                  <th>Pgto</th>
+                  {/*<th>Pgto</th>*/}
                   <th className="text-center">Repasses</th>
                   <th className="text-right">Valor total</th>
                 </tr>
@@ -74,7 +74,7 @@ export function ColaboradorRepassesHistory({ colaboradorId }: Readonly<Colaborad
                     <td>
                       {formatDateShortYear(repasse.dataRepasse)} às {formatTime(repasse.dataRepasse)}
                     </td>
-                    <td>{formaPagamentoLabels[repasse.formaPagamento]}</td>
+                    {/*<td>{formaPagamentoLabels[repasse.formaPagamento]}</td>*/}
                     <td className="text-center">{repasse.quantidadeRepasses}</td>
                     <td className="text-right font-semibold">{brl.format(repasse.valorTotal)}</td>
                   </tr>

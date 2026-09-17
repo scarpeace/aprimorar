@@ -62,8 +62,8 @@ export function AlunoCobrancasHistory({ alunoId }: Readonly<AlunoCobrancasHistor
               <thead>
                 <tr>
                   <th>Data</th>
-                  <th>Pgto</th>
-                  <th className="text-center">Cobranças</th>
+                  {/*<th>Pgto</th>*/}
+                  <th className="text-center">Atendimentos</th>
                   <th className="text-right">Valor total</th>
                 </tr>
               </thead>
@@ -74,7 +74,7 @@ export function AlunoCobrancasHistory({ alunoId }: Readonly<AlunoCobrancasHistor
                     <td>
                       {formatDateShortYear(cobranca.dataPagamento)} às {formatTime(cobranca.dataPagamento)}
                     </td>
-                    <td>{formaPagamentoLabels[cobranca.formaPagamento]}</td>
+                    {/*<td>{formaPagamentoLabels[cobranca.formaPagamento]}</td>*/}
                     <td className="text-center">{cobranca.quantidadeCobrancas}</td>
                     <td className="text-right font-semibold">{brl.format(cobranca.valorTotal)}</td>
                   </tr>
