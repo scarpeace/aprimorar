@@ -4,8 +4,9 @@ import { Card, CardHeader, CardTitle } from "@/components/ui/Card";
 import { EmptyCard } from "@/components/ui/EmptyCard";
 import { ErrorCard } from "@/components/ui/ErrorCard";
 import { LoadingSkeleton } from "@/components/ui/LoadingSkeleton";
-import { UsuarioActions } from "@/features/usuarios/components/UsuarioActions";
+import { ExcluirUsuarioButton } from "@/features/usuarios/components/ExcluirUsuarioButton";
 import { UsuarioStatusBadge } from "@/features/usuarios/components/UsuarioStatusBadge";
+import { UsuarioStatusButton } from "@/features/usuarios/components/UsuarioStatusButton";
 import { useGetUsers } from "@/lib/api/generated/hooks/usuário/useGetUsers";
 
 const roleLabels = {
@@ -58,7 +59,14 @@ export function UsuariosTable() {
                     <UsuarioStatusBadge enabled={user.enabled} />
                   </td>
                   <td className="text-right">
-                    <UsuarioActions user={user} />
+                    {user.role === "ADMIN" ? (
+                      <span className="text-sm text-base-content/45">Protegido</span>
+                    ) : (
+                      <div className="flex justify-end gap-2">
+                        <UsuarioStatusButton user={user} />
+                        <ExcluirUsuarioButton user={user} />
+                      </div>
+                    )}
                   </td>
                 </tr>
               ))}

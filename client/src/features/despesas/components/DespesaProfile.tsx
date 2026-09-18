@@ -4,9 +4,11 @@ import { Card, CardActions, CardHeader, CardTitle } from "@/components/ui/Card";
 import { EmptyCard } from "@/components/ui/EmptyCard";
 import { ErrorCard } from "@/components/ui/ErrorCard";
 import { LoadingSkeleton } from "@/components/ui/LoadingSkeleton";
-import { DespesaActions } from "@/features/despesas/components/DespesaActions";
 import { DespesaDetails } from "@/features/despesas/components/DespesaDetails";
+import { DespesaPagamentoButton } from "@/features/despesas/components/DespesaPagamentoButton";
 import { DespesaStatusBadge } from "@/features/despesas/components/DespesaStatusBadge";
+import { EditarDespesaButton } from "@/features/despesas/components/EditarDespesaButton";
+import { ExcluirDespesaButton } from "@/features/despesas/components/ExcluirDespesaButton";
 import { useGetDespesaById } from "@/lib/api/generated/hooks/despesa/useGetDespesaById";
 import { brl } from "@/lib/utils/formatter";
 
@@ -29,7 +31,9 @@ export function DespesaProfile({ despesaId }: Readonly<DespesaProfileProps>) {
 
         {despesa.data ? (
           <CardActions>
-            <DespesaActions despesa={despesa.data} />
+            <EditarDespesaButton despesa={despesa.data} />
+            <DespesaPagamentoButton despesa={despesa.data} />
+            <ExcluirDespesaButton despesa={despesa.data} />
           </CardActions>
         ) : null}
       </CardHeader>

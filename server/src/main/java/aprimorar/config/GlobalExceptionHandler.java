@@ -62,7 +62,6 @@ public class GlobalExceptionHandler {
         );
     }
 
-    //TODO: tem que voltar aqui pra ver isso aqui. tá meio esquisito.
     @ExceptionHandler({
         MethodArgumentNotValidException.class,
         BindException.class
