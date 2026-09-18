@@ -1,4 +1,4 @@
-import { CobrancaLoteProfile } from "@/features/cobrancas/components/CobrancaLoteProfile";
+import { CobrancaLoteDetails } from "@/features/cobrancas/components/CobrancaLoteDetails";
 
 export default async function CobrancaLotePage({
   params,
@@ -7,5 +7,5 @@ export default async function CobrancaLotePage({
 }>) {
   const { loteId } = await params;
 
-  return <CobrancaLoteProfile loteId={loteId} />;
+  return <CobrancaLoteDetails loteId={loteId} />;
 }

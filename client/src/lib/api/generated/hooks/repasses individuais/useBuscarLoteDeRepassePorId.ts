@@ -21,7 +21,7 @@ export const buscarLoteDeRepassePorIdQueryKey = (loteId: BuscarLoteDeRepassePorI
 export type BuscarLoteDeRepassePorIdQueryKey = ReturnType<typeof buscarLoteDeRepassePorIdQueryKey>;
 
 /**
- * @description Busca um lote de repasses pelo identificador.
+ * @description Busca os detalhes de um lote de repasses pelo identificador.
  * {@link /financeiro/repasses/lotes/:loteId}
  */
 export async function buscarLoteDeRepassePorId(
@@ -58,7 +58,7 @@ export function buscarLoteDeRepassePorIdQueryOptions(
 }
 
 /**
- * @description Busca um lote de repasses pelo identificador.
+ * @description Busca os detalhes de um lote de repasses pelo identificador.
  * {@link /financeiro/repasses/lotes/:loteId}
  */
 export function useBuscarLoteDeRepassePorId<

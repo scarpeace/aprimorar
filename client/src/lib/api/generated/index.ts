@@ -271,7 +271,7 @@ export type {
   CobrancaLoteDetalheResponse,
   CobrancaLoteDetalheResponseFormaPagamentoEnumKey,
 } from "./types/CobrancaLoteDetalheResponse.ts";
-export type { CobrancaLoteItemResponse, CobrancaLoteItemResponseStatusEnumKey } from "./types/CobrancaLoteItemResponse.ts";
+export type { CobrancaLoteItem, CobrancaLoteItemStatusEnumKey } from "./types/CobrancaLoteItem.ts";
 export type { CobrancaLoteResponse, CobrancaLoteResponseFormaPagamentoEnumKey } from "./types/CobrancaLoteResponse.ts";
 export type { CobrancaResumo } from "./types/CobrancaResumo.ts";
 export type {
@@ -544,6 +544,11 @@ export type {
   RepasseIndividualResponseFormaPagamentoEnumKey,
   RepasseIndividualResponseStatusEnumKey,
 } from "./types/RepasseIndividualResponse.ts";
+export type {
+  RepasseLoteDetalheResponse,
+  RepasseLoteDetalheResponseFormaPagamentoEnumKey,
+} from "./types/RepasseLoteDetalheResponse.ts";
+export type { RepasseLoteItem, RepasseLoteItemStatusEnumKey } from "./types/RepasseLoteItem.ts";
 export type { RepasseLoteResponse, RepasseLoteResponseFormaPagamentoEnumKey } from "./types/RepasseLoteResponse.ts";
 export type { RepasseResumo } from "./types/RepasseResumo.ts";
 export type { ResponsavelRequestDTO } from "./types/ResponsavelRequestDTO.ts";
@@ -801,7 +806,7 @@ export { buscarRepassesIndividuaisQueryParamsStatusEnum } from "./types/BuscarRe
 export { cobrancaIndividualResponseFormaPagamentoEnum } from "./types/CobrancaIndividualResponse.ts";
 export { cobrancaIndividualResponseStatusEnum } from "./types/CobrancaIndividualResponse.ts";
 export { cobrancaLoteDetalheResponseFormaPagamentoEnum } from "./types/CobrancaLoteDetalheResponse.ts";
-export { cobrancaLoteItemResponseStatusEnum } from "./types/CobrancaLoteItemResponse.ts";
+export { cobrancaLoteItemStatusEnum } from "./types/CobrancaLoteItem.ts";
 export { cobrancaLoteResponseFormaPagamentoEnum } from "./types/CobrancaLoteResponse.ts";
 export { colaboradorDetailResponseDTOFuncaoEnum } from "./types/ColaboradorDetailResponseDTO.ts";
 export { colaboradorListResponseDTOFuncaoEnum } from "./types/ColaboradorListResponseDTO.ts";
@@ -819,6 +824,8 @@ export { registrarPagamentoIndividualRequestFormaPagamentoEnum } from "./types/R
 export { registrarRepasseIndividualRequestFormaPagamentoEnum } from "./types/RegistrarRepasseIndividualRequest.ts";
 export { repasseIndividualResponseFormaPagamentoEnum } from "./types/RepasseIndividualResponse.ts";
 export { repasseIndividualResponseStatusEnum } from "./types/RepasseIndividualResponse.ts";
+export { repasseLoteDetalheResponseFormaPagamentoEnum } from "./types/RepasseLoteDetalheResponse.ts";
+export { repasseLoteItemStatusEnum } from "./types/RepasseLoteItem.ts";
 export { repasseLoteResponseFormaPagamentoEnum } from "./types/RepasseLoteResponse.ts";
 export { userCreateRequestRoleEnum } from "./types/UserCreateRequest.ts";
 export { userListResponseRoleEnum } from "./types/UserListResponse.ts";
@@ -1003,7 +1010,7 @@ export {
 } from "./zod/cancelarRepassesIndividuaisSchema.ts";
 export { cobrancaIndividualResponseSchema } from "./zod/cobrancaIndividualResponseSchema.ts";
 export { cobrancaLoteDetalheResponseSchema } from "./zod/cobrancaLoteDetalheResponseSchema.ts";
-export { cobrancaLoteItemResponseSchema } from "./zod/cobrancaLoteItemResponseSchema.ts";
+export { cobrancaLoteItemSchema } from "./zod/cobrancaLoteItemSchema.ts";
 export { cobrancaLoteResponseSchema } from "./zod/cobrancaLoteResponseSchema.ts";
 export { cobrancaResumoSchema } from "./zod/cobrancaResumoSchema.ts";
 export { colaboradorDetailResponseDTOSchema } from "./zod/colaboradorDetailResponseDTOSchema.ts";
@@ -1224,6 +1231,8 @@ export {
   registrarRepassesIndividuaisMutationResponseSchema,
 } from "./zod/registrarRepassesIndividuaisSchema.ts";
 export { repasseIndividualResponseSchema } from "./zod/repasseIndividualResponseSchema.ts";
+export { repasseLoteDetalheResponseSchema } from "./zod/repasseLoteDetalheResponseSchema.ts";
+export { repasseLoteItemSchema } from "./zod/repasseLoteItemSchema.ts";
 export { repasseLoteResponseSchema } from "./zod/repasseLoteResponseSchema.ts";
 export { repasseResumoSchema } from "./zod/repasseResumoSchema.ts";
 export { responsavelRequestDTOSchema } from "./zod/responsavelRequestDTOSchema.ts";

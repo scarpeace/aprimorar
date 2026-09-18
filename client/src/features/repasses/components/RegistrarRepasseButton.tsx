@@ -3,7 +3,7 @@
 import { Banknote } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/Button";
-import { RegistrarRepasseModal } from "@/features/colaboradores/components/repasses/RegistrarRepasseModal";
+import { RegistrarRepasseModal } from "@/features/repasses/components/RegistrarRepasseModal";
 
 type RegistrarRepasseButtonProps = {
   colaboradorId: string;

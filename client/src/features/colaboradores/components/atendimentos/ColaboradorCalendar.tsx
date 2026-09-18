@@ -14,7 +14,7 @@ import { getFriendlyErrorMessage } from "@/lib/api/api-error";
 import { useBuscarCalendarioAtendimentosIndividuais } from "@/lib/api/generated/hooks/atendimentos individuais/useBuscarCalendarioAtendimentosIndividuais";
 import { atendimentoTipoCalendarClass, tipoAtendimentoLabels } from "@/lib/constants/atendimento-constants";
 import { formatDateTimeLocal } from "@/lib/utils/date-utils";
-import styles from "@/features/atendimentos/components/calendarios/AtendimentoCalendar.module.css";
+import styles from "@/features/atendimentos/components/calendario/AtendimentoCalendar.module.css";
 
 type CalendarRange = {
   inicio: string;

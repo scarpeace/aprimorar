@@ -10,7 +10,7 @@ import { useRouter } from "next/navigation";
 import { Card, CardHeader, CardTitle } from "@/components/ui/Card";
 import { ErrorCard } from "@/components/ui/ErrorCard";
 import { LoadingSkeleton } from "@/components/ui/LoadingSkeleton";
-import styles from "@/features/atendimentos/components/calendarios/AtendimentoCalendar.module.css";
+import styles from "@/features/atendimentos/components/calendario/AtendimentoCalendar.module.css";
 import { getFriendlyErrorMessage } from "@/lib/api/api-error";
 import { useBuscarCalendarioAtendimentosIndividuais } from "@/lib/api/generated/hooks/atendimentos individuais/useBuscarCalendarioAtendimentosIndividuais";
 import { atendimentoTipoCalendarClass, tipoAtendimentoLabels } from "@/lib/constants/atendimento-constants";

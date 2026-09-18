@@ -3,7 +3,7 @@
  * Do not edit manually.
  */
 
-import { cobrancaLoteItemResponseSchema } from "./cobrancaLoteItemResponseSchema.ts";
+import { cobrancaLoteItemSchema } from "./cobrancaLoteItemSchema.ts";
 import { z } from "zod/v4";
 
 /**
@@ -21,7 +21,7 @@ export const cobrancaLoteDetalheResponseSchema = z
     valorTotal: z.number(),
     quantidadeCobrancas: z.int(),
     get cobrancas() {
-      return z.array(cobrancaLoteItemResponseSchema.describe("Cobrança individual pertencente a um lote de pagamento"));
+      return z.array(cobrancaLoteItemSchema.describe("Cobrança individual pertencente a um lote de pagamento"));
     },
   })
   .describe("Detalhes de um lote de cobranças pagas");

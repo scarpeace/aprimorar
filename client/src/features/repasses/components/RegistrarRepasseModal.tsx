@@ -6,8 +6,8 @@ import { ErrorCard } from "@/components/ui/ErrorCard";
 import { LoadingSkeleton } from "@/components/ui/LoadingSkeleton";
 import { Modal } from "@/components/ui/Modal";
 import { Pagination } from "@/components/ui/Pagination";
-import { RegistrarRepasseForm } from "@/features/colaboradores/components/repasses/RegistrarRepasseForm";
-import { RegistrarRepasseTable } from "@/features/colaboradores/components/repasses/RegistrarRepasseTable";
+import { RegistrarRepasseForm } from "@/features/repasses/components/RegistrarRepasseForm";
+import { RegistrarRepasseTable } from "@/features/repasses/components/RegistrarRepasseTable";
 import { useBuscarRepassesIndividuais } from "@/lib/api/generated/hooks/repasses individuais/useBuscarRepassesIndividuais";
 
 const PAGE_SIZE = 10;

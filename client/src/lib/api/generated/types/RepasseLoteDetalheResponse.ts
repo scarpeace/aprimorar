@@ -3,9 +3,9 @@
  * Do not edit manually.
  */
 
-import type { CobrancaLoteItem } from "./CobrancaLoteItem.ts";
+import type { RepasseLoteItem } from "./RepasseLoteItem.ts";
 
-export const cobrancaLoteDetalheResponseFormaPagamentoEnum = {
+export const repasseLoteDetalheResponseFormaPagamentoEnum = {
   PIX: "PIX",
   DINHEIRO: "DINHEIRO",
   CARTAO_CREDITO: "CARTAO_CREDITO",
@@ -14,13 +14,13 @@ export const cobrancaLoteDetalheResponseFormaPagamentoEnum = {
   TRANSFERENCIA: "TRANSFERENCIA",
 } as const;
 
-export type CobrancaLoteDetalheResponseFormaPagamentoEnumKey =
-  (typeof cobrancaLoteDetalheResponseFormaPagamentoEnum)[keyof typeof cobrancaLoteDetalheResponseFormaPagamentoEnum];
+export type RepasseLoteDetalheResponseFormaPagamentoEnumKey =
+  (typeof repasseLoteDetalheResponseFormaPagamentoEnum)[keyof typeof repasseLoteDetalheResponseFormaPagamentoEnum];
 
 /**
- * @description Detalhes de um lote de cobranças pagas
+ * @description Detalhes de um lote de repasses pagos
  */
-export type CobrancaLoteDetalheResponse = {
+export type RepasseLoteDetalheResponse = {
   /**
    * @type string, uuid
    */
@@ -28,16 +28,16 @@ export type CobrancaLoteDetalheResponse = {
   /**
    * @type string, uuid
    */
-  alunoId: string;
+  colaboradorId: string;
   /**
    * @type string, date-time
    */
-  dataPagamento: string;
+  dataRepasse: string;
   /**
    * @description Forma de pagamento
    * @type string
    */
-  formaPagamento: CobrancaLoteDetalheResponseFormaPagamentoEnumKey;
+  formaPagamento: RepasseLoteDetalheResponseFormaPagamentoEnumKey;
   /**
    * @type string
    */
@@ -49,9 +49,9 @@ export type CobrancaLoteDetalheResponse = {
   /**
    * @type integer, int64
    */
-  quantidadeCobrancas: number;
+  quantidadeRepasses: number;
   /**
    * @type array
    */
-  cobrancas: CobrancaLoteItem[];
+  repasses: RepasseLoteItem[];
 };

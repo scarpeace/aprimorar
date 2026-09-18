@@ -1,10 +1,10 @@
 {
-  "required": ["alunoId", "cobrancas", "dataPagamento", "formaPagamento", "loteId", "quantidadeCobrancas", "valorTotal"],
+  "required": ["colaboradorId", "dataRepasse", "formaPagamento", "loteId", "quantidadeRepasses", "repasses", "valorTotal"],
   "type": "object",
   "properties": {
     "loteId": { "type": "string", "format": "uuid" },
-    "alunoId": { "type": "string", "format": "uuid" },
-    "dataPagamento": { "type": "string", "format": "date-time" },
+    "colaboradorId": { "type": "string", "format": "uuid" },
+    "dataRepasse": { "type": "string", "format": "date-time" },
     "formaPagamento": {
       "type": "string",
       "description": "Forma de pagamento",
@@ -12,8 +12,8 @@
     },
     "comprovanteUrl": { "type": "string", "nullable": true },
     "valorTotal": { "type": "number" },
-    "quantidadeCobrancas": { "type": "integer", "format": "int64" },
-    "cobrancas": {
+    "quantidadeRepasses": { "type": "integer", "format": "int64" },
+    "repasses": {
       "type": "array",
       "items": {
         "required": ["atendimentoId", "id", "status", "valor"],
@@ -24,11 +24,11 @@
           "valor": { "type": "number" },
           "status": { "type": "string", "enum": ["PENDENTE", "PAGO", "CANCELADO"] }
         },
-        "description": "Cobrança individual pertencente a um lote de pagamento",
-        "x-readme-ref-name": "CobrancaLoteItem"
+        "description": "Repasse individual pertencente a um lote de pagamento",
+        "x-readme-ref-name": "RepasseLoteItem"
       }
     }
   },
-  "description": "Detalhes de um lote de cobranças pagas",
-  "x-readme-ref-name": "CobrancaLoteDetalheResponse"
+  "description": "Detalhes de um lote de repasses pagos",
+  "x-readme-ref-name": "RepasseLoteDetalheResponse"
 }

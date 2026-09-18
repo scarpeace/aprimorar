@@ -1,5 +1,7 @@
 "use client";
 
+import { SquareArrowOutUpRight } from "lucide-react";
+import Link from "next/link";
 import { useState } from "react";
 import { Card, CardHeader, CardTitle } from "@/components/ui/Card";
 import { EmptyCard } from "@/components/ui/EmptyCard";
@@ -65,6 +67,7 @@ export function ColaboradorRepassesHistory({ colaboradorId }: Readonly<Colaborad
                   {/*<th>Pgto</th>*/}
                   <th className="text-center">Repasses</th>
                   <th className="text-right">Valor total</th>
+                  <th className="text-right">Registro</th>
                 </tr>
               </thead>
 
@@ -77,6 +80,15 @@ export function ColaboradorRepassesHistory({ colaboradorId }: Readonly<Colaborad
                     {/*<td>{formaPagamentoLabels[repasse.formaPagamento]}</td>*/}
                     <td className="text-center">{repasse.quantidadeRepasses}</td>
                     <td className="text-right font-semibold">{brl.format(repasse.valorTotal)}</td>
+                    <td className="text-right">
+                      <Link
+                        className="btn btn-link btn-xs gap-1"
+                        href={`/financeiro/repasses/lotes/${repasse.loteId}`}
+                      >
+                        Ver detalhes
+                        <SquareArrowOutUpRight size={14} aria-hidden="true" />
+                      </Link>
+                    </td>
                   </tr>
                 ))}
               </tbody>

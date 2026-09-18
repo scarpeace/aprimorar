@@ -1,18 +1,18 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect } from "react";
 import { FormProvider, useForm } from "react-hook-form";
+import { useEffect } from "react";
 import { Button } from "@/components/ui/Button";
-import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 import { SelectInput } from "@/components/ui/forms/SelectInput";
-import { useCobrancaMutations } from "@/features/alunos/hooks/use-cobranca-mutations";
-import {
-  registrarCobrancaFormSchema,
-  type RegistrarCobrancaFormData,
-} from "@/features/alunos/schemas/registrar-cobranca-form-schema";
-import { formaPagamentoLabels } from "@/lib/constants/pagamento-constants";
+import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
+import { useRepasseMutations } from "@/features/repasses/hooks/use-repasse-mutations";
 import { brl } from "@/lib/utils/formatter";
+import { formaPagamentoLabels } from "@/lib/constants/pagamento-constants";
+import {
+  registrarRepasseFormSchema,
+  type RegistrarRepasseFormData,
+} from "@/features/repasses/schemas/registrar-repasse-form-schema";
 
 const formaPagamentoOptions = [
   { value: "PIX", label: formaPagamentoLabels.PIX },
@@ -23,34 +23,34 @@ const formaPagamentoOptions = [
   { value: "TRANSFERENCIA", label: formaPagamentoLabels.TRANSFERENCIA },
 ];
 
-type RegistrarCobrancaFormProps = {
-  cobrancaIds: number[];
+type RegistrarRepasseFormProps = {
+  repasseIds: number[];
   selectedTotal: number;
   onSuccess: () => void;
   onCancel: () => void;
 };
 
-export function RegistrarCobrancaForm({
-  cobrancaIds,
+export function RegistrarRepasseForm({
+  repasseIds,
   selectedTotal,
   onSuccess,
   onCancel,
-}: Readonly<RegistrarCobrancaFormProps>) {
-  const methods = useForm<RegistrarCobrancaFormData>({
-    resolver: zodResolver(registrarCobrancaFormSchema),
+}: Readonly<RegistrarRepasseFormProps>) {
+  const methods = useForm<RegistrarRepasseFormData>({
+    resolver: zodResolver(registrarRepasseFormSchema),
     defaultValues: {
-      cobrancaIds,
+      repasseIds,
       formaPagamento: "PIX",
     },
   });
-  const { registerStudentPayment } = useCobrancaMutations();
+  const { registerCollaboratorPayment } = useRepasseMutations();
 
   useEffect(() => {
-    methods.setValue("cobrancaIds", cobrancaIds, { shouldValidate: true });
-  }, [cobrancaIds, methods]);
+    methods.setValue("repasseIds", repasseIds, { shouldValidate: true });
+  }, [methods, repasseIds]);
 
   const onSubmit = methods.handleSubmit((data) => {
-    registerStudentPayment.mutate(
+    registerCollaboratorPayment.mutate(
       { data },
       {
         onSuccess,
@@ -62,7 +62,7 @@ export function RegistrarCobrancaForm({
     <FormProvider {...methods}>
       <form className="space-y-6" onSubmit={onSubmit}>
         <div className="flex items-center justify-between rounded-box bg-base-200 p-4">
-          <p className="text-sm font-medium">{cobrancaIds.length} cobrança(s) selecionada(s)</p>
+          <p className="text-sm font-medium">{repasseIds.length} repasse(s) selecionado(s)</p>
           <p className="font-bold text-base-content">{brl.format(selectedTotal)}</p>
         </div>
 
@@ -77,17 +77,17 @@ export function RegistrarCobrancaForm({
         </label>
 
         <div className="flex justify-end gap-2">
-          <Button type="button" variant="ghost" onClick={onCancel} disabled={registerStudentPayment.isPending}>
-            Cancelar
+          <Button type="button" variant="ghost" onClick={onCancel} disabled={registerCollaboratorPayment.isPending}>
+            Voltar
           </Button>
-          <Button type="submit" disabled={cobrancaIds.length === 0 || registerStudentPayment.isPending}>
-            {registerStudentPayment.isPending ? (
+          <Button type="submit" disabled={repasseIds.length === 0 || registerCollaboratorPayment.isPending}>
+            {registerCollaboratorPayment.isPending ? (
               <>
                 <LoadingSpinner />
                 Registrando...
               </>
             ) : (
-              "Registrar cobrança"
+              "Registrar repasse"
             )}
           </Button>
         </div>

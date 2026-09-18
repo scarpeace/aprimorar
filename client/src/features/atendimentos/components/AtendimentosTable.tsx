@@ -11,7 +11,7 @@ import { Pagination } from "@/components/ui/Pagination";
 import { PaymentStatusIndicator } from "@/components/ui/PaymentStatusIndicator";
 import { SearchInput } from "@/components/ui/SearchInput";
 import { SelectField } from "@/components/ui/SelectField";
-import { AtendimentoCard } from "@/features/atendimentos/components/atendimentos/AtendimentoCard";
+import { AtendimentoCard } from "@/features/atendimentos/components/AtendimentoCard";
 import { AtendimentoTipoBadge } from "@/features/atendimentos/components/AtendimentoTipoBadge";
 import { useBuscarAtendimentosIndividuais } from "@/lib/api/generated/hooks/atendimentos individuais/useBuscarAtendimentosIndividuais";
 import type { BuscarAtendimentosIndividuaisQueryParamsTipoEnumKey } from "@/lib/api/generated/types/BuscarAtendimentosIndividuais";

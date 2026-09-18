@@ -4,7 +4,7 @@ import { useParams } from "next/navigation";
 import { ColaboradorAtendimentosTable } from "@/features/colaboradores/components/atendimentos/ColaboradorAtendimentosTable";
 import { ColaboradorCalendar } from "@/features/colaboradores/components/atendimentos/ColaboradorCalendar";
 import { ColaboradorProfile } from "@/features/colaboradores/components/ColaboradorProfile";
-import { ColaboradorRepassesHistory } from "@/features/colaboradores/components/repasses/ColaboradorRepassesHistory";
+import { ColaboradorRepassesHistory } from "@/features/repasses/components/ColaboradorRepassesHistory";
 
 export default function ColaboradorPage() {
   const { id } = useParams<{ id: string }>();

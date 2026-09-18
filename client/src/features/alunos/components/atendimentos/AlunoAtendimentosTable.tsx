@@ -12,7 +12,7 @@ import { PaymentStatusIndicator } from "@/components/ui/PaymentStatusIndicator";
 import { SearchInput } from "@/components/ui/SearchInput";
 import { SelectField } from "@/components/ui/SelectField";
 import { AlunoAtendimentoCard } from "@/features/alunos/components/atendimentos/AlunoAtendimentoCard";
-import { RegistrarCobrancaButton } from "@/features/alunos/components/cobrancas/RegistrarCobrancaButton";
+import { RegistrarCobrancaButton } from "@/features/cobrancas/components/RegistrarCobrancaButton";
 import { AtendimentoTipoBadge } from "@/features/atendimentos/components/AtendimentoTipoBadge";
 import { useBuscarAtendimentosIndividuais } from "@/lib/api/generated/hooks/atendimentos individuais/useBuscarAtendimentosIndividuais";
 import type { BuscarAtendimentosIndividuaisQueryParamsTipoEnumKey } from "@/lib/api/generated/types/BuscarAtendimentosIndividuais";

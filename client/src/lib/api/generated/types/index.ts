@@ -218,7 +218,7 @@ export type {
   CobrancaLoteDetalheResponse,
   CobrancaLoteDetalheResponseFormaPagamentoEnumKey,
 } from "./CobrancaLoteDetalheResponse.ts";
-export type { CobrancaLoteItemResponse, CobrancaLoteItemResponseStatusEnumKey } from "./CobrancaLoteItemResponse.ts";
+export type { CobrancaLoteItem, CobrancaLoteItemStatusEnumKey } from "./CobrancaLoteItem.ts";
 export type { CobrancaLoteResponse, CobrancaLoteResponseFormaPagamentoEnumKey } from "./CobrancaLoteResponse.ts";
 export type { CobrancaResumo } from "./CobrancaResumo.ts";
 export type { ColaboradorDetailResponseDTO, ColaboradorDetailResponseDTOFuncaoEnumKey } from "./ColaboradorDetailResponseDTO.ts";
@@ -488,6 +488,11 @@ export type {
   RepasseIndividualResponseFormaPagamentoEnumKey,
   RepasseIndividualResponseStatusEnumKey,
 } from "./RepasseIndividualResponse.ts";
+export type {
+  RepasseLoteDetalheResponse,
+  RepasseLoteDetalheResponseFormaPagamentoEnumKey,
+} from "./RepasseLoteDetalheResponse.ts";
+export type { RepasseLoteItem, RepasseLoteItemStatusEnumKey } from "./RepasseLoteItem.ts";
 export type { RepasseLoteResponse, RepasseLoteResponseFormaPagamentoEnumKey } from "./RepasseLoteResponse.ts";
 export type { RepasseResumo } from "./RepasseResumo.ts";
 export type { ResponsavelRequestDTO } from "./ResponsavelRequestDTO.ts";
@@ -545,7 +550,7 @@ export { buscarRepassesIndividuaisQueryParamsStatusEnum } from "./BuscarRepasses
 export { cobrancaIndividualResponseFormaPagamentoEnum } from "./CobrancaIndividualResponse.ts";
 export { cobrancaIndividualResponseStatusEnum } from "./CobrancaIndividualResponse.ts";
 export { cobrancaLoteDetalheResponseFormaPagamentoEnum } from "./CobrancaLoteDetalheResponse.ts";
-export { cobrancaLoteItemResponseStatusEnum } from "./CobrancaLoteItemResponse.ts";
+export { cobrancaLoteItemStatusEnum } from "./CobrancaLoteItem.ts";
 export { cobrancaLoteResponseFormaPagamentoEnum } from "./CobrancaLoteResponse.ts";
 export { colaboradorDetailResponseDTOFuncaoEnum } from "./ColaboradorDetailResponseDTO.ts";
 export { colaboradorListResponseDTOFuncaoEnum } from "./ColaboradorListResponseDTO.ts";
@@ -563,6 +568,8 @@ export { registrarPagamentoIndividualRequestFormaPagamentoEnum } from "./Registr
 export { registrarRepasseIndividualRequestFormaPagamentoEnum } from "./RegistrarRepasseIndividualRequest.ts";
 export { repasseIndividualResponseFormaPagamentoEnum } from "./RepasseIndividualResponse.ts";
 export { repasseIndividualResponseStatusEnum } from "./RepasseIndividualResponse.ts";
+export { repasseLoteDetalheResponseFormaPagamentoEnum } from "./RepasseLoteDetalheResponse.ts";
+export { repasseLoteItemStatusEnum } from "./RepasseLoteItem.ts";
 export { repasseLoteResponseFormaPagamentoEnum } from "./RepasseLoteResponse.ts";
 export { userCreateRequestRoleEnum } from "./UserCreateRequest.ts";
 export { userListResponseRoleEnum } from "./UserListResponse.ts";

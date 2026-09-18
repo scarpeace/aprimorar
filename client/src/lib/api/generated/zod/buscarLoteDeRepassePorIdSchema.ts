@@ -4,7 +4,7 @@
  */
 
 import { problemDetailSchema } from "./problemDetailSchema.ts";
-import { repasseLoteResponseSchema } from "./repasseLoteResponseSchema.ts";
+import { repasseLoteDetalheResponseSchema } from "./repasseLoteDetalheResponseSchema.ts";
 import { z } from "zod/v4";
 
 export const buscarLoteDeRepassePorIdPathParamsSchema = z.object({
@@ -12,9 +12,11 @@ export const buscarLoteDeRepassePorIdPathParamsSchema = z.object({
 });
 
 /**
- * @description Lote de repasses encontrado.
+ * @description Detalhes do lote de repasses encontrados.
  */
-export const buscarLoteDeRepassePorId200Schema = z.lazy(() => repasseLoteResponseSchema).describe("Lote de repasses pagos");
+export const buscarLoteDeRepassePorId200Schema = z
+  .lazy(() => repasseLoteDetalheResponseSchema)
+  .describe("Detalhes de um lote de repasses pagos");
 
 /**
  * @description Não autenticado.

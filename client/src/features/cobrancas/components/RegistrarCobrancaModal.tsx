@@ -6,8 +6,8 @@ import { ErrorCard } from "@/components/ui/ErrorCard";
 import { LoadingSkeleton } from "@/components/ui/LoadingSkeleton";
 import { Modal } from "@/components/ui/Modal";
 import { Pagination } from "@/components/ui/Pagination";
-import { RegistrarCobrancaForm } from "@/features/alunos/components/cobrancas/RegistrarCobrancaForm";
-import { RegistrarCobrancaTable } from "@/features/alunos/components/cobrancas/RegistrarCobrancaTable";
+import { RegistrarCobrancaForm } from "@/features/cobrancas/components/RegistrarCobrancaForm";
+import { RegistrarCobrancaTable } from "@/features/cobrancas/components/RegistrarCobrancaTable";
 import { useBuscarCobrancasIndividuais } from "@/lib/api/generated/hooks/cobranças individuais/useBuscarCobrancasIndividuais";
 
 const PAGE_SIZE = 10;

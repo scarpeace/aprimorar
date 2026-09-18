@@ -1,4 +1,4 @@
-import { AtendimentosTable } from "@/features/atendimentos/components/atendimentos/AtendimentosTable";
+import { AtendimentosTable } from "@/features/atendimentos/components/AtendimentosTable";
 
 export default function AtendimentosPage() {
   return <AtendimentosTable />;

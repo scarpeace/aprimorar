@@ -99,6 +99,11 @@ export function AtendimentoDetails({ atendimentoId }: Readonly<AtendimentoDetail
               loteId={atendimento.data.repasse.loteId}
               paymentDate={atendimento.data.repasse.dataRepasse}
               formaPagamento={atendimento.data.repasse.formaPagamento}
+              paymentRecordHref={
+                atendimento.data.repasse.loteId
+                  ? `/financeiro/repasses/lotes/${atendimento.data.repasse.loteId}`
+                  : undefined
+              }
             />
           </div>
 

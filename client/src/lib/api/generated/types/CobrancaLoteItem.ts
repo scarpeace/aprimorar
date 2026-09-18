@@ -3,19 +3,18 @@
  * Do not edit manually.
  */
 
-export const cobrancaLoteItemResponseStatusEnum = {
+export const cobrancaLoteItemStatusEnum = {
   PENDENTE: "PENDENTE",
   PAGO: "PAGO",
   CANCELADO: "CANCELADO",
 } as const;
 
-export type CobrancaLoteItemResponseStatusEnumKey =
-  (typeof cobrancaLoteItemResponseStatusEnum)[keyof typeof cobrancaLoteItemResponseStatusEnum];
+export type CobrancaLoteItemStatusEnumKey = (typeof cobrancaLoteItemStatusEnum)[keyof typeof cobrancaLoteItemStatusEnum];
 
 /**
  * @description Cobrança individual pertencente a um lote de pagamento
  */
-export type CobrancaLoteItemResponse = {
+export type CobrancaLoteItem = {
   /**
    * @type integer, int64
    */
@@ -31,5 +30,5 @@ export type CobrancaLoteItemResponse = {
   /**
    * @type string
    */
-  status: CobrancaLoteItemResponseStatusEnumKey;
+  status: CobrancaLoteItemStatusEnumKey;
 };

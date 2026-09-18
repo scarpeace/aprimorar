@@ -178,7 +178,7 @@ export {
 } from "./cancelarRepassesIndividuaisSchema.ts";
 export { cobrancaIndividualResponseSchema } from "./cobrancaIndividualResponseSchema.ts";
 export { cobrancaLoteDetalheResponseSchema } from "./cobrancaLoteDetalheResponseSchema.ts";
-export { cobrancaLoteItemResponseSchema } from "./cobrancaLoteItemResponseSchema.ts";
+export { cobrancaLoteItemSchema } from "./cobrancaLoteItemSchema.ts";
 export { cobrancaLoteResponseSchema } from "./cobrancaLoteResponseSchema.ts";
 export { cobrancaResumoSchema } from "./cobrancaResumoSchema.ts";
 export { colaboradorDetailResponseDTOSchema } from "./colaboradorDetailResponseDTOSchema.ts";
@@ -399,6 +399,8 @@ export {
   registrarRepassesIndividuaisMutationResponseSchema,
 } from "./registrarRepassesIndividuaisSchema.ts";
 export { repasseIndividualResponseSchema } from "./repasseIndividualResponseSchema.ts";
+export { repasseLoteDetalheResponseSchema } from "./repasseLoteDetalheResponseSchema.ts";
+export { repasseLoteItemSchema } from "./repasseLoteItemSchema.ts";
 export { repasseLoteResponseSchema } from "./repasseLoteResponseSchema.ts";
 export { repasseResumoSchema } from "./repasseResumoSchema.ts";
 export { responsavelRequestDTOSchema } from "./responsavelRequestDTOSchema.ts";

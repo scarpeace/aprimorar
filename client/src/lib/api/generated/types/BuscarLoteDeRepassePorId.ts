@@ -4,7 +4,7 @@
  */
 
 import type { ProblemDetail } from "./ProblemDetail.ts";
-import type { RepasseLoteResponse } from "./RepasseLoteResponse.ts";
+import type { RepasseLoteDetalheResponse } from "./RepasseLoteDetalheResponse.ts";
 
 export type BuscarLoteDeRepassePorIdPathParams = {
   /**
@@ -14,9 +14,9 @@ export type BuscarLoteDeRepassePorIdPathParams = {
 };
 
 /**
- * @description Lote de repasses encontrado.
+ * @description Detalhes do lote de repasses encontrados.
  */
-export type BuscarLoteDeRepassePorId200 = RepasseLoteResponse;
+export type BuscarLoteDeRepassePorId200 = RepasseLoteDetalheResponse;
 
 /**
  * @description Não autenticado.

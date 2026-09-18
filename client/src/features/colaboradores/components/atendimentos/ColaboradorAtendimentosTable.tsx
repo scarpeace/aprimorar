@@ -13,7 +13,7 @@ import { SearchInput } from "@/components/ui/SearchInput";
 import { SelectField } from "@/components/ui/SelectField";
 import { ColaboradorAtendimentoCard } from "@/features/colaboradores/components/atendimentos/ColaboradorAtendimentoCard";
 import { AtendimentoTipoBadge } from "@/features/atendimentos/components/AtendimentoTipoBadge";
-import { RegistrarRepasseButton } from "@/features/colaboradores/components/repasses/RegistrarRepasseButton";
+import { RegistrarRepasseButton } from "@/features/repasses/components/RegistrarRepasseButton";
 import { useBuscarAtendimentosIndividuais } from "@/lib/api/generated/hooks/atendimentos individuais/useBuscarAtendimentosIndividuais";
 import type { BuscarAtendimentosIndividuaisQueryParamsTipoEnumKey } from "@/lib/api/generated/types/BuscarAtendimentosIndividuais";
 import { atendimentoTipoOptions } from "@/lib/constants/atendimento-constants";

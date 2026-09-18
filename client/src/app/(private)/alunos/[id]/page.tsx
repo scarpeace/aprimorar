@@ -1,6 +1,6 @@
 import { AlunoAtendimentosTable } from "@/features/alunos/components/atendimentos/AlunoAtendimentosTable";
 import { AlunoCalendar } from "@/features/alunos/components/atendimentos/AlunoCalendar";
-import { AlunoCobrancasHistory } from "@/features/alunos/components/cobrancas/AlunoCobrancasHistory";
+import { AlunoCobrancasHistory } from "@/features/cobrancas/components/AlunoCobrancasHistory";
 import { AlunoProfile } from "@/features/alunos/components/AlunoProfile";
 
 export default async function AlunoPage({
