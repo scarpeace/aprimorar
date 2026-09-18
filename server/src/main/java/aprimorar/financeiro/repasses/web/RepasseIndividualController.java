@@ -1,5 +1,6 @@
 package aprimorar.financeiro.repasses.web;
 
+import aprimorar.financeiro.repasses.web.dto.RepasseLoteDetalheResponse;
 import aprimorar.financeiro.repasses.web.dto.RepasseLoteResponse;
 import aprimorar.common.openapi.BadRequestProblemResponse;
 import aprimorar.common.openapi.CommonProblemResponses;
@@ -72,11 +73,11 @@ public class RepasseIndividualController {
     @GetMapping("/lotes/{loteId}")
     @Operation(
         operationId = "buscarLoteDeRepassePorId",
-        description = "Busca um lote de repasses pelo identificador."
+        description = "Busca os detalhes de um lote de repasses pelo identificador."
     )
-    @ApiResponse(responseCode = "200", description = "Lote de repasses encontrado.")
+    @ApiResponse(responseCode = "200", description = "Detalhes do lote de repasses encontrados.")
     @NotFoundProblemResponse
-    public ResponseEntity<RepasseLoteResponse> buscarLotePorId(@PathVariable UUID loteId) {
+    public ResponseEntity<RepasseLoteDetalheResponse> buscarLotePorId(@PathVariable UUID loteId) {
         return ResponseEntity.ok(repasseService.buscarLotePorId(loteId));
     }
 

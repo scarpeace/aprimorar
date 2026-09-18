@@ -1,8 +1,8 @@
-package aprimorar.financeiro.cobrancas.web.dto;
+package aprimorar.financeiro.repasses.web.dto;
 
 import aprimorar.financeiro.common.FormaPagamentoEnum;
-import aprimorar.financeiro.cobrancas.domain.CobrancaIndividual;
-import aprimorar.financeiro.cobrancas.domain.enums.StatusCobrancaIndividual;
+import aprimorar.financeiro.repasses.domain.RepasseIndividual;
+import aprimorar.financeiro.repasses.domain.enums.StatusRepasseIndividual;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotNull;
@@ -11,19 +11,19 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
-@Schema(description = "Detalhes de um lote de cobranças pagas")
-public record CobrancaLoteDetalheResponse(
+@Schema(description = "Detalhes de um lote de repasses pagos")
+public record RepasseLoteDetalheResponse(
     @NotNull
     @Schema(nullable = false)
     UUID loteId,
 
     @NotNull
     @Schema(nullable = false)
-    UUID alunoId,
+    UUID colaboradorId,
 
     @NotNull
     @Schema(nullable = false)
-    LocalDateTime dataPagamento,
+    LocalDateTime dataRepasse,
 
     @NotNull
     @Schema(nullable = false)
@@ -39,30 +39,30 @@ public record CobrancaLoteDetalheResponse(
 
     @NotNull
     @Schema(nullable = false)
-    Long quantidadeCobrancas,
+    Long quantidadeRepasses,
 
     @NotNull
     @Schema(nullable = false)
-    List<CobrancaLoteItem> cobrancas
+    List<RepasseLoteItem> repasses
 ) {
-    public static CobrancaLoteDetalheResponse from(
-        CobrancaLoteResponse lote,
-        List<CobrancaLoteItem> cobrancas
+    public static RepasseLoteDetalheResponse from(
+        RepasseLoteResponse lote,
+        List<RepasseLoteItem> repasses
     ) {
-        return new CobrancaLoteDetalheResponse(
+        return new RepasseLoteDetalheResponse(
             lote.loteId(),
-            lote.alunoId(),
-            lote.dataPagamento(),
+            lote.colaboradorId(),
+            lote.dataRepasse(),
             lote.formaPagamento(),
             lote.comprovanteUrl(),
             lote.valorTotal(),
-            lote.quantidadeCobrancas(),
-            cobrancas
+            lote.quantidadeRepasses(),
+            repasses
         );
     }
 
-    @Schema(description = "Cobrança individual pertencente a um lote de pagamento")
-    public record CobrancaLoteItem(
+    @Schema(description = "Repasse individual pertencente a um lote de pagamento")
+    public record RepasseLoteItem(
         @NotNull
         @Schema(nullable = false)
         Long id,
@@ -77,16 +77,14 @@ public record CobrancaLoteDetalheResponse(
 
         @NotNull
         @Schema(nullable = false)
-        StatusCobrancaIndividual status
+        StatusRepasseIndividual status
     ) {
-        public static CobrancaLoteItem from(
-            CobrancaIndividual cobranca
-        ) {
-            return new CobrancaLoteItem(
-                cobranca.getId(),
-                cobranca.getAtendimentoId(),
-                cobranca.getValor(),
-                cobranca.getStatus()
+        public static RepasseLoteItem from(RepasseIndividual repasse) {
+            return new RepasseLoteItem(
+                repasse.getId(),
+                repasse.getAtendimentoId(),
+                repasse.getValor(),
+                repasse.getStatus()
             );
         }
     }

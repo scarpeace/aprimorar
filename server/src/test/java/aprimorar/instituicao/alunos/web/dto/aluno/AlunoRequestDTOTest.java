@@ -19,7 +19,7 @@ class AlunoRequestDTOTest {
             "(61) 99999-9999",
             "ANA.SILVA@EXAMPLE.COM",
             new EnderecoRequestDTO("Rua A", "10", "Apto 1", "Centro", "Brasilia", "DF", "70000-000"),
-            new ResponsavelRequestDTO("Carlos Silva", "carlos@example.com", "61999999998", "98765432100")
+            new AlunoRequestDTO.ResponsavelRequestDTO("Carlos Silva", "carlos@example.com", "61999999998", "98765432100")
         );
 
         var entity = dto.toEntity();

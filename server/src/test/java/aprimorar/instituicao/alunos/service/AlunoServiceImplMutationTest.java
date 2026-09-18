@@ -17,7 +17,7 @@ import aprimorar.instituicao.alunos.domain.exception.AlunoPossuiPendenciaFinance
 import aprimorar.instituicao.alunos.repository.AlunoRepository;
 
 import aprimorar.instituicao.alunos.web.dto.aluno.AlunoRequestDTO;
-import aprimorar.instituicao.alunos.web.dto.aluno.ResponsavelRequestDTO;
+
 import aprimorar.instituicao.common.domain.Endereco;
 import aprimorar.instituicao.common.web.dto.endereco.EnderecoRequestDTO;
 
@@ -161,8 +161,8 @@ class AlunoServiceImplMutationTest {
         return new EnderecoRequestDTO("Rua A", "10", "Apto 1", "Centro", "Brasilia", "DF", "70000000");
     }
 
-    private static ResponsavelRequestDTO responsavelRequest() {
-        return new ResponsavelRequestDTO("João Pereira", "joao@example.com", "(61) 99999-9999", "987.654.321-00");
+    private static AlunoRequestDTO.ResponsavelRequestDTO responsavelRequest() {
+        return new AlunoRequestDTO.ResponsavelRequestDTO("João Pereira", "joao@example.com", "(61) 99999-9999", "987.654.321-00");
     }
 
     private static Aluno aluno(Responsavel responsavel) {

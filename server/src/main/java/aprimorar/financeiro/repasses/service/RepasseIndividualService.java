@@ -14,6 +14,7 @@ import aprimorar.financeiro.repasses.web.dto.CancelarRepasseIndividualRequest;
 import aprimorar.financeiro.repasses.web.dto.RegistrarRepasseIndividualRequest;
 import aprimorar.financeiro.repasses.web.dto.RepasseIndividualFiltroRequest;
 import aprimorar.financeiro.repasses.web.dto.RepasseIndividualResponse;
+import aprimorar.financeiro.repasses.web.dto.RepasseLoteDetalheResponse;
 import aprimorar.financeiro.repasses.web.dto.RepasseLoteResponse;
 import java.math.BigDecimal;
 import java.util.List;
@@ -132,10 +133,21 @@ public class RepasseIndividualService implements RepasseApi {
     }
 
     @Transactional(readOnly = true)
-    public RepasseLoteResponse buscarLotePorId(UUID loteId) {
-        return repasseRepository.findLotePorId(loteId, StatusRepasseIndividual.PAGO)
+    public RepasseLoteDetalheResponse buscarLotePorId(UUID loteId) {
+        RepasseLoteResponse lote = repasseRepository.findLotePorId(
+                loteId,
+                StatusRepasseIndividual.PAGO
+            )
             .map(RepasseLoteResponse::toDto)
             .orElseThrow(RepasseIndividualNaoEncontradoException::new);
+
+        List<RepasseLoteDetalheResponse.RepasseLoteItem> repasses = repasseRepository
+            .findAllByLoteIdOrderByIdAsc(loteId)
+            .stream()
+            .map(RepasseLoteDetalheResponse.RepasseLoteItem::from)
+            .toList();
+
+        return RepasseLoteDetalheResponse.from(lote, repasses);
     }
 
     @Transactional(readOnly = true)

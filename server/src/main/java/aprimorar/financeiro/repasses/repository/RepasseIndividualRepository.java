@@ -92,4 +92,6 @@ public interface RepasseIndividualRepository
         @Param("loteId") UUID loteId,
         @Param("status") StatusRepasseIndividual status
     );
+
+    List<RepasseIndividual> findAllByLoteIdOrderByIdAsc(UUID loteId);
 }

@@ -1,6 +1,7 @@
 package aprimorar.instituicao.alunos.web.dto.aluno;
 
 import aprimorar.instituicao.alunos.domain.Aluno;
+import aprimorar.instituicao.alunos.domain.Responsavel;
 import aprimorar.instituicao.common.web.dto.endereco.EnderecoResponseDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -68,10 +69,38 @@ public record AlunoDetailResponseDTO(
             aluno.getDataNascimento(),
             aluno.getEscola(),
             aluno.getActive(),
-            ResponsavelResponseDTO.toDto(aluno.getResponsavel()),
+            ResponsavelResponseDTO.from(aluno.getResponsavel()),
             EnderecoResponseDTO.toDto(aluno.getEndereco()),
             aluno.getUpdatedAt(),
             aluno.getCreatedAt()
         );
+    }
+
+    @Schema(description = "Dados do responsável do aluno")
+    public record ResponsavelResponseDTO(
+        @NotNull
+        @Schema(description = "Nome do responsável", example = "João Silva")
+        String nome,
+
+        @NotNull
+        @Schema(description = "CPF do responsável", example = "12345678901")
+        String cpf,
+
+        @NotNull
+        @Schema(description = "Contato do responsável", example = "11999999999")
+        String telefone,
+
+        @NotNull
+        @Schema(description = "Email do responsável", example = "email@email.com")
+        String email
+    ) {
+        public static ResponsavelResponseDTO from(Responsavel responsavel) {
+            return new ResponsavelResponseDTO(
+                responsavel.getNome(),
+                responsavel.getCpf(),
+                responsavel.getTelefone(),
+                responsavel.getEmail()
+            );
+        }
     }
 }

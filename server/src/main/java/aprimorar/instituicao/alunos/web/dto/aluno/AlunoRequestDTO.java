@@ -5,6 +5,7 @@ import aprimorar.common.utils.CpfUtils;
 import aprimorar.common.utils.EmailUtils;
 import aprimorar.common.utils.PhoneUtils;
 import aprimorar.instituicao.alunos.domain.Aluno;
+import aprimorar.instituicao.alunos.domain.Responsavel;
 import aprimorar.instituicao.common.web.dto.endereco.EnderecoRequestDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;
@@ -62,5 +63,34 @@ public record AlunoRequestDTO(
             this.responsavel().toDomain(),
             this.endereco().toEntity()
         );
+    }
+
+    @Schema(description = "Dados do responsável do aluno")
+    public record ResponsavelRequestDTO(
+        @NotBlank(message = "Nome do responsável é obrigatório")
+        @Schema(nullable = false, description = "Nome do responsável", example = "João Silva")
+        String nome,
+
+        @Email(message = "Use um e-mail válido")
+        @NotBlank(message = "Email do responsável é obrigatório")
+        @Schema(nullable = false, description = "E-mail do responsável", example = "joao.silva@example.com")
+        String email,
+
+        @NotBlank(message = "Contato do responsável é obrigatório")
+        @Schema(nullable = false, description = "Contato do responsável", example = "11999999999")
+        String telefone,
+
+        @NotBlank(message = "CPF do responsável é obrigatório")
+        @Schema(nullable = false, description = "CPF do responsável", example = "12345678901")
+        String cpf
+    ) {
+        public Responsavel toDomain() {
+            return new Responsavel(
+                nome,
+                PhoneUtils.normalize(telefone),
+                CpfUtils.normalize(cpf),
+                EmailUtils.normalize(email)
+            );
+        }
     }
 }
