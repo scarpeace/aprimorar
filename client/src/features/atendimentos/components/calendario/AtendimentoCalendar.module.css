@@ -7,7 +7,8 @@
   border-radius: 0.5rem;
 }
 
-.eventContent {
+.eventContent,
+.eventContentCompact {
   display: flex;
   flex-direction: column;
   gap: 0.125rem;
@@ -22,6 +23,8 @@
   opacity: 0.8;
 }
 
+.eventContentCompact .eventStudent,
+.eventContentCompact .eventType,
 .eventCollaborator,
 .eventStudent,
 .eventType {

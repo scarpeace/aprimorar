@@ -15,6 +15,10 @@ import { getFriendlyErrorMessage } from "@/lib/api/api-error";
 import { useBuscarCalendarioAtendimentosIndividuais } from "@/lib/api/generated/hooks/atendimentos individuais/useBuscarCalendarioAtendimentosIndividuais";
 import { atendimentoTipoCalendarClass, tipoAtendimentoLabels } from "@/lib/constants/atendimento-constants";
 import { formatDateTimeLocal } from "@/lib/utils/date-utils";
+import {
+  AtendimentoCalendarEventContent,
+  type AtendimentoCalendarEventData,
+} from "./AtendimentoCalendarEventContent";
 import styles from "./AtendimentoCalendar.module.css";
 
 type CalendarRange = {
@@ -22,30 +26,16 @@ type CalendarRange = {
   fim: string;
 };
 
-type AtendimentoCalendarEventData = {
-  alunoNome: string;
-  colaboradorNome: string;
-  tipo: keyof typeof tipoAtendimentoLabels;
-};
-
-function AtendimentoCalendarEventContent({
-  alunoNome,
-  colaboradorNome,
-  tipo,
-}: Readonly<AtendimentoCalendarEventData>) {
-  return (
-    <div className={styles.eventContent}>
-      <span className={styles.eventType}>{tipoAtendimentoLabels[tipo]}</span>
-      <span className={styles.eventStudent}>A: {alunoNome}</span>
-      <span className={styles.eventCollaborator}>C: {colaboradorNome}</span>
-    </div>
-  );
-}
-
 function renderEventContent(eventInfo: EventContentArg) {
   const eventData = eventInfo.event.extendedProps as AtendimentoCalendarEventData;
+  const compacto = eventInfo.view.type === "timeGridWeek" || eventInfo.view.type === "timeGridDay";
 
-  return <AtendimentoCalendarEventContent {...eventData} />;
+  return (
+    <AtendimentoCalendarEventContent
+      {...eventData}
+      compacto={compacto}
+    />
+  );
 }
 
 function getInitialRange(): CalendarRange {
@@ -125,20 +115,30 @@ export function AtendimentosCalendar() {
           {calendario.isFetching ? <LoadingSkeleton className="absolute right-0 top-0 z-10 h-2 w-20" /> : null}
 
           <FullCalendar
-          plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
-          eventContent={renderEventContent}
-          initialView="dayGridMonth"
-          locale={ptBrLocale}
-          headerToolbar={{
-            left: "prev,next today",
-            center: "title",
-            right: "dayGridMonth,timeGridWeek,timeGridDay",
-          }}
-          events={events}
-          datesSet={handleDatesSet}
-          eventClick={handleEventClick}
-          height="auto"
-        />
+            plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
+            eventContent={renderEventContent}
+            initialView="dayGridMonth"
+            locale={ptBrLocale}
+            headerToolbar={{
+              left: "prev,next today",
+              center: "title",
+              right: "dayGridMonth,timeGridWeek,timeGridDay",
+            }}
+            eventTimeFormat={{
+              hour: "2-digit",
+              minute: "2-digit",
+              hour12: false,
+            }}
+            events={events}
+            datesSet={handleDatesSet}
+            eventClick={handleEventClick}
+            slotMinTime="08:00:00"
+            slotMaxTime="19:00:00"
+            scrollTime="08:00:00"
+            allDaySlot={false}
+            nowIndicator
+            height="auto"
+          />
       </div>
       )}
     </Card>

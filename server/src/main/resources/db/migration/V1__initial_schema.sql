@@ -88,8 +88,11 @@ CREATE TABLE atendimentos_individuais (
   tipo VARCHAR(255) NOT NULL CHECK (
     tipo IN ('AULA','MENTORIA','TERAPIA','ORIENTACAO_VOCACIONAL','ENEM','PAS','OUTRO')
   ),
+  status VARCHAR(20) NOT NULL,
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP
+  updated_at TIMESTAMP,
+  CONSTRAINT ck_atendimentos_individuais_status
+    CHECK (status IN ('AGENDADO', 'REALIZADO', 'CANCELADO'))
 );
 
 CREATE INDEX idx_atendimentos_individuais_tipo ON atendimentos_individuais(tipo);
@@ -99,7 +102,7 @@ CREATE TABLE cobrancas_individuais (
   atendimento_id BIGINT NOT NULL REFERENCES atendimentos_individuais(id),
   aluno_id UUID NOT NULL REFERENCES alunos(id),
   valor NUMERIC(10, 2) NOT NULL CHECK (valor > 0),
-  status VARCHAR(20) NOT NULL DEFAULT 'PENDENTE' CHECK (status IN ('PENDENTE', 'PAGO')),
+  status VARCHAR(20) NOT NULL DEFAULT 'PENDENTE',
   data_pagamento TIMESTAMP,
   forma_pagamento VARCHAR(40) CHECK (
     forma_pagamento IS NULL OR forma_pagamento IN (
@@ -112,21 +115,26 @@ CREATE TABLE cobrancas_individuais (
     )
   ),
   comprovante_url VARCHAR(500),
+  lote_id UUID,
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP
+  updated_at TIMESTAMP,
+  CONSTRAINT ck_cobrancas_individuais_status
+    CHECK (status IN ('PENDENTE', 'PAGO', 'CANCELADO'))
 );
 
 CREATE UNIQUE INDEX uk_cobrancas_individuais_atendimento_id
   ON cobrancas_individuais(atendimento_id);
 CREATE INDEX idx_cobrancas_individuais_aluno_status
   ON cobrancas_individuais(aluno_id, status);
+CREATE INDEX idx_cobrancas_individuais_lote_id
+  ON cobrancas_individuais(lote_id);
 
 CREATE TABLE repasses_individuais (
   id BIGSERIAL NOT NULL PRIMARY KEY,
   atendimento_id BIGINT NOT NULL UNIQUE REFERENCES atendimentos_individuais(id),
   colaborador_id UUID NOT NULL REFERENCES colaboradores(id),
   valor NUMERIC(10, 2) NOT NULL CHECK (valor >= 0),
-  status VARCHAR(20) NOT NULL DEFAULT 'PENDENTE' CHECK (status IN ('PENDENTE', 'PAGO')),
+  status VARCHAR(20) NOT NULL DEFAULT 'PENDENTE',
   data_repasse TIMESTAMP,
   forma_pagamento VARCHAR(40) CHECK (
     forma_pagamento IS NULL OR forma_pagamento IN (
@@ -139,12 +147,17 @@ CREATE TABLE repasses_individuais (
     )
   ),
   comprovante_url VARCHAR(500),
+  lote_id UUID,
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP
+  updated_at TIMESTAMP,
+  CONSTRAINT ck_repasses_individuais_status
+    CHECK (status IN ('PENDENTE', 'PAGO', 'CANCELADO'))
 );
 
 CREATE INDEX idx_repasses_individuais_colaborador_status
   ON repasses_individuais(colaborador_id, status);
+CREATE INDEX idx_repasses_individuais_lote_id
+  ON repasses_individuais(lote_id);
 
 CREATE TABLE despesas (
   id BIGSERIAL NOT NULL PRIMARY KEY,
@@ -183,32 +196,3 @@ CREATE TABLE despesas (
 CREATE INDEX idx_despesas_categoria ON despesas(categoria);
 CREATE INDEX idx_despesas_data_pagamento ON despesas(data_pagamento);
 
-CREATE VIEW vw_atendimentos_individuais AS
-SELECT
-  atendimento.id,
-  atendimento.tipo,
-  atendimento.data_hora_inicio,
-  atendimento.data_hora_fim,
-  atendimento.aluno_id,
-  aluno.nome AS aluno_nome,
-  atendimento.colaborador_id,
-  colaborador.nome AS colaborador_nome,
-  cobranca.id AS cobranca_id,
-  cobranca.valor AS cobranca_valor,
-  cobranca.status AS cobranca_status,
-  cobranca.data_pagamento AS cobranca_data_pagamento,
-  cobranca.forma_pagamento AS cobranca_forma_pagamento,
-  cobranca.comprovante_url AS cobranca_comprovante_url,
-  repasse.id AS repasse_id,
-  repasse.valor AS repasse_valor,
-  repasse.status AS repasse_status,
-  repasse.data_repasse AS repasse_data_repasse,
-  repasse.forma_pagamento AS repasse_forma_pagamento,
-  repasse.comprovante_url AS repasse_comprovante_url,
-  atendimento.created_at,
-  atendimento.updated_at
-FROM atendimentos_individuais atendimento
-JOIN alunos aluno ON aluno.id = atendimento.aluno_id
-JOIN colaboradores colaborador ON colaborador.id = atendimento.colaborador_id
-JOIN cobrancas_individuais cobranca ON cobranca.atendimento_id = atendimento.id
-JOIN repasses_individuais repasse ON repasse.atendimento_id = atendimento.id;

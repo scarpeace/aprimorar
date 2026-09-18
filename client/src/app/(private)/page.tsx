@@ -1,4 +1,4 @@
-import { AtendimentosCalendar } from "@/features/atendimentos/components/calendarios/AtendimentosCalendar";
+import { AtendimentosCalendar } from "@/features/atendimentos/components/calendario/AtendimentosCalendar";
 
 export default function DashboardPage() {
   return (
