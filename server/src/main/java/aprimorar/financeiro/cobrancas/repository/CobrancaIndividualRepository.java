@@ -45,7 +45,6 @@ public interface CobrancaIndividualRepository
                 count(c.id) as quantidadeCobrancas
             from CobrancaIndividual c
             where c.alunoId = :alunoId
-              and c.status = :status
               and c.loteId is not null
             group by
                 c.loteId,
@@ -58,13 +57,11 @@ public interface CobrancaIndividualRepository
             select count(distinct c.loteId)
             from CobrancaIndividual c
             where c.alunoId = :alunoId
-              and c.status = :status
               and c.loteId is not null
             """
     )
     Page<CobrancaLoteProjection> findLotesCobrancasPorAlunoId(
         @Param("alunoId") UUID alunoId,
-        @Param("status") StatusCobrancaIndividual status,
         Pageable pageable
     );
 
@@ -80,7 +77,6 @@ public interface CobrancaIndividualRepository
                 count(c.id) as quantidadeCobrancas
             from CobrancaIndividual c
             where c.loteId = :loteId
-              and c.status = :status
             group by
                 c.loteId,
                 c.alunoId,
@@ -88,9 +84,8 @@ public interface CobrancaIndividualRepository
                 c.comprovanteUrl
             """
     )
-    Optional<CobrancaLoteProjection> findLoteCobrancaPorId(
-        @Param("loteId") UUID loteId,
-        @Param("status") StatusCobrancaIndividual status
-    );
+    Optional<CobrancaLoteProjection> findLoteCobrancaPorId(@Param("loteId") UUID loteId);
+
+    List<CobrancaIndividual> findAllByLoteIdOrderByIdAsc(UUID loteId);
 
 }

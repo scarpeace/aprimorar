@@ -102,11 +102,12 @@ INSERT INTO atendimentos_individuais (
   data_hora_inicio,
   data_hora_fim,
   tipo,
+  status,
   created_at,
   updated_at
 )
 SELECT id, aluno_id, colaborador_id, data_hora_inicio, data_hora_fim, tipo,
-  created_at, updated_at
+  'AGENDADO', created_at, updated_at
 FROM seed_atendimentos;
 
 INSERT INTO repasses_individuais (

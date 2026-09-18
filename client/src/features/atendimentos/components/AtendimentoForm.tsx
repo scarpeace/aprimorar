@@ -7,13 +7,14 @@ import type { AtendimentoIndividualResponse } from "@/lib/api/generated/types/At
 import { useListAlunos } from "@/lib/api/generated/hooks/aluno/useListAlunos";
 import { useGetColaboradoresList } from "@/lib/api/generated/hooks/colaborador/useGetColaboradoresList";
 import { Button } from "@/components/ui/Button";
-
+import { AsyncSelectInput } from "@/components/ui/forms/AsyncSelectInput";
 import { Field } from "@/components/ui/forms/Field";
 import { MonetaryInput } from "@/components/ui/forms/MonetaryInput";
 import { SelectInput } from "@/components/ui/forms/SelectInput";
 import { TextInput } from "@/components/ui/forms/TextInput";
 import { useAtendimentoMutations } from "@/features/atendimentos/hooks/use-atendimento-mutations";
 import { atendimentoTipoOptions } from "@/lib/constants/atendimento-constants";
+import { getFriendlyErrorMessage } from "@/lib/api/api-error";
 import { addHoursToDateTimeLocal, formatDateTimeLocal, getDurationInHours } from "@/lib/utils/date-utils";
 import { atendimentoFormSchema, type AtendimentoFormInput } from "@/features/atendimentos/schemas/atendimento-form-schema";
 
@@ -120,39 +121,49 @@ export function AtendimentoForm({ initialData, onSuccess, onCancel }: Readonly<A
 
           <div className="grid gap-4 md:grid-cols-2">
             <div>
-              <SelectInput
+              <AsyncSelectInput
                 name="alunoId"
                 label="Aluno"
                 options={alunoOptions}
                 placeholder="Selecione um aluno"
-                disabled={isPending || alunos.isLoading}
-              />
-
-              <p className="mt-2 text-sm text-base-content/60">
-                Não encontrou o aluno?{" "}
-                <Link className="link link-primary font-medium" href="/alunos">
-                  Cadastre aqui
-                </Link>
-                .
-              </p>
+                isLoading={alunos.isLoading}
+                isError={alunos.isError}
+                errorMessage={getFriendlyErrorMessage(alunos.error)}
+                loadingMessage="Carregando alunos..."
+                emptyMessage="Nenhum aluno ativo disponível."
+                disabled={isPending}
+              >
+                <p className="mt-2 text-sm text-base-content/60">
+                  Não encontrou o aluno?{" "}
+                  <Link className="link link-primary font-medium" href="/alunos">
+                    Cadastre aqui
+                  </Link>
+                  .
+                </p>
+              </AsyncSelectInput>
             </div>
 
             <div>
-              <SelectInput
+              <AsyncSelectInput
                 name="colaboradorId"
                 label="Colaborador"
                 options={colaboradorOptions}
                 placeholder="Selecione um colaborador"
-                disabled={isPending || colaboradores.isLoading}
-              />
-
-              <p className="mt-2 text-sm text-base-content/60">
-                Não encontrou o colaborador?{" "}
-                <Link className="link link-primary font-medium" href="/colaboradores">
-                  Cadastre aqui
-                </Link>
-                .
-              </p>
+                isLoading={colaboradores.isLoading}
+                isError={colaboradores.isError}
+                errorMessage={getFriendlyErrorMessage(colaboradores.error)}
+                loadingMessage="Carregando colaboradores..."
+                emptyMessage="Nenhum colaborador ativo disponível."
+                disabled={isPending}
+              >
+                <p className="mt-2 text-sm text-base-content/60">
+                  Não encontrou o colaborador?{" "}
+                  <Link className="link link-primary font-medium" href="/colaboradores">
+                    Cadastre aqui
+                  </Link>
+                  .
+                </p>
+              </AsyncSelectInput>
             </div>
           </div>
 

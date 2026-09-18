@@ -3,6 +3,7 @@ package aprimorar.auth.jwt;
 import aprimorar.auth.user.User;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
 import org.springframework.security.oauth2.jwt.JwsHeader;
@@ -34,6 +35,7 @@ public class JwtService {
         JwtClaimsSet claims = JwtClaimsSet.builder()
             .issuer(issuer)
             .subject(user.getId().toString())
+            .claim("roles", List.of(user.getRole().name()))
             .issuedAt(now)
             .expiresAt(now.plus(accessTokenMinutes, ChronoUnit.MINUTES))
             .build();

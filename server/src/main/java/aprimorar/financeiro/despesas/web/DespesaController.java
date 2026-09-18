@@ -29,7 +29,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/despesas")
+@RequestMapping("/financeiro/despesas")
 @Tag(name = "Despesa", description = "APIs de gestão de despesas operacionais")
 @CommonProblemResponses
 public class DespesaController {

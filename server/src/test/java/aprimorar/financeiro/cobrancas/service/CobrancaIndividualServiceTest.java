@@ -3,6 +3,7 @@ package aprimorar.financeiro.cobrancas.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -13,9 +14,13 @@ import aprimorar.financeiro.api.cobrancas.CobrancaResumo;
 import aprimorar.financeiro.cobrancas.domain.CobrancaIndividual;
 import aprimorar.financeiro.cobrancas.domain.enums.StatusCobrancaIndividual;
 import aprimorar.financeiro.cobrancas.domain.exception.CobrancaIndividualDadosInvalidosException;
+import aprimorar.financeiro.cobrancas.domain.exception.CobrancaIndividualNaoEncontradoException;
 import aprimorar.financeiro.cobrancas.repository.CobrancaIndividualRepository;
+import aprimorar.financeiro.cobrancas.repository.projections.CobrancaLoteProjection;
+import aprimorar.financeiro.cobrancas.web.dto.CobrancaLoteDetalheResponse;
 import aprimorar.financeiro.common.FormaPagamentoEnum;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -142,6 +147,48 @@ class CobrancaIndividualServiceTest {
 
         assertEquals(Map.of(), resumos);
         verify(cobrancaRepository, never()).findAllByAtendimentoIdIn(any());
+    }
+
+    @Test
+    void deveBuscarDetalheDoLote() {
+        UUID loteId = UUID.randomUUID();
+        LocalDateTime dataPagamento = LocalDateTime.now();
+        CobrancaLoteProjection projection = mock(CobrancaLoteProjection.class);
+        CobrancaIndividual cobranca = mock(CobrancaIndividual.class);
+
+        when(projection.getLoteId()).thenReturn(loteId);
+        when(projection.getAlunoId()).thenReturn(ALUNO_ID);
+        when(projection.getDataPagamento()).thenReturn(dataPagamento);
+        when(projection.getFormaPagamento()).thenReturn(FormaPagamentoEnum.PIX);
+        when(projection.getValorTotal()).thenReturn(new BigDecimal("100.00"));
+        when(projection.getQuantidadeCobrancas()).thenReturn(1L);
+        when(cobranca.getId()).thenReturn(1L);
+        when(cobranca.getAtendimentoId()).thenReturn(10L);
+        when(cobranca.getValor()).thenReturn(new BigDecimal("100.00"));
+        when(cobranca.getStatus()).thenReturn(StatusCobrancaIndividual.PAGO);
+        when(cobrancaRepository.findLoteCobrancaPorId(loteId)).thenReturn(Optional.of(projection));
+        when(cobrancaRepository.findAllByLoteIdOrderByIdAsc(loteId)).thenReturn(List.of(cobranca));
+
+        CobrancaLoteDetalheResponse response = service.buscarLotePorId(loteId);
+
+        assertEquals(loteId, response.loteId());
+        assertEquals(ALUNO_ID, response.alunoId());
+        assertEquals(new BigDecimal("100.00"), response.valorTotal());
+        assertEquals(1, response.cobrancas().size());
+        assertEquals(10L, response.cobrancas().getFirst().atendimentoId());
+    }
+
+    @Test
+    void naoDeveBuscarItensQuandoLoteNaoExistir() {
+        UUID loteId = UUID.randomUUID();
+        when(cobrancaRepository.findLoteCobrancaPorId(loteId)).thenReturn(Optional.empty());
+
+        assertThrows(
+            CobrancaIndividualNaoEncontradoException.class,
+            () -> service.buscarLotePorId(loteId)
+        );
+
+        verify(cobrancaRepository, never()).findAllByLoteIdOrderByIdAsc(any());
     }
 
     private static CobrancaIndividual cobranca(Long atendimentoId) {

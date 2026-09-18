@@ -1,8 +1,8 @@
 "use client";
 
 import { ActiveStatusIndicator } from "@/components/ui/ActiveStatusIndicator";
-
 import { Card, CardActions, CardHeader, CardTitle } from "@/components/ui/Card";
+import { EmptyCard } from "@/components/ui/EmptyCard";
 import { ErrorCard } from "@/components/ui/ErrorCard";
 import { LoadingSkeleton } from "@/components/ui/LoadingSkeleton";
 
@@ -55,7 +55,7 @@ export function ColaboradorProfile({ colaboradorId }: Readonly<ColaboradorProfil
           <ColaboradorDetails colaborador={colaborador.data} />
         </>
       ) : (
-        <ErrorCard title="Colaborador não encontrado" description="A API respondeu sem conteúdo para este cadastro." />
+        <EmptyCard title="Colaborador não encontrado" description="A API respondeu sem conteúdo para este cadastro." />
       )}
     </Card>
   );

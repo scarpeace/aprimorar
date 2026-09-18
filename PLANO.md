@@ -1,14 +1,6 @@
-# Plano de refatoração arquitetural
+# Decisões arquiteturais consolidadas
 
-Este documento é o índice da refatoração que dividirá o sistema nos módulos `instituicao` e `financeiro`. Os detalhes executáveis estão separados em três planos para reduzir o risco de mudanças incompletas ou perda de contexto.
-
-## Planos
-
-1. [Instituição](docs/planos/01-instituicao.md)
-2. [Financeiro](docs/planos/02-financeiro.md)
-3. [Integração e migração](docs/planos/03-integracao-e-migracao.md)
-
-O terceiro plano define a ordem real de execução. Os planos de instituição e financeiro descrevem o estado-alvo de cada módulo e não devem ser executados isoladamente sem observar essa ordem.
+Este documento registra as decisões consolidadas da refatoração que dividiu o sistema nos módulos `instituicao` e `financeiro`. Os planos executáveis foram concluídos e removidos; este arquivo permanece como referência de arquitetura e regras de negócio.
 
 ## Decisões fechadas
 
@@ -18,7 +10,7 @@ O terceiro plano define a ordem real de execução. Os planos de instituição e
 aprimorar.instituicao
 ├── alunos
 ├── colaboradores
-└── atendimentos
+└── atendimentos_individuais
 
 aprimorar.financeiro
 ├── api
@@ -89,7 +81,7 @@ instituicao -> financeiro.api
 - Aluno e colaborador podem ser relações JPA de atendimento porque estão no mesmo módulo.
 - Dados financeiros são obtidos em lote pelas APIs internas de cobrança e repasse.
 - Não haverá consulta financeira por linha.
-- `vw_atendimentos_individuais`, sua entidade e seu repository serão removidos após a migração dos consumidores.
+- `vw_atendimentos_individuais`, sua entidade e seu repository foram removidos.
 
 ### Rotas
 

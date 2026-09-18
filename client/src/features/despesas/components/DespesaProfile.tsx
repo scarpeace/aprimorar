@@ -1,6 +1,7 @@
 "use client";
 
 import { Card, CardActions, CardHeader, CardTitle } from "@/components/ui/Card";
+import { EmptyCard } from "@/components/ui/EmptyCard";
 import { ErrorCard } from "@/components/ui/ErrorCard";
 import { LoadingSkeleton } from "@/components/ui/LoadingSkeleton";
 import { DespesaActions } from "@/features/despesas/components/DespesaActions";
@@ -54,7 +55,7 @@ export function DespesaProfile({ despesaId }: Readonly<DespesaProfileProps>) {
           <DespesaDetails despesa={despesa.data} />
         </>
       ) : (
-        <ErrorCard title="Despesa não encontrada" description="A API respondeu sem conteúdo para este lançamento." />
+        <EmptyCard title="Despesa não encontrada" description="A API respondeu sem conteúdo para este lançamento." />
       )}
     </Card>
   );

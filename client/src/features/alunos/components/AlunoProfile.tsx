@@ -2,6 +2,7 @@
 
 import { ActiveStatusIndicator } from "@/components/ui/ActiveStatusIndicator";
 import { Card, CardActions, CardHeader, CardTitle } from "@/components/ui/Card";
+import { EmptyCard } from "@/components/ui/EmptyCard";
 import { ErrorCard } from "@/components/ui/ErrorCard";
 import { LoadingSkeleton } from "@/components/ui/LoadingSkeleton";
 import { AlunoDetails } from "@/features/alunos/components/AlunoDetails";
@@ -53,7 +54,7 @@ export function AlunoProfile({ alunoId }: Readonly<AlunoProfileProps>) {
           <AlunoDetails aluno={aluno.data} />
         </>
       ) : (
-        <ErrorCard title="Aluno não encontrado" description="A API respondeu sem conteúdo para este cadastro." />
+        <EmptyCard title="Aluno não encontrado" description="A API respondeu sem conteúdo para este cadastro." />
       )}
     </Card>
   );

@@ -10,6 +10,7 @@ import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindException;
@@ -32,6 +33,16 @@ public class GlobalExceptionHandler {
             HttpStatus.UNAUTHORIZED,
             "Não autorizado",
             ex.getMessage(),
+            request
+        );
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ProblemDetail handleForbidden(AccessDeniedException ex, HttpServletRequest request) {
+        return problem(
+            HttpStatus.FORBIDDEN,
+            "Acesso negado",
+            "Você não possui permissão para realizar esta operação.",
             request
         );
     }

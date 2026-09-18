@@ -8,6 +8,7 @@ import aprimorar.financeiro.cobrancas.service.CobrancaIndividualService;
 import aprimorar.financeiro.cobrancas.web.dto.CancelarCobrancasIndividualRequest;
 import aprimorar.financeiro.cobrancas.web.dto.CobrancaIndividualFiltroRequest;
 import aprimorar.financeiro.cobrancas.web.dto.CobrancaIndividualResponse;
+import aprimorar.financeiro.cobrancas.web.dto.CobrancaLoteDetalheResponse;
 import aprimorar.financeiro.cobrancas.web.dto.CobrancaLoteResponse;
 import aprimorar.financeiro.cobrancas.web.dto.RegistrarPagamentoIndividualRequest;
 import io.swagger.v3.oas.annotations.Operation;
@@ -31,7 +32,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/atendimentos-individuais/cobrancas")
+@RequestMapping("/financeiro/cobrancas")
 @Tag(
     name = "Cobranças individuais",
     description = "APIs para gestão de cobranças individuais"
@@ -73,11 +74,11 @@ public class CobrancaIndividualController {
     @GetMapping("/lotes/{loteId}")
     @Operation(
         operationId = "buscarLoteDeCobrancaPorId",
-        description = "Busca um lote de cobranças pelo identificador."
+        description = "Busca os detalhes de um lote de cobranças pelo identificador."
     )
-    @ApiResponse(responseCode = "200", description = "Lote de cobranças encontrado.")
+    @ApiResponse(responseCode = "200", description = "Detalhes do lote de cobranças encontrados.")
     @NotFoundProblemResponse
-    public ResponseEntity<CobrancaLoteResponse> buscarLotePorId(@PathVariable UUID loteId) {
+    public ResponseEntity<CobrancaLoteDetalheResponse> buscarLotePorId(@PathVariable UUID loteId) {
         return ResponseEntity.ok(cobrancaService.buscarLotePorId(loteId));
     }
 

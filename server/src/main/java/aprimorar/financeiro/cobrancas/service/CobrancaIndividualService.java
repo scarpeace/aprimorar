@@ -13,6 +13,8 @@ import aprimorar.financeiro.cobrancas.repository.CobrancaIndividualSpecification
 import aprimorar.financeiro.cobrancas.web.dto.CancelarCobrancasIndividualRequest;
 import aprimorar.financeiro.cobrancas.web.dto.CobrancaIndividualFiltroRequest;
 import aprimorar.financeiro.cobrancas.web.dto.CobrancaIndividualResponse;
+import aprimorar.financeiro.cobrancas.web.dto.CobrancaLoteDetalheResponse;
+import aprimorar.financeiro.cobrancas.web.dto.CobrancaLoteItemResponse;
 import aprimorar.financeiro.cobrancas.web.dto.CobrancaLoteResponse;
 import aprimorar.financeiro.cobrancas.web.dto.RegistrarPagamentoIndividualRequest;
 import java.math.BigDecimal;
@@ -127,16 +129,23 @@ public class CobrancaIndividualService implements CobrancaApi {
     public Page<CobrancaLoteResponse> buscarLotes(UUID alunoId, Pageable pageable) {
         return cobrancaRepository.findLotesCobrancasPorAlunoId(
             alunoId,
-            StatusCobrancaIndividual.PAGO,
             pageable
         ).map(CobrancaLoteResponse::toDto);
     }
 
     @Transactional(readOnly = true)
-    public CobrancaLoteResponse buscarLotePorId(UUID loteId) {
-        return cobrancaRepository.findLoteCobrancaPorId(loteId, StatusCobrancaIndividual.PAGO)
+    public CobrancaLoteDetalheResponse buscarLotePorId(UUID loteId) {
+        CobrancaLoteResponse lote = cobrancaRepository.findLoteCobrancaPorId(loteId)
             .map(CobrancaLoteResponse::toDto)
             .orElseThrow(CobrancaIndividualNaoEncontradoException::new);
+
+        List<CobrancaLoteItemResponse> cobrancas = cobrancaRepository
+            .findAllByLoteIdOrderByIdAsc(loteId)
+            .stream()
+            .map(CobrancaLoteItemResponse::toDto)
+            .toList();
+
+        return CobrancaLoteDetalheResponse.from(lote, cobrancas);
     }
 
     @Transactional(readOnly = true)

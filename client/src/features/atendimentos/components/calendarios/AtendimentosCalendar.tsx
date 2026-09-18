@@ -8,8 +8,9 @@ import interactionPlugin from "@fullcalendar/interaction";
 import FullCalendar from "@fullcalendar/react";
 import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
+import { Card, CardHeader, CardTitle } from "@/components/ui/Card";
 import { ErrorCard } from "@/components/ui/ErrorCard";
-import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
+import { LoadingSkeleton } from "@/components/ui/LoadingSkeleton";
 import { getFriendlyErrorMessage } from "@/lib/api/api-error";
 import { useBuscarCalendarioAtendimentosIndividuais } from "@/lib/api/generated/hooks/atendimentos individuais/useBuscarCalendarioAtendimentosIndividuais";
 import { atendimentoTipoCalendarClass, tipoAtendimentoLabels } from "@/lib/constants/atendimento-constants";
@@ -102,35 +103,28 @@ export function AtendimentosCalendar() {
     router.push(`/atendimentos/${info.event.id}`);
   }
 
-  if (calendario.isError) {
-    return (
-      <ErrorCard
-        title="Não foi possível carregar o calendário"
-        description={getFriendlyErrorMessage(calendario.error)}
-        error={calendario.error}
-      />
-    );
-  }
-
-  if (calendario.isLoading) {
-    return (
-      <section className="flex min-h-96 items-center justify-center rounded-2xl border border-base-300 bg-base-100 p-6 shadow-sm">
-        <LoadingSpinner />
-      </section>
-    );
-  }
-
   return (
-    <section className="rounded-2xl border border-base-300 bg-base-100 p-6 shadow-sm">
-      <div className={styles.calendar}>
-        {calendario.isFetching ? (
-          <div className="absolute right-0 top-0 z-10 flex items-center gap-2 rounded-lg bg-base-100/90 px-3 py-2 text-xs text-base-content/65 shadow-sm">
-            <LoadingSpinner />
-            Atualizando...
-          </div>
-        ) : null}
+    <Card>
+      <CardHeader>
+        <div>
+          <CardTitle>Calendário</CardTitle>
+          <p className="mt-2 text-sm text-base-content/65">Visualize todos os atendimentos.</p>
+        </div>
+      </CardHeader>
 
-        <FullCalendar
+      {calendario.isLoading ? (
+        <LoadingSkeleton className="h-64 w-full" />
+      ) : calendario.isError ? (
+        <ErrorCard
+          title="Não foi possível carregar o calendário"
+          description={getFriendlyErrorMessage(calendario.error)}
+          error={calendario.error}
+        />
+      ) : (
+        <div className={styles.calendar}>
+          {calendario.isFetching ? <LoadingSkeleton className="absolute right-0 top-0 z-10 h-2 w-20" /> : null}
+
+          <FullCalendar
           plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
           eventContent={renderEventContent}
           initialView="dayGridMonth"
@@ -146,6 +140,7 @@ export function AtendimentosCalendar() {
           height="auto"
         />
       </div>
-    </section>
+      )}
+    </Card>
   );
 }

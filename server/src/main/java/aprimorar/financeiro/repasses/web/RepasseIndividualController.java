@@ -30,7 +30,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/atendimentos-individuais/repasses")
+@RequestMapping("/financeiro/repasses")
 @Tag(
     name = "Repasses individuais",
     description = "APIs para gestão de repasses individuais"
