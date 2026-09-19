@@ -1,0 +1,19 @@
+@startuml
+set separator none
+title Financeiro
+
+top to bottom direction
+
+!include <C4/C4>
+!include <C4/C4_Context>
+!include <C4/C4_Component>
+
+Container_Boundary("AprimorarAplication.AprimorarAplication_boundary", "AprimorarAplication", $tags="") {
+  Component(AprimorarAplication.AprimorarAplication.Common, "Common", $techn="Module", $descr="", $tags="", $link="")
+  Component(AprimorarAplication.AprimorarAplication.Financeiro, "Financeiro", $techn="Module", $descr="", $tags="", $link="")
+}
+
+Rel(AprimorarAplication.AprimorarAplication.Financeiro, AprimorarAplication.AprimorarAplication.Common, "depends on", $techn="", $tags="", $link="")
+
+SHOW_LEGEND(true)
+@enduml

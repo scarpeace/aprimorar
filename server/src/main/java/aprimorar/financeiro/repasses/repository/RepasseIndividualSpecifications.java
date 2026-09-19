@@ -19,12 +19,13 @@ public final class RepasseIndividualSpecifications {
     public static Specification<RepasseIndividual> comFiltros(
         RepasseIndividualFiltroRequest filtro
     ) {
-        return Specification
-            .where(colaboradorIdIgual(filtro.colaboradorId()))
-            .and(statusIgual(filtro.status()))
-            .and(formaPagamentoIgual(filtro.formaPagamento()))
-            .and(dataRepasseMaiorOuIgual(filtro.dataRepasseInicio()))
-            .and(dataRepasseMenorOuIgual(filtro.dataRepasseFim()));
+        return Specification.allOf(
+            colaboradorIdIgual(filtro.colaboradorId()),
+            statusIgual(filtro.status()),
+            formaPagamentoIgual(filtro.formaPagamento()),
+            dataRepasseMaiorOuIgual(filtro.dataRepasseInicio()),
+            dataRepasseMenorOuIgual(filtro.dataRepasseFim())
+        );
     }
 
     private static Specification<RepasseIndividual> colaboradorIdIgual(UUID colaboradorId) {

@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @Order(Ordered.HIGHEST_PRECEDENCE)
-@RestControllerAdvice
+@RestControllerAdvice(basePackages = "aprimorar.financeiro.despesas.web")
 public class DespesasExceptionHandler {
 
     @ExceptionHandler(DespesaDadosInvalidosException.class)

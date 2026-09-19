@@ -1,0 +1,10 @@
+[%autowidth.stretch, cols="h,a"]
+|===
+|Base package
+|`aprimorar.financeiro`
+|Spring components
+|_Services_
+
+* `a.f.api.cobrancas.CobrancaApi` (via `a.f.cobrancas.service.CobrancaIndividualService`)
+* `a.f.api.repasses.RepasseApi` (via `a.f.repasses.service.RepasseIndividualService`)
+|===

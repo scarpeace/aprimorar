@@ -13,12 +13,13 @@ public final class DespesaSpecifications {
     private DespesaSpecifications() {}
 
     public static Specification<Despesa> comFiltros(DespesaFiltroRequest filtro) {
-        return Specification
-            .where(buscaContem(filtro.busca()))
-            .and(categoriaIgual(filtro.categoria()))
-            .and(formaPagamentoIgual(filtro.formaPagamento()))
-            .and(dataMaiorOuIgual(filtro.dataInicio()))
-            .and(dataMenorOuIgual(filtro.dataFim()));
+        return Specification.allOf(
+            buscaContem(filtro.busca()),
+            categoriaIgual(filtro.categoria()),
+            formaPagamentoIgual(filtro.formaPagamento()),
+            dataMaiorOuIgual(filtro.dataInicio()),
+            dataMenorOuIgual(filtro.dataFim())
+        );
     }
 
     public static Specification<Despesa> buscaContem(String termo) {

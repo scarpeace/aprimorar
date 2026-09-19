@@ -19,12 +19,13 @@ public final class CobrancaIndividualSpecifications {
     public static Specification<CobrancaIndividual> comFiltros(
         CobrancaIndividualFiltroRequest filtro
     ) {
-        return Specification
-            .where(alunoIdIgual(filtro.alunoId()))
-            .and(statusIgual(filtro.status()))
-            .and(formaPagamentoIgual(filtro.formaPagamento()))
-            .and(dataPagamentoMaiorOuIgual(filtro.dataPagamentoInicio()))
-            .and(dataPagamentoMenorOuIgual(filtro.dataPagamentoFim()));
+        return Specification.allOf(
+            alunoIdIgual(filtro.alunoId()),
+            statusIgual(filtro.status()),
+            formaPagamentoIgual(filtro.formaPagamento()),
+            dataPagamentoMaiorOuIgual(filtro.dataPagamentoInicio()),
+            dataPagamentoMenorOuIgual(filtro.dataPagamentoFim())
+        );
     }
 
     private static Specification<CobrancaIndividual> alunoIdIgual(UUID alunoId) {

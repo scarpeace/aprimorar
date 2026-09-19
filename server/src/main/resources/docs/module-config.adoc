@@ -1,0 +1,10 @@
+[%autowidth.stretch, cols="h,a"]
+|===
+|Base package
+|`aprimorar.config`
+|Spring components
+|* `a.c.ClockConfig`
+* `a.c.GlobalExceptionHandler`
+* `a.c.JacksonConfig`
+* `a.c.OpenAPIConfig`
+|===

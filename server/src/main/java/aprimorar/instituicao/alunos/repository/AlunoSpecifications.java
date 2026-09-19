@@ -10,12 +10,13 @@ public final class AlunoSpecifications {
     private AlunoSpecifications() {}
 
     public static Specification<Aluno> comFiltros(AlunoFiltroRequest filtro) {
-        return Specification
-            .where(nomeContem(filtro.nome()))
-            .and(emailContem(filtro.email()))
-            .and(cpfContem(filtro.cpf()))
-            .and(escolaContem(filtro.escola()))
-            .and(ativosContem(filtro.ativos()));
+        return Specification.allOf(
+            nomeContem(filtro.nome()),
+            emailContem(filtro.email()),
+            cpfContem(filtro.cpf()),
+            escolaContem(filtro.escola()),
+            ativosContem(filtro.ativos())
+        );
     }
 
     public static Specification<Aluno> nomeContem(String nome) {

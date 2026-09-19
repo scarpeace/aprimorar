@@ -1,9 +1,7 @@
-package aprimorar.financeiro.config;
+package aprimorar.financeiro.cobrancas.config;
 
 import aprimorar.financeiro.cobrancas.domain.exception.CobrancaIndividualDadosInvalidosException;
 import aprimorar.financeiro.cobrancas.domain.exception.CobrancaIndividualNaoEncontradoException;
-import aprimorar.financeiro.repasses.domain.exception.RepasseIndividualDadosInvalidosException;
-import aprimorar.financeiro.repasses.domain.exception.RepasseIndividualNaoEncontradoException;
 import jakarta.servlet.http.HttpServletRequest;
 import java.net.URI;
 import org.springframework.core.Ordered;
@@ -15,29 +13,23 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @Order(Ordered.HIGHEST_PRECEDENCE)
-@RestControllerAdvice
-public class FinanceiroExceptionHandler {
+@RestControllerAdvice(basePackages = "aprimorar.financeiro.cobrancas.web")
+public class CobrancaExceptionHandler {
 
-    @ExceptionHandler({
-        CobrancaIndividualNaoEncontradoException.class,
-        RepasseIndividualNaoEncontradoException.class
-    })
+    @ExceptionHandler(CobrancaIndividualNaoEncontradoException.class)
     public ResponseEntity<ProblemDetail> handleNotFound(
-        RuntimeException ex,
+        CobrancaIndividualNaoEncontradoException ex,
         HttpServletRequest request
     ) {
-        return response(HttpStatus.NOT_FOUND, "Registro financeiro não encontrado", ex.getMessage(), request);
+        return response(HttpStatus.NOT_FOUND, "Cobrança não encontrada", ex.getMessage(), request);
     }
 
-    @ExceptionHandler({
-        CobrancaIndividualDadosInvalidosException.class,
-        RepasseIndividualDadosInvalidosException.class
-    })
+    @ExceptionHandler(CobrancaIndividualDadosInvalidosException.class)
     public ResponseEntity<ProblemDetail> handleBadRequest(
-        RuntimeException ex,
+        CobrancaIndividualDadosInvalidosException ex,
         HttpServletRequest request
     ) {
-        return response(HttpStatus.BAD_REQUEST, "Erro de regra de negócio", ex.getMessage(), request);
+        return response(HttpStatus.BAD_REQUEST, "Dados inválidos da cobrança", ex.getMessage(), request);
     }
 
     private ResponseEntity<ProblemDetail> response(

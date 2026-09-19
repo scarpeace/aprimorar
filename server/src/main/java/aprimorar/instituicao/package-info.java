@@ -2,7 +2,7 @@
     id = "instituicao",
     displayName = "Instituição",
     allowedDependencies = {
-        "common::*",
+        "common",
         "financeiro::cobrancas-api",
         "financeiro::repasses-api"
     }

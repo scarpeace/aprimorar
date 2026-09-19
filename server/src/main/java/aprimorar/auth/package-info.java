@@ -2,7 +2,7 @@
     id = "auth",
     displayName = "Autenticação",
     allowedDependencies = {
-        "common::*"
+        "common"
     }
 )
 package aprimorar.auth;

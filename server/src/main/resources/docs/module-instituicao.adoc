@@ -1,0 +1,8 @@
+[%autowidth.stretch, cols="h,a"]
+|===
+|Base package
+|`aprimorar.instituicao`
+|Bean references
+|* `a.f.api.cobrancas.CobrancaApi` (in Financeiro)
+* `a.f.api.repasses.RepasseApi` (in Financeiro)
+|===

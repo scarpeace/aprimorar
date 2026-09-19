@@ -96,6 +96,7 @@ public class AtendimentoIndividual implements Serializable {
         return this;
     }
 
+    //TODO: isso nao deveria ser public
     public void validarPodeEditar() {
         exigirStatusAgendado("Só é possível editar um atendimento agendado");
         validarJanelaEdicao();

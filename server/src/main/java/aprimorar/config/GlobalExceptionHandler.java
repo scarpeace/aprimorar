@@ -1,6 +1,5 @@
 package aprimorar.config;
 
-import aprimorar.auth.exception.AuthException;
 import jakarta.servlet.http.HttpServletRequest;
 import java.net.URI;
 import java.util.List;
@@ -26,16 +25,6 @@ public class GlobalExceptionHandler {
     private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
     private static final String VALIDATION_ERROR_MESSAGE =
         "Erro de validação nos campos informados";
-
-    @ExceptionHandler(AuthException.class)
-    public ProblemDetail handleUnauthorized(AuthException ex, HttpServletRequest request) {
-        return problem(
-            HttpStatus.UNAUTHORIZED,
-            "Não autorizado",
-            ex.getMessage(),
-            request
-        );
-    }
 
     @ExceptionHandler(AccessDeniedException.class)
     public ProblemDetail handleForbidden(AccessDeniedException ex, HttpServletRequest request) {

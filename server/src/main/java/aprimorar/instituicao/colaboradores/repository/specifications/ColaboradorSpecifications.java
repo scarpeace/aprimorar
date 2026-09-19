@@ -10,11 +10,12 @@ public final class ColaboradorSpecifications {
     private ColaboradorSpecifications() {}
 
     public static Specification<Colaborador> comFiltros(ColaboradorFiltroRequest filtro) {
-        return Specification
-            .where(nomeContem(filtro.nome()))
-            .and(emailContem(filtro.email()))
-            .and(cpfContem(filtro.cpf()))
-            .and(ativosContem(filtro.ativos()));
+        return Specification.allOf(
+            nomeContem(filtro.nome()),
+            emailContem(filtro.email()),
+            cpfContem(filtro.cpf()),
+            ativosContem(filtro.ativos())
+        );
     }
 
     public static Specification<Colaborador> nomeContem(String nome) {

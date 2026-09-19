@@ -2,7 +2,7 @@
     id = "financeiro",
     displayName = "Financeiro",
     allowedDependencies = {
-        "common::*"
+        "common"
     }
 )
 package aprimorar.financeiro;

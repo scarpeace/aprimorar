@@ -20,23 +20,25 @@ public final class AtendimentoIndividualSpecifications {
     public static Specification<AtendimentoIndividual> paraAtendimentos(
         AtendimentoIndividualFiltroRequest filtro
     ) {
-        return Specification
-            .where(buscaContem(filtro.busca()))
-            .and(inicioMaiorOuIgual(filtro.inicio()))
-            .and(fimMenorOuIgual(filtro.fim()))
-            .and(tipoIgual(filtro.tipo()))
-            .and(alunoIdIgual(filtro.alunoId()))
-            .and(colaboradorIdIgual(filtro.colaboradorId()));
+        return Specification.allOf(
+            buscaContem(filtro.busca()),
+            inicioMaiorOuIgual(filtro.inicio()),
+            fimMenorOuIgual(filtro.fim()),
+            tipoIgual(filtro.tipo()),
+            alunoIdIgual(filtro.alunoId()),
+            colaboradorIdIgual(filtro.colaboradorId())
+        );
     }
 
     public static Specification<AtendimentoIndividual> paraCalendario(
         AtendimentoIndividualCalendarioFiltroRequest filtro
     ) {
-        return Specification
-            .where(dataHoraFimMaiorOuIgual(filtro.inicio()))
-            .and(dataHoraInicioMenorOuIgual(filtro.fim()))
-            .and(alunoIdIgual(filtro.alunoId()))
-            .and(colaboradorIdIgual(filtro.colaboradorId()));
+        return Specification.allOf(
+            dataHoraFimMaiorOuIgual(filtro.inicio()),
+            dataHoraInicioMenorOuIgual(filtro.fim()),
+            alunoIdIgual(filtro.alunoId()),
+            colaboradorIdIgual(filtro.colaboradorId())
+        );
     }
 
     private static Specification<AtendimentoIndividual> buscaContem(String termo) {

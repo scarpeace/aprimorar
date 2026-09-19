@@ -1,0 +1,23 @@
+== AprimorarAplication
+plantuml::components.puml[,,format=svg]
+
+== Common
+plantuml::module-common.puml[,,format=svg]
+include::module-common.adoc[]
+
+== Config
+plantuml::module-config.puml[,,format=svg]
+include::module-config.adoc[]
+
+== Autenticação
+plantuml::module-auth.puml[,,format=svg]
+include::module-auth.adoc[]
+
+== Financeiro
+plantuml::module-financeiro.puml[,,format=svg]
+include::module-financeiro.adoc[]
+
+== Instituição
+plantuml::module-instituicao.puml[,,format=svg]
+include::module-instituicao.adoc[]
+
