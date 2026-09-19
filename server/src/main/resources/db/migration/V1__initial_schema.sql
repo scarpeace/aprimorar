@@ -97,7 +97,7 @@ CREATE TABLE atendimentos_individuais (
 
 CREATE INDEX idx_atendimentos_individuais_tipo ON atendimentos_individuais(tipo);
 
-CREATE TABLE cobrancas_individuais (
+CREATE TABLE cobrancas_alunos (
   id BIGSERIAL NOT NULL PRIMARY KEY,
   atendimento_id BIGINT NOT NULL REFERENCES atendimentos_individuais(id),
   aluno_id UUID NOT NULL REFERENCES alunos(id),
@@ -118,16 +118,16 @@ CREATE TABLE cobrancas_individuais (
   lote_id UUID,
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP,
-  CONSTRAINT ck_cobrancas_individuais_status
+  CONSTRAINT ck_cobrancas_alunos_status
     CHECK (status IN ('PENDENTE', 'PAGO', 'CANCELADO'))
 );
 
-CREATE UNIQUE INDEX uk_cobrancas_individuais_atendimento_id
-  ON cobrancas_individuais(atendimento_id);
-CREATE INDEX idx_cobrancas_individuais_aluno_status
-  ON cobrancas_individuais(aluno_id, status);
-CREATE INDEX idx_cobrancas_individuais_lote_id
-  ON cobrancas_individuais(lote_id);
+CREATE UNIQUE INDEX uk_cobrancas_alunos_atendimento_id
+  ON cobrancas_alunos(atendimento_id);
+CREATE INDEX idx_cobrancas_alunos_aluno_status
+  ON cobrancas_alunos(aluno_id, status);
+CREATE INDEX idx_cobrancas_alunos_lote_id
+  ON cobrancas_alunos(lote_id);
 
 CREATE TABLE repasses_individuais (
   id BIGSERIAL NOT NULL PRIMARY KEY,
@@ -195,4 +195,3 @@ CREATE TABLE despesas (
 
 CREATE INDEX idx_despesas_categoria ON despesas(categoria);
 CREATE INDEX idx_despesas_data_pagamento ON despesas(data_pagamento);
-

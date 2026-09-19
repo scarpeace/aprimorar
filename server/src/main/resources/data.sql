@@ -2,7 +2,7 @@
 -- Keeps the dataset small and aligned with the current schema.
 
 DELETE FROM repasses_individuais;
-DELETE FROM cobrancas_individuais;
+DELETE FROM cobrancas_alunos;
 DELETE FROM atendimentos_individuais;
 DELETE FROM despesas;
 DELETE FROM alunos;
@@ -166,7 +166,7 @@ INSERT INTO atendimentos_individuais (
   (1079, 'b1000000-0000-4000-8000-000000000019', 'a1000000-0000-4000-8000-000000000001', TIMESTAMP '2026-11-04 15:00:00', TIMESTAMP '2026-11-04 16:30:00', 'ORIENTACAO_VOCACIONAL', 'AGENDADO', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
   (1080, 'b1000000-0000-4000-8000-000000000022', 'a1000000-0000-4000-8000-000000000006', TIMESTAMP '2026-11-05 17:00:00', TIMESTAMP '2026-11-05 18:00:00', 'ENEM', 'AGENDADO', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
-INSERT INTO cobrancas_individuais (
+INSERT INTO cobrancas_alunos (
   id, atendimento_id, aluno_id, valor, status, data_pagamento, forma_pagamento, comprovante_url, lote_id, created_at, updated_at
 ) VALUES
   (2001, 1001, 'df351208-d6c8-5c8a-a2ce-19cea64ac3a8', 130.00, 'PENDENTE', NULL, NULL, NULL, NULL, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
@@ -380,6 +380,6 @@ INSERT INTO despesas (
   (30, 'Materiais pedagogicos', 'SAIDA', 'DESPENSA', 410.60, DATE '2026-11-09', DATE '2026-11-09', 'PAGA', 'CARTAO_DEBITO', 'Apoio as aulas', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
 SELECT setval('atendimentos_individuais_id_seq', (SELECT MAX(id) FROM atendimentos_individuais), TRUE);
-SELECT setval('cobrancas_individuais_id_seq', (SELECT MAX(id) FROM cobrancas_individuais), TRUE);
+SELECT setval('cobrancas_alunos_id_seq', (SELECT MAX(id) FROM cobrancas_alunos), TRUE);
 SELECT setval('repasses_individuais_id_seq', (SELECT MAX(id) FROM repasses_individuais), TRUE);
 SELECT setval('despesas_id_seq', (SELECT MAX(id) FROM despesas), TRUE);

@@ -1,0 +1,33 @@
+[
+  {
+    "label": "Java: Aprimorar Spring Boot",
+    "adapter": "Java",
+    "request": "launch",
+    "mainClass": "aprimorar.AprimorarAplication",
+    "cwd": "$ZED_WORKTREE_ROOT/server",
+    "stopOnEntry": false,
+    "build": {
+      "command": "./server/mvnw",
+      "args": ["-f", "server/pom.xml", "-q", "-DskipTests", "compile"]
+    }
+  },
+  {
+    "label": "Client: Next.js (Node)",
+    "adapter": "JavaScript",
+    "type": "node",
+    "request": "launch",
+    "program": "${ZED_WORKTREE_ROOT}/client/node_modules/next/dist/bin/next",
+    "args": ["dev"],
+    "cwd": "$ZED_WORKTREE_ROOT/client",
+    "skipFiles": ["<node_internals>/**"]
+  },
+  {
+    "label": "Client: navegador (Chrome)",
+    "adapter": "JavaScript",
+    "type": "chrome",
+    "request": "launch",
+    "url": "http://localhost:3000",
+    "webRoot": "${ZED_WORKTREE_ROOT}/client",
+    "skipFiles": ["<node_internals>/**"]
+  }
+]

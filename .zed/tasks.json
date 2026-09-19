@@ -1,0 +1,38 @@
+[
+  {
+    "label": "Backend: testes",
+    "command": "./mvnw",
+    "args": ["test"],
+    "cwd": "$ZED_WORKTREE_ROOT/server"
+  },
+  {
+    "label": "Backend: verificação do Modulith",
+    "command": "./mvnw",
+    "args": ["test", "-Dtest=ModuleVerificationTest"],
+    "cwd": "$ZED_WORKTREE_ROOT/server"
+  },
+  {
+    "label": "Backend: clean",
+    "command": "./mvnw",
+    "args": ["clean"],
+    "cwd": "$ZED_WORKTREE_ROOT/server"
+  },
+  {
+    "label": "Backend: clean compile",
+    "command": "./mvnw",
+    "args": ["clean", "compile"],
+    "cwd": "$ZED_WORKTREE_ROOT/server"
+  },
+  {
+    "label": "Backend: clean test",
+    "command": "./mvnw",
+    "args": ["clean", "test"],
+    "cwd": "$ZED_WORKTREE_ROOT/server"
+  },
+  {
+    "label": "Frontend: sincronizar API",
+    "command": "npm",
+    "args": ["run", "sync"],
+    "cwd": "$ZED_WORKTREE_ROOT/client"
+  }
+]

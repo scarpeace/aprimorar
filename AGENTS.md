@@ -115,7 +115,7 @@ Dentro de `server/`:
 - `Aluno` e `Colaborador` usam `Endereco` com `@Embedded`
 - `Aluno` usa `Responsavel` com `@Embedded`; não existe tabela ou ID próprio
   para responsável
-- o valor da cobrança vive em `cobrancas_individuais`; o valor do repasse vive
+- o valor da cobrança vive em `cobrancas_alunos`; o valor do repasse vive
   em `repasses_individuais`
 - toda criação de atendimento individual cria uma cobrança e um repasse
   pendentes; o atendimento não armazena valores financeiros próprios
@@ -252,7 +252,7 @@ diagnóstico.
 
 - contrato gerado desatualizado
 - import antigo de tipo gerado depois de mudança no OpenAPI
-- migration Flyway editada depois de aplicada ou com versão duplicada
+- migration Flyway editada depois de aplicada em ambiente persistente ou com versão duplicada
 - `target/classes` manter migrations ou `data.sql` removidos da fonte; executar
   `./mvnw clean` antes de repetir a inicialização local
 - teste de contexto iniciado sem as variáveis de ambiente necessárias
@@ -264,7 +264,9 @@ diagnóstico.
 - editar código gerado
 - criar abstração sem uso real
 - criar estado global para problema local
-- editar migrations já aplicadas
+- editar migrations já aplicadas em ambiente persistente ou compartilhado; enquanto o
+  projeto estiver em desenvolvimento e os bancos puderem ser recriados, a migration
+  inicial pode ser ajustada diretamente
 - criar entidade JPA para value object sem ciclo de vida próprio
 - criar relacionamento JPA entre módulos sem benefício concreto
 - vazar entidade JPA pela API
