@@ -5,6 +5,6 @@
 |Spring components
 |_Services_
 
-* `a.f.api.cobrancas.CobrancaApi` (via `a.f.cobrancas.service.CobrancaIndividualService`)
-* `a.f.api.repasses.RepasseApi` (via `a.f.repasses.service.RepasseIndividualService`)
+* `a.f.api.financeiro_aluno.CobrancaAlunoApi` (via `a.f.financeiro_aluno.cobrancas.service.CobrancaAlunoService`)
+* `a.f.api.repasses_particular.RepasseApi` (via `a.f.repasses_particular.service.RepasseParticularService`)
 |===

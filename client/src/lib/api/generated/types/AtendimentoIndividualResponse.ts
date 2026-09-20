@@ -4,7 +4,7 @@
  */
 
 import type { AlunoResumo } from "./AlunoResumo.ts";
-import type { CobrancaResumo } from "./CobrancaResumo.ts";
+import type { CobrancaAlunoResumo } from "./CobrancaAlunoResumo.ts";
 import type { ColaboradorResumo } from "./ColaboradorResumo.ts";
 import type { RepasseResumo } from "./RepasseResumo.ts";
 
@@ -73,7 +73,7 @@ export type AtendimentoIndividualResponse = {
    * @description Resumo da cobrança do atendimento
    * @type object
    */
-  cobranca: CobrancaResumo;
+  cobranca: CobrancaAlunoResumo;
   /**
    * @description Resumo do repasse do atendimento
    * @type object

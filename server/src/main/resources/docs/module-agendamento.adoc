@@ -1,0 +1,8 @@
+[%autowidth.stretch, cols="h,a"]
+|===
+|Base package
+|`aprimorar.agendamento`
+|Bean references
+|* `a.f.api.financeiro_aluno.CobrancaAlunoApi` (in Financeiro)
+* `a.f.api.repasses.RepasseApi` (in Financeiro)
+|===

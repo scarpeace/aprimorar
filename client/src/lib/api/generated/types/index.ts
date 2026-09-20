@@ -93,25 +93,25 @@ export type {
   BuscarCalendarioAtendimentosIndividuaisQueryResponse,
 } from "./BuscarCalendarioAtendimentosIndividuais.ts";
 export type {
-  BuscarCobrancaIndividualPorId200,
-  BuscarCobrancaIndividualPorId401,
-  BuscarCobrancaIndividualPorId404,
-  BuscarCobrancaIndividualPorId500,
-  BuscarCobrancaIndividualPorIdPathParams,
-  BuscarCobrancaIndividualPorIdQuery,
-  BuscarCobrancaIndividualPorIdQueryResponse,
-} from "./BuscarCobrancaIndividualPorId.ts";
+  BuscarCobrancaAlunoPorId200,
+  BuscarCobrancaAlunoPorId401,
+  BuscarCobrancaAlunoPorId404,
+  BuscarCobrancaAlunoPorId500,
+  BuscarCobrancaAlunoPorIdPathParams,
+  BuscarCobrancaAlunoPorIdQuery,
+  BuscarCobrancaAlunoPorIdQueryResponse,
+} from "./BuscarCobrancaAlunoPorId.ts";
 export type {
-  BuscarCobrancasIndividuais200,
-  BuscarCobrancasIndividuais400,
-  BuscarCobrancasIndividuais401,
-  BuscarCobrancasIndividuais500,
-  BuscarCobrancasIndividuaisQuery,
-  BuscarCobrancasIndividuaisQueryParams,
-  BuscarCobrancasIndividuaisQueryParamsFormaPagamentoEnumKey,
-  BuscarCobrancasIndividuaisQueryParamsStatusEnumKey,
-  BuscarCobrancasIndividuaisQueryResponse,
-} from "./BuscarCobrancasIndividuais.ts";
+  BuscarCobrancasAlunos200,
+  BuscarCobrancasAlunos400,
+  BuscarCobrancasAlunos401,
+  BuscarCobrancasAlunos500,
+  BuscarCobrancasAlunosQuery,
+  BuscarCobrancasAlunosQueryParams,
+  BuscarCobrancasAlunosQueryParamsFormaPagamentoEnumKey,
+  BuscarCobrancasAlunosQueryParamsStatusEnumKey,
+  BuscarCobrancasAlunosQueryResponse,
+} from "./BuscarCobrancasAlunos.ts";
 export type {
   BuscarLoteDeCobrancaPorId200,
   BuscarLoteDeCobrancaPorId401,
@@ -178,17 +178,17 @@ export type {
   CancelarAtendimentoIndividualMutationResponse,
   CancelarAtendimentoIndividualPathParams,
 } from "./CancelarAtendimentoIndividual.ts";
-export type { CancelarCobrancasIndividualRequest } from "./CancelarCobrancasIndividualRequest.ts";
 export type {
-  CancelarPagamentoCobrancasIndividuais204,
-  CancelarPagamentoCobrancasIndividuais400,
-  CancelarPagamentoCobrancasIndividuais401,
-  CancelarPagamentoCobrancasIndividuais404,
-  CancelarPagamentoCobrancasIndividuais500,
-  CancelarPagamentoCobrancasIndividuaisMutation,
-  CancelarPagamentoCobrancasIndividuaisMutationRequest,
-  CancelarPagamentoCobrancasIndividuaisMutationResponse,
-} from "./CancelarPagamentoCobrancasIndividuais.ts";
+  CancelarPagamentoAluno204,
+  CancelarPagamentoAluno400,
+  CancelarPagamentoAluno401,
+  CancelarPagamentoAluno404,
+  CancelarPagamentoAluno500,
+  CancelarPagamentoAlunoMutation,
+  CancelarPagamentoAlunoMutationRequest,
+  CancelarPagamentoAlunoMutationResponse,
+} from "./CancelarPagamentoAluno.ts";
+export type { CancelarPagamentoAlunoRequest } from "./CancelarPagamentoAlunoRequest.ts";
 export type {
   CancelarPagamentoDespesa200,
   CancelarPagamentoDespesa401,
@@ -210,17 +210,17 @@ export type {
   CancelarRepassesIndividuaisMutationResponse,
 } from "./CancelarRepassesIndividuais.ts";
 export type {
-  CobrancaIndividualResponse,
-  CobrancaIndividualResponseFormaPagamentoEnumKey,
-  CobrancaIndividualResponseStatusEnumKey,
-} from "./CobrancaIndividualResponse.ts";
+  CobrancaAlunoResponse,
+  CobrancaAlunoResponseFormaPagamentoEnumKey,
+  CobrancaAlunoResponseStatusEnumKey,
+} from "./CobrancaAlunoResponse.ts";
+export type { CobrancaAlunoResumo } from "./CobrancaAlunoResumo.ts";
 export type {
   CobrancaLoteDetalheResponse,
   CobrancaLoteDetalheResponseFormaPagamentoEnumKey,
 } from "./CobrancaLoteDetalheResponse.ts";
 export type { CobrancaLoteItem, CobrancaLoteItemStatusEnumKey } from "./CobrancaLoteItem.ts";
 export type { CobrancaLoteResponse, CobrancaLoteResponseFormaPagamentoEnumKey } from "./CobrancaLoteResponse.ts";
-export type { CobrancaResumo } from "./CobrancaResumo.ts";
 export type { ColaboradorDetailResponseDTO, ColaboradorDetailResponseDTOFuncaoEnumKey } from "./ColaboradorDetailResponseDTO.ts";
 export type { ColaboradorListResponseDTO, ColaboradorListResponseDTOFuncaoEnumKey } from "./ColaboradorListResponseDTO.ts";
 export type { ColaboradorRequestDTO, ColaboradorRequestDTOFuncaoEnumKey } from "./ColaboradorRequestDTO.ts";
@@ -433,7 +433,7 @@ export type {
 export type { PageMetadata } from "./PageMetadata.ts";
 export type { PagedModelAlunoListResponseDTO } from "./PagedModelAlunoListResponseDTO.ts";
 export type { PagedModelAtendimentoIndividualResponse } from "./PagedModelAtendimentoIndividualResponse.ts";
-export type { PagedModelCobrancaIndividualResponse } from "./PagedModelCobrancaIndividualResponse.ts";
+export type { PagedModelCobrancaAlunoResponse } from "./PagedModelCobrancaAlunoResponse.ts";
 export type { PagedModelCobrancaLoteResponse } from "./PagedModelCobrancaLoteResponse.ts";
 export type { PagedModelColaboradorListResponseDTO } from "./PagedModelColaboradorListResponseDTO.ts";
 export type { PagedModelDespesaResponse } from "./PagedModelDespesaResponse.ts";
@@ -456,19 +456,19 @@ export type {
   RefreshAccessTokenMutationResponse,
 } from "./RefreshAccessToken.ts";
 export type {
-  RegistrarPagamentoCobrancasIndividuais204,
-  RegistrarPagamentoCobrancasIndividuais400,
-  RegistrarPagamentoCobrancasIndividuais401,
-  RegistrarPagamentoCobrancasIndividuais404,
-  RegistrarPagamentoCobrancasIndividuais500,
-  RegistrarPagamentoCobrancasIndividuaisMutation,
-  RegistrarPagamentoCobrancasIndividuaisMutationRequest,
-  RegistrarPagamentoCobrancasIndividuaisMutationResponse,
-} from "./RegistrarPagamentoCobrancasIndividuais.ts";
+  RegistrarPagamentoAluno204,
+  RegistrarPagamentoAluno400,
+  RegistrarPagamentoAluno401,
+  RegistrarPagamentoAluno404,
+  RegistrarPagamentoAluno500,
+  RegistrarPagamentoAlunoMutation,
+  RegistrarPagamentoAlunoMutationRequest,
+  RegistrarPagamentoAlunoMutationResponse,
+} from "./RegistrarPagamentoAluno.ts";
 export type {
-  RegistrarPagamentoIndividualRequest,
-  RegistrarPagamentoIndividualRequestFormaPagamentoEnumKey,
-} from "./RegistrarPagamentoIndividualRequest.ts";
+  RegistrarPagamentoAlunoRequest,
+  RegistrarPagamentoAlunoRequestFormaPagamentoEnumKey,
+} from "./RegistrarPagamentoAlunoRequest.ts";
 export type {
   RegistrarRepasseIndividualRequest,
   RegistrarRepasseIndividualRequestFormaPagamentoEnumKey,
@@ -543,12 +543,12 @@ export { atendimentoIndividualResponseStatusEnum } from "./AtendimentoIndividual
 export { atendimentoIndividualResponseTipoEnum } from "./AtendimentoIndividualResponse.ts";
 export { authMeResponseRoleEnum } from "./AuthMeResponse.ts";
 export { buscarAtendimentosIndividuaisQueryParamsTipoEnum } from "./BuscarAtendimentosIndividuais.ts";
-export { buscarCobrancasIndividuaisQueryParamsFormaPagamentoEnum } from "./BuscarCobrancasIndividuais.ts";
-export { buscarCobrancasIndividuaisQueryParamsStatusEnum } from "./BuscarCobrancasIndividuais.ts";
+export { buscarCobrancasAlunosQueryParamsFormaPagamentoEnum } from "./BuscarCobrancasAlunos.ts";
+export { buscarCobrancasAlunosQueryParamsStatusEnum } from "./BuscarCobrancasAlunos.ts";
 export { buscarRepassesIndividuaisQueryParamsFormaPagamentoEnum } from "./BuscarRepassesIndividuais.ts";
 export { buscarRepassesIndividuaisQueryParamsStatusEnum } from "./BuscarRepassesIndividuais.ts";
-export { cobrancaIndividualResponseFormaPagamentoEnum } from "./CobrancaIndividualResponse.ts";
-export { cobrancaIndividualResponseStatusEnum } from "./CobrancaIndividualResponse.ts";
+export { cobrancaAlunoResponseFormaPagamentoEnum } from "./CobrancaAlunoResponse.ts";
+export { cobrancaAlunoResponseStatusEnum } from "./CobrancaAlunoResponse.ts";
 export { cobrancaLoteDetalheResponseFormaPagamentoEnum } from "./CobrancaLoteDetalheResponse.ts";
 export { cobrancaLoteItemStatusEnum } from "./CobrancaLoteItem.ts";
 export { cobrancaLoteResponseFormaPagamentoEnum } from "./CobrancaLoteResponse.ts";
@@ -564,7 +564,7 @@ export { despesaResponseStatusEnum } from "./DespesaResponse.ts";
 export { despesaResponseTipoEnum } from "./DespesaResponse.ts";
 export { getDespesasQueryParamsCategoriaEnum } from "./GetDespesas.ts";
 export { getDespesasQueryParamsFormaPagamentoEnum } from "./GetDespesas.ts";
-export { registrarPagamentoIndividualRequestFormaPagamentoEnum } from "./RegistrarPagamentoIndividualRequest.ts";
+export { registrarPagamentoAlunoRequestFormaPagamentoEnum } from "./RegistrarPagamentoAlunoRequest.ts";
 export { registrarRepasseIndividualRequestFormaPagamentoEnum } from "./RegistrarRepasseIndividualRequest.ts";
 export { repasseIndividualResponseFormaPagamentoEnum } from "./RepasseIndividualResponse.ts";
 export { repasseIndividualResponseStatusEnum } from "./RepasseIndividualResponse.ts";

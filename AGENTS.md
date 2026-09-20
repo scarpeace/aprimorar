@@ -56,12 +56,16 @@ aprimorar/
 ├── auth/
 ├── common/
 ├── financeiro/
-│   ├── api/{cobrancas,repasses}
-│   ├── cobrancas/{domain,repository,service,web}
-│   ├── repasses/{domain,repository,service,web}
+│   ├── api/{financeiro_aluno,repasses_particular}
+│   ├── financeiro_aluno/
+│   │   ├── cobrancas/{domain,repository,service,web}
+│   │   ├── parcelas/{domain,repository,service,web}
+│   │   └── pagamentos/{domain,repository,service,web}
+│   ├── repasses_particular/{domain,repository,service,web}
+│   ├── pagamentos_particular/{domain,repository,service,web}
 │   ├── despesas/{domain,repository,service,web}
 │   └── config/
-├── instituicao/
+├── agendamento/
 │   ├── common/
 │   ├── alunos/{domain,repository,service,web}
 │   ├── colaboradores/{domain,repository,service,web}
@@ -76,16 +80,19 @@ aprimorar/
   O refresh token fica no cookie `refresh_token` (`HttpOnly`, `SameSite=Lax`,
   escopo `/auth`) e somente seu hash é persistido. O usuário atual é retornado
   por `/auth/me` como `id`, `email` e `role`.
-- `instituicao/atendimentos_individuais` concentra alunos, colaboradores e
+- `agendamento/atendimentos_individuais` concentra alunos, colaboradores e
   atendimentos individuais. O atendimento usa relações JPA internas com aluno e
   colaborador e integra cobranças e repasses somente por contratos de
   `financeiro.api`.
 - o calendário de atendimentos individuais é uma consulta própria em
   `GET /instituicao/atendimentos/calendario`; seu contrato é neutro em relação
   ao FullCalendar e aceita intervalo, `alunoId` e `colaboradorId`.
-- `instituicao/alunos` e `instituicao/colaboradores` mantêm suas implementações
+- O namespace Java do módulo é `aprimorar.agendamento`; o prefixo HTTP
+  `/instituicao` permanece temporariamente por compatibilidade com o contrato
+  existente.
+- `agendamento/alunos` e `agendamento/colaboradores` mantêm suas implementações
   separadas em `service` e `web`, com DTOs organizados por capacidade.
-- `instituicao/common/domain/Endereco` contém o value object de endereço; não é
+- `agendamento/common/domain/Endereco` contém o value object de endereço; não é
   uma entidade nem possui ciclo de vida próprio.
 - `Responsavel` é um value object embutido em `Aluno`, sem tabela própria.
 - `financeiro/despesas` é responsável por lançamentos operacionais de entrada e
@@ -115,8 +122,11 @@ Dentro de `server/`:
 - `Aluno` e `Colaborador` usam `Endereco` com `@Embedded`
 - `Aluno` usa `Responsavel` com `@Embedded`; não existe tabela ou ID próprio
   para responsável
-- o valor da cobrança vive em `cobrancas_alunos`; o valor do repasse vive
-  em `repasses_individuais`
+- o valor da cobrança individual vive em `cobrancas_alunos`; o valor do repasse vive
+  em `repasses_particular`
+- pagamentos de cobranças individuais vivem em `pagamentos_alunos_individuais`;
+  um pagamento pode quitar várias cobranças do mesmo aluno e seu total é calculado
+  pela soma das cobranças vinculadas
 - toda criação de atendimento individual cria uma cobrança e um repasse
   pendentes; o atendimento não armazena valores financeiros próprios
 - alunos e colaboradores não são excluídos; o campo `ativo` controla ativação e
@@ -132,7 +142,7 @@ Dentro de `server/`:
 - respostas de erro usam `org.springframework.http.ProblemDetail`
 - `GlobalExceptionHandler` em `aprimorar.config` tem baixa precedência e trata
   apenas erros transversais
-- handlers de `instituicao`, `atendimentos_individuais` e `financeiro/despesas`
+- handlers de `agendamento`, `atendimentos_individuais` e `financeiro/despesas`
   ficam nos pacotes dos respectivos módulos e tratam suas exceções próprias
 - `AuthException` é tratada pelo handler global como `401 Unauthorized`
 - anotações OpenAPI reutilizáveis ficam em `common/openapi`; os controllers de

@@ -8,12 +8,14 @@ import { EmptyCard } from "@/components/ui/EmptyCard";
 import { ErrorCard } from "@/components/ui/ErrorCard";
 import { LoadingSkeleton } from "@/components/ui/LoadingSkeleton";
 import { PaymentStatusBadge } from "@/components/ui/PaymentStatusBadge";
-import { useBuscarLoteDeCobrancaPorId } from "@/lib/api/generated/hooks/cobranças individuais/useBuscarLoteDeCobrancaPorId";
+import { useBuscarLoteDeCobrancaPorId } from "@/lib/api/generated/hooks/cobranças de alunos/useBuscarLoteDeCobrancaPorId";
 import type { CobrancaLoteDetalheResponse } from "@/lib/api/generated/types/CobrancaLoteDetalheResponse";
 import { formaPagamentoLabels } from "@/lib/constants/pagamento-constants";
 import { formatDateShortYear, formatTime } from "@/lib/utils/date-utils";
 import { brl } from "@/lib/utils/formatter";
 
+
+//TODO: isso aqui não tá bom. cabe refatoração nesse código
 type CobrancaLoteDetailsProps = {
   loteId: string;
 };

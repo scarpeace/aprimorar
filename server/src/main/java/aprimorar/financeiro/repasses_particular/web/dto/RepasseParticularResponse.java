@@ -1,0 +1,41 @@
+package aprimorar.financeiro.repasses_particular.web.dto;
+
+import aprimorar.financeiro.repasses_particular.domain.RepasseParticular;
+import aprimorar.financeiro.repasses_particular.domain.enums.StatusRepasseParticular;
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotNull;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+
+@Schema(description = "Repasse particular")
+public record RepasseParticularResponse(
+    @NotNull
+    @Schema(nullable = false)
+    Long id,
+
+    @NotNull
+    @Schema(nullable = false)
+    Long atendimentoId,
+
+    @NotNull
+    @Schema(nullable = false)
+    BigDecimal valor,
+
+    @NotNull
+    @Schema(nullable = false)
+    StatusRepasseParticular status,
+
+    @NotNull
+    @Schema(nullable = false)
+    LocalDateTime createdAt
+) {
+    public static RepasseParticularResponse from(RepasseParticular repasse) {
+        return new RepasseParticularResponse(
+            repasse.getId(),
+            repasse.getAtendimentoId(),
+            repasse.getValor(),
+            repasse.statusAtual(),
+            repasse.getCreatedAt()
+        );
+    }
+}

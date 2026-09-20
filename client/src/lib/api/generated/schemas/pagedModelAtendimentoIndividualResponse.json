@@ -70,7 +70,7 @@
               "loteId": { "type": "string", "format": "uuid", "nullable": true }
             },
             "description": "Resumo da cobrança do atendimento",
-            "x-readme-ref-name": "CobrancaResumo"
+            "x-readme-ref-name": "CobrancaAlunoResumo"
           },
           "repasse": {
             "required": ["id", "status", "valor"],

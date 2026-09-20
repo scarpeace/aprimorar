@@ -12,7 +12,7 @@ import { PaymentStatusIndicator } from "@/components/ui/PaymentStatusIndicator";
 import { SearchInput } from "@/components/ui/SearchInput";
 import { SelectField } from "@/components/ui/SelectField";
 import { AlunoAtendimentoCard } from "@/features/alunos/components/atendimentos/AlunoAtendimentoCard";
-import { RegistrarCobrancaButton } from "@/features/cobrancas/components/RegistrarCobrancaButton";
+import { RegistrarPagamentoAlunoButton } from "@/features/cobrancas/components/RegistrarPagamentoAlunoButton";
 import { AtendimentoTipoBadge } from "@/features/atendimentos/components/AtendimentoTipoBadge";
 import { useBuscarAtendimentosIndividuais } from "@/lib/api/generated/hooks/atendimentos individuais/useBuscarAtendimentosIndividuais";
 import type { BuscarAtendimentosIndividuaisQueryParamsTipoEnumKey } from "@/lib/api/generated/types/BuscarAtendimentosIndividuais";
@@ -74,7 +74,7 @@ export function AlunoAtendimentosTable({ alunoId }: Readonly<AlunoAtendimentosTa
         </div>
 
         <CardActions>
-          <RegistrarCobrancaButton alunoId={alunoId} />
+          <RegistrarPagamentoAlunoButton alunoId={alunoId} />
         </CardActions>
       </CardHeader>
 

@@ -1,13 +1,13 @@
 # Decisões arquiteturais consolidadas
 
-Este documento registra as decisões consolidadas da refatoração que dividiu o sistema nos módulos `instituicao` e `financeiro`. Os planos executáveis foram concluídos e removidos; este arquivo permanece como referência de arquitetura e regras de negócio.
+Este documento registra as decisões consolidadas da refatoração que dividiu o sistema nos módulos `agendamento` e `financeiro`. Os planos executáveis foram concluídos e removidos; este arquivo permanece como referência de arquitetura e regras de negócio.
 
 ## Decisões fechadas
 
 ### Fronteiras
 
 ```text
-aprimorar.instituicao
+aprimorar.agendamento
 ├── alunos
 ├── colaboradores
 └── atendimentos_individuais
@@ -20,22 +20,22 @@ aprimorar.financeiro
 ```
 
 - Matrículas não serão criadas nesta refatoração.
-- Endereço continua como value object compartilhado por aluno e colaborador dentro de instituição.
+- Endereço continua como value object compartilhado por aluno e colaborador dentro de agendamento.
 - Responsável continua como value object pertencente ao aluno.
 - Cobranças, repasses e despesas pertencem ao financeiro.
-- Alunos, colaboradores e atendimentos pertencem à instituição.
+- Alunos, colaboradores e atendimentos pertencem ao agendamento.
 
 ### Direção das dependências
 
 ```text
-instituicao -> financeiro.api
+agendamento -> financeiro.api
 ```
 
 - O financeiro não importa classes de instituição.
 - O financeiro armazena `atendimentoId`, `alunoId` e `colaboradorId` como referências escalares.
 - As foreign keys entre tabelas dos módulos serão mantidas.
 - Não serão criados relacionamentos JPA entre instituição e financeiro.
-- A instituição usa `CobrancaApi` e `RepasseApi` separadamente.
+- O agendamento usa `CobrancaApi` e `RepasseApi` separadamente.
 - Não será criada uma `FinanceiroApi` genérica.
 
 ### Transações
@@ -77,13 +77,16 @@ instituicao -> financeiro.api
 
 ### Consultas
 
-- A instituição compõe os responses de atendimento.
+- O agendamento compõe os responses de atendimento.
 - Aluno e colaborador podem ser relações JPA de atendimento porque estão no mesmo módulo.
 - Dados financeiros são obtidos em lote pelas APIs internas de cobrança e repasse.
 - Não haverá consulta financeira por linha.
 - `vw_atendimentos_individuais`, sua entidade e seu repository foram removidos.
 
 ### Rotas
+
+O namespace Java do módulo é `aprimorar.agendamento`. Os prefixos HTTP abaixo
+continuam com `/instituicao` temporariamente para preservar o contrato atual.
 
 Estado-alvo:
 

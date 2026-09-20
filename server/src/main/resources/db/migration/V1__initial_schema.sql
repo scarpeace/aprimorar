@@ -19,8 +19,8 @@ CREATE INDEX idx_refresh_tokens_user_id ON refresh_tokens(user_id);
 CREATE TABLE alunos (
   id UUID NOT NULL PRIMARY KEY,
   nome VARCHAR(50) NOT NULL,
-  cpf VARCHAR(255) NOT NULL UNIQUE,
-  email VARCHAR(255) NOT NULL UNIQUE,
+  cpf VARCHAR(255) NOT NULL,
+  email VARCHAR(255) NOT NULL,
   data_nascimento DATE NOT NULL,
   telefone VARCHAR(20) NOT NULL,
   escola VARCHAR(255),
@@ -42,7 +42,9 @@ CREATE TABLE alunos (
   endereco_cep VARCHAR(8) NOT NULL,
   endereco_complemento VARCHAR(255),
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP
+  updated_at TIMESTAMP,
+  CONSTRAINT uk_alunos_cpf UNIQUE (cpf),
+  CONSTRAINT uk_alunos_email UNIQUE (email)
 );
 
 CREATE INDEX idx_alunos_nome ON alunos(nome);
@@ -91,19 +93,18 @@ CREATE TABLE atendimentos_individuais (
   status VARCHAR(20) NOT NULL,
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP,
+  CONSTRAINT ck_atendimentos_individuais_periodo
+    CHECK (data_hora_fim >= data_hora_inicio),
   CONSTRAINT ck_atendimentos_individuais_status
     CHECK (status IN ('AGENDADO', 'REALIZADO', 'CANCELADO'))
 );
 
 CREATE INDEX idx_atendimentos_individuais_tipo ON atendimentos_individuais(tipo);
 
-CREATE TABLE cobrancas_alunos (
-  id BIGSERIAL NOT NULL PRIMARY KEY,
-  atendimento_id BIGINT NOT NULL REFERENCES atendimentos_individuais(id),
+CREATE TABLE pagamentos_alunos (
+  id UUID NOT NULL PRIMARY KEY,
   aluno_id UUID NOT NULL REFERENCES alunos(id),
-  valor NUMERIC(10, 2) NOT NULL CHECK (valor > 0),
-  status VARCHAR(20) NOT NULL DEFAULT 'PENDENTE',
-  data_pagamento TIMESTAMP,
+  data_pagamento DATE NOT NULL,
   forma_pagamento VARCHAR(40) CHECK (
     forma_pagamento IS NULL OR forma_pagamento IN (
       'PIX',
@@ -115,49 +116,103 @@ CREATE TABLE cobrancas_alunos (
     )
   ),
   comprovante_url VARCHAR(500),
-  lote_id UUID,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX idx_pagamentos_alunos_aluno_data
+  ON pagamentos_alunos(aluno_id, data_pagamento);
+
+CREATE TABLE cobrancas_alunos (
+  id BIGSERIAL NOT NULL PRIMARY KEY,
+  aluno_id UUID NOT NULL REFERENCES alunos(id),
+  origem_id BIGINT NOT NULL,
+  origem_tipo VARCHAR(40) NOT NULL CHECK (
+    origem_tipo IN ('ATENDIMENTO_INDIVIDUAL', 'ATENDIMENTO_TURMA')
+  ),
+  valor_total NUMERIC(10, 2) NOT NULL CHECK (valor_total >= 50),
+  status VARCHAR(20) NOT NULL DEFAULT 'PENDENTE',
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP,
   CONSTRAINT ck_cobrancas_alunos_status
-    CHECK (status IN ('PENDENTE', 'PAGO', 'CANCELADO'))
+    CHECK (status IN ('PENDENTE', 'PARCIALMENTE_PAGA', 'PAGA', 'CANCELADA'))
 );
 
-CREATE UNIQUE INDEX uk_cobrancas_alunos_atendimento_id
-  ON cobrancas_alunos(atendimento_id);
+CREATE UNIQUE INDEX uk_cobrancas_alunos_origem
+  ON cobrancas_alunos(aluno_id, origem_tipo, origem_id);
 CREATE INDEX idx_cobrancas_alunos_aluno_status
   ON cobrancas_alunos(aluno_id, status);
-CREATE INDEX idx_cobrancas_alunos_lote_id
-  ON cobrancas_alunos(lote_id);
+CREATE INDEX idx_cobrancas_alunos_origem
+  ON cobrancas_alunos(origem_tipo, origem_id);
 
-CREATE TABLE repasses_individuais (
+CREATE TABLE parcelas_alunos (
+  id BIGSERIAL NOT NULL PRIMARY KEY,
+  cobranca_id BIGINT NOT NULL REFERENCES cobrancas_alunos(id) ON DELETE CASCADE,
+  pagamento_id UUID REFERENCES pagamentos_alunos(id),
+  numero_parcela INTEGER NOT NULL CHECK (numero_parcela > 0),
+  valor NUMERIC(10, 2) NOT NULL CHECK (valor > 0),
+  data_vencimento DATE,
+  status VARCHAR(20) NOT NULL DEFAULT 'PENDENTE',
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP,
+  CONSTRAINT ck_parcelas_alunos_status
+    CHECK (status IN ('PENDENTE', 'PAGA', 'CANCELADA')),
+  CONSTRAINT ck_parcelas_alunos_pagamento
+    CHECK (
+      (status = 'PAGA' AND pagamento_id IS NOT NULL)
+      OR
+      (status IN ('PENDENTE', 'CANCELADA') AND pagamento_id IS NULL)
+    ),
+  CONSTRAINT uk_parcelas_alunos_cobranca_numero
+    UNIQUE (cobranca_id, numero_parcela)
+);
+
+CREATE INDEX idx_parcelas_alunos_pagamento_id
+  ON parcelas_alunos(pagamento_id);
+CREATE INDEX idx_parcelas_alunos_cobranca_status
+  ON parcelas_alunos(cobranca_id, status);
+
+CREATE TABLE pagamentos_particular (
+  id UUID NOT NULL PRIMARY KEY,
+  data_pagamento DATE NOT NULL,
+  valor_total NUMERIC(10, 2) NOT NULL CHECK (valor_total >= 0),
+  forma_pagamento VARCHAR(40) NOT NULL CHECK (
+    forma_pagamento IN (
+      'PIX',
+      'DINHEIRO',
+      'CARTAO_CREDITO',
+      'CARTAO_DEBITO',
+      'BOLETO',
+      'TRANSFERENCIA'
+    )
+  ),
+  comprovante_url VARCHAR(500),
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP
+);
+
+CREATE TABLE repasses_particular (
   id BIGSERIAL NOT NULL PRIMARY KEY,
   atendimento_id BIGINT NOT NULL UNIQUE REFERENCES atendimentos_individuais(id),
   colaborador_id UUID NOT NULL REFERENCES colaboradores(id),
   valor NUMERIC(10, 2) NOT NULL CHECK (valor >= 0),
   status VARCHAR(20) NOT NULL DEFAULT 'PENDENTE',
-  data_repasse TIMESTAMP,
-  forma_pagamento VARCHAR(40) CHECK (
-    forma_pagamento IS NULL OR forma_pagamento IN (
-      'PIX',
-      'DINHEIRO',
-      'CARTAO_CREDITO',
-      'CARTAO_DEBITO',
-      'BOLETO',
-      'TRANSFERENCIA'
-    )
-  ),
-  comprovante_url VARCHAR(500),
-  lote_id UUID,
+  pagamento_id UUID REFERENCES pagamentos_particular(id) ON DELETE SET NULL,
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP,
-  CONSTRAINT ck_repasses_individuais_status
-    CHECK (status IN ('PENDENTE', 'PAGO', 'CANCELADO'))
+  CONSTRAINT ck_repasses_particular_status
+    CHECK (status IN ('PENDENTE', 'PAGO', 'CANCELADO')),
+  CONSTRAINT ck_repasses_particular_pagamento
+    CHECK (
+      (status = 'PAGO' AND pagamento_id IS NOT NULL)
+      OR
+      (status IN ('PENDENTE', 'CANCELADO') AND pagamento_id IS NULL)
+    )
 );
 
-CREATE INDEX idx_repasses_individuais_colaborador_status
-  ON repasses_individuais(colaborador_id, status);
-CREATE INDEX idx_repasses_individuais_lote_id
-  ON repasses_individuais(lote_id);
+CREATE INDEX idx_repasses_particular_colaborador_status
+  ON repasses_particular(colaborador_id, status);
+CREATE INDEX idx_repasses_particular_pagamento_id
+  ON repasses_particular(pagamento_id);
 
 CREATE TABLE despesas (
   id BIGSERIAL NOT NULL PRIMARY KEY,

@@ -4,7 +4,7 @@
  */
 
 import { alunoResumoSchema } from "./alunoResumoSchema.ts";
-import { cobrancaResumoSchema } from "./cobrancaResumoSchema.ts";
+import { cobrancaAlunoResumoSchema } from "./cobrancaAlunoResumoSchema.ts";
 import { colaboradorResumoSchema } from "./colaboradorResumoSchema.ts";
 import { repasseResumoSchema } from "./repasseResumoSchema.ts";
 import { z } from "zod/v4";
@@ -28,7 +28,7 @@ export const atendimentoIndividualResponseSchema = z
       return colaboradorResumoSchema.describe("Resumo do colaborador vinculado ao atendimento");
     },
     get cobranca() {
-      return cobrancaResumoSchema.describe("Resumo da cobrança do atendimento");
+      return cobrancaAlunoResumoSchema.describe("Resumo da cobrança do atendimento");
     },
     get repasse() {
       return repasseResumoSchema.describe("Resumo do repasse do atendimento");

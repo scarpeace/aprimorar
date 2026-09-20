@@ -1,7 +1,0 @@
-{
-  "required": ["cobrancaIds"],
-  "type": "object",
-  "properties": { "cobrancaIds": { "minItems": 1, "type": "array", "items": { "type": "integer", "format": "int64" } } },
-  "description": "Cobranças pagas que devem voltar para pendente",
-  "x-readme-ref-name": "CancelarCobrancasIndividualRequest"
-}

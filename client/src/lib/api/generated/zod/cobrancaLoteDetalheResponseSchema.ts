@@ -21,7 +21,7 @@ export const cobrancaLoteDetalheResponseSchema = z
     valorTotal: z.number(),
     quantidadeCobrancas: z.int(),
     get cobrancas() {
-      return z.array(cobrancaLoteItemSchema.describe("Cobrança individual pertencente a um lote de pagamento"));
+      return z.array(cobrancaLoteItemSchema.describe("Cobrança de aluno pertencente a um lote de pagamento"));
     },
   })
   .describe("Detalhes de um lote de cobranças pagas");

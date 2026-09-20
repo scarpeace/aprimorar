@@ -8,7 +8,7 @@ import { EmptyCard } from "@/components/ui/EmptyCard";
 import { ErrorCard } from "@/components/ui/ErrorCard";
 import { LoadingSkeleton } from "@/components/ui/LoadingSkeleton";
 import { Pagination } from "@/components/ui/Pagination";
-import { useBuscarLotesDeCobranca } from "@/lib/api/generated/hooks/cobranças individuais/useBuscarLotesDeCobranca";
+import { useBuscarLotesDeCobranca } from "@/lib/api/generated/hooks/cobranças de alunos/useBuscarLotesDeCobranca";
 import { formatDateShortYear, formatTime } from "@/lib/utils/date-utils";
 import { brl } from "@/lib/utils/formatter";
 

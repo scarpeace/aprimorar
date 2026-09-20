@@ -17,8 +17,8 @@ Container_Boundary("AprimorarAplication.AprimorarAplication_boundary", "Aprimora
 
 Rel(AprimorarAplication.AprimorarAplication.Instituição, AprimorarAplication.AprimorarAplication.Common, "depends on", $techn="", $tags="", $link="")
 Rel(AprimorarAplication.AprimorarAplication.Instituição, AprimorarAplication.AprimorarAplication.Financeiro, "uses", $techn="", $tags="", $link="")
-Rel(AprimorarAplication.AprimorarAplication.Financeiro, AprimorarAplication.AprimorarAplication.Common, "depends on", $techn="", $tags="", $link="")
 Rel(AprimorarAplication.AprimorarAplication.Autenticação, AprimorarAplication.AprimorarAplication.Common, "depends on", $techn="", $tags="", $link="")
+Rel(AprimorarAplication.AprimorarAplication.Financeiro, AprimorarAplication.AprimorarAplication.Common, "depends on", $techn="", $tags="", $link="")
 
 SHOW_LEGEND(true)
 @enduml

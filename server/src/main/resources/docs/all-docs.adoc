@@ -17,7 +17,6 @@ include::module-auth.adoc[]
 plantuml::module-financeiro.puml[,,format=svg]
 include::module-financeiro.adoc[]
 
-== Instituição
-plantuml::module-instituicao.puml[,,format=svg]
-include::module-instituicao.adoc[]
-
+== Agendamento
+plantuml::module-agendamento.puml[,,format=svg]
+include::module-agendamento.adoc[]

@@ -7,6 +7,6 @@
     "valor": { "type": "number" },
     "status": { "type": "string", "enum": ["PENDENTE", "PAGO", "CANCELADO"] }
   },
-  "description": "Cobrança individual pertencente a um lote de pagamento",
+  "description": "Cobrança de aluno pertencente a um lote de pagamento",
   "x-readme-ref-name": "CobrancaLoteItem"
 }

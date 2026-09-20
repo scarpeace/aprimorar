@@ -16,12 +16,12 @@ export type { GetCurrentUserQueryKey } from "./hooks/autentica\u00E7\u00E3o/useG
 export type { LoginMutationKey } from "./hooks/autentica\u00E7\u00E3o/useLogin.ts";
 export type { LogoutMutationKey } from "./hooks/autentica\u00E7\u00E3o/useLogout.ts";
 export type { RefreshAccessTokenMutationKey } from "./hooks/autentica\u00E7\u00E3o/useRefreshAccessToken.ts";
-export type { BuscarCobrancaIndividualPorIdQueryKey } from "./hooks/cobran\u00E7as individuais/useBuscarCobrancaIndividualPorId.ts";
-export type { BuscarCobrancasIndividuaisQueryKey } from "./hooks/cobran\u00E7as individuais/useBuscarCobrancasIndividuais.ts";
-export type { BuscarLoteDeCobrancaPorIdQueryKey } from "./hooks/cobran\u00E7as individuais/useBuscarLoteDeCobrancaPorId.ts";
-export type { BuscarLotesDeCobrancaQueryKey } from "./hooks/cobran\u00E7as individuais/useBuscarLotesDeCobranca.ts";
-export type { CancelarPagamentoCobrancasIndividuaisMutationKey } from "./hooks/cobran\u00E7as individuais/useCancelarPagamentoCobrancasIndividuais.ts";
-export type { RegistrarPagamentoCobrancasIndividuaisMutationKey } from "./hooks/cobran\u00E7as individuais/useRegistrarPagamentoCobrancasIndividuais.ts";
+export type { BuscarCobrancaAlunoPorIdQueryKey } from "./hooks/cobran\u00E7as de alunos/useBuscarCobrancaAlunoPorId.ts";
+export type { BuscarCobrancasAlunosQueryKey } from "./hooks/cobran\u00E7as de alunos/useBuscarCobrancasAlunos.ts";
+export type { BuscarLoteDeCobrancaPorIdQueryKey } from "./hooks/cobran\u00E7as de alunos/useBuscarLoteDeCobrancaPorId.ts";
+export type { BuscarLotesDeCobrancaQueryKey } from "./hooks/cobran\u00E7as de alunos/useBuscarLotesDeCobranca.ts";
+export type { CancelarPagamentoAlunoMutationKey } from "./hooks/cobran\u00E7as de alunos/useCancelarPagamentoAluno.ts";
+export type { RegistrarPagamentoAlunoMutationKey } from "./hooks/cobran\u00E7as de alunos/useRegistrarPagamentoAluno.ts";
 export type { ActivateColaboradorMutationKey } from "./hooks/colaborador/useActivateColaborador.ts";
 export type { CreateColaboradorMutationKey } from "./hooks/colaborador/useCreateColaborador.ts";
 export type { DeactivateColaboradorMutationKey } from "./hooks/colaborador/useDeactivateColaborador.ts";
@@ -146,25 +146,25 @@ export type {
   BuscarCalendarioAtendimentosIndividuaisQueryResponse,
 } from "./types/BuscarCalendarioAtendimentosIndividuais.ts";
 export type {
-  BuscarCobrancaIndividualPorId200,
-  BuscarCobrancaIndividualPorId401,
-  BuscarCobrancaIndividualPorId404,
-  BuscarCobrancaIndividualPorId500,
-  BuscarCobrancaIndividualPorIdPathParams,
-  BuscarCobrancaIndividualPorIdQuery,
-  BuscarCobrancaIndividualPorIdQueryResponse,
-} from "./types/BuscarCobrancaIndividualPorId.ts";
+  BuscarCobrancaAlunoPorId200,
+  BuscarCobrancaAlunoPorId401,
+  BuscarCobrancaAlunoPorId404,
+  BuscarCobrancaAlunoPorId500,
+  BuscarCobrancaAlunoPorIdPathParams,
+  BuscarCobrancaAlunoPorIdQuery,
+  BuscarCobrancaAlunoPorIdQueryResponse,
+} from "./types/BuscarCobrancaAlunoPorId.ts";
 export type {
-  BuscarCobrancasIndividuais200,
-  BuscarCobrancasIndividuais400,
-  BuscarCobrancasIndividuais401,
-  BuscarCobrancasIndividuais500,
-  BuscarCobrancasIndividuaisQuery,
-  BuscarCobrancasIndividuaisQueryParams,
-  BuscarCobrancasIndividuaisQueryParamsFormaPagamentoEnumKey,
-  BuscarCobrancasIndividuaisQueryParamsStatusEnumKey,
-  BuscarCobrancasIndividuaisQueryResponse,
-} from "./types/BuscarCobrancasIndividuais.ts";
+  BuscarCobrancasAlunos200,
+  BuscarCobrancasAlunos400,
+  BuscarCobrancasAlunos401,
+  BuscarCobrancasAlunos500,
+  BuscarCobrancasAlunosQuery,
+  BuscarCobrancasAlunosQueryParams,
+  BuscarCobrancasAlunosQueryParamsFormaPagamentoEnumKey,
+  BuscarCobrancasAlunosQueryParamsStatusEnumKey,
+  BuscarCobrancasAlunosQueryResponse,
+} from "./types/BuscarCobrancasAlunos.ts";
 export type {
   BuscarLoteDeCobrancaPorId200,
   BuscarLoteDeCobrancaPorId401,
@@ -231,17 +231,17 @@ export type {
   CancelarAtendimentoIndividualMutationResponse,
   CancelarAtendimentoIndividualPathParams,
 } from "./types/CancelarAtendimentoIndividual.ts";
-export type { CancelarCobrancasIndividualRequest } from "./types/CancelarCobrancasIndividualRequest.ts";
 export type {
-  CancelarPagamentoCobrancasIndividuais204,
-  CancelarPagamentoCobrancasIndividuais400,
-  CancelarPagamentoCobrancasIndividuais401,
-  CancelarPagamentoCobrancasIndividuais404,
-  CancelarPagamentoCobrancasIndividuais500,
-  CancelarPagamentoCobrancasIndividuaisMutation,
-  CancelarPagamentoCobrancasIndividuaisMutationRequest,
-  CancelarPagamentoCobrancasIndividuaisMutationResponse,
-} from "./types/CancelarPagamentoCobrancasIndividuais.ts";
+  CancelarPagamentoAluno204,
+  CancelarPagamentoAluno400,
+  CancelarPagamentoAluno401,
+  CancelarPagamentoAluno404,
+  CancelarPagamentoAluno500,
+  CancelarPagamentoAlunoMutation,
+  CancelarPagamentoAlunoMutationRequest,
+  CancelarPagamentoAlunoMutationResponse,
+} from "./types/CancelarPagamentoAluno.ts";
+export type { CancelarPagamentoAlunoRequest } from "./types/CancelarPagamentoAlunoRequest.ts";
 export type {
   CancelarPagamentoDespesa200,
   CancelarPagamentoDespesa401,
@@ -263,17 +263,17 @@ export type {
   CancelarRepassesIndividuaisMutationResponse,
 } from "./types/CancelarRepassesIndividuais.ts";
 export type {
-  CobrancaIndividualResponse,
-  CobrancaIndividualResponseFormaPagamentoEnumKey,
-  CobrancaIndividualResponseStatusEnumKey,
-} from "./types/CobrancaIndividualResponse.ts";
+  CobrancaAlunoResponse,
+  CobrancaAlunoResponseFormaPagamentoEnumKey,
+  CobrancaAlunoResponseStatusEnumKey,
+} from "./types/CobrancaAlunoResponse.ts";
+export type { CobrancaAlunoResumo } from "./types/CobrancaAlunoResumo.ts";
 export type {
   CobrancaLoteDetalheResponse,
   CobrancaLoteDetalheResponseFormaPagamentoEnumKey,
 } from "./types/CobrancaLoteDetalheResponse.ts";
 export type { CobrancaLoteItem, CobrancaLoteItemStatusEnumKey } from "./types/CobrancaLoteItem.ts";
 export type { CobrancaLoteResponse, CobrancaLoteResponseFormaPagamentoEnumKey } from "./types/CobrancaLoteResponse.ts";
-export type { CobrancaResumo } from "./types/CobrancaResumo.ts";
 export type {
   ColaboradorDetailResponseDTO,
   ColaboradorDetailResponseDTOFuncaoEnumKey,
@@ -489,7 +489,7 @@ export type {
 export type { PageMetadata } from "./types/PageMetadata.ts";
 export type { PagedModelAlunoListResponseDTO } from "./types/PagedModelAlunoListResponseDTO.ts";
 export type { PagedModelAtendimentoIndividualResponse } from "./types/PagedModelAtendimentoIndividualResponse.ts";
-export type { PagedModelCobrancaIndividualResponse } from "./types/PagedModelCobrancaIndividualResponse.ts";
+export type { PagedModelCobrancaAlunoResponse } from "./types/PagedModelCobrancaAlunoResponse.ts";
 export type { PagedModelCobrancaLoteResponse } from "./types/PagedModelCobrancaLoteResponse.ts";
 export type { PagedModelColaboradorListResponseDTO } from "./types/PagedModelColaboradorListResponseDTO.ts";
 export type { PagedModelDespesaResponse } from "./types/PagedModelDespesaResponse.ts";
@@ -512,19 +512,19 @@ export type {
   RefreshAccessTokenMutationResponse,
 } from "./types/RefreshAccessToken.ts";
 export type {
-  RegistrarPagamentoCobrancasIndividuais204,
-  RegistrarPagamentoCobrancasIndividuais400,
-  RegistrarPagamentoCobrancasIndividuais401,
-  RegistrarPagamentoCobrancasIndividuais404,
-  RegistrarPagamentoCobrancasIndividuais500,
-  RegistrarPagamentoCobrancasIndividuaisMutation,
-  RegistrarPagamentoCobrancasIndividuaisMutationRequest,
-  RegistrarPagamentoCobrancasIndividuaisMutationResponse,
-} from "./types/RegistrarPagamentoCobrancasIndividuais.ts";
+  RegistrarPagamentoAluno204,
+  RegistrarPagamentoAluno400,
+  RegistrarPagamentoAluno401,
+  RegistrarPagamentoAluno404,
+  RegistrarPagamentoAluno500,
+  RegistrarPagamentoAlunoMutation,
+  RegistrarPagamentoAlunoMutationRequest,
+  RegistrarPagamentoAlunoMutationResponse,
+} from "./types/RegistrarPagamentoAluno.ts";
 export type {
-  RegistrarPagamentoIndividualRequest,
-  RegistrarPagamentoIndividualRequestFormaPagamentoEnumKey,
-} from "./types/RegistrarPagamentoIndividualRequest.ts";
+  RegistrarPagamentoAlunoRequest,
+  RegistrarPagamentoAlunoRequestFormaPagamentoEnumKey,
+} from "./types/RegistrarPagamentoAlunoRequest.ts";
 export type {
   RegistrarRepasseIndividualRequest,
   RegistrarRepasseIndividualRequestFormaPagamentoEnumKey,
@@ -664,30 +664,30 @@ export { refreshAccessToken } from "./hooks/autentica\u00E7\u00E3o/useRefreshAcc
 export { refreshAccessTokenMutationKey } from "./hooks/autentica\u00E7\u00E3o/useRefreshAccessToken.ts";
 export { refreshAccessTokenMutationOptions } from "./hooks/autentica\u00E7\u00E3o/useRefreshAccessToken.ts";
 export { useRefreshAccessToken } from "./hooks/autentica\u00E7\u00E3o/useRefreshAccessToken.ts";
-export { buscarCobrancaIndividualPorId } from "./hooks/cobran\u00E7as individuais/useBuscarCobrancaIndividualPorId.ts";
-export { buscarCobrancaIndividualPorIdQueryKey } from "./hooks/cobran\u00E7as individuais/useBuscarCobrancaIndividualPorId.ts";
-export { buscarCobrancaIndividualPorIdQueryOptions } from "./hooks/cobran\u00E7as individuais/useBuscarCobrancaIndividualPorId.ts";
-export { useBuscarCobrancaIndividualPorId } from "./hooks/cobran\u00E7as individuais/useBuscarCobrancaIndividualPorId.ts";
-export { buscarCobrancasIndividuais } from "./hooks/cobran\u00E7as individuais/useBuscarCobrancasIndividuais.ts";
-export { buscarCobrancasIndividuaisQueryKey } from "./hooks/cobran\u00E7as individuais/useBuscarCobrancasIndividuais.ts";
-export { buscarCobrancasIndividuaisQueryOptions } from "./hooks/cobran\u00E7as individuais/useBuscarCobrancasIndividuais.ts";
-export { useBuscarCobrancasIndividuais } from "./hooks/cobran\u00E7as individuais/useBuscarCobrancasIndividuais.ts";
-export { buscarLoteDeCobrancaPorId } from "./hooks/cobran\u00E7as individuais/useBuscarLoteDeCobrancaPorId.ts";
-export { buscarLoteDeCobrancaPorIdQueryKey } from "./hooks/cobran\u00E7as individuais/useBuscarLoteDeCobrancaPorId.ts";
-export { buscarLoteDeCobrancaPorIdQueryOptions } from "./hooks/cobran\u00E7as individuais/useBuscarLoteDeCobrancaPorId.ts";
-export { useBuscarLoteDeCobrancaPorId } from "./hooks/cobran\u00E7as individuais/useBuscarLoteDeCobrancaPorId.ts";
-export { buscarLotesDeCobranca } from "./hooks/cobran\u00E7as individuais/useBuscarLotesDeCobranca.ts";
-export { buscarLotesDeCobrancaQueryKey } from "./hooks/cobran\u00E7as individuais/useBuscarLotesDeCobranca.ts";
-export { buscarLotesDeCobrancaQueryOptions } from "./hooks/cobran\u00E7as individuais/useBuscarLotesDeCobranca.ts";
-export { useBuscarLotesDeCobranca } from "./hooks/cobran\u00E7as individuais/useBuscarLotesDeCobranca.ts";
-export { cancelarPagamentoCobrancasIndividuais } from "./hooks/cobran\u00E7as individuais/useCancelarPagamentoCobrancasIndividuais.ts";
-export { cancelarPagamentoCobrancasIndividuaisMutationKey } from "./hooks/cobran\u00E7as individuais/useCancelarPagamentoCobrancasIndividuais.ts";
-export { cancelarPagamentoCobrancasIndividuaisMutationOptions } from "./hooks/cobran\u00E7as individuais/useCancelarPagamentoCobrancasIndividuais.ts";
-export { useCancelarPagamentoCobrancasIndividuais } from "./hooks/cobran\u00E7as individuais/useCancelarPagamentoCobrancasIndividuais.ts";
-export { registrarPagamentoCobrancasIndividuais } from "./hooks/cobran\u00E7as individuais/useRegistrarPagamentoCobrancasIndividuais.ts";
-export { registrarPagamentoCobrancasIndividuaisMutationKey } from "./hooks/cobran\u00E7as individuais/useRegistrarPagamentoCobrancasIndividuais.ts";
-export { registrarPagamentoCobrancasIndividuaisMutationOptions } from "./hooks/cobran\u00E7as individuais/useRegistrarPagamentoCobrancasIndividuais.ts";
-export { useRegistrarPagamentoCobrancasIndividuais } from "./hooks/cobran\u00E7as individuais/useRegistrarPagamentoCobrancasIndividuais.ts";
+export { buscarCobrancaAlunoPorId } from "./hooks/cobran\u00E7as de alunos/useBuscarCobrancaAlunoPorId.ts";
+export { buscarCobrancaAlunoPorIdQueryKey } from "./hooks/cobran\u00E7as de alunos/useBuscarCobrancaAlunoPorId.ts";
+export { buscarCobrancaAlunoPorIdQueryOptions } from "./hooks/cobran\u00E7as de alunos/useBuscarCobrancaAlunoPorId.ts";
+export { useBuscarCobrancaAlunoPorId } from "./hooks/cobran\u00E7as de alunos/useBuscarCobrancaAlunoPorId.ts";
+export { buscarCobrancasAlunos } from "./hooks/cobran\u00E7as de alunos/useBuscarCobrancasAlunos.ts";
+export { buscarCobrancasAlunosQueryKey } from "./hooks/cobran\u00E7as de alunos/useBuscarCobrancasAlunos.ts";
+export { buscarCobrancasAlunosQueryOptions } from "./hooks/cobran\u00E7as de alunos/useBuscarCobrancasAlunos.ts";
+export { useBuscarCobrancasAlunos } from "./hooks/cobran\u00E7as de alunos/useBuscarCobrancasAlunos.ts";
+export { buscarLoteDeCobrancaPorId } from "./hooks/cobran\u00E7as de alunos/useBuscarLoteDeCobrancaPorId.ts";
+export { buscarLoteDeCobrancaPorIdQueryKey } from "./hooks/cobran\u00E7as de alunos/useBuscarLoteDeCobrancaPorId.ts";
+export { buscarLoteDeCobrancaPorIdQueryOptions } from "./hooks/cobran\u00E7as de alunos/useBuscarLoteDeCobrancaPorId.ts";
+export { useBuscarLoteDeCobrancaPorId } from "./hooks/cobran\u00E7as de alunos/useBuscarLoteDeCobrancaPorId.ts";
+export { buscarLotesDeCobranca } from "./hooks/cobran\u00E7as de alunos/useBuscarLotesDeCobranca.ts";
+export { buscarLotesDeCobrancaQueryKey } from "./hooks/cobran\u00E7as de alunos/useBuscarLotesDeCobranca.ts";
+export { buscarLotesDeCobrancaQueryOptions } from "./hooks/cobran\u00E7as de alunos/useBuscarLotesDeCobranca.ts";
+export { useBuscarLotesDeCobranca } from "./hooks/cobran\u00E7as de alunos/useBuscarLotesDeCobranca.ts";
+export { cancelarPagamentoAluno } from "./hooks/cobran\u00E7as de alunos/useCancelarPagamentoAluno.ts";
+export { cancelarPagamentoAlunoMutationKey } from "./hooks/cobran\u00E7as de alunos/useCancelarPagamentoAluno.ts";
+export { cancelarPagamentoAlunoMutationOptions } from "./hooks/cobran\u00E7as de alunos/useCancelarPagamentoAluno.ts";
+export { useCancelarPagamentoAluno } from "./hooks/cobran\u00E7as de alunos/useCancelarPagamentoAluno.ts";
+export { registrarPagamentoAluno } from "./hooks/cobran\u00E7as de alunos/useRegistrarPagamentoAluno.ts";
+export { registrarPagamentoAlunoMutationKey } from "./hooks/cobran\u00E7as de alunos/useRegistrarPagamentoAluno.ts";
+export { registrarPagamentoAlunoMutationOptions } from "./hooks/cobran\u00E7as de alunos/useRegistrarPagamentoAluno.ts";
+export { useRegistrarPagamentoAluno } from "./hooks/cobran\u00E7as de alunos/useRegistrarPagamentoAluno.ts";
 export { activateColaborador } from "./hooks/colaborador/useActivateColaborador.ts";
 export { activateColaboradorMutationKey } from "./hooks/colaborador/useActivateColaborador.ts";
 export { activateColaboradorMutationOptions } from "./hooks/colaborador/useActivateColaborador.ts";
@@ -799,12 +799,12 @@ export { atendimentoIndividualResponseStatusEnum } from "./types/AtendimentoIndi
 export { atendimentoIndividualResponseTipoEnum } from "./types/AtendimentoIndividualResponse.ts";
 export { authMeResponseRoleEnum } from "./types/AuthMeResponse.ts";
 export { buscarAtendimentosIndividuaisQueryParamsTipoEnum } from "./types/BuscarAtendimentosIndividuais.ts";
-export { buscarCobrancasIndividuaisQueryParamsFormaPagamentoEnum } from "./types/BuscarCobrancasIndividuais.ts";
-export { buscarCobrancasIndividuaisQueryParamsStatusEnum } from "./types/BuscarCobrancasIndividuais.ts";
+export { buscarCobrancasAlunosQueryParamsFormaPagamentoEnum } from "./types/BuscarCobrancasAlunos.ts";
+export { buscarCobrancasAlunosQueryParamsStatusEnum } from "./types/BuscarCobrancasAlunos.ts";
 export { buscarRepassesIndividuaisQueryParamsFormaPagamentoEnum } from "./types/BuscarRepassesIndividuais.ts";
 export { buscarRepassesIndividuaisQueryParamsStatusEnum } from "./types/BuscarRepassesIndividuais.ts";
-export { cobrancaIndividualResponseFormaPagamentoEnum } from "./types/CobrancaIndividualResponse.ts";
-export { cobrancaIndividualResponseStatusEnum } from "./types/CobrancaIndividualResponse.ts";
+export { cobrancaAlunoResponseFormaPagamentoEnum } from "./types/CobrancaAlunoResponse.ts";
+export { cobrancaAlunoResponseStatusEnum } from "./types/CobrancaAlunoResponse.ts";
 export { cobrancaLoteDetalheResponseFormaPagamentoEnum } from "./types/CobrancaLoteDetalheResponse.ts";
 export { cobrancaLoteItemStatusEnum } from "./types/CobrancaLoteItem.ts";
 export { cobrancaLoteResponseFormaPagamentoEnum } from "./types/CobrancaLoteResponse.ts";
@@ -820,7 +820,7 @@ export { despesaResponseStatusEnum } from "./types/DespesaResponse.ts";
 export { despesaResponseTipoEnum } from "./types/DespesaResponse.ts";
 export { getDespesasQueryParamsCategoriaEnum } from "./types/GetDespesas.ts";
 export { getDespesasQueryParamsFormaPagamentoEnum } from "./types/GetDespesas.ts";
-export { registrarPagamentoIndividualRequestFormaPagamentoEnum } from "./types/RegistrarPagamentoIndividualRequest.ts";
+export { registrarPagamentoAlunoRequestFormaPagamentoEnum } from "./types/RegistrarPagamentoAlunoRequest.ts";
 export { registrarRepasseIndividualRequestFormaPagamentoEnum } from "./types/RegistrarRepasseIndividualRequest.ts";
 export { repasseIndividualResponseFormaPagamentoEnum } from "./types/RepasseIndividualResponse.ts";
 export { repasseIndividualResponseStatusEnum } from "./types/RepasseIndividualResponse.ts";
@@ -908,21 +908,21 @@ export {
   buscarCalendarioAtendimentosIndividuaisQueryResponseSchema,
 } from "./zod/buscarCalendarioAtendimentosIndividuaisSchema.ts";
 export {
-  buscarCobrancaIndividualPorId200Schema,
-  buscarCobrancaIndividualPorId401Schema,
-  buscarCobrancaIndividualPorId404Schema,
-  buscarCobrancaIndividualPorId500Schema,
-  buscarCobrancaIndividualPorIdPathParamsSchema,
-  buscarCobrancaIndividualPorIdQueryResponseSchema,
-} from "./zod/buscarCobrancaIndividualPorIdSchema.ts";
+  buscarCobrancaAlunoPorId200Schema,
+  buscarCobrancaAlunoPorId401Schema,
+  buscarCobrancaAlunoPorId404Schema,
+  buscarCobrancaAlunoPorId500Schema,
+  buscarCobrancaAlunoPorIdPathParamsSchema,
+  buscarCobrancaAlunoPorIdQueryResponseSchema,
+} from "./zod/buscarCobrancaAlunoPorIdSchema.ts";
 export {
-  buscarCobrancasIndividuais200Schema,
-  buscarCobrancasIndividuais400Schema,
-  buscarCobrancasIndividuais401Schema,
-  buscarCobrancasIndividuais500Schema,
-  buscarCobrancasIndividuaisQueryParamsSchema,
-  buscarCobrancasIndividuaisQueryResponseSchema,
-} from "./zod/buscarCobrancasIndividuaisSchema.ts";
+  buscarCobrancasAlunos200Schema,
+  buscarCobrancasAlunos400Schema,
+  buscarCobrancasAlunos401Schema,
+  buscarCobrancasAlunos500Schema,
+  buscarCobrancasAlunosQueryParamsSchema,
+  buscarCobrancasAlunosQueryResponseSchema,
+} from "./zod/buscarCobrancasAlunosSchema.ts";
 export {
   buscarLoteDeCobrancaPorId200Schema,
   buscarLoteDeCobrancaPorId401Schema,
@@ -980,16 +980,16 @@ export {
   cancelarAtendimentoIndividualMutationResponseSchema,
   cancelarAtendimentoIndividualPathParamsSchema,
 } from "./zod/cancelarAtendimentoIndividualSchema.ts";
-export { cancelarCobrancasIndividualRequestSchema } from "./zod/cancelarCobrancasIndividualRequestSchema.ts";
+export { cancelarPagamentoAlunoRequestSchema } from "./zod/cancelarPagamentoAlunoRequestSchema.ts";
 export {
-  cancelarPagamentoCobrancasIndividuais204Schema,
-  cancelarPagamentoCobrancasIndividuais400Schema,
-  cancelarPagamentoCobrancasIndividuais401Schema,
-  cancelarPagamentoCobrancasIndividuais404Schema,
-  cancelarPagamentoCobrancasIndividuais500Schema,
-  cancelarPagamentoCobrancasIndividuaisMutationRequestSchema,
-  cancelarPagamentoCobrancasIndividuaisMutationResponseSchema,
-} from "./zod/cancelarPagamentoCobrancasIndividuaisSchema.ts";
+  cancelarPagamentoAluno204Schema,
+  cancelarPagamentoAluno400Schema,
+  cancelarPagamentoAluno401Schema,
+  cancelarPagamentoAluno404Schema,
+  cancelarPagamentoAluno500Schema,
+  cancelarPagamentoAlunoMutationRequestSchema,
+  cancelarPagamentoAlunoMutationResponseSchema,
+} from "./zod/cancelarPagamentoAlunoSchema.ts";
 export {
   cancelarPagamentoDespesa200Schema,
   cancelarPagamentoDespesa401Schema,
@@ -1008,11 +1008,11 @@ export {
   cancelarRepassesIndividuaisMutationRequestSchema,
   cancelarRepassesIndividuaisMutationResponseSchema,
 } from "./zod/cancelarRepassesIndividuaisSchema.ts";
-export { cobrancaIndividualResponseSchema } from "./zod/cobrancaIndividualResponseSchema.ts";
+export { cobrancaAlunoResponseSchema } from "./zod/cobrancaAlunoResponseSchema.ts";
+export { cobrancaAlunoResumoSchema } from "./zod/cobrancaAlunoResumoSchema.ts";
 export { cobrancaLoteDetalheResponseSchema } from "./zod/cobrancaLoteDetalheResponseSchema.ts";
 export { cobrancaLoteItemSchema } from "./zod/cobrancaLoteItemSchema.ts";
 export { cobrancaLoteResponseSchema } from "./zod/cobrancaLoteResponseSchema.ts";
-export { cobrancaResumoSchema } from "./zod/cobrancaResumoSchema.ts";
 export { colaboradorDetailResponseDTOSchema } from "./zod/colaboradorDetailResponseDTOSchema.ts";
 export { colaboradorListResponseDTOSchema } from "./zod/colaboradorListResponseDTOSchema.ts";
 export { colaboradorRequestDTOSchema } from "./zod/colaboradorRequestDTOSchema.ts";
@@ -1193,7 +1193,7 @@ export {
 export { pageMetadataSchema } from "./zod/pageMetadataSchema.ts";
 export { pagedModelAlunoListResponseDTOSchema } from "./zod/pagedModelAlunoListResponseDTOSchema.ts";
 export { pagedModelAtendimentoIndividualResponseSchema } from "./zod/pagedModelAtendimentoIndividualResponseSchema.ts";
-export { pagedModelCobrancaIndividualResponseSchema } from "./zod/pagedModelCobrancaIndividualResponseSchema.ts";
+export { pagedModelCobrancaAlunoResponseSchema } from "./zod/pagedModelCobrancaAlunoResponseSchema.ts";
 export { pagedModelCobrancaLoteResponseSchema } from "./zod/pagedModelCobrancaLoteResponseSchema.ts";
 export { pagedModelColaboradorListResponseDTOSchema } from "./zod/pagedModelColaboradorListResponseDTOSchema.ts";
 export { pagedModelDespesaResponseSchema } from "./zod/pagedModelDespesaResponseSchema.ts";
@@ -1210,16 +1210,16 @@ export {
   realizarAtendimentoIndividualPathParamsSchema,
 } from "./zod/realizarAtendimentoIndividualSchema.ts";
 export { refreshAccessToken200Schema, refreshAccessTokenMutationResponseSchema } from "./zod/refreshAccessTokenSchema.ts";
+export { registrarPagamentoAlunoRequestSchema } from "./zod/registrarPagamentoAlunoRequestSchema.ts";
 export {
-  registrarPagamentoCobrancasIndividuais204Schema,
-  registrarPagamentoCobrancasIndividuais400Schema,
-  registrarPagamentoCobrancasIndividuais401Schema,
-  registrarPagamentoCobrancasIndividuais404Schema,
-  registrarPagamentoCobrancasIndividuais500Schema,
-  registrarPagamentoCobrancasIndividuaisMutationRequestSchema,
-  registrarPagamentoCobrancasIndividuaisMutationResponseSchema,
-} from "./zod/registrarPagamentoCobrancasIndividuaisSchema.ts";
-export { registrarPagamentoIndividualRequestSchema } from "./zod/registrarPagamentoIndividualRequestSchema.ts";
+  registrarPagamentoAluno204Schema,
+  registrarPagamentoAluno400Schema,
+  registrarPagamentoAluno401Schema,
+  registrarPagamentoAluno404Schema,
+  registrarPagamentoAluno500Schema,
+  registrarPagamentoAlunoMutationRequestSchema,
+  registrarPagamentoAlunoMutationResponseSchema,
+} from "./zod/registrarPagamentoAlunoSchema.ts";
 export { registrarRepasseIndividualRequestSchema } from "./zod/registrarRepasseIndividualRequestSchema.ts";
 export {
   registrarRepassesIndividuais204Schema,

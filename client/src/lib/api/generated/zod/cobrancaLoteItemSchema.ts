@@ -6,7 +6,7 @@
 import { z } from "zod/v4";
 
 /**
- * @description Cobrança individual pertencente a um lote de pagamento
+ * @description Cobrança de aluno pertencente a um lote de pagamento
  */
 export const cobrancaLoteItemSchema = z
   .object({
@@ -15,4 +15,4 @@ export const cobrancaLoteItemSchema = z
     valor: z.number(),
     status: z.enum(["PENDENTE", "PAGO", "CANCELADO"]),
   })
-  .describe("Cobrança individual pertencente a um lote de pagamento");
+  .describe("Cobrança de aluno pertencente a um lote de pagamento");

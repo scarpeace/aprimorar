@@ -12,7 +12,7 @@ export const cobrancaLoteItemStatusEnum = {
 export type CobrancaLoteItemStatusEnumKey = (typeof cobrancaLoteItemStatusEnum)[keyof typeof cobrancaLoteItemStatusEnum];
 
 /**
- * @description Cobrança individual pertencente a um lote de pagamento
+ * @description Cobrança de aluno pertencente a um lote de pagamento
  */
 export type CobrancaLoteItem = {
   /**
