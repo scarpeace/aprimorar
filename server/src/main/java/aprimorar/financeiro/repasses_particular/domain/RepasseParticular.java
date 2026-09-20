@@ -64,8 +64,7 @@ public class RepasseParticular {
     }
 
     public StatusRepasseParticular statusAtual() {
-        if (
-            status == StatusRepasseParticular.PENDENTE
+        if (status == StatusRepasseParticular.PENDENTE
                 && pagamento == null
                 && createdAt != null
                 && createdAt.isBefore(LocalDateTime.now().minusDays(30))
@@ -76,7 +75,7 @@ public class RepasseParticular {
         return status;
     }
 
-    public void validarDisponivelParaPagamento() {
+    private void validarDisponivelParaPagamento() {
         StatusRepasseParticular statusAtual = statusAtual();
 
         if (pagamento != null || statusAtual == StatusRepasseParticular.PAGO) {
@@ -87,9 +86,7 @@ public class RepasseParticular {
             statusAtual != StatusRepasseParticular.PENDENTE
                 && statusAtual != StatusRepasseParticular.ATRASADO
         ) {
-            throw new RepasseParticularDadosInvalidosException(
-                "Somente repasses pendentes ou atrasados podem ser pagos"
-            );
+            throw new RepasseParticularDadosInvalidosException("Somente repasses pendentes ou atrasados podem ser pagos");
         }
     }
 
@@ -102,9 +99,7 @@ public class RepasseParticular {
 
     public void desvincularPagamento() {
         if (status != StatusRepasseParticular.PAGO || pagamento == null) {
-            throw new RepasseParticularDadosInvalidosException(
-                "Repasse não possui pagamento"
-            );
+            throw new RepasseParticularDadosInvalidosException("Repasse não possui pagamento");
         }
 
         this.pagamento = null;
@@ -135,12 +130,12 @@ public class RepasseParticular {
     }
 
     @PrePersist
-    void prePersist() {
+    protected void prePersist() {
         this.createdAt = LocalDateTime.now();
     }
 
     @PreUpdate
-    void preUpdate() {
+    protected void preUpdate() {
         this.updatedAt = LocalDateTime.now();
     }
 }

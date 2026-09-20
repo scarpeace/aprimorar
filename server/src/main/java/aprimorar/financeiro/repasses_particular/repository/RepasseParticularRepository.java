@@ -22,8 +22,6 @@ public interface RepasseParticularRepository extends JpaRepository<RepassePartic
     @Query("select r from RepasseParticular r where r.pagamento.id = :pagamentoId")
     List<RepasseParticular> findAllByPagamentoIdForUpdate(@Param("pagamentoId") UUID pagamentoId);
 
-    List<RepasseParticular> findAllByPagamentoIdOrderByIdAsc(UUID pagamentoId);
-
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("select r from RepasseParticular r where r.atendimentoId = :atendimentoId")
     Optional<RepasseParticular> findByAtendimentoIdForUpdate(
@@ -31,8 +29,6 @@ public interface RepasseParticularRepository extends JpaRepository<RepassePartic
     );
 
     Optional<RepasseParticular> findByAtendimentoId(Long atendimentoId);
-
-    boolean existsByAtendimentoId(Long atendimentoId);
 
     boolean existsByColaboradorIdAndStatus(UUID colaboradorId, StatusRepasseParticular status);
 

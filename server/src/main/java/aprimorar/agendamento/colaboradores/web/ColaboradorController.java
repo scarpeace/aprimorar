@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,12 +23,13 @@ import aprimorar.common.openapi.BadRequestProblemResponse;
 import aprimorar.common.openapi.CommonProblemResponses;
 import aprimorar.common.openapi.ConflictProblemResponse;
 import aprimorar.common.openapi.NotFoundProblemResponse;
+import aprimorar.agendamento.colaboradores.domain.Colaborador;
 import aprimorar.agendamento.colaboradores.service.ColaboradorService;
-import aprimorar.agendamento.colaboradores.web.dto.colaborador.ColaboradorDetailResponse;
 import aprimorar.agendamento.colaboradores.web.dto.colaborador.ColaboradorFiltroRequest;
 import aprimorar.agendamento.colaboradores.web.dto.colaborador.ColaboradorListResponse;
 import aprimorar.agendamento.colaboradores.web.dto.colaborador.ColaboradorRequest;
 import aprimorar.agendamento.colaboradores.web.dto.colaborador.ColaboradoresOptionsResponse;
+import aprimorar.agendamento.colaboradores.web.dto.colaborador.ColaboradorResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -37,6 +39,9 @@ import jakarta.validation.Valid;
 @RequestMapping("/instituicao/colaboradores")
 @Tag(name = "Colaborador", description = "APIs de gestão de colaboradores")
 @CommonProblemResponses
+@BadRequestProblemResponse
+@ConflictProblemResponse
+@NotFoundProblemResponse
 public class ColaboradorController {
 
     private final ColaboradorService colaboradorService;
@@ -46,64 +51,63 @@ public class ColaboradorController {
     }
 
     @PostMapping
-    @Operation(operationId = "createColaborador", description = "Cria um novo colaborador com os dados fornecidos.")
+    @Operation(operationId = "criarColaborador", description = "Cria um novo colaborador com os dados fornecidos.")
     @ApiResponse(responseCode = "201", description = "Colaborador criado com sucesso.")
-    @BadRequestProblemResponse
-    @ConflictProblemResponse
     public ResponseEntity<Void> createColaborador(
         @RequestBody @Valid ColaboradorRequest colaboradorRequest
     ) {
-        UUID id = colaboradorService.createColaborador(colaboradorRequest);
+        UUID id = colaboradorService.createColaborador(colaboradorRequest.toEntity());
         return ResponseEntity.created(URI.create("/instituicao/colaboradores/" + id)).build();
     }
 
     @GetMapping
     @Operation(operationId = "getColaboradores", description = "Retorna uma lista paginada de colaboradores.")
     @ApiResponse(responseCode = "200", description = "Lista de colaboradores retornada com sucesso.")
-    @BadRequestProblemResponse
     public ResponseEntity<Page<ColaboradorListResponse>> getColaboradores(
         @ParameterObject ColaboradorFiltroRequest filtro,
         @ParameterObject @PageableDefault(sort = "nome") Pageable pageable
     ) {
-        Page<ColaboradorListResponse> colaboradores = colaboradorService.getColaboradores(filtro, pageable);
+        Page<ColaboradorListResponse> colaboradores = colaboradorService
+            .getColaboradores(filtro, pageable)
+            .map(ColaboradorListResponse::toDto);
         return ResponseEntity.ok(colaboradores);
     }
 
-    @GetMapping("/list")
-    @Operation(operationId = "getColaboradoresList", description = "Retorna uma lista de opções de colaboradores para dropdown.")
+    @GetMapping("/options")
+    @Operation(operationId = "listColaboradoresOptions", description = "Retorna uma lista de opções de colaboradores para dropdown.")
     @ApiResponse(responseCode = "200", description = "Lista de opções de colaboradores retornada com sucesso.")
-    public ResponseEntity<List<ColaboradoresOptionsResponse>> listarColaboradores() {
-        List<ColaboradoresOptionsResponse> options = colaboradorService.getColaboradoresOptions();
+    public ResponseEntity<List<ColaboradoresOptionsResponse>> listColaboradoresOptions() {
+        List<ColaboradoresOptionsResponse> options = colaboradorService
+            .listColaboradoresOptions()
+            .stream()
+            .map(ColaboradoresOptionsResponse::toDto)
+            .toList();
         return ResponseEntity.ok(options);
     }
 
     @GetMapping("/{colaboradorId}")
-    @Operation(operationId = "findColaboradorById", description = "Retorna um colaborador por ID.")
+    @Operation(operationId = "getColaboradorById", description = "Retorna um colaborador por ID.")
     @ApiResponse(responseCode = "200", description = "Colaborador retornado com sucesso.")
-    @NotFoundProblemResponse
-    public ResponseEntity<ColaboradorDetailResponse> buscarPorId(@PathVariable UUID colaboradorId) {
-        ColaboradorDetailResponse colaborador = colaboradorService.findById(colaboradorId);
+    public ResponseEntity<ColaboradorResponse> getColaboradorById(@PathVariable UUID colaboradorId) {
+        Colaborador colaboradorEntity = colaboradorService.findColaboradorById(colaboradorId);
+        ColaboradorResponse colaborador = ColaboradorResponse.toDto(colaboradorEntity);
         return ResponseEntity.ok(colaborador);
     }
 
-    @PatchMapping("/{colaboradorId}")
+    @PutMapping("/{colaboradorId}")
     @Operation(operationId = "updateColaborador", description = "Atualiza um colaborador por ID.")
-    @ApiResponse(responseCode = "200", description = "Colaborador atualizado com sucesso.")
-    @BadRequestProblemResponse
-    @ConflictProblemResponse
-    @NotFoundProblemResponse
+    @ApiResponse(responseCode = "204", description = "Colaborador atualizado com sucesso.")
     public ResponseEntity<Void> updateColaborador(
         @PathVariable UUID colaboradorId,
         @RequestBody @Valid ColaboradorRequest colaboradorRequest
     ) {
-        colaboradorService.updateColaborador(colaboradorId, colaboradorRequest);
+        colaboradorService.updateColaborador(colaboradorId, colaboradorRequest.toEntity());
         return ResponseEntity.noContent().build();
     }
 
     @PatchMapping("/{colaboradorId}/deactivate")
     @Operation(operationId = "deactivateColaborador", description = "Desativa um colaborador por ID.")
     @ApiResponse(responseCode = "204", description = "Colaborador desativado com sucesso.")
-    @NotFoundProblemResponse
     public ResponseEntity<Void> deactivateColaborador(@PathVariable UUID colaboradorId) {
         colaboradorService.deactivateColaborador(colaboradorId);
         return ResponseEntity.noContent().build();
@@ -112,7 +116,6 @@ public class ColaboradorController {
     @PatchMapping("/{colaboradorId}/activate")
     @Operation(operationId = "activateColaborador", description = "Ativa um colaborador por ID.")
     @ApiResponse(responseCode = "204", description = "Colaborador ativado com sucesso.")
-    @NotFoundProblemResponse
     public ResponseEntity<Void> activateColaborador(@PathVariable UUID colaboradorId) {
         colaboradorService.activateColaborador(colaboradorId);
         return ResponseEntity.noContent().build();

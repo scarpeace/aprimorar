@@ -29,11 +29,6 @@ public class AlunoService {
     }
 
     @Transactional(readOnly = true)
-    public boolean existsById(UUID alunoId) {
-        return alunoRepo.existsById(alunoId);
-    }
-
-    @Transactional(readOnly = true)
     public Page<Aluno> getAlunos(AlunoFiltroRequest filtro, Pageable pageable) {
         Specification<Aluno> spec = AlunoSpecifications.comFiltros(filtro);
         return alunoRepo.findAll(spec, pageable);
@@ -67,6 +62,7 @@ public class AlunoService {
             requestedAluno.getNome(),
             requestedAluno.getDataNascimento(),
             requestedAluno.getTelefone(),
+            requestedAluno.getCpf(),
             requestedAluno.getEmail(),
             requestedAluno.getEscola(),
             requestedAluno.getResponsavel(),

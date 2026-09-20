@@ -63,6 +63,9 @@ public class Colaborador {
     @Embedded
     private Endereco endereco;
 
+    protected Colaborador() {
+    }
+
     @PrePersist
     protected void prePersist() {
         this.createdAt = LocalDateTime.now();
@@ -73,20 +76,17 @@ public class Colaborador {
         this.updatedAt = LocalDateTime.now();
     }
 
-    protected Colaborador() {
-    }
-
     public Colaborador(
-            String name,
-            LocalDate dataNascimento,
-            String pix,
-            String telefone,
-            String cpf,
-            String email,
-            FuncoesColaborador funcao,
-            Endereco endereco
+        String nome,
+        LocalDate dataNascimento,
+        String pix,
+        String telefone,
+        String cpf,
+        String email,
+        FuncoesColaborador funcao,
+        Endereco endereco
     ) {
-        this.nome = name;
+        this.nome = nome;
         this.dataNascimento = dataNascimento;
         this.pix = pix;
         this.telefone = telefone;
@@ -97,18 +97,20 @@ public class Colaborador {
     }
 
     public void update(
-            String name,
-            LocalDate dataNascimento,
-            String pix,
-            String telefone,
-            String email,
-            FuncoesColaborador funcao,
-            Endereco endereco
+        String nome,
+        LocalDate dataNascimento,
+        String pix,
+        String telefone,
+        String cpf,
+        String email,
+        FuncoesColaborador funcao,
+        Endereco endereco
     ) {
-        this.nome = name;
+        this.nome = nome;
         this.dataNascimento = dataNascimento;
         this.pix = pix;
         this.telefone = telefone;
+        this.cpf = cpf;
         this.email = email;
         this.funcao = funcao;
         this.endereco = endereco;

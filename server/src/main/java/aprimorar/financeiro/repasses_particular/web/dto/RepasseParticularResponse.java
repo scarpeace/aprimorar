@@ -29,7 +29,7 @@ public record RepasseParticularResponse(
     @Schema(nullable = false)
     LocalDateTime createdAt
 ) {
-    public static RepasseParticularResponse from(RepasseParticular repasse) {
+    public static RepasseParticularResponse toDto(RepasseParticular repasse) {
         return new RepasseParticularResponse(
             repasse.getId(),
             repasse.getAtendimentoId(),

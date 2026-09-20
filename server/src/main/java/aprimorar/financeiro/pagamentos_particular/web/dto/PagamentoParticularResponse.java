@@ -36,7 +36,7 @@ public record PagamentoParticularResponse(
     @Schema(nullable = false)
     LocalDateTime createdAt
 ) {
-    public static PagamentoParticularResponse from(PagamentoParticular pagamento) {
+    public static PagamentoParticularResponse toDto(PagamentoParticular pagamento) {
         return new PagamentoParticularResponse(
             pagamento.getId(),
             pagamento.getDataPagamento(),

@@ -7,16 +7,18 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OrderBy;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 import lombok.Getter;
 
@@ -47,8 +49,9 @@ public class PagamentoParticular {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    @OneToMany(mappedBy = "pagamento")
-    private Set<RepasseParticular> repasses = new HashSet<>();
+    @OneToMany(mappedBy = "pagamento", fetch = FetchType.LAZY)
+    @OrderBy("id ASC")
+    private List<RepasseParticular> repasses = new ArrayList<>();
 
     protected PagamentoParticular() {
     }
@@ -60,12 +63,6 @@ public class PagamentoParticular {
         String comprovanteUrl
     ) {
         validarDataPagamento(dataPagamento);
-        validarValorTotal(valorTotal);
-        if (formaPagamento == null) {
-            throw new PagamentoParticularDadosInvalidosException(
-                "Forma de pagamento é obrigatória"
-            );
-        }
         this.id = UUID.randomUUID();
         this.dataPagamento = dataPagamento;
         this.valorTotal = valorTotal;
@@ -74,38 +71,20 @@ public class PagamentoParticular {
     }
 
     private static void validarDataPagamento(LocalDate dataPagamento) {
-        if (dataPagamento == null) {
-            throw new PagamentoParticularDadosInvalidosException(
-                "Data do pagamento é obrigatória"
-            );
-        }
-        if (dataPagamento.isAfter(LocalDate.now())) {
+        if (dataPagamento != null && dataPagamento.isAfter(LocalDate.now())) {
             throw new PagamentoParticularDadosInvalidosException(
                 "A data do pagamento não pode ser futura"
             );
         }
     }
 
-    private static void validarValorTotal(BigDecimal valorTotal) {
-        if (valorTotal == null) {
-            throw new PagamentoParticularDadosInvalidosException(
-                "Valor total do pagamento é obrigatório"
-            );
-        }
-        if (valorTotal.signum() < 0) {
-            throw new PagamentoParticularDadosInvalidosException(
-                "Valor total do pagamento não pode ser negativo"
-            );
-        }
-    }
-
     @PrePersist
-    void prePersist() {
+    protected void prePersist() {
         this.createdAt = LocalDateTime.now();
     }
 
     @PreUpdate
-    void preUpdate() {
+    protected void preUpdate() {
         this.updatedAt = LocalDateTime.now();
     }
 }

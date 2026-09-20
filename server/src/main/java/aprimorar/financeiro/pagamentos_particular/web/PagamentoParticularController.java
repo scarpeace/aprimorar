@@ -2,6 +2,7 @@ package aprimorar.financeiro.pagamentos_particular.web;
 
 import aprimorar.common.openapi.BadRequestProblemResponse;
 import aprimorar.common.openapi.CommonProblemResponses;
+import aprimorar.common.openapi.ConflictProblemResponse;
 import aprimorar.common.openapi.NotFoundProblemResponse;
 import aprimorar.financeiro.pagamentos_particular.service.PagamentoParticularService;
 import aprimorar.financeiro.pagamentos_particular.web.dto.PagamentoParticularDetalheResponse;
@@ -12,6 +13,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+
+import java.net.URI;
 import java.util.UUID;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
@@ -34,6 +37,7 @@ import org.springframework.web.bind.annotation.RestController;
     description = "APIs para registrar, consultar e cancelar pagamentos de repasses particulares"
 )
 @CommonProblemResponses
+@ConflictProblemResponse
 public class PagamentoParticularController {
 
     private final PagamentoParticularService pagamentoService;
@@ -47,13 +51,22 @@ public class PagamentoParticularController {
         operationId = "registrarPagamentoParticular",
         description = "Registra um pagamento para um ou mais repasses do mesmo colaborador."
     )
-    @ApiResponse(responseCode = "200", description = "Pagamento registrado.")
+    @ApiResponse(responseCode = "201", description = "Pagamento registrado.")
     @BadRequestProblemResponse
     @NotFoundProblemResponse
-    public ResponseEntity<UUID> registrarPagamento(
+    public ResponseEntity<Void> registrarPagamento(
         @RequestBody @Valid RegistrarPagamentoParticularRequest request
     ) {
-        return ResponseEntity.ok(pagamentoService.registrarPagamento(request));
+        UUID id = pagamentoService.registrarPagamento(
+            request.repasseIds(),
+            request.dataPagamento(),
+            request.formaPagamento(),
+            request.comprovanteUrl()
+        );
+
+        return ResponseEntity.created(
+            URI.create("/financeiro/repasses/pagamentos/" + id)
+        ).build();
     }
 
     @GetMapping
@@ -71,6 +84,7 @@ public class PagamentoParticularController {
     ) {
         return ResponseEntity.ok(
             pagamentoService.buscarPagamentos(filtro, pageable)
+                .map(PagamentoParticularResponse::toDto)
         );
     }
 
@@ -85,7 +99,11 @@ public class PagamentoParticularController {
     public ResponseEntity<PagamentoParticularDetalheResponse> buscarPorId(
         @PathVariable UUID pagamentoId
     ) {
-        return ResponseEntity.ok(pagamentoService.buscarPorId(pagamentoId));
+        return ResponseEntity.ok(
+            PagamentoParticularDetalheResponse.toDto(
+                pagamentoService.buscarDetalhesPorId(pagamentoId)
+            )
+        );
     }
 
     @DeleteMapping("/{pagamentoId}")

@@ -89,7 +89,7 @@ public class AlunoController {
 
     @PutMapping("/{alunoId}")
     @Operation(operationId = "updateAluno", description = "Atualiza um aluno por ID.")
-    @ApiResponse(responseCode = "200", description = "Aluno atualizado com sucesso.")
+    @ApiResponse(responseCode = "204", description = "Aluno atualizado com sucesso.")
     public ResponseEntity<Void> updateAluno(
         @PathVariable UUID alunoId,
         @RequestBody @Valid AlunoRequest request

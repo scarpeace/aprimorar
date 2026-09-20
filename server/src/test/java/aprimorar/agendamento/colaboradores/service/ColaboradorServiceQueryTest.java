@@ -62,8 +62,12 @@ class ColaboradorServiceQueryTest {
         var response = service.getColaboradores(new ColaboradorFiltroRequest(null, null, null, true), pageable);
 
         assertEquals(1, response.getTotalElements());
-        assertEquals(colaborador.getId(), response.getContent().getFirst().id());
-        assertEquals("João Pereira", response.getContent().getFirst().nome());
+        assertEquals(colaborador.getId(), response.getContent().getFirst().getId());
+        assertEquals("João Pereira", response.getContent().getFirst().getNome());
+        assertEquals("12345678900", response.getContent().getFirst().getCpf());
+        assertEquals("61999999999", response.getContent().getFirst().getTelefone());
+        assertEquals(FuncoesColaborador.PROFESSOR, response.getContent().getFirst().getFuncao());
+        assertTrue(response.getContent().getFirst().ativo());
     }
 
     @Test
@@ -74,23 +78,10 @@ class ColaboradorServiceQueryTest {
 
         when(colaboradorRepo.findById(id)).thenReturn(Optional.of(colaborador));
 
-        var response = service.findById(id);
+        var response = service.findColaboradorById(id);
 
-        assertEquals(id, response.id());
-        assertEquals("João Pereira", response.nome());
-    }
-
-    @Test
-    void shouldCheckColaboradorExists() {
-        var id = UUID.randomUUID();
-        var colaborador = colaborador("João Pereira");
-        setId(colaborador, id);
-
-        when(colaboradorRepo.existsById(id)).thenReturn(true);
-
-        var response = service.existsById(id);
-
-        assertTrue(response);
+        assertEquals(id, response.getId());
+        assertEquals("João Pereira", response.getNome());
     }
 
     @Test
@@ -124,7 +115,10 @@ class ColaboradorServiceQueryTest {
 
         when(colaboradorRepo.findById(id)).thenReturn(Optional.empty());
 
-        var ex = assertThrows(ColaboradorNaoEncontradoException.class, () -> service.findById(id));
+        var ex = assertThrows(
+            ColaboradorNaoEncontradoException.class,
+            () -> service.findColaboradorById(id)
+        );
 
         assertEquals("Colaborador não encontrado no banco de dados", ex.getMessage());
     }
@@ -138,11 +132,11 @@ class ColaboradorServiceQueryTest {
                     ArgumentMatchers.any(Sort.class)
                 )).thenReturn(List.of(colaborador));
 
-        var response = service.getColaboradoresOptions();
+        var response = service.listColaboradoresOptions();
 
         assertEquals(1, response.size());
-        assertEquals(colaborador.getId(), response.getFirst().id());
-        assertEquals("João Pereira", response.getFirst().nome());
+        assertEquals(colaborador.getId(), response.getFirst().getId());
+        assertEquals("João Pereira", response.getFirst().getNome());
     }
 
     private static Colaborador colaborador(String nome) {

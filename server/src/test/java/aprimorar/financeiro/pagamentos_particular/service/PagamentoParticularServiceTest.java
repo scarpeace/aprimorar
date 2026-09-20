@@ -10,7 +10,6 @@ import aprimorar.financeiro.common.FormaPagamentoEnum;
 import aprimorar.financeiro.pagamentos_particular.domain.PagamentoParticular;
 import aprimorar.financeiro.pagamentos_particular.domain.exception.PagamentoParticularDadosInvalidosException;
 import aprimorar.financeiro.pagamentos_particular.repository.PagamentoParticularRepository;
-import aprimorar.financeiro.pagamentos_particular.web.dto.RegistrarPagamentoParticularRequest;
 import aprimorar.financeiro.repasses_particular.domain.RepasseParticular;
 import aprimorar.financeiro.repasses_particular.domain.enums.StatusRepasseParticular;
 import aprimorar.financeiro.repasses_particular.domain.exception.RepasseParticularDadosInvalidosException;
@@ -55,11 +54,16 @@ class PagamentoParticularServiceTest {
         when(pagamentoRepository.save(any(PagamentoParticular.class)))
             .thenAnswer(invocation -> invocation.getArgument(0));
 
-        UUID pagamentoId = service.registrarPagamento(request(List.of(1L, 2L)));
+        PagamentoParticular pagamento = service.registrarPagamento(
+            List.of(1L, 2L),
+            LocalDate.now(),
+            FormaPagamentoEnum.PIX,
+            null
+        );
 
         ArgumentCaptor<PagamentoParticular> captor = ArgumentCaptor.forClass(PagamentoParticular.class);
         verify(pagamentoRepository).save(captor.capture());
-        assertEquals(pagamentoId, captor.getValue().getId());
+        assertEquals(pagamento.getId(), captor.getValue().getId());
         assertEquals(new BigDecimal("200.00"), captor.getValue().getValorTotal());
         assertEquals(StatusRepasseParticular.PAGO, primeiro.getStatus());
         assertEquals(StatusRepasseParticular.PAGO, segundo.getStatus());
@@ -74,7 +78,12 @@ class PagamentoParticularServiceTest {
 
         assertThrows(
             PagamentoParticularDadosInvalidosException.class,
-            () -> service.registrarPagamento(request(List.of(1L, 2L)))
+            () -> service.registrarPagamento(
+                List.of(1L, 2L),
+                LocalDate.now(),
+                FormaPagamentoEnum.PIX,
+                null
+            )
         );
     }
 
@@ -92,7 +101,12 @@ class PagamentoParticularServiceTest {
 
         assertThrows(
             RepasseParticularDadosInvalidosException.class,
-            () -> service.registrarPagamento(request(List.of(1L)))
+            () -> service.registrarPagamento(
+                List.of(1L),
+                LocalDate.now(),
+                FormaPagamentoEnum.PIX,
+                null
+            )
         );
     }
 
@@ -116,15 +130,6 @@ class PagamentoParticularServiceTest {
         assertEquals(StatusRepasseParticular.PENDENTE, repasse.getStatus());
         verify(repasseRepository).flush();
         verify(pagamentoRepository).delete(pagamento);
-    }
-
-    private static RegistrarPagamentoParticularRequest request(List<Long> repasseIds) {
-        return new RegistrarPagamentoParticularRequest(
-            repasseIds,
-            LocalDate.now(),
-            FormaPagamentoEnum.PIX,
-            null
-        );
     }
 
     private static RepasseParticular repasse(

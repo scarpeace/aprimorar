@@ -5,14 +5,13 @@ import aprimorar.financeiro.pagamentos_particular.domain.exception.PagamentoPart
 import aprimorar.financeiro.pagamentos_particular.domain.exception.PagamentoParticularNaoEncontradoException;
 import aprimorar.financeiro.pagamentos_particular.repository.PagamentoParticularRepository;
 import aprimorar.financeiro.pagamentos_particular.repository.PagamentoParticularSpecifications;
-import aprimorar.financeiro.pagamentos_particular.web.dto.PagamentoParticularDetalheResponse;
 import aprimorar.financeiro.pagamentos_particular.web.dto.PagamentoParticularFiltroRequest;
-import aprimorar.financeiro.pagamentos_particular.web.dto.PagamentoParticularResponse;
-import aprimorar.financeiro.pagamentos_particular.web.dto.RegistrarPagamentoParticularRequest;
 import aprimorar.financeiro.repasses_particular.domain.RepasseParticular;
 import aprimorar.financeiro.repasses_particular.domain.exception.RepasseParticularNaoEncontradoException;
 import aprimorar.financeiro.repasses_particular.repository.RepasseParticularRepository;
+import aprimorar.financeiro.common.FormaPagamentoEnum;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 import org.springframework.data.domain.Page;
@@ -35,34 +34,41 @@ public class PagamentoParticularService {
     }
 
     @Transactional(readOnly = true)
-    public Page<PagamentoParticularResponse> buscarPagamentos(
+    public Page<PagamentoParticular> buscarPagamentos(
         PagamentoParticularFiltroRequest filtro,
         Pageable pageable
     ) {
-        return pagamentoRepository.findAll(PagamentoParticularSpecifications.comFiltros(filtro),pageable)
-        .map(PagamentoParticularResponse::from);
-    }
-
-    @Transactional(readOnly = true)
-    public PagamentoParticularDetalheResponse buscarPorId(UUID pagamentoId) {
-
-        PagamentoParticular pagamento = pagamentoRepository.findById(pagamentoId)
-            .orElseThrow(PagamentoParticularNaoEncontradoException::new);
-        List<RepasseParticular> repasses = repasseRepository
-            .findAllByPagamentoIdOrderByIdAsc(pagamentoId);
-
-        return PagamentoParticularDetalheResponse.from(
-            pagamento,
-            repasses.getFirst().getColaboradorId(),
-            repasses
+        return pagamentoRepository.findAll(
+            PagamentoParticularSpecifications.comFiltros(filtro),
+            pageable
         );
     }
 
-    @Transactional
-    public UUID registrarPagamento(RegistrarPagamentoParticularRequest request) {
+    @Transactional(readOnly = true)
+    public PagamentoParticular buscarDetalhesPorId(UUID pagamentoId) {
+        PagamentoParticular pagamento = pagamentoRepository
+            .findByIdWithRepasses(pagamentoId)
+            .orElseThrow(PagamentoParticularNaoEncontradoException::new);
 
-        List<RepasseParticular> repasses = repasseRepository.findAllByIdInForUpdate(request.repasseIds());
-        if (repasses.size() != request.repasseIds().size()) {
+        if (pagamento.getRepasses().isEmpty()) {
+            throw new PagamentoParticularDadosInvalidosException(
+                "O pagamento não possui repasses vinculados"
+            );
+        }
+
+        return pagamento;
+    }
+
+    @Transactional
+    public UUID registrarPagamento(
+        List<Long> repasseIds,
+        LocalDate dataPagamento,
+        FormaPagamentoEnum formaPagamento,
+        String comprovanteUrl
+    ) {
+
+        List<RepasseParticular> repasses = repasseRepository.findAllByIdInForUpdate(repasseIds);
+        if (repasses.size() != repasseIds.size()) {
             throw new RepasseParticularNaoEncontradoException();
         }
 
@@ -70,18 +76,16 @@ public class PagamentoParticularService {
             throw new PagamentoParticularDadosInvalidosException("Todos os repasses precisam pertencer ao mesmo colaborador");
         }
 
-        repasses.forEach(RepasseParticular::validarDisponivelParaPagamento);
-
         BigDecimal total = repasses.stream()
             .map(RepasseParticular::getValor)
             .reduce(BigDecimal.ZERO, BigDecimal::add);
 
         PagamentoParticular pagamento = pagamentoRepository.save(
             new PagamentoParticular(
-                request.dataPagamento(),
+                dataPagamento,
                 total,
-                request.formaPagamento(),
-                request.comprovanteUrl()
+                formaPagamento,
+                comprovanteUrl
             )
         );
 

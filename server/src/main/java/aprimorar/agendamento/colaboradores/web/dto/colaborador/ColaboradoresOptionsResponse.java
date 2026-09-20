@@ -1,5 +1,6 @@
 package aprimorar.agendamento.colaboradores.web.dto.colaborador;
 
+import aprimorar.agendamento.colaboradores.domain.Colaborador;
 import java.util.UUID;
 
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -15,4 +16,11 @@ public record ColaboradoresOptionsResponse(
         @Schema(description = "Nome completo do colaborador", example = "João Pereira")
         String nome
 ) {
+
+    public static ColaboradoresOptionsResponse toDto(Colaborador colaborador) {
+        return new ColaboradoresOptionsResponse(
+            colaborador.getId(),
+            colaborador.getNome()
+        );
+    }
 }

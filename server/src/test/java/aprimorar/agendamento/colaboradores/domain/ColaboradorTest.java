@@ -13,7 +13,7 @@ import aprimorar.agendamento.common.domain.Endereco;
 class ColaboradorTest {
 
     @Test
-    void shouldCreateColaboradorNormalizingData() {
+    void shouldCreateColaborador() {
         var colaborador = new Colaborador(
             "João Pereira",
             LocalDate.of(1990, 5, 21),
@@ -54,6 +54,7 @@ class ColaboradorTest {
             LocalDate.of(1992, 6, 10),
             "maria.pereira@example.com",
             "(21) 98888-7777",
+            "987.654.321-00",
             "maria.pereira@example.com",
             FuncoesColaborador.ADMINISTRATIVO,
             new Endereco("Rua B", "20", "Bairro", "Rio", "RJ", "20000-000", "Sala 2")
@@ -63,12 +64,11 @@ class ColaboradorTest {
         assertEquals(LocalDate.of(1992, 6, 10), colaborador.getDataNascimento());
         assertEquals("maria.pereira@example.com", colaborador.getPix());
         assertEquals("(21) 98888-7777", colaborador.getTelefone());
+        assertEquals("987.654.321-00", colaborador.getCpf());
         assertEquals("maria.pereira@example.com", colaborador.getEmail());
         assertEquals(FuncoesColaborador.ADMINISTRATIVO, colaborador.getFuncao());
         assertEquals("20000-000", colaborador.getEndereco().getCep());
-        assertEquals("123.456.789-00", colaborador.getCpf());
     }
-
 
     @Test
     void shouldSetCreatedAtAndUpdatedAt() {

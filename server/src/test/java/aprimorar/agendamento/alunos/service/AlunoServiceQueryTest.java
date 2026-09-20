@@ -80,19 +80,6 @@ class AlunoServiceQueryTest {
     }
 
     @Test
-    void shouldCheckAlunoExists() {
-        var id = UUID.randomUUID();
-        var aluno = aluno("Ana Silva");
-        setId(aluno, id);
-
-        when(alunoRepo.existsById(id)).thenReturn(true);
-
-        var response = service.existsById(id);
-
-        assertTrue(response);
-    }
-
-    @Test
     void shouldFindAlunoDomainObjectById() {
         var id = UUID.randomUUID();
         var aluno = aluno("Ana Silva");

@@ -47,24 +47,22 @@ public record PagamentoParticularDetalheResponse(
     @Schema(nullable = false)
     List<RepasseParticularResponse> repasses
 ) {
-    public static PagamentoParticularDetalheResponse from(
-        PagamentoParticular pagamento,
-        UUID colaboradorId,
-        List<RepasseParticular> repasses
-    ) {
-        List<RepasseParticularResponse> repassesResponse = repasses.stream()
-            .map(RepasseParticularResponse::from)
+    public static PagamentoParticularDetalheResponse toDto(PagamentoParticular pagamento) {
+        List<RepasseParticular> repasses = pagamento.getRepasses();
+
+        List<RepasseParticularResponse> repassesDto = repasses.stream()
+            .map(RepasseParticularResponse::toDto)
             .toList();
 
         return new PagamentoParticularDetalheResponse(
             pagamento.getId(),
-            colaboradorId,
+            repasses.getFirst().getColaboradorId(),
             pagamento.getDataPagamento(),
             pagamento.getValorTotal(),
             pagamento.getFormaPagamento(),
             pagamento.getComprovanteUrl(),
             pagamento.getCreatedAt(),
-            repassesResponse
+            repassesDto
         );
     }
 }

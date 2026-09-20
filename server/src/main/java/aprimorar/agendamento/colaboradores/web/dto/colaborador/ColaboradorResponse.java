@@ -1,8 +1,8 @@
 package aprimorar.agendamento.colaboradores.web.dto.colaborador;
 
+import aprimorar.agendamento.colaboradores.domain.Colaborador;
 import aprimorar.agendamento.colaboradores.domain.enums.FuncoesColaborador;
 import aprimorar.agendamento.common.web.dto.endereco.EnderecoResponse;
-import aprimorar.agendamento.colaboradores.domain.Colaborador;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotNull;
@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Schema(description = "Dados detalhados do colaborador")
-public record ColaboradorDetailResponse(
+public record ColaboradorResponse(
     @NotNull
     @Schema(description = "Identificador unico do colaborador", example = "550e8400-e29b-41d4-a716-446655440000")
     UUID id,
@@ -49,8 +49,8 @@ public record ColaboradorDetailResponse(
     LocalDateTime updatedAt
 ) {
 
-    public static ColaboradorDetailResponse toDto(Colaborador colaborador) {
-        return new ColaboradorDetailResponse(
+    public static ColaboradorResponse toDto(Colaborador colaborador) {
+        return new ColaboradorResponse(
             colaborador.getId(),
             colaborador.getNome(),
             colaborador.getDataNascimento(),

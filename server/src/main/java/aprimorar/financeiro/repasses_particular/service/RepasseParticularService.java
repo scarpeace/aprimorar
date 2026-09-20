@@ -30,10 +30,16 @@ public class RepasseParticularService implements RepasseApi {
     @Transactional
     public void criar(CriarRepasseCommand command) {
 
-        validarAtendimentoId(command.atendimentoId());
+        if (command.atendimentoId() == null) {
+            throw new RepasseParticularDadosInvalidosException("ID do atendimento é obrigatório");
+        }
 
-        if (repasseRepository.existsByAtendimentoId(command.atendimentoId())) {
-            throw new RepasseParticularDadosInvalidosException("Já existe um repasse para o atendimento informado");
+        if (command.colaboradorId() == null) {
+            throw new RepasseParticularDadosInvalidosException("ID do colaborador é obrigatório");
+        }
+
+        if (command.valor() == null) {
+            throw new RepasseParticularDadosInvalidosException("Valor é obrigatório");
         }
 
         repasseRepository.save(
@@ -49,7 +55,17 @@ public class RepasseParticularService implements RepasseApi {
     @Transactional
     public void atualizar(AtualizarRepasseCommand command) {
 
-        validarAtendimentoId(command.atendimentoId());
+        if (command.atendimentoId() == null) {
+            throw new RepasseParticularDadosInvalidosException("ID do atendimento é obrigatório");
+        }
+
+        if (command.colaboradorId() == null) {
+            throw new RepasseParticularDadosInvalidosException("ID do colaborador é obrigatório");
+        }
+
+        if (command.valor() == null) {
+            throw new RepasseParticularDadosInvalidosException("Valor é obrigatório");
+        }
 
         RepasseParticular repasse = repasseRepository.findByAtendimentoIdForUpdate(command.atendimentoId())
             .orElseThrow(RepasseParticularNaoEncontradoException::new);
@@ -60,10 +76,6 @@ public class RepasseParticularService implements RepasseApi {
     @Override
     @Transactional
     public void cancelarPorAtendimento(Long atendimentoId) {
-        if (atendimentoId == null) {
-            throw new RepasseParticularDadosInvalidosException("ID do atendimento é obrigatório");
-        }
-
         RepasseParticular repasse = repasseRepository.findByAtendimentoIdForUpdate(atendimentoId)
             .orElseThrow(RepasseParticularNaoEncontradoException::new);
 
@@ -73,10 +85,6 @@ public class RepasseParticularService implements RepasseApi {
     @Override
     @Transactional(readOnly = true)
     public boolean possuiPendenciaPorColaboradorId(UUID colaboradorId) {
-        if (colaboradorId == null) {
-            throw new RepasseParticularDadosInvalidosException("ID do colaborador é obrigatório");
-        }
-
         return repasseRepository.existsByColaboradorIdAndStatus(colaboradorId,StatusRepasseParticular.PENDENTE);
     }
 
@@ -85,10 +93,6 @@ public class RepasseParticularService implements RepasseApi {
     public Optional<RepasseParticularSummary> buscarSummaryPorAtendimentoId(
         Long atendimentoId
     ) {
-        if (atendimentoId == null) {
-            throw new RepasseParticularDadosInvalidosException("ID do atendimento é obrigatório");
-        }
-
         return repasseRepository.findByAtendimentoId(atendimentoId)
             .map(RepasseParticularService::toSummary);
     }
@@ -121,9 +125,5 @@ public class RepasseParticularService implements RepasseApi {
         );
     }
 
-    private static void validarAtendimentoId(Long atendimentoId) {
-        if (atendimentoId == null) {
-            throw new RepasseParticularDadosInvalidosException("ID do atendimento é obrigatório");
-        }
-    }
+
 }

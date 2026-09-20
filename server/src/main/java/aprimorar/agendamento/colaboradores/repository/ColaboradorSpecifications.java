@@ -1,13 +1,13 @@
-package aprimorar.agendamento.colaboradores.repository.specifications;
+package aprimorar.agendamento.colaboradores.repository;
 
-import org.springframework.data.jpa.domain.Specification;
-
-import aprimorar.agendamento.colaboradores.web.dto.colaborador.ColaboradorFiltroRequest;
 import aprimorar.agendamento.colaboradores.domain.Colaborador;
+import aprimorar.agendamento.colaboradores.web.dto.colaborador.ColaboradorFiltroRequest;
+import org.springframework.data.jpa.domain.Specification;
 
 public final class ColaboradorSpecifications {
 
-    private ColaboradorSpecifications() {}
+    private ColaboradorSpecifications() {
+    }
 
     public static Specification<Colaborador> comFiltros(ColaboradorFiltroRequest filtro) {
         return Specification.allOf(

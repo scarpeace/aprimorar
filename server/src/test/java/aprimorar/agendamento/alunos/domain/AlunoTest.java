@@ -55,6 +55,7 @@ class AlunoTest {
             "Maria Silva",
             LocalDate.of(2001, 2, 2),
             "(21) 98888-7777",
+            "987.654.321-00",
             "maria.silva@example.com",
             "Escola Nova",
             new Responsavel(
@@ -69,10 +70,10 @@ class AlunoTest {
         assertEquals("Maria Silva", aluno.getNome());
         assertEquals(LocalDate.of(2001, 2, 2), aluno.getDataNascimento());
         assertEquals("(21) 98888-7777", aluno.getTelefone());
+        assertEquals("987.654.321-00", aluno.getCpf());
         assertEquals("maria.silva@example.com", aluno.getEmail());
         assertEquals("Escola Nova", aluno.getEscola());
         assertEquals("Maria Ramos", aluno.getResponsavel().getNome());
-        assertEquals("123.456.789-00", aluno.getCpf());
         assertEquals("20000-000", aluno.getEndereco().getCep());
     }
 

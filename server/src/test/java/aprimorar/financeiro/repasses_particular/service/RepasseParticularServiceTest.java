@@ -2,8 +2,6 @@ package aprimorar.financeiro.repasses_particular.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -42,8 +40,6 @@ class RepasseParticularServiceTest {
 
     @Test
     void deveCriarRepassePendente() {
-        when(repasseRepository.existsByAtendimentoId(10L)).thenReturn(false);
-
         service.criar(new CriarRepasseCommand(10L, COLABORADOR_ID, new BigDecimal("80.00")));
 
         ArgumentCaptor<RepasseParticular> captor = ArgumentCaptor.forClass(RepasseParticular.class);
@@ -52,18 +48,6 @@ class RepasseParticularServiceTest {
         assertEquals(COLABORADOR_ID, captor.getValue().getColaboradorId());
         assertEquals(new BigDecimal("80.00"), captor.getValue().getValor());
         assertEquals(StatusRepasseParticular.PENDENTE, captor.getValue().getStatus());
-    }
-
-    @Test
-    void naoDeveCriarRepasseDuplicadoParaAtendimento() {
-        when(repasseRepository.existsByAtendimentoId(10L)).thenReturn(true);
-
-        assertThrows(
-            RepasseParticularDadosInvalidosException.class,
-            () -> service.criar(new CriarRepasseCommand(10L, COLABORADOR_ID, new BigDecimal("80.00")))
-        );
-
-        verify(repasseRepository, never()).save(any(RepasseParticular.class));
     }
 
     @Test

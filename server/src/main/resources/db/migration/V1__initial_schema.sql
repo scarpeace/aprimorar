@@ -53,8 +53,8 @@ CREATE INDEX idx_alunos_escola ON alunos(escola);
 CREATE TABLE colaboradores (
   id UUID NOT NULL PRIMARY KEY,
   nome VARCHAR(50) NOT NULL,
-  cpf VARCHAR(255) NOT NULL UNIQUE,
-  email VARCHAR(255) NOT NULL UNIQUE,
+  cpf VARCHAR(255) NOT NULL,
+  email VARCHAR(255) NOT NULL,
   data_nascimento DATE NOT NULL,
   telefone VARCHAR(20) NOT NULL,
   funcao VARCHAR(100) NOT NULL CHECK (
@@ -75,7 +75,9 @@ CREATE TABLE colaboradores (
   endereco_cep VARCHAR(8) NOT NULL,
   endereco_complemento VARCHAR(255),
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP
+  updated_at TIMESTAMP,
+  CONSTRAINT uk_colaboradores_cpf UNIQUE (cpf),
+  CONSTRAINT uk_colaboradores_email UNIQUE (email)
 );
 
 CREATE INDEX idx_colaboradores_nome ON colaboradores(nome);
@@ -174,31 +176,37 @@ CREATE INDEX idx_parcelas_alunos_cobranca_status
 CREATE TABLE pagamentos_particular (
   id UUID NOT NULL PRIMARY KEY,
   data_pagamento DATE NOT NULL,
-  valor_total NUMERIC(10, 2) NOT NULL CHECK (valor_total >= 0),
-  forma_pagamento VARCHAR(40) NOT NULL CHECK (
-    forma_pagamento IN (
-      'PIX',
-      'DINHEIRO',
-      'CARTAO_CREDITO',
-      'CARTAO_DEBITO',
-      'BOLETO',
-      'TRANSFERENCIA'
-    )
-  ),
+  valor_total NUMERIC(10, 2) NOT NULL,
+  forma_pagamento VARCHAR(40) NOT NULL,
   comprovante_url VARCHAR(500),
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP
+  updated_at TIMESTAMP,
+  CONSTRAINT ck_pagamentos_particular_valor_total
+    CHECK (valor_total >= 0),
+  CONSTRAINT ck_pagamentos_particular_forma_pagamento
+    CHECK (
+      forma_pagamento IN (
+        'PIX',
+        'DINHEIRO',
+        'CARTAO_CREDITO',
+        'CARTAO_DEBITO',
+        'BOLETO',
+        'TRANSFERENCIA'
+      )
+    )
 );
 
 CREATE TABLE repasses_particular (
   id BIGSERIAL NOT NULL PRIMARY KEY,
-  atendimento_id BIGINT NOT NULL UNIQUE REFERENCES atendimentos_individuais(id),
+  atendimento_id BIGINT NOT NULL REFERENCES atendimentos_individuais(id),
   colaborador_id UUID NOT NULL REFERENCES colaboradores(id),
-  valor NUMERIC(10, 2) NOT NULL CHECK (valor >= 0),
+  valor NUMERIC(10, 2) NOT NULL,
   status VARCHAR(20) NOT NULL DEFAULT 'PENDENTE',
   pagamento_id UUID REFERENCES pagamentos_particular(id) ON DELETE SET NULL,
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP,
+  CONSTRAINT uk_repasses_particular_atendimento UNIQUE (atendimento_id),
+  CONSTRAINT ck_repasses_particular_valor CHECK (valor >= 0),
   CONSTRAINT ck_repasses_particular_status
     CHECK (status IN ('PENDENTE', 'PAGO', 'CANCELADO')),
   CONSTRAINT ck_repasses_particular_pagamento

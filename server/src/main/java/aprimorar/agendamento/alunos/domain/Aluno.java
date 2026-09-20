@@ -97,6 +97,7 @@ public class Aluno {
         String nome,
         LocalDate dataNascimento,
         String telefone,
+        String cpf,
         String email,
         String escola,
         Responsavel responsavel,
@@ -105,6 +106,7 @@ public class Aluno {
         this.nome = nome;
         this.dataNascimento = dataNascimento;
         this.telefone = telefone;
+        this.cpf = cpf;
         this.email = email;
         this.escola = escola;
         this.responsavel = responsavel;
