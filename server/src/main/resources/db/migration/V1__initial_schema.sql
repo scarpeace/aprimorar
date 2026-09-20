@@ -83,7 +83,7 @@ CREATE TABLE colaboradores (
 CREATE INDEX idx_colaboradores_nome ON colaboradores(nome);
 CREATE INDEX idx_colaboradores_funcao ON colaboradores(funcao);
 
-CREATE TABLE atendimentos_individuais (
+CREATE TABLE atendimentos_particular (
   id BIGSERIAL NOT NULL PRIMARY KEY,
   aluno_id UUID NOT NULL REFERENCES alunos(id),
   colaborador_id UUID NOT NULL REFERENCES colaboradores(id),
@@ -95,83 +95,67 @@ CREATE TABLE atendimentos_individuais (
   status VARCHAR(20) NOT NULL,
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP,
-  CONSTRAINT ck_atendimentos_individuais_periodo
-    CHECK (data_hora_fim >= data_hora_inicio),
-  CONSTRAINT ck_atendimentos_individuais_status
+  CONSTRAINT ck_atendimentos_particular_periodo
+    CHECK (data_hora_fim > data_hora_inicio),
+  CONSTRAINT ck_atendimentos_particular_status
     CHECK (status IN ('AGENDADO', 'REALIZADO', 'CANCELADO'))
 );
 
-CREATE INDEX idx_atendimentos_individuais_tipo ON atendimentos_individuais(tipo);
+CREATE INDEX idx_atendimentos_particular_aluno_inicio
+  ON atendimentos_particular(aluno_id, data_hora_inicio);
+CREATE INDEX idx_atendimentos_particular_colaborador_inicio
+  ON atendimentos_particular(colaborador_id, data_hora_inicio);
+CREATE INDEX idx_atendimentos_particular_status_inicio
+  ON atendimentos_particular(status, data_hora_inicio);
 
-CREATE TABLE pagamentos_alunos (
+CREATE TABLE recebimentos_particular (
   id UUID NOT NULL PRIMARY KEY,
-  aluno_id UUID NOT NULL REFERENCES alunos(id),
-  data_pagamento DATE NOT NULL,
-  forma_pagamento VARCHAR(40) CHECK (
-    forma_pagamento IS NULL OR forma_pagamento IN (
-      'PIX',
-      'DINHEIRO',
-      'CARTAO_CREDITO',
-      'CARTAO_DEBITO',
-      'BOLETO',
-      'TRANSFERENCIA'
-    )
-  ),
+  data_recebimento DATE NOT NULL,
+  valor_total NUMERIC(10, 2) NOT NULL,
+  forma_pagamento VARCHAR(40) NOT NULL,
   comprovante_url VARCHAR(500),
-  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
-);
-
-CREATE INDEX idx_pagamentos_alunos_aluno_data
-  ON pagamentos_alunos(aluno_id, data_pagamento);
-
-CREATE TABLE cobrancas_alunos (
-  id BIGSERIAL NOT NULL PRIMARY KEY,
-  aluno_id UUID NOT NULL REFERENCES alunos(id),
-  origem_id BIGINT NOT NULL,
-  origem_tipo VARCHAR(40) NOT NULL CHECK (
-    origem_tipo IN ('ATENDIMENTO_INDIVIDUAL', 'ATENDIMENTO_TURMA')
-  ),
-  valor_total NUMERIC(10, 2) NOT NULL CHECK (valor_total >= 50),
-  status VARCHAR(20) NOT NULL DEFAULT 'PENDENTE',
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP,
-  CONSTRAINT ck_cobrancas_alunos_status
-    CHECK (status IN ('PENDENTE', 'PARCIALMENTE_PAGA', 'PAGA', 'CANCELADA'))
-);
-
-CREATE UNIQUE INDEX uk_cobrancas_alunos_origem
-  ON cobrancas_alunos(aluno_id, origem_tipo, origem_id);
-CREATE INDEX idx_cobrancas_alunos_aluno_status
-  ON cobrancas_alunos(aluno_id, status);
-CREATE INDEX idx_cobrancas_alunos_origem
-  ON cobrancas_alunos(origem_tipo, origem_id);
-
-CREATE TABLE parcelas_alunos (
-  id BIGSERIAL NOT NULL PRIMARY KEY,
-  cobranca_id BIGINT NOT NULL REFERENCES cobrancas_alunos(id) ON DELETE CASCADE,
-  pagamento_id UUID REFERENCES pagamentos_alunos(id),
-  numero_parcela INTEGER NOT NULL CHECK (numero_parcela > 0),
-  valor NUMERIC(10, 2) NOT NULL CHECK (valor > 0),
-  data_vencimento DATE,
-  status VARCHAR(20) NOT NULL DEFAULT 'PENDENTE',
-  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP,
-  CONSTRAINT ck_parcelas_alunos_status
-    CHECK (status IN ('PENDENTE', 'PAGA', 'CANCELADA')),
-  CONSTRAINT ck_parcelas_alunos_pagamento
+  CONSTRAINT ck_recebimentos_particular_valor_total
+    CHECK (valor_total >= 0),
+  CONSTRAINT ck_recebimentos_particular_forma_pagamento
     CHECK (
-      (status = 'PAGA' AND pagamento_id IS NOT NULL)
-      OR
-      (status IN ('PENDENTE', 'CANCELADA') AND pagamento_id IS NULL)
-    ),
-  CONSTRAINT uk_parcelas_alunos_cobranca_numero
-    UNIQUE (cobranca_id, numero_parcela)
+      forma_pagamento IN (
+        'PIX',
+        'DINHEIRO',
+        'CARTAO_CREDITO',
+        'CARTAO_DEBITO',
+        'BOLETO',
+        'TRANSFERENCIA'
+      )
+    )
 );
 
-CREATE INDEX idx_parcelas_alunos_pagamento_id
-  ON parcelas_alunos(pagamento_id);
-CREATE INDEX idx_parcelas_alunos_cobranca_status
-  ON parcelas_alunos(cobranca_id, status);
+CREATE TABLE cobrancas_particular (
+  id BIGSERIAL NOT NULL PRIMARY KEY,
+  atendimento_id BIGINT NOT NULL REFERENCES atendimentos_particular(id),
+  aluno_id UUID NOT NULL REFERENCES alunos(id),
+  valor NUMERIC(10, 2) NOT NULL,
+  status VARCHAR(20) NOT NULL DEFAULT 'PENDENTE',
+  recebimento_id UUID REFERENCES recebimentos_particular(id) ON DELETE SET NULL,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP,
+  CONSTRAINT uk_cobrancas_particular_atendimento UNIQUE (atendimento_id),
+  CONSTRAINT ck_cobrancas_particular_valor CHECK (valor >= 0),
+  CONSTRAINT ck_cobrancas_particular_status
+    CHECK (status IN ('PENDENTE', 'PAGA', 'CANCELADA')),
+  CONSTRAINT ck_cobrancas_particular_recebimento
+    CHECK (
+      (status = 'PAGA' AND recebimento_id IS NOT NULL)
+      OR
+      (status IN ('PENDENTE', 'CANCELADA') AND recebimento_id IS NULL)
+    )
+);
+
+CREATE INDEX idx_cobrancas_particular_aluno_status
+  ON cobrancas_particular(aluno_id, status);
+CREATE INDEX idx_cobrancas_particular_recebimento_id
+  ON cobrancas_particular(recebimento_id);
 
 CREATE TABLE pagamentos_particular (
   id UUID NOT NULL PRIMARY KEY,
@@ -198,7 +182,7 @@ CREATE TABLE pagamentos_particular (
 
 CREATE TABLE repasses_particular (
   id BIGSERIAL NOT NULL PRIMARY KEY,
-  atendimento_id BIGINT NOT NULL REFERENCES atendimentos_individuais(id),
+  atendimento_id BIGINT NOT NULL REFERENCES atendimentos_particular(id),
   colaborador_id UUID NOT NULL REFERENCES colaboradores(id),
   valor NUMERIC(10, 2) NOT NULL,
   status VARCHAR(20) NOT NULL DEFAULT 'PENDENTE',

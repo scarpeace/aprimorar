@@ -18,6 +18,12 @@
     "cwd": "$ZED_WORKTREE_ROOT/server"
   },
   {
+    "label": "Backend: MVN Install",
+    "command": "./mvnw",
+    "args": ["clean install"],
+    "cwd": "$ZED_WORKTREE_ROOT/server"
+  },
+  {
     "label": "Backend: clean compile",
     "command": "./mvnw",
     "args": ["clean", "compile"],

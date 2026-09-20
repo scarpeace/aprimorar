@@ -3,6 +3,6 @@
 |Base package
 |`aprimorar.agendamento`
 |Bean references
-|* `a.f.api.financeiro_aluno.CobrancaAlunoApi` (in Financeiro)
-* `a.f.api.repasses.RepasseApi` (in Financeiro)
+|* `aprimorar.financeiro.api.cobrancas_particular.CobrancaParticularApi` (in Financeiro)
+* `aprimorar.financeiro.api.repasses_particular.RepasseApi` (in Financeiro)
 |===

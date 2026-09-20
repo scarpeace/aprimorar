@@ -56,11 +56,9 @@ aprimorar/
 ├── auth/
 ├── common/
 ├── financeiro/
-│   ├── api/{financeiro_aluno,repasses_particular}
-│   ├── financeiro_aluno/
-│   │   ├── cobrancas/{domain,repository,service,web}
-│   │   ├── parcelas/{domain,repository,service,web}
-│   │   └── pagamentos/{domain,repository,service,web}
+│   ├── api/{cobrancas_particular,repasses_particular}
+│   ├── cobrancas_particular/{domain,repository,service,web}
+│   ├── recebimentos_particular/{domain,repository,service,web}
 │   ├── repasses_particular/{domain,repository,service,web}
 │   ├── pagamentos_particular/{domain,repository,service,web}
 │   ├── despesas/{domain,repository,service,web}
@@ -122,10 +120,10 @@ Dentro de `server/`:
 - `Aluno` e `Colaborador` usam `Endereco` com `@Embedded`
 - `Aluno` usa `Responsavel` com `@Embedded`; não existe tabela ou ID próprio
   para responsável
-- o valor da cobrança individual vive em `cobrancas_alunos`; o valor do repasse vive
+- o valor da cobrança individual vive em `cobrancas_particular`; o valor do repasse vive
   em `repasses_particular`
-- pagamentos de cobranças individuais vivem em `pagamentos_alunos_individuais`;
-  um pagamento pode quitar várias cobranças do mesmo aluno e seu total é calculado
+- recebimentos de cobranças individuais vivem em `recebimentos_particular`;
+  um recebimento pode quitar várias cobranças do mesmo aluno e seu total é calculado
   pela soma das cobranças vinculadas
 - toda criação de atendimento individual cria uma cobrança e um repasse
   pendentes; o atendimento não armazena valores financeiros próprios

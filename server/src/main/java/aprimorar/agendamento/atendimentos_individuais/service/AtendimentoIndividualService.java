@@ -1,13 +1,12 @@
 package aprimorar.agendamento.atendimentos_individuais.service;
 
-import aprimorar.financeiro.api.financeiro_aluno.AtualizarCobrancaAlunoCommand;
-import aprimorar.financeiro.api.financeiro_aluno.CobrancaAlunoApi;
-import aprimorar.financeiro.api.financeiro_aluno.CriarCobrancaAlunoCommand;
-import aprimorar.financeiro.api.financeiro_aluno.TipoOrigemCobrancaAluno;
+import aprimorar.financeiro.api.cobrancas_particular.AtualizarCobrancaParticularCommand;
+import aprimorar.financeiro.api.cobrancas_particular.CobrancaParticularApi;
+import aprimorar.financeiro.api.cobrancas_particular.CobrancaParticularSummary;
+import aprimorar.financeiro.api.cobrancas_particular.CriarCobrancaParticularCommand;
 import aprimorar.financeiro.api.repasses_particular.AtualizarRepasseCommand;
 import aprimorar.financeiro.api.repasses_particular.CriarRepasseCommand;
 import aprimorar.financeiro.api.repasses_particular.RepasseApi;
-import aprimorar.financeiro.api.financeiro_aluno.CobrancaAlunoResumo;
 import aprimorar.financeiro.api.repasses_particular.RepasseParticularSummary;
 import aprimorar.agendamento.atendimentos_individuais.repository.AtendimentoIndividualRepository;
 import aprimorar.agendamento.atendimentos_individuais.repository.AtendimentoIndividualSpecifications;
@@ -47,14 +46,14 @@ public class AtendimentoIndividualService {
 
     private static final Logger log = LoggerFactory.getLogger(AtendimentoIndividualService.class);
     private final AtendimentoIndividualRepository atendimentoRepository;
-    private final CobrancaAlunoApi cobrancaApi;
+    private final CobrancaParticularApi cobrancaApi;
     private final RepasseApi repasseApi;
     private final AlunoService alunoService;
     private final ColaboradorService colaboradorService;
 
     public AtendimentoIndividualService(
         AtendimentoIndividualRepository atendimentoRepository,
-        CobrancaAlunoApi cobrancaApi,
+        CobrancaParticularApi cobrancaApi,
         RepasseApi repasseApi,
         AlunoService alunoService,
         ColaboradorService colaboradorService
@@ -74,7 +73,7 @@ public class AtendimentoIndividualService {
 
         Set<Long> ids = idsDosAtendimentos(atendimentos.getContent());
 
-        Map<Long, CobrancaAlunoResumo> cobrancas = cobrancaApi.buscarResumosPorOrigemIds(ids,TipoOrigemCobrancaAluno.ATENDIMENTO_INDIVIDUAL);
+        Map<Long, CobrancaParticularSummary> cobrancas = cobrancaApi.buscarSummariesPorAtendimentoIds(ids);
         Map<Long, RepasseParticularSummary> repasses = repasseApi.buscarSummariesPorAtendimentoIds(ids);
 
         return atendimentos.map(atendimento -> AtendimentoIndividualResponse.toDto(
@@ -88,7 +87,7 @@ public class AtendimentoIndividualService {
     public AtendimentoIndividualResponse buscarAtendimentoPorId(Long id) {
         AtendimentoIndividual atendimento = findAtendimentoOrThrow(id);
 
-        CobrancaAlunoResumo cobranca = cobrancaApi.buscarResumoPorOrigemId(id, TipoOrigemCobrancaAluno.ATENDIMENTO_INDIVIDUAL)
+        CobrancaParticularSummary cobranca = cobrancaApi.buscarSummaryPorAtendimentoId(id)
             .orElseThrow(() -> new IllegalStateException("Cobrança não encontrada para o atendimento " + id));
 
         RepasseParticularSummary repasse = repasseApi.buscarSummaryPorAtendimentoId(id)
@@ -154,9 +153,8 @@ public class AtendimentoIndividualService {
             )
         );
 
-        cobrancaApi.criar(new CriarCobrancaAlunoCommand(
+        cobrancaApi.criar(new CriarCobrancaParticularCommand(
             atendimento.getId(),
-            TipoOrigemCobrancaAluno.ATENDIMENTO_INDIVIDUAL,
             atendimento.getAluno().getId(),
             request.valorCobranca()
         ));
@@ -195,9 +193,8 @@ public class AtendimentoIndividualService {
         }
 
         validarDisponibilidade(aluno.getId(), colaborador.getId(), request.dataHoraInicio(), request.dataHoraFim(), id);
-        cobrancaApi.atualizar(new AtualizarCobrancaAlunoCommand(
+        cobrancaApi.atualizar(new AtualizarCobrancaParticularCommand(
             id,
-            TipoOrigemCobrancaAluno.ATENDIMENTO_INDIVIDUAL,
             aluno.getId(),
             request.valorCobranca()
         ));
@@ -224,7 +221,7 @@ public class AtendimentoIndividualService {
     public void cancelar(Long id) {
         AtendimentoIndividual atendimento = findAtendimentoOrThrow(id);
         atendimento.cancelar();
-        cobrancaApi.cancelarPorOrigem(id, TipoOrigemCobrancaAluno.ATENDIMENTO_INDIVIDUAL);
+        cobrancaApi.cancelarPorAtendimento(id);
         repasseApi.cancelarPorAtendimento(id);
         log.info("Atendimento individual {} cancelado.", id);
     }
@@ -235,8 +232,11 @@ public class AtendimentoIndividualService {
             .collect(Collectors.toUnmodifiableSet());
     }
 
-    private CobrancaAlunoResumo cobrancaDoAtendimento(Long atendimentoId, Map<Long, CobrancaAlunoResumo> cobrancas) {
-        CobrancaAlunoResumo cobranca = cobrancas.get(atendimentoId);
+    private CobrancaParticularSummary cobrancaDoAtendimento(
+        Long atendimentoId,
+        Map<Long, CobrancaParticularSummary> cobrancas
+    ) {
+        CobrancaParticularSummary cobranca = cobrancas.get(atendimentoId);
         if (cobranca == null) {
             throw new IllegalStateException("Cobrança não encontrada para o atendimento " + atendimentoId);
         }

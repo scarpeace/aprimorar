@@ -3,6 +3,7 @@ package aprimorar.agendamento.atendimentos_individuais.web.dto.atendimento;
 import aprimorar.agendamento.atendimentos_individuais.domain.AtendimentoIndividual;
 import aprimorar.agendamento.atendimentos_individuais.domain.enums.StatusAtendimentoIndividual;
 import aprimorar.agendamento.atendimentos_individuais.domain.enums.TipoAtendimento;
+import aprimorar.financeiro.api.cobrancas_particular.CobrancaParticularSummary;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotNull;
@@ -42,7 +43,7 @@ public record AtendimentoIndividualResponse(
 
     @NotNull
     @Schema(nullable = false, description = "Resumo da cobrança do atendimento")
-    CobrancaAlunoResumo cobranca,
+    CobrancaParticularResponse cobranca,
 
     @NotNull
     @Schema(nullable = false, description = "Resumo do repasse do atendimento")
@@ -58,7 +59,7 @@ public record AtendimentoIndividualResponse(
 ) {
     public static AtendimentoIndividualResponse toDto(
         AtendimentoIndividual atendimento,
-        aprimorar.financeiro.api.financeiro_aluno.CobrancaAlunoResumo cobranca,
+        CobrancaParticularSummary cobranca,
         aprimorar.financeiro.api.repasses_particular.RepasseParticularSummary repasse
     ) {
         return new AtendimentoIndividualResponse(
@@ -69,7 +70,7 @@ public record AtendimentoIndividualResponse(
             atendimento.getDataHoraFim(),
             new AlunoResumo(atendimento.getAluno().getId(), atendimento.getAluno().getNome()),
             new ColaboradorResumo(atendimento.getColaborador().getId(), atendimento.getColaborador().getNome()),
-            new CobrancaAlunoResumo(
+            new CobrancaParticularResponse(
                 cobranca.id(),
                 cobranca.valor(),
                 cobranca.status()
@@ -108,7 +109,7 @@ public record AtendimentoIndividualResponse(
     ) {
     }
 
-    public record CobrancaAlunoResumo(
+    public record CobrancaParticularResponse(
         @NotNull
         @Schema(nullable = false, description = "Identificador da cobrança")
         Long id,

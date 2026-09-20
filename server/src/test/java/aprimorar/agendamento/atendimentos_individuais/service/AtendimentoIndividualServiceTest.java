@@ -8,10 +8,9 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
-import aprimorar.financeiro.api.financeiro_aluno.CobrancaAlunoApi;
-import aprimorar.financeiro.api.financeiro_aluno.CriarCobrancaAlunoCommand;
-import aprimorar.financeiro.api.financeiro_aluno.AtualizarCobrancaAlunoCommand;
-import aprimorar.financeiro.api.financeiro_aluno.TipoOrigemCobrancaAluno;
+import aprimorar.financeiro.api.cobrancas_particular.AtualizarCobrancaParticularCommand;
+import aprimorar.financeiro.api.cobrancas_particular.CobrancaParticularApi;
+import aprimorar.financeiro.api.cobrancas_particular.CriarCobrancaParticularCommand;
 import aprimorar.financeiro.api.repasses_particular.AtualizarRepasseCommand;
 import aprimorar.financeiro.api.repasses_particular.CriarRepasseCommand;
 import aprimorar.financeiro.api.repasses_particular.RepasseApi;
@@ -46,7 +45,7 @@ class AtendimentoIndividualServiceTest {
     private AtendimentoIndividualRepository atendimentoRepository;
 
     @Mock
-    private CobrancaAlunoApi cobrancaApi;
+    private CobrancaParticularApi cobrancaApi;
 
     @Mock
     private RepasseApi repasseApi;
@@ -130,13 +129,10 @@ class AtendimentoIndividualServiceTest {
 
         assertEquals(atendimentoId, result);
 
-        ArgumentCaptor<CriarCobrancaAlunoCommand> cobrancaCaptor = ArgumentCaptor.forClass(CriarCobrancaAlunoCommand.class);
+        ArgumentCaptor<CriarCobrancaParticularCommand> cobrancaCaptor =
+            ArgumentCaptor.forClass(CriarCobrancaParticularCommand.class);
         verify(cobrancaApi).criar(cobrancaCaptor.capture());
-        assertEquals(atendimentoId, cobrancaCaptor.getValue().origemId());
-        assertEquals(
-            TipoOrigemCobrancaAluno.ATENDIMENTO_INDIVIDUAL,
-            cobrancaCaptor.getValue().origemTipo()
-        );
+        assertEquals(atendimentoId, cobrancaCaptor.getValue().atendimentoId());
         assertEquals(aluno.getId(), cobrancaCaptor.getValue().alunoId());
         assertEquals(BigDecimal.valueOf(150), cobrancaCaptor.getValue().valor());
 
@@ -165,14 +161,10 @@ class AtendimentoIndividualServiceTest {
 
         service.update(atendimentoId, request(alunoId, colaboradorId));
 
-        ArgumentCaptor<AtualizarCobrancaAlunoCommand> cobrancaCaptor =
-            ArgumentCaptor.forClass(AtualizarCobrancaAlunoCommand.class);
+        ArgumentCaptor<AtualizarCobrancaParticularCommand> cobrancaCaptor =
+            ArgumentCaptor.forClass(AtualizarCobrancaParticularCommand.class);
         verify(cobrancaApi).atualizar(cobrancaCaptor.capture());
-        assertEquals(atendimentoId, cobrancaCaptor.getValue().origemId());
-        assertEquals(
-            TipoOrigemCobrancaAluno.ATENDIMENTO_INDIVIDUAL,
-            cobrancaCaptor.getValue().origemTipo()
-        );
+        assertEquals(atendimentoId, cobrancaCaptor.getValue().atendimentoId());
         assertEquals(aluno.getId(), cobrancaCaptor.getValue().alunoId());
         assertEquals(BigDecimal.valueOf(150), cobrancaCaptor.getValue().valor());
 
@@ -208,10 +200,7 @@ class AtendimentoIndividualServiceTest {
         service.cancelar(atendimentoId);
 
         assertEquals(StatusAtendimentoIndividual.CANCELADO, atendimento.getStatus());
-        verify(cobrancaApi).cancelarPorOrigem(
-            atendimentoId,
-            TipoOrigemCobrancaAluno.ATENDIMENTO_INDIVIDUAL
-        );
+        verify(cobrancaApi).cancelarPorAtendimento(atendimentoId);
         verify(repasseApi).cancelarPorAtendimento(atendimentoId);
     }
 

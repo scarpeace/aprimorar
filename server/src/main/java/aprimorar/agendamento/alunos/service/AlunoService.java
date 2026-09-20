@@ -1,6 +1,6 @@
 package aprimorar.agendamento.alunos.service;
 
-import aprimorar.financeiro.api.financeiro_aluno.CobrancaAlunoApi;
+import aprimorar.financeiro.api.cobrancas_particular.CobrancaParticularApi;
 import aprimorar.agendamento.alunos.domain.Aluno;
 import aprimorar.agendamento.alunos.domain.exception.AlunoNaoEncontradoException;
 import aprimorar.agendamento.alunos.domain.exception.AlunoPossuiPendenciaFinanceiraException;
@@ -21,9 +21,9 @@ import org.springframework.transaction.annotation.Transactional;
 public class AlunoService {
 
     private final AlunoRepository alunoRepo;
-    private final CobrancaAlunoApi cobrancaApi;
+    private final CobrancaParticularApi cobrancaApi;
 
-    public AlunoService(AlunoRepository alunoRepo, CobrancaAlunoApi cobrancaApi) {
+    public AlunoService(AlunoRepository alunoRepo, CobrancaParticularApi cobrancaApi) {
         this.alunoRepo = alunoRepo;
         this.cobrancaApi = cobrancaApi;
     }

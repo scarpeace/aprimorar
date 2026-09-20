@@ -6,7 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
-import aprimorar.financeiro.api.financeiro_aluno.CobrancaAlunoApi;
+import aprimorar.financeiro.api.cobrancas_particular.CobrancaParticularApi;
 import aprimorar.agendamento.alunos.domain.Aluno;
 import aprimorar.agendamento.alunos.domain.Responsavel;
 import aprimorar.agendamento.alunos.domain.exception.AlunoPossuiPendenciaFinanceiraException;
@@ -34,7 +34,7 @@ class AlunoServiceMutationTest {
     private AlunoRepository alunoRepo;
 
     @Mock
-    private CobrancaAlunoApi cobrancaApi;
+    private CobrancaParticularApi cobrancaApi;
 
     private AlunoService service;
 
