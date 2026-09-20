@@ -10,8 +10,6 @@ import aprimorar.agendamento.alunos.web.dto.aluno.AlunoFiltroRequest;
 
 import java.util.List;
 import java.util.UUID;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -21,8 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class AlunoService {
-
-    private static final Logger log = LoggerFactory.getLogger(AlunoService.class);
 
     private final AlunoRepository alunoRepo;
     private final CobrancaAlunoApi cobrancaApi;
@@ -40,36 +36,26 @@ public class AlunoService {
     @Transactional(readOnly = true)
     public Page<Aluno> getAlunos(AlunoFiltroRequest filtro, Pageable pageable) {
         Specification<Aluno> spec = AlunoSpecifications.comFiltros(filtro);
-        Page<Aluno> alunosPage = alunoRepo.findAll(spec, pageable);
-
-        log.info("Consulta de alunos finalizada, {} registros encontrados.", alunosPage.getTotalElements());
-        return alunosPage;
+        return alunoRepo.findAll(spec, pageable);
     }
 
     @Transactional(readOnly = true)
-    public List<Aluno> listAlunos() {
+    public List<Aluno> listAlunosOptions() {
         Sort sort = Sort.by(Sort.Direction.ASC, "nome");
-        List<Aluno> alunos = alunoRepo
+        return alunoRepo
             .findAll(AlunoSpecifications.isActive(), sort)
             .stream()
             .toList();
-
-        log.info("Consulta de opcoes de alunos finalizada, {} registros encontrados.", alunos.size());
-        return alunos;
     }
 
     @Transactional(readOnly = true)
     public Aluno findAlunoById(UUID alunoId) {
-        Aluno aluno = findAlunoOrThrow(alunoId);
-        log.info("Aluno {} consultado com sucesso.", aluno.getNome());
-        return aluno;
+        return findAlunoOrThrow(alunoId);
     }
 
     @Transactional
     public UUID createAluno(Aluno aluno) {
         Aluno savedAluno = alunoRepo.save(aluno);
-
-        log.info("Aluno {} cadastrado com sucesso.", savedAluno.getNome().toUpperCase());
         return savedAluno.getId();
     }
 
@@ -86,8 +72,6 @@ public class AlunoService {
             requestedAluno.getResponsavel(),
             requestedAluno.getEndereco()
         );
-
-        log.info("Aluno {} atualizado com sucesso.", aluno.getNome().toUpperCase());
     }
 
     @Transactional
@@ -99,14 +83,12 @@ public class AlunoService {
         }
 
         aluno.deactivate();
-        log.info("Aluno {} desativado com sucesso.", aluno.getNome().toUpperCase());
     }
 
     @Transactional
     public void activateAluno(UUID alunoId) {
         Aluno aluno = findAlunoOrThrow(alunoId);
         aluno.activate();
-        log.info("Aluno {} ativado com sucesso.", aluno.getNome().toUpperCase());
     }
 
     private Aluno findAlunoOrThrow(UUID alunoId) {

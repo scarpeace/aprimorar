@@ -69,10 +69,10 @@ public class AlunoController {
     }
 
     @GetMapping("/options")
-    @Operation(operationId = "listAlunos", description = "Retorna uma lista de opções de alunos.")
+    @Operation(operationId = "listAlunosOptions", description = "Retorna uma lista de opções de alunos.")
     @ApiResponse(responseCode = "200", description = "Lista de opções de alunos retornada com sucesso.")
-    public ResponseEntity<List<AlunosOptionsResponse>> listAlunos() {
-        List<AlunosOptionsResponse> options = alunoService.listAlunos()
+    public ResponseEntity<List<AlunosOptionsResponse>> listAlunosOptions() {
+        List<AlunosOptionsResponse> options = alunoService.listAlunosOptions()
             .stream()
             .map(AlunosOptionsResponse::toDto)
             .toList();
