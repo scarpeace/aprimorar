@@ -8,12 +8,11 @@ import aprimorar.financeiro.financeiro_particular.pagamentos_colaboradores.repos
 import aprimorar.financeiro.financeiro_particular.pagamentos_colaboradores.web.dto.PagamentoParticularDetalheResponse;
 import aprimorar.financeiro.financeiro_particular.pagamentos_colaboradores.web.dto.PagamentoParticularFiltroRequest;
 import aprimorar.financeiro.financeiro_particular.pagamentos_colaboradores.web.dto.PagamentoParticularResponse;
+import aprimorar.financeiro.financeiro_particular.pagamentos_colaboradores.web.dto.RegistrarPagamentoParticularRequest;
 import aprimorar.financeiro.financeiro_particular.pagamentos_colaboradores.domain.RepasseParticular;
 import aprimorar.financeiro.financeiro_particular.pagamentos_colaboradores.api.RepasseParticularNaoEncontradoException;
 import aprimorar.financeiro.financeiro_particular.pagamentos_colaboradores.repository.RepasseParticularRepository;
-import aprimorar.common.FormaPagamentoEnum;
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 import org.springframework.data.domain.Page;
@@ -64,15 +63,11 @@ public class PagamentoParticularService {
     }
 
     @Transactional
-    public UUID registrarPagamento(
-        List<Long> repasseIds,
-        LocalDate dataPagamento,
-        FormaPagamentoEnum formaPagamento,
-        String comprovanteUrl
-    ) {
+    public UUID registrarPagamento(RegistrarPagamentoParticularRequest dto) {
+        List<RepasseParticular> repasses = repasseRepository
+            .findAllByIdInForUpdate(dto.repasseIds());
 
-        List<RepasseParticular> repasses = repasseRepository.findAllByIdInForUpdate(repasseIds);
-        if (repasses.size() != repasseIds.size()) {
+        if (repasses.size() != dto.repasseIds().size()) {
             throw new RepasseParticularNaoEncontradoException();
         }
 
@@ -86,10 +81,10 @@ public class PagamentoParticularService {
 
         PagamentoParticular pagamento = pagamentoRepository.save(
             new PagamentoParticular(
-                dataPagamento,
+                dto.dataPagamento(),
                 total,
-                formaPagamento,
-                comprovanteUrl
+                dto.formaPagamento(),
+                dto.comprovanteUrl()
             )
         );
 

@@ -3,19 +3,22 @@ package aprimorar.financeiro.financeiro_particular.recebimentos_alunos.service;
 import aprimorar.financeiro.financeiro_particular.recebimentos_alunos.domain.CobrancaParticular;
 import aprimorar.financeiro.financeiro_particular.recebimentos_alunos.api.CobrancaParticularNaoEncontradaException;
 import aprimorar.financeiro.financeiro_particular.recebimentos_alunos.repository.CobrancaParticularRepository;
-import aprimorar.common.FormaPagamentoEnum;
 import aprimorar.financeiro.financeiro_particular.recebimentos_alunos.domain.RecebimentoParticular;
 import aprimorar.financeiro.financeiro_particular.recebimentos_alunos.domain.exception.RecebimentoParticularDadosInvalidosException;
 import aprimorar.financeiro.financeiro_particular.recebimentos_alunos.domain.exception.RecebimentoParticularNaoEncontradoException;
 import aprimorar.financeiro.financeiro_particular.recebimentos_alunos.repository.RecebimentoParticularRepository;
 import aprimorar.financeiro.financeiro_particular.recebimentos_alunos.repository.RecebimentoParticularSpecifications;
+import aprimorar.financeiro.financeiro_particular.recebimentos_alunos.web.dto.RecebimentoParticularDetalheResponse;
 import aprimorar.financeiro.financeiro_particular.recebimentos_alunos.web.dto.RecebimentoParticularFiltroRequest;
+import aprimorar.financeiro.financeiro_particular.recebimentos_alunos.web.dto.RecebimentoParticularResponse;
+import aprimorar.financeiro.financeiro_particular.recebimentos_alunos.web.dto.RegistrarRecebimentoParticularRequest;
+
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,16 +37,11 @@ public class RecebimentoParticularService {
     }
 
     @Transactional
-    public UUID registrarRecebimento(
-        List<Long> cobrancaIds,
-        LocalDate dataRecebimento,
-        FormaPagamentoEnum formaPagamento,
-        String comprovanteUrl
-    ) {
+    public UUID registrarRecebimento(RegistrarRecebimentoParticularRequest dto) {
         List<CobrancaParticular> cobrancas = cobrancaRepository
-            .findAllByIdInForUpdate(cobrancaIds);
+            .findAllByIdInForUpdate(dto.cobrancaIds());
 
-        if (cobrancas.size() != cobrancaIds.size()) {
+        if (cobrancas.size() != dto.cobrancaIds().size()) {
             throw new CobrancaParticularNaoEncontradaException();
         }
 
@@ -59,10 +57,10 @@ public class RecebimentoParticularService {
 
         RecebimentoParticular recebimento = recebimentoRepository.save(
             new RecebimentoParticular(
-                dataRecebimento,
+                dto.dataRecebimento(),
                 total,
-                formaPagamento,
-                comprovanteUrl
+                dto.formaPagamento(),
+                dto.comprovanteUrl()
             )
         );
 
@@ -71,18 +69,21 @@ public class RecebimentoParticularService {
     }
 
     @Transactional(readOnly = true)
-    public Page<RecebimentoParticular> buscarRecebimentos(
+    public Page<RecebimentoParticularResponse> getRecebimentos(
         RecebimentoParticularFiltroRequest filtro,
         Pageable pageable
     ) {
-        return recebimentoRepository.findAll(
-            RecebimentoParticularSpecifications.comFiltros(filtro),
-            pageable
-        );
+        Specification<RecebimentoParticular> spec = RecebimentoParticularSpecifications
+            .comFiltros(filtro);
+
+        return recebimentoRepository.findAll(spec, pageable)
+            .map(RecebimentoParticularResponse::toDto);
     }
 
     @Transactional(readOnly = true)
-    public RecebimentoParticular buscarDetalhesPorId(UUID recebimentoId) {
+    public RecebimentoParticularDetalheResponse getRecebimentoPorId(
+        UUID recebimentoId
+    ) {
         RecebimentoParticular recebimento = recebimentoRepository
             .findByIdWithCobrancas(recebimentoId)
             .orElseThrow(RecebimentoParticularNaoEncontradoException::new);
@@ -93,7 +94,7 @@ public class RecebimentoParticularService {
             );
         }
 
-        return recebimento;
+        return RecebimentoParticularDetalheResponse.toDto(recebimento);
     }
 
     @Transactional

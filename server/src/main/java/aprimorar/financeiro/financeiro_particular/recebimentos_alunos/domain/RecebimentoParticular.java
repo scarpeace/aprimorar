@@ -1,7 +1,6 @@
 package aprimorar.financeiro.financeiro_particular.recebimentos_alunos.domain;
 
 import aprimorar.common.FormaPagamentoEnum;
-import aprimorar.financeiro.financeiro_particular.recebimentos_alunos.domain.CobrancaParticular;
 import aprimorar.financeiro.financeiro_particular.recebimentos_alunos.domain.exception.RecebimentoParticularDadosInvalidosException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

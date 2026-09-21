@@ -57,12 +57,7 @@ public class PagamentoParticularController {
     public ResponseEntity<Void> registrarPagamento(
         @RequestBody @Valid RegistrarPagamentoParticularRequest request
     ) {
-        UUID id = pagamentoService.registrarPagamento(
-            request.repasseIds(),
-            request.dataPagamento(),
-            request.formaPagamento(),
-            request.comprovanteUrl()
-        );
+        UUID id = pagamentoService.registrarPagamento(request);
 
         return ResponseEntity.created(
             URI.create("/financeiro/repasses/pagamentos/" + id)

@@ -56,12 +56,7 @@ public class RecebimentoParticularController {
     public ResponseEntity<Void> registrarRecebimento(
         @RequestBody @Valid RegistrarRecebimentoParticularRequest request
     ) {
-        UUID id = recebimentoService.registrarRecebimento(
-            request.cobrancaIds(),
-            request.dataRecebimento(),
-            request.formaPagamento(),
-            request.comprovanteUrl()
-        );
+        UUID id = recebimentoService.registrarRecebimento(request);
 
         return ResponseEntity.created(
             URI.create("/financeiro/cobrancas/recebimentos/" + id)
@@ -81,10 +76,10 @@ public class RecebimentoParticularController {
         @PageableDefault(sort = "dataRecebimento", direction = Sort.Direction.DESC)
         Pageable pageable
     ) {
-        return ResponseEntity.ok(
-            recebimentoService.buscarRecebimentos(filtro, pageable)
-                .map(RecebimentoParticularResponse::toDto)
-        );
+        Page<RecebimentoParticularResponse> recebimentos = recebimentoService
+            .getRecebimentos(filtro, pageable);
+
+        return ResponseEntity.ok(recebimentos);
     }
 
     @GetMapping("/{recebimentoId}")
@@ -98,11 +93,10 @@ public class RecebimentoParticularController {
     public ResponseEntity<RecebimentoParticularDetalheResponse> buscarPorId(
         @PathVariable UUID recebimentoId
     ) {
-        return ResponseEntity.ok(
-            RecebimentoParticularDetalheResponse.toDto(
-                recebimentoService.buscarDetalhesPorId(recebimentoId)
-            )
-        );
+        RecebimentoParticularDetalheResponse recebimento = recebimentoService
+            .getRecebimentoPorId(recebimentoId);
+
+        return ResponseEntity.ok(recebimento);
     }
 
     @DeleteMapping("/{recebimentoId}")

@@ -14,6 +14,7 @@ import aprimorar.financeiro.financeiro_particular.pagamentos_colaboradores.domai
 import aprimorar.financeiro.financeiro_particular.pagamentos_colaboradores.domain.enums.StatusRepasseParticular;
 import aprimorar.financeiro.financeiro_particular.pagamentos_colaboradores.api.RepasseParticularDadosInvalidosException;
 import aprimorar.financeiro.financeiro_particular.pagamentos_colaboradores.repository.RepasseParticularRepository;
+import aprimorar.financeiro.financeiro_particular.pagamentos_colaboradores.web.dto.RegistrarPagamentoParticularRequest;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
@@ -55,10 +56,12 @@ class PagamentoParticularServiceTest {
             .thenAnswer(invocation -> invocation.getArgument(0));
 
         UUID pagamentoId = service.registrarPagamento(
-            List.of(1L, 2L),
-            LocalDate.now(),
-            FormaPagamentoEnum.PIX,
-            null
+            new RegistrarPagamentoParticularRequest(
+                List.of(1L, 2L),
+                LocalDate.now(),
+                FormaPagamentoEnum.PIX,
+                null
+            )
         );
 
         ArgumentCaptor<PagamentoParticular> captor = ArgumentCaptor.forClass(PagamentoParticular.class);
@@ -79,10 +82,12 @@ class PagamentoParticularServiceTest {
         assertThrows(
             PagamentoParticularDadosInvalidosException.class,
             () -> service.registrarPagamento(
-                List.of(1L, 2L),
-                LocalDate.now(),
-                FormaPagamentoEnum.PIX,
-                null
+                new RegistrarPagamentoParticularRequest(
+                    List.of(1L, 2L),
+                    LocalDate.now(),
+                    FormaPagamentoEnum.PIX,
+                    null
+                )
             )
         );
     }
@@ -102,10 +107,12 @@ class PagamentoParticularServiceTest {
         assertThrows(
             RepasseParticularDadosInvalidosException.class,
             () -> service.registrarPagamento(
-                List.of(1L),
-                LocalDate.now(),
-                FormaPagamentoEnum.PIX,
-                null
+                new RegistrarPagamentoParticularRequest(
+                    List.of(1L),
+                    LocalDate.now(),
+                    FormaPagamentoEnum.PIX,
+                    null
+                )
             )
         );
     }

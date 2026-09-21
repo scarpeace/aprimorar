@@ -2,7 +2,6 @@ package aprimorar.financeiro.financeiro_particular.recebimentos_alunos.web.dto;
 
 import aprimorar.common.FormaPagamentoEnum;
 import aprimorar.financeiro.financeiro_particular.recebimentos_alunos.domain.CobrancaParticular;
-import aprimorar.financeiro.financeiro_particular.recebimentos_alunos.web.dto.CobrancaParticularResponse;
 import aprimorar.financeiro.financeiro_particular.recebimentos_alunos.domain.RecebimentoParticular;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.annotation.Nullable;

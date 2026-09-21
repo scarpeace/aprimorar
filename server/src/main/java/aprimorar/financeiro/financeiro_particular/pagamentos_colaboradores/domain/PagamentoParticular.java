@@ -2,7 +2,6 @@ package aprimorar.financeiro.financeiro_particular.pagamentos_colaboradores.doma
 
 import aprimorar.common.FormaPagamentoEnum;
 import aprimorar.financeiro.financeiro_particular.pagamentos_colaboradores.domain.exception.PagamentoParticularDadosInvalidosException;
-import aprimorar.financeiro.financeiro_particular.pagamentos_colaboradores.domain.RepasseParticular;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
