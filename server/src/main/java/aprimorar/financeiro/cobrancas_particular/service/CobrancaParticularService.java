@@ -101,11 +101,12 @@ public class CobrancaParticularService implements CobrancaParticularApi {
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<CobrancaParticularSummary> buscarSummaryPorAtendimentoId(
+    public CobrancaParticularSummary buscarSummaryPorAtendimentoId(
         Long atendimentoId
     ) {
         return cobrancaRepository.findByAtendimentoId(atendimentoId)
-            .map(CobrancaParticularService::toSummary);
+            .map(CobrancaParticularService::toSummary)
+            .orElseThrow(CobrancaParticularNaoEncontradaException::new);
     }
 
     @Override

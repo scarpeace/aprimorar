@@ -1,4 +1,4 @@
-package aprimorar.agendamento.atendimentos_individuais.domain;
+package aprimorar.agendamento.atendimentos_particular.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -13,21 +13,20 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
-import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import aprimorar.agendamento.alunos.domain.Aluno;
-import aprimorar.agendamento.atendimentos_individuais.domain.enums.StatusAtendimentoIndividual;
-import aprimorar.agendamento.atendimentos_individuais.domain.enums.TipoAtendimento;
+import aprimorar.agendamento.atendimentos_particular.domain.enums.StatusAtendimentoParticular;
+import aprimorar.agendamento.atendimentos_particular.domain.enums.TipoAtendimentoParticular;
 import aprimorar.agendamento.colaboradores.domain.Colaborador;
-import aprimorar.agendamento.atendimentos_individuais.domain.exception.AtendimentoIndividualDadosInvalidosException;
-import aprimorar.agendamento.atendimentos_individuais.domain.exception.AtendimentoIndividualEdicaoExpiradaException;
+import aprimorar.agendamento.atendimentos_particular.domain.exception.AtendimentoParticularDadosInvalidosException;
+import aprimorar.agendamento.atendimentos_particular.domain.exception.AtendimentoParticularEdicaoExpiradaException;
 import lombok.Getter;
 
 @Entity
 @Getter
-@Table(name = "atendimentos_individuais")
-public class AtendimentoIndividual implements Serializable {
+@Table(name = "atendimentos_particular")
+public class AtendimentoParticular {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -41,11 +40,11 @@ public class AtendimentoIndividual implements Serializable {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "tipo", nullable = false)
-    private TipoAtendimento tipo;
+    private TipoAtendimentoParticular tipo;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
-    private StatusAtendimentoIndividual status;
+    private StatusAtendimentoParticular status;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "aluno_id", nullable = false)
@@ -61,64 +60,59 @@ public class AtendimentoIndividual implements Serializable {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    protected AtendimentoIndividual() {}
+    protected AtendimentoParticular() {}
 
-    public AtendimentoIndividual(
+    public AtendimentoParticular(
         LocalDateTime dataHoraInicio,
         LocalDateTime dataHoraFim,
-        TipoAtendimento tipo,
+        TipoAtendimentoParticular tipo,
         Aluno aluno,
         Colaborador colaborador
     ) {
         this.dataHoraInicio = dataHoraInicio;
         this.dataHoraFim = dataHoraFim;
         this.tipo = tipo;
-        this.status = StatusAtendimentoIndividual.AGENDADO;
+        this.status = StatusAtendimentoParticular.AGENDADO;
         this.aluno = aluno;
         this.colaborador = colaborador;
     }
 
-    public AtendimentoIndividual update(
+    public void atualizar(
         LocalDateTime dataHoraInicio,
         LocalDateTime dataHoraFim,
-        TipoAtendimento tipo,
+        TipoAtendimentoParticular tipo,
         Aluno aluno,
         Colaborador colaborador
     ) {
-        validarPodeEditar();
-        this.dataHoraInicio = dataHoraInicio;
-        this.dataHoraFim = dataHoraFim;
-        this.aluno = aluno;
-        this.colaborador = colaborador;
-        this.tipo = tipo;
-        return this;
-    }
-
-    //TODO: isso nao deveria ser public
-    public void validarPodeEditar() {
         exigirStatusAgendado("Só é possível editar um atendimento agendado");
-        validarJanelaEdicao();
+        validarJanelaDeEdicao();
+        this.dataHoraInicio = dataHoraInicio;
+        this.dataHoraFim = dataHoraFim;
+        this.aluno = aluno;
+        this.colaborador = colaborador;
+        this.tipo = tipo;
     }
 
     public void realizar() {
         exigirStatusAgendado("Só é possível realizar um atendimento agendado");
-        this.status = StatusAtendimentoIndividual.REALIZADO;
+        this.status = StatusAtendimentoParticular.REALIZADO;
     }
 
     public void cancelar() {
         exigirStatusAgendado("Só é possível cancelar um atendimento agendado");
-        this.status = StatusAtendimentoIndividual.CANCELADO;
+        this.status = StatusAtendimentoParticular.CANCELADO;
     }
 
-    public void validarJanelaEdicao() {
+
+    private void validarJanelaDeEdicao() {
         if (this.dataHoraFim != null && LocalDateTime.now().isAfter(this.dataHoraFim.plus(20, ChronoUnit.DAYS))) {
-            throw new AtendimentoIndividualEdicaoExpiradaException();
+            throw new AtendimentoParticularEdicaoExpiradaException();
         }
     }
 
-    private void exigirStatusAgendado(String mensagem) {
-        if (this.status != StatusAtendimentoIndividual.AGENDADO) {
-            throw new AtendimentoIndividualDadosInvalidosException(mensagem);
+    private void exigirStatusAgendado(String message) {
+        if (this.status != StatusAtendimentoParticular.AGENDADO) {
+            throw new AtendimentoParticularDadosInvalidosException(message);
         }
     }
 

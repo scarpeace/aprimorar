@@ -1,7 +1,6 @@
 package aprimorar.financeiro.api.cobrancas_particular;
 
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
@@ -15,7 +14,7 @@ public interface CobrancaParticularApi {
 
     boolean possuiPendenciaPorAlunoId(UUID alunoId);
 
-    Optional<CobrancaParticularSummary> buscarSummaryPorAtendimentoId(Long atendimentoId);
+    CobrancaParticularSummary buscarSummaryPorAtendimentoId(Long atendimentoId);
 
     Map<Long, CobrancaParticularSummary> buscarSummariesPorAtendimentoIds(
         Set<Long> atendimentoIds

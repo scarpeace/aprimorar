@@ -1,4 +1,4 @@
-package aprimorar.agendamento.atendimentos_individuais.repository;
+package aprimorar.agendamento.atendimentos_particular.repository;
 
 
 
@@ -17,28 +17,29 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import aprimorar.agendamento.atendimentos_individuais.domain.AtendimentoIndividual;
+import aprimorar.agendamento.atendimentos_particular.domain.AtendimentoParticular;
 
-public interface AtendimentoIndividualRepository
-    extends JpaRepository<AtendimentoIndividual, Long>, JpaSpecificationExecutor<AtendimentoIndividual> {
-
-    @Override
-    @EntityGraph(attributePaths = {"aluno", "colaborador"})
-    Page<AtendimentoIndividual> findAll(Specification<AtendimentoIndividual> specification, Pageable pageable);
+public interface AtendimentoParticularRepository
+    extends JpaRepository<AtendimentoParticular, Long>, JpaSpecificationExecutor<AtendimentoParticular> {
 
     @Override
     @EntityGraph(attributePaths = {"aluno", "colaborador"})
-    List<AtendimentoIndividual> findAll(Specification<AtendimentoIndividual> specification, Sort sort);
+    Page<AtendimentoParticular> findAll(Specification<AtendimentoParticular> specification, Pageable pageable);
 
     @Override
     @EntityGraph(attributePaths = {"aluno", "colaborador"})
-    Optional<AtendimentoIndividual> findById(Long id);
+    List<AtendimentoParticular> findAll(Specification<AtendimentoParticular> specification, Sort sort);
+
+    @Override
+    @EntityGraph(attributePaths = {"aluno", "colaborador"})
+    Optional<AtendimentoParticular> findById(Long id);
 
     @Query(
         """
             SELECT count(a) > 0
-            FROM AtendimentoIndividual a
+            FROM AtendimentoParticular a
             WHERE a.aluno.id = :alunoId
+              AND a.status <> aprimorar.agendamento.atendimentos_particular.domain.enums.StatusAtendimentoParticular.CANCELADO
               AND a.dataHoraInicio < :fim
               AND a.dataHoraFim > :inicio
               AND (:ignoredAtendimentoId is null or a.id <> :ignoredAtendimentoId)
@@ -54,8 +55,9 @@ public interface AtendimentoIndividualRepository
     @Query(
         """
             SELECT count(a) > 0
-            FROM AtendimentoIndividual a
+            FROM AtendimentoParticular a
             WHERE a.colaborador.id = :colaboradorId
+              AND a.status <> aprimorar.agendamento.atendimentos_particular.domain.enums.StatusAtendimentoParticular.CANCELADO
               AND a.dataHoraInicio < :fim
               AND a.dataHoraFim > :inicio
               AND (:ignoredAtendimentoId is null or a.id <> :ignoredAtendimentoId)

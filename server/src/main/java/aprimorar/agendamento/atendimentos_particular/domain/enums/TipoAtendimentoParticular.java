@@ -1,9 +1,9 @@
-package aprimorar.agendamento.atendimentos_individuais.domain.enums;
+package aprimorar.agendamento.atendimentos_particular.domain.enums;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
 @Schema(description = "Tipo de conteudo ou categoria do atendimento")
-public enum TipoAtendimento {
+public enum TipoAtendimentoParticular {
     @Schema(description = "Aulas regulares")
     AULA,
 

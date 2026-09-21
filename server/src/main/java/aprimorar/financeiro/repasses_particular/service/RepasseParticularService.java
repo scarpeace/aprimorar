@@ -10,7 +10,6 @@ import aprimorar.financeiro.repasses_particular.domain.exception.RepasseParticul
 import aprimorar.financeiro.repasses_particular.domain.exception.RepasseParticularNaoEncontradoException;
 import aprimorar.financeiro.repasses_particular.repository.RepasseParticularRepository;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -90,11 +89,12 @@ public class RepasseParticularService implements RepasseApi {
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<RepasseParticularSummary> buscarSummaryPorAtendimentoId(
+    public RepasseParticularSummary buscarSummaryPorAtendimentoId(
         Long atendimentoId
     ) {
         return repasseRepository.findByAtendimentoId(atendimentoId)
-            .map(RepasseParticularService::toSummary);
+            .map(RepasseParticularService::toSummary)
+            .orElseThrow(RepasseParticularNaoEncontradoException::new);
     }
 
     @Override

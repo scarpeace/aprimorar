@@ -82,9 +82,6 @@ aprimorar/
   atendimentos individuais. O atendimento usa relações JPA internas com aluno e
   colaborador e integra cobranças e repasses somente por contratos de
   `financeiro.api`.
-- o calendário de atendimentos individuais é uma consulta própria em
-  `GET /instituicao/atendimentos/calendario`; seu contrato é neutro em relação
-  ao FullCalendar e aceita intervalo, `alunoId` e `colaboradorId`.
 - O namespace Java do módulo é `aprimorar.agendamento`; o prefixo HTTP
   `/instituicao` permanece temporariamente por compatibilidade com o contrato
   existente.

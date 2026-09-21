@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @RestControllerAdvice(basePackages = {
-    "aprimorar.agendamento.atendimentos_individuais.web",
+    "aprimorar.agendamento.atendimentos_particular.web",
     "aprimorar.agendamento.alunos.web",
     "aprimorar.financeiro.cobrancas_particular.web"
 })
