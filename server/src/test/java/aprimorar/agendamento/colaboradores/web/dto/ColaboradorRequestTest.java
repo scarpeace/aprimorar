@@ -1,0 +1,38 @@
+package aprimorar.agendamento.colaboradores.web.dto;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+
+import aprimorar.agendamento.colaboradores.domain.enums.FuncoesColaborador;
+import aprimorar.agendamento.common.web.dto.endereco.EnderecoRequest;
+
+import java.time.LocalDate;
+import org.junit.jupiter.api.Test;
+
+class ColaboradorRequestTest {
+
+    @Test
+    void shouldConvertToColaborador() {
+        var dto = new ColaboradorRequest(
+            "João Pereira",
+            LocalDate.of(1990, 5, 21),
+            "joao.pereira@example.com",
+            "(61) 99999-9999",
+            "123.456.789-00",
+            "JOAO.PEREIRA@EXAMPLE.COM",
+            FuncoesColaborador.PROFESSOR,
+            new EnderecoRequest("Rua A", "10", "Apto 1", "Centro", "Brasilia", "DF", "70000-000")
+        );
+
+        var entity = dto.toEntity();
+
+        assertEquals("João Pereira", entity.getNome());
+        assertEquals(LocalDate.of(1990, 5, 21), entity.getDataNascimento());
+        assertEquals("joao.pereira@example.com", entity.getPix());
+        assertEquals("61999999999", entity.getTelefone());
+        assertEquals("12345678900", entity.getCpf());
+        assertEquals("joao.pereira@example.com", entity.getEmail());
+        assertEquals(FuncoesColaborador.PROFESSOR, entity.getFuncao());
+        assertEquals("70000000", entity.getEndereco().getCep());
+    }
+}

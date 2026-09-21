@@ -23,11 +23,11 @@ import aprimorar.common.openapi.BadRequestProblemResponse;
 import aprimorar.common.openapi.CommonProblemResponses;
 import aprimorar.common.openapi.ConflictProblemResponse;
 import aprimorar.common.openapi.NotFoundProblemResponse;
-import aprimorar.agendamento.colaboradores.service.ColaboradorService;
-import aprimorar.agendamento.colaboradores.web.dto.colaborador.ColaboradorFiltroRequest;
-import aprimorar.agendamento.colaboradores.web.dto.colaborador.ColaboradorRequest;
-import aprimorar.agendamento.colaboradores.web.dto.colaborador.ColaboradoresOptionsResponse;
-import aprimorar.agendamento.colaboradores.web.dto.colaborador.ColaboradorResponse;
+import aprimorar.agendamento.colaboradores.application.ColaboradorService;
+import aprimorar.agendamento.colaboradores.web.dto.ColaboradorFiltroRequest;
+import aprimorar.agendamento.colaboradores.web.dto.ColaboradorRequest;
+import aprimorar.agendamento.colaboradores.web.dto.ColaboradoresOptionsResponse;
+import aprimorar.agendamento.colaboradores.web.dto.ColaboradorResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -40,11 +40,11 @@ import jakarta.validation.Valid;
 @BadRequestProblemResponse
 @ConflictProblemResponse
 @NotFoundProblemResponse
-public class ColaboradorController {
+class ColaboradorController {
 
     private final ColaboradorService colaboradorService;
 
-    public ColaboradorController(ColaboradorService colaboradorService) {
+    ColaboradorController(ColaboradorService colaboradorService) {
         this.colaboradorService = colaboradorService;
     }
 

@@ -22,7 +22,7 @@ import aprimorar.common.openapi.BadRequestProblemResponse;
 import aprimorar.common.openapi.CommonProblemResponses;
 import aprimorar.common.openapi.ConflictProblemResponse;
 import aprimorar.common.openapi.NotFoundProblemResponse;
-import aprimorar.agendamento.alunos.service.AlunoService;
+import aprimorar.agendamento.alunos.application.AlunoService;
 import aprimorar.agendamento.alunos.web.dto.AlunoFiltroRequest;
 import aprimorar.agendamento.alunos.web.dto.AlunoRequest;
 import aprimorar.agendamento.alunos.web.dto.AlunoResponse;
@@ -39,11 +39,11 @@ import jakarta.validation.Valid;
 @BadRequestProblemResponse
 @ConflictProblemResponse
 @NotFoundProblemResponse
-public class AlunoController {
+class AlunoController {
 
     private final AlunoService alunoService;
 
-    public AlunoController(AlunoService alunoService) {
+    AlunoController(AlunoService alunoService) {
         this.alunoService = alunoService;
     }
 

@@ -46,8 +46,8 @@
 - Dependencia cruzada so por `...api`; nunca importar classes internas de outro modulo.
 - Antes de nova dependencia, leia `package-info.java` do modulo e confirme `allowedDependencies`.
 - Modulos atuais e limites principais:
-  - `agendamento` pode depender de `common`, `financeiro::pagamentos-colaboradores-api` e `financeiro::recebimentos-alunos-api`.
-  - `financeiro` pode depender de `common`; `financeiro_particular/pagamentos_colaboradores` e `financeiro_particular/recebimentos_alunos` sao pacotes internos, nao modulos independentes.
+  - `agendamento` pode depender de `common`, `financeiro::repasses-colaboradores-api` e `financeiro::recebimentos-alunos-api`.
+  - `financeiro` pode depender de `common`; `repasses_colaboradores` e `recebimentos_alunos` sao pacotes internos, nao modulos independentes.
   - `auth` pode depender de `common`.
   - `common` nao deve depender de outros modulos de dominio.
 - Mudou contrato de endpoint: alinhar OpenAPI e comunicar impacto no frontend (Kubb depende de `/v3/api-docs`).

@@ -27,13 +27,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/auth")
 @Tag(name = "Autenticação", description = "APIs de autenticação e sessão")
-public class AuthController {
+class AuthController {
 
     private final AuthService authService;
     private final boolean cookieSecure;
     private final long refreshTokenDays;
 
-    public AuthController(
+    AuthController(
         AuthService authService,
         @Value("${app.auth.cookie-secure}") boolean cookieSecure,
         @Value("${app.auth.refresh-token-days}") long refreshTokenDays

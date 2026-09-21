@@ -3,7 +3,7 @@
     displayName = "Agendamento",
     allowedDependencies = {
         "common",
-        "financeiro::pagamentos-colaboradores-api",
+        "financeiro::repasses-colaboradores-api",
         "financeiro::recebimentos-alunos-api"
     }
 )

@@ -31,11 +31,11 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "Usuário", description = "APIs administrativas de gestão de usuários")
 @CommonProblemResponses
 @PreAuthorize("hasRole('ADMIN')")
-public class UserController {
+class UserController {
 
     private final UserService userService;
 
-    public UserController(UserService userService) {
+    UserController(UserService userService) {
         this.userService = userService;
     }
 

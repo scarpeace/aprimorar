@@ -58,16 +58,15 @@ aprimorar/
 ├── auth/
 ├── common/
 ├── financeiro/
-│   ├── financeiro_particular/
-│   │   ├── pagamentos_colaboradores/{api,config,domain,repository,service,web}
-│   │   └── recebimentos_alunos/{api,config,domain,repository,service,web}
-│   ├── despesas/{domain,repository,service,web}
+│   ├── recebimentos_alunos/{api,application,config,domain,infrastructure,web}
+│   ├── operacional/{config,domain,repository,service,web}
+│   ├── repasses_colaboradores/{api,application,config,domain,infrastructure,web}
 │   └── package-info.java
 ├── agendamento/
 │   ├── common/
-│   ├── alunos/{domain,repository,service,web}
-│   ├── colaboradores/{domain,repository,service,web}
-│   └── atendimentos_particular/{domain,repository,service,web}
+│   ├── alunos/{application,config,domain,infrastructure,web}
+│   ├── colaboradores/{application,config,domain,infrastructure,web}
+│   └── atendimentos_individuais/{application,config,domain,infrastructure,web}
 └── config/
 ```
 
@@ -78,23 +77,23 @@ aprimorar/
   O refresh token fica no cookie `refresh_token` (`HttpOnly`, `SameSite=Lax`,
   escopo `/auth`) e somente seu hash é persistido. O usuário atual é retornado
   por `/auth/me` como `id`, `email` e `role`.
-- `agendamento/atendimentos_particular` concentra os atendimentos particulares.
+- `agendamento/atendimentos_individuais` concentra os atendimentos individuais.
   O atendimento usa relações JPA internas com aluno e colaborador e integra os
   fluxos financeiros somente pelas APIs nomeadas do módulo `financeiro`.
 - O namespace Java do módulo é `aprimorar.agendamento`; o prefixo HTTP
   `/instituicao` permanece temporariamente por compatibilidade com o contrato
   existente.
 - `agendamento/alunos` e `agendamento/colaboradores` mantêm suas implementações
-  separadas em `service` e `web`, com DTOs organizados por capacidade.
+  separadas em camadas de aplicação e web, com DTOs organizados por capacidade.
 - `agendamento/common/domain/Endereco` contém o value object de endereço; não é
   uma entidade nem possui ciclo de vida próprio.
 - `Responsavel` é um value object embutido em `Aluno`, sem tabela própria.
-- `financeiro/despesas` é responsável por lançamentos operacionais de entrada e
+- `financeiro/operacional` é responsável por lançamentos operacionais de entrada e
   saída, sem relação JPA com instituição.
 - `common` é aberto para modelos, utilitários e anotações compartilhadas.
-- `FormaPagamentoEnum` fica em `common`. Os fluxos `pagamentos_colaboradores` e
+- `FormaPagamentoEnum` fica em `common`. Os fluxos `repasses_colaboradores` e
   `recebimentos_alunos` são pacotes internos do módulo `financeiro`, com as
-  interfaces nomeadas `financeiro::pagamentos-colaboradores-api` e
+  interfaces nomeadas `financeiro::repasses-colaboradores-api` e
   `financeiro::recebimentos-alunos-api`.
 - `config` contém configuração transversal, não regras de domínio.
 
@@ -113,20 +112,20 @@ Dentro de `server/`:
 
 ### Observações do domínio
 
-- `AtendimentoParticular` armazena referências JPA internas para aluno e colaborador;
+- `AtendimentoIndividual` armazena referências JPA internas para aluno e colaborador;
   as integrações financeiras usam IDs escalares e contratos das APIs nomeadas
   de `financeiro`
 - a criação, atualização e cancelamento do atendimento, da cobrança e do repasse
-  particular acontecem no `AtendimentoParticularService`
+  individual acontecem no `AtendimentoIndividualService`
 - `Aluno` e `Colaborador` usam `Endereco` com `@Embedded`
 - `Aluno` usa `Responsavel` com `@Embedded`; não existe tabela ou ID próprio
   para responsável
 - o valor da cobrança particular vive em `recebimentos_alunos`; o valor do repasse vive
-  em `pagamentos_colaboradores`
+  em `repasses_colaboradores`
 - recebimentos de cobranças particulares vivem em `recebimentos_alunos`;
   um recebimento pode quitar várias cobranças do mesmo aluno e seu total é calculado
   pela soma das cobranças vinculadas
-- toda criação de atendimento particular cria uma cobrança e um repasse
+- toda criação de atendimento individual cria uma cobrança e um repasse
   pendentes; o atendimento não armazena valores financeiros próprios
 - alunos e colaboradores não são excluídos; o campo `ativo` controla ativação e
   desativação
@@ -141,7 +140,7 @@ Dentro de `server/`:
 - respostas de erro usam `org.springframework.http.ProblemDetail`
 - `GlobalExceptionHandler` em `aprimorar.config` tem baixa precedência e trata
   apenas erros transversais
-- handlers de alunos, colaboradores, atendimentos particulares e financeiro
+- handlers de alunos, colaboradores, atendimentos individuais e financeiro
   ficam nos pacotes dos respectivos módulos e tratam suas exceções próprias
 - `AuthException` é tratada pelo handler global como `401 Unauthorized`
 - anotações OpenAPI reutilizáveis ficam em `common/openapi`; os controllers de

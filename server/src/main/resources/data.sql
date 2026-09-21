@@ -1,11 +1,11 @@
 -- Development seed for Aprimorar.
 -- Keeps the dataset small and aligned with the current schema.
 
-DELETE FROM repasses_particular;
-DELETE FROM pagamentos_particular;
-DELETE FROM cobrancas_particular;
-DELETE FROM recebimentos_particular;
-DELETE FROM atendimentos_particular;
+DELETE FROM repasses;
+DELETE FROM repasse_pagamentos;
+DELETE FROM cobrancas;
+DELETE FROM cobranca_recebimentos;
+DELETE FROM atendimentos_individuais;
 DELETE FROM despesas;
 DELETE FROM alunos;
 DELETE FROM colaboradores;
@@ -81,10 +81,10 @@ INSERT INTO alunos (
   ('b1000000-0000-4000-8000-000000000029', 'Lucia Regina Campos', '281.234.567-89', '11992000029', 'lucia.campos@example.com', 'Rua Vergueiro', '2750', 'Vila Mariana', 'Sao Paulo', 'SP', '04102003', 'Apto 73', 'Heloisa Campos', '792.567.890-01', 'heloisa.campos@example.com', DATE '2011-11-09', '11972000029', 'Colegio Caminhos', FALSE, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
   ('b1000000-0000-4000-8000-000000000030', 'Osvaldo Pereira Santos', '392.345.678-90', '11992000030', 'osvaldo.santos@example.com', 'Rua Cardeal Arcoverde', '1880', 'Pinheiros', 'Sao Paulo', 'SP', '05408004', 'Casa 2', 'Ian Santos', '803.678.901-12', 'ian.santos@example.com', DATE '2008-07-15', '11972000030', 'Colegio Pinheiros Norte', FALSE, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
--- Atendimentos particulares de desenvolvimento.
+-- Atendimentos individuais de desenvolvimento.
 -- Cada atendimento possui uma cobrança e um repasse pendentes.
 
-INSERT INTO atendimentos_particular (
+INSERT INTO atendimentos_individuais (
   id, aluno_id, colaborador_id, data_hora_inicio, data_hora_fim, tipo, status, created_at, updated_at
 ) VALUES
   (1001, 'df351208-d6c8-5c8a-a2ce-19cea64ac3a8', '890322e5-6327-53c6-a9a7-726765d704d8', TIMESTAMP '2026-07-02 14:00:00', TIMESTAMP '2026-07-02 15:30:00', 'AULA', 'REALIZADO', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
@@ -168,7 +168,7 @@ INSERT INTO atendimentos_particular (
   (1079, 'b1000000-0000-4000-8000-000000000019', 'a1000000-0000-4000-8000-000000000001', TIMESTAMP '2026-11-04 15:00:00', TIMESTAMP '2026-11-04 16:30:00', 'ORIENTACAO_VOCACIONAL', 'AGENDADO', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
   (1080, 'b1000000-0000-4000-8000-000000000022', 'a1000000-0000-4000-8000-000000000006', TIMESTAMP '2026-11-05 17:00:00', TIMESTAMP '2026-11-05 18:00:00', 'ENEM', 'AGENDADO', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
-INSERT INTO cobrancas_particular (
+INSERT INTO cobrancas (
   id, atendimento_id, aluno_id, valor, status, recebimento_id, created_at, updated_at
 ) VALUES
   (2001, 1001, 'df351208-d6c8-5c8a-a2ce-19cea64ac3a8', 130.00, 'PENDENTE', NULL, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
@@ -251,6 +251,7 @@ INSERT INTO cobrancas_particular (
   (2078, 1078, 'b1000000-0000-4000-8000-000000000016', 230.00, 'PENDENTE', NULL, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
   (2079, 1079, 'b1000000-0000-4000-8000-000000000019', 250.00, 'PENDENTE', NULL, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
   (2080, 1080, 'b1000000-0000-4000-8000-000000000022', 210.00, 'PENDENTE', NULL, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO repasses (
   id, atendimento_id, colaborador_id, valor, status, pagamento_id, created_at, updated_at
 ) VALUES
   (3001, 1001, '890322e5-6327-53c6-a9a7-726765d704d8', 90.00, 'PENDENTE', NULL, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
@@ -379,7 +380,7 @@ INSERT INTO despesas (
   (29, 'Conta de energia - novembro', 'SAIDA', 'CONTAS', 658.75, DATE '2026-11-05', NULL, 'PENDENTE', 'PIX', 'Unidade principal', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
   (30, 'Materiais pedagogicos', 'SAIDA', 'DESPENSA', 410.60, DATE '2026-11-09', DATE '2026-11-09', 'PAGA', 'CARTAO_DEBITO', 'Apoio as aulas', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
-SELECT setval('atendimentos_particular_id_seq', (SELECT MAX(id) FROM atendimentos_particular), TRUE);
-SELECT setval('cobrancas_particular_id_seq', (SELECT MAX(id) FROM cobrancas_particular), TRUE);
-SELECT setval('repasses_particular_id_seq', (SELECT MAX(id) FROM repasses_particular), TRUE);
+SELECT setval('atendimentos_individuais_id_seq', (SELECT MAX(id) FROM atendimentos_individuais), TRUE);
+SELECT setval('cobrancas_id_seq', (SELECT MAX(id) FROM cobrancas), TRUE);
+SELECT setval('repasses_id_seq', (SELECT MAX(id) FROM repasses), TRUE);
 SELECT setval('despesas_id_seq', (SELECT MAX(id) FROM despesas), TRUE);
