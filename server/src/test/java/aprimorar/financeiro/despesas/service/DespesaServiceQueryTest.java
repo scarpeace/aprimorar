@@ -1,4 +1,4 @@
-package aprimorar.financeiro.despesas.service;
+package aprimorar.financeiro.financeiro_operacional.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -6,13 +6,13 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
-import aprimorar.financeiro.despesas.domain.Despesa;
-import aprimorar.financeiro.despesas.domain.enums.CategoriaDespesa;
-import aprimorar.financeiro.despesas.domain.enums.FormaPagamento;
-import aprimorar.financeiro.despesas.domain.enums.TipoDespesa;
-import aprimorar.financeiro.despesas.domain.exception.DespesaNaoEncontradaException;
-import aprimorar.financeiro.despesas.repository.DespesaRepository;
-import aprimorar.financeiro.despesas.web.dto.DespesaFiltroRequest;
+import aprimorar.financeiro.financeiro_operacional.domain.Despesa;
+import aprimorar.financeiro.financeiro_operacional.domain.enums.CategoriaDespesa;
+import aprimorar.financeiro.financeiro_operacional.domain.enums.FormaPagamento;
+import aprimorar.financeiro.financeiro_operacional.domain.enums.TipoDespesa;
+import aprimorar.financeiro.financeiro_operacional.domain.exception.DespesaNaoEncontradaException;
+import aprimorar.financeiro.financeiro_operacional.repository.DespesaRepository;
+import aprimorar.financeiro.financeiro_operacional.web.dto.DespesaFiltroRequest;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;

@@ -16,12 +16,13 @@ import aprimorar.agendamento.colaboradores.domain.Colaborador;
 import aprimorar.agendamento.colaboradores.service.ColaboradorService;
 import aprimorar.financeiro.financeiro_particular.recebimentos_alunos.api.AtualizarCobrancaParticularCommand;
 import aprimorar.financeiro.financeiro_particular.recebimentos_alunos.api.CobrancaParticularAPI;
-import aprimorar.financeiro.financeiro_particular.recebimentos_alunos.api.CobrancaParticularSummary;
+    import aprimorar.financeiro.financeiro_particular.recebimentos_alunos.api.CobrancaParticularSummary;
 import aprimorar.financeiro.financeiro_particular.recebimentos_alunos.api.CriarCobrancaParticularCommand;
-import aprimorar.financeiro.financeiro_particular.pagamentos_colaboradores.api.AtualizarRepasseCommand;
-import aprimorar.financeiro.financeiro_particular.pagamentos_colaboradores.api.CriarRepasseCommand;
-import aprimorar.financeiro.financeiro_particular.pagamentos_colaboradores.api.RepasseAPI;
-import aprimorar.financeiro.financeiro_particular.pagamentos_colaboradores.api.RepasseParticularSummary;
+import aprimorar.financeiro.pagamentos_colaboradores.api.PagamentosApi;
+import aprimorar.financeiro.pagamentos_colaboradores.api.commands.AtualizarRepasseCommandApi;
+import aprimorar.financeiro.pagamentos_colaboradores.api.commands.CriarRepasseCommandApi;
+import aprimorar.financeiro.pagamentos_colaboradores.api.queries.RepasseQueryApi;
+
 import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.Set;
@@ -39,14 +40,14 @@ public class AtendimentoParticularService {
 
     private final AtendimentoParticularRepository atendimentoRepository;
     private final CobrancaParticularAPI cobrancaParticularApi;
-    private final RepasseAPI repasseParticularApi;
+    private final PagamentosApi repasseParticularApi;
     private final AlunoService alunoService;
     private final ColaboradorService colaboradorService;
 
     public AtendimentoParticularService(
         AtendimentoParticularRepository atendimentoRepository,
         CobrancaParticularAPI cobrancaApi,
-        RepasseAPI repasseApi,
+        PagamentosApi repasseApi,
         AlunoService alunoService,
         ColaboradorService colaboradorService
     ) {
@@ -71,7 +72,7 @@ public class AtendimentoParticularService {
 
         Map<Long, CobrancaParticularSummary> cobrancas =
             cobrancaParticularApi.buscarSummariesPorAtendimentoIds(atendimentoIds);
-        Map<Long, RepasseParticularSummary> repasses =
+        Map<Long, RepasseQueryApi> repasses =
             repasseParticularApi.buscarSummariesPorAtendimentoIds(atendimentoIds);
 
         return atendimentos.map(atendimento ->
@@ -87,7 +88,7 @@ public class AtendimentoParticularService {
     public AtendimentoParticularResponse buscarAtendimentoPorId(Long atendimentoId) {
         AtendimentoParticular atendimento = findAtendimentoOrThrow(atendimentoId);
         CobrancaParticularSummary cobranca = cobrancaParticularApi.buscarSummaryPorAtendimentoId(atendimentoId);
-        RepasseParticularSummary repasse = repasseParticularApi.buscarSummaryPorAtendimentoId(atendimentoId);
+        RepasseQueryApi repasse = repasseParticularApi.buscarSummaryPorAtendimentoId(atendimentoId);
 
         return AtendimentoParticularResponse.toDto(
             atendimento,
@@ -168,7 +169,7 @@ public class AtendimentoParticularService {
             throw new AtendimentoParticularDadosInvalidosException("Não é possível alterar um atendimento já pago");
         }
 
-        RepasseParticularSummary repasse = repasseParticularApi.buscarSummaryPorAtendimentoId(atendimentoId);
+        RepasseQueryApi repasse = repasseParticularApi.buscarSummaryPorAtendimentoId(atendimentoId);
         if(repasse.pagamentoId() != null) {
             throw new AtendimentoParticularDadosInvalidosException("Não é possível alterar um atendimento já pago");
         }
@@ -216,7 +217,7 @@ public class AtendimentoParticularService {
             throw new AtendimentoParticularDadosInvalidosException("Não é possível cancelar um atendimento com recebimento registrado");
         }
 
-        RepasseParticularSummary repasse = repasseParticularApi.buscarSummaryPorAtendimentoId(atendimentoId);
+        RepasseQueryApi repasse = repasseParticularApi.buscarSummaryPorAtendimentoId(atendimentoId);
         if(repasse.pagamentoId() != null) {
             throw new AtendimentoParticularDadosInvalidosException("Não é possível cancelar um atendimento com pagamento registrado");
         }

@@ -7,13 +7,13 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
-import aprimorar.financeiro.financeiro_particular.pagamentos_colaboradores.api.RepasseAPI;
 import aprimorar.agendamento.colaboradores.domain.enums.FuncoesColaborador;
 import aprimorar.agendamento.colaboradores.domain.exception.ColaboradorNaoEncontradoException;
 import aprimorar.agendamento.colaboradores.repository.ColaboradorRepository;
 
 import aprimorar.agendamento.colaboradores.web.dto.colaborador.ColaboradorFiltroRequest;
 import aprimorar.agendamento.common.domain.Endereco;
+import aprimorar.financeiro.pagamentos_colaboradores.api.PagamentosApi;
 import aprimorar.agendamento.colaboradores.domain.Colaborador;
 
 import java.time.LocalDate;
@@ -40,7 +40,7 @@ class ColaboradorServiceQueryTest {
     private ColaboradorRepository colaboradorRepo;
 
     @Mock
-    private RepasseAPI repasseApi;
+    private PagamentosApi repasseApi;
 
     private ColaboradorService service;
 

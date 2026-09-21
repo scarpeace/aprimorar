@@ -1,4 +1,4 @@
-package aprimorar.financeiro.despesas.web.dto;
+package aprimorar.financeiro.financeiro_operacional.web.dto;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;

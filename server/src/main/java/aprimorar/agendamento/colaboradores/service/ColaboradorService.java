@@ -1,6 +1,5 @@
 package aprimorar.agendamento.colaboradores.service;
 
-import aprimorar.financeiro.financeiro_particular.pagamentos_colaboradores.api.RepasseAPI;
 import aprimorar.agendamento.colaboradores.domain.Colaborador;
 import aprimorar.agendamento.colaboradores.domain.exception.ColaboradorNaoEncontradoException;
 import aprimorar.agendamento.colaboradores.domain.exception.ColaboradorPossuiRepassePendenteException;
@@ -9,6 +8,7 @@ import aprimorar.agendamento.colaboradores.repository.ColaboradorSpecifications;
 import aprimorar.agendamento.colaboradores.web.dto.colaborador.ColaboradorFiltroRequest;
 import aprimorar.agendamento.colaboradores.web.dto.colaborador.ColaboradorResponse;
 import aprimorar.agendamento.colaboradores.web.dto.colaborador.ColaboradoresOptionsResponse;
+import aprimorar.financeiro.pagamentos_colaboradores.api.PagamentosApi;
 
 import java.util.List;
 import java.util.UUID;
@@ -23,9 +23,9 @@ import org.springframework.transaction.annotation.Transactional;
 public class ColaboradorService {
 
     private final ColaboradorRepository colaboradorRepo;
-    private final RepasseAPI repasseApi;
+    private final PagamentosApi repasseApi;
 
-    public ColaboradorService(ColaboradorRepository colaboradorRepo, RepasseAPI repasseApi) {
+    public ColaboradorService(ColaboradorRepository colaboradorRepo, PagamentosApi repasseApi) {
         this.colaboradorRepo = colaboradorRepo;
         this.repasseApi = repasseApi;
     }

@@ -5,14 +5,16 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import aprimorar.financeiro.financeiro_particular.pagamentos_colaboradores.api.AtualizarRepasseCommand;
-import aprimorar.financeiro.financeiro_particular.pagamentos_colaboradores.api.CriarRepasseCommand;
 import aprimorar.common.FormaPagamentoEnum;
-import aprimorar.financeiro.financeiro_particular.pagamentos_colaboradores.domain.PagamentoParticular;
-import aprimorar.financeiro.financeiro_particular.pagamentos_colaboradores.domain.RepasseParticular;
-import aprimorar.financeiro.financeiro_particular.pagamentos_colaboradores.domain.enums.StatusRepasseParticular;
-import aprimorar.financeiro.financeiro_particular.pagamentos_colaboradores.api.RepasseParticularDadosInvalidosException;
-import aprimorar.financeiro.financeiro_particular.pagamentos_colaboradores.repository.RepasseParticularRepository;
+import aprimorar.financeiro.pagamentos_colaboradores.api.commands.AtualizarRepasseCommandApi;
+import aprimorar.financeiro.pagamentos_colaboradores.api.commands.CriarRepasseCommandApi;
+import aprimorar.financeiro.pagamentos_colaboradores.application.RepasseParticularService;
+import aprimorar.financeiro.pagamentos_colaboradores.domain.Pagamento;
+import aprimorar.financeiro.pagamentos_colaboradores.domain.Repasse;
+import aprimorar.financeiro.pagamentos_colaboradores.domain.enums.StatusRepasse;
+import aprimorar.financeiro.pagamentos_colaboradores.domain.exception.RepasseDadosInvalidosException;
+import aprimorar.financeiro.pagamentos_colaboradores.infrastructure.RepasseRepository;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.UUID;
@@ -29,7 +31,7 @@ class RepasseParticularServiceTest {
     private static final UUID COLABORADOR_ID = UUID.fromString("33333333-3333-3333-3333-333333333333");
 
     @Mock
-    private RepasseParticularRepository repasseRepository;
+    private RepasseRepository repasseRepository;
 
     private RepasseParticularService service;
 
@@ -40,23 +42,23 @@ class RepasseParticularServiceTest {
 
     @Test
     void deveCriarRepassePendente() {
-        service.criar(new CriarRepasseCommand(10L, COLABORADOR_ID, new BigDecimal("80.00")));
+        service.criar(new CriarRepasseCommandApi(10L, COLABORADOR_ID, new BigDecimal("80.00")));
 
-        ArgumentCaptor<RepasseParticular> captor = ArgumentCaptor.forClass(RepasseParticular.class);
+        ArgumentCaptor<Repasse> captor = ArgumentCaptor.forClass(Repasse.class);
         verify(repasseRepository).save(captor.capture());
         assertEquals(10L, captor.getValue().getAtendimentoId());
         assertEquals(COLABORADOR_ID, captor.getValue().getColaboradorId());
         assertEquals(new BigDecimal("80.00"), captor.getValue().getValor());
-        assertEquals(StatusRepasseParticular.PENDENTE, captor.getValue().getStatus());
+        assertEquals(StatusRepasse.PENDENTE, captor.getValue().getStatus());
     }
 
     @Test
     void deveAtualizarRepassePendente() {
-        RepasseParticular repasse = repasse(10L);
+        Repasse repasse = repasse(10L);
         when(repasseRepository.findByAtendimentoIdForUpdate(10L)).thenReturn(java.util.Optional.of(repasse));
 
         UUID novoColaboradorId = UUID.fromString("44444444-4444-4444-4444-444444444444");
-        service.atualizar(new AtualizarRepasseCommand(10L, novoColaboradorId, new BigDecimal("90.00")));
+        service.atualizar(new AtualizarRepasseCommandApi(10L, novoColaboradorId, new BigDecimal("90.00")));
 
         assertEquals(novoColaboradorId, repasse.getColaboradorId());
         assertEquals(new BigDecimal("90.00"), repasse.getValor());
@@ -64,8 +66,8 @@ class RepasseParticularServiceTest {
 
     @Test
     void naoDeveAtualizarRepassePago() {
-        RepasseParticular repasse = repasse(10L);
-        repasse.vincularPagamento(new PagamentoParticular(
+        Repasse repasse = repasse(10L);
+        repasse.vincularPagamento(new Pagamento(
             LocalDate.now(),
             new BigDecimal("80.00"),
             FormaPagamentoEnum.PIX,
@@ -74,25 +76,25 @@ class RepasseParticularServiceTest {
         when(repasseRepository.findByAtendimentoIdForUpdate(10L)).thenReturn(java.util.Optional.of(repasse));
 
         assertThrows(
-            RepasseParticularDadosInvalidosException.class,
-            () -> service.atualizar(new AtualizarRepasseCommand(10L, COLABORADOR_ID, new BigDecimal("90.00")))
+            RepasseDadosInvalidosException.class,
+            () -> service.atualizar(new AtualizarRepasseCommandApi(10L, COLABORADOR_ID, new BigDecimal("90.00")))
         );
     }
 
     @Test
     void deveCancelarRepassePendente() {
-        RepasseParticular repasse = repasse(10L);
+        Repasse repasse = repasse(10L);
         when(repasseRepository.findByAtendimentoIdForUpdate(10L)).thenReturn(java.util.Optional.of(repasse));
 
         service.cancelarPorAtendimento(10L);
 
-        assertEquals(StatusRepasseParticular.CANCELADO, repasse.getStatus());
+        assertEquals(StatusRepasse.CANCELADO, repasse.getStatus());
     }
 
     @Test
     void naoDeveCancelarRepassePago() {
-        RepasseParticular repasse = repasse(10L);
-        repasse.vincularPagamento(new PagamentoParticular(
+        Repasse repasse = repasse(10L);
+        repasse.vincularPagamento(new Pagamento(
             LocalDate.now(),
             new BigDecimal("80.00"),
             FormaPagamentoEnum.PIX,
@@ -100,12 +102,12 @@ class RepasseParticularServiceTest {
         ));
         when(repasseRepository.findByAtendimentoIdForUpdate(10L)).thenReturn(java.util.Optional.of(repasse));
 
-        assertThrows(RepasseParticularDadosInvalidosException.class, () -> service.cancelarPorAtendimento(10L));
+        assertThrows(RepasseDadosInvalidosException.class, () -> service.cancelarPorAtendimento(10L));
     }
 
     @Test
     void deveConsultarPendenciaPorColaborador() {
-        when(repasseRepository.existsByColaboradorIdAndStatus(COLABORADOR_ID, StatusRepasseParticular.PENDENTE))
+        when(repasseRepository.existsByColaboradorIdAndStatus(COLABORADOR_ID, StatusRepasse.PENDENTE))
             .thenReturn(true);
 
         boolean possuiPendencia = service.possuiPendenciaPorColaboradorId(COLABORADOR_ID);
@@ -113,7 +115,7 @@ class RepasseParticularServiceTest {
         assertEquals(true, possuiPendencia);
     }
 
-    private static RepasseParticular repasse(Long atendimentoId) {
-        return new RepasseParticular(atendimentoId, COLABORADOR_ID, new BigDecimal("80.00"));
+    private static Repasse repasse(Long atendimentoId) {
+        return new Repasse(atendimentoId, COLABORADOR_ID, new BigDecimal("80.00"));
     }
 }

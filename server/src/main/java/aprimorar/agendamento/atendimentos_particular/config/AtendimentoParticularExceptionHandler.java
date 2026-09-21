@@ -5,10 +5,10 @@ import aprimorar.agendamento.atendimentos_particular.domain.exception.Atendiment
 import aprimorar.agendamento.atendimentos_particular.domain.exception.AtendimentoParticularEdicaoExpiradaException;
 import aprimorar.agendamento.atendimentos_particular.domain.exception.AtendimentoParticularNaoEncontradoException;
 import aprimorar.common.utils.ExceptionUtils;
-import aprimorar.financeiro.financeiro_particular.pagamentos_colaboradores.api.RepasseParticularDadosInvalidosException;
-import aprimorar.financeiro.financeiro_particular.pagamentos_colaboradores.api.RepasseParticularNaoEncontradoException;
 import aprimorar.financeiro.financeiro_particular.recebimentos_alunos.api.CobrancaParticularDadosInvalidosException;
 import aprimorar.financeiro.financeiro_particular.recebimentos_alunos.api.CobrancaParticularNaoEncontradaException;
+import aprimorar.financeiro.pagamentos_colaboradores.domain.exception.RepasseDadosInvalidosException;
+import aprimorar.financeiro.pagamentos_colaboradores.domain.exception.RepasseNaoEncontradoException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
@@ -130,9 +130,9 @@ public class AtendimentoParticularExceptionHandler {
         );
     }
 
-    @ExceptionHandler(RepasseParticularNaoEncontradoException.class)
+    @ExceptionHandler(RepasseNaoEncontradoException.class)
     public ResponseEntity<ProblemDetail> handleRepasseNotFound(
-        RepasseParticularNaoEncontradoException ex,
+        RepasseNaoEncontradoException ex,
         HttpServletRequest request
     ) {
         return ExceptionUtils.response(
@@ -143,9 +143,9 @@ public class AtendimentoParticularExceptionHandler {
         );
     }
 
-    @ExceptionHandler(RepasseParticularDadosInvalidosException.class)
+    @ExceptionHandler(RepasseDadosInvalidosException.class)
     public ResponseEntity<ProblemDetail> handleRepasseBadRequest(
-        RepasseParticularDadosInvalidosException ex,
+        RepasseDadosInvalidosException ex,
         HttpServletRequest request
     ) {
         return ExceptionUtils.response(

@@ -6,8 +6,11 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import aprimorar.common.FormaPagamentoEnum;
-import aprimorar.financeiro.financeiro_particular.pagamentos_colaboradores.domain.enums.StatusRepasseParticular;
-import aprimorar.financeiro.financeiro_particular.pagamentos_colaboradores.api.RepasseParticularDadosInvalidosException;
+import aprimorar.financeiro.pagamentos_colaboradores.domain.Pagamento;
+import aprimorar.financeiro.pagamentos_colaboradores.domain.Repasse;
+import aprimorar.financeiro.pagamentos_colaboradores.domain.enums.StatusRepasse;
+import aprimorar.financeiro.pagamentos_colaboradores.domain.exception.RepasseDadosInvalidosException;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -22,46 +25,46 @@ class RepasseParticularTest {
 
     @Test
     void shouldCreatePendingRepasse() {
-        RepasseParticular repasse = repasse();
+        Repasse repasse = repasse();
 
         assertEquals(10L, repasse.getAtendimentoId());
         assertEquals(COLABORADOR_ID, repasse.getColaboradorId());
         assertEquals(new BigDecimal("80.00"), repasse.getValor());
-        assertEquals(StatusRepasseParticular.PENDENTE, repasse.getStatus());
+        assertEquals(StatusRepasse.PENDENTE, repasse.getStatus());
     }
 
     @Test
     void shouldCalculateOverdueStatus() {
-        RepasseParticular repasse = repasse();
+        Repasse repasse = repasse();
         ReflectionTestUtils.setField(
             repasse,
             "createdAt",
             LocalDateTime.now().minusDays(31)
         );
 
-        assertEquals(StatusRepasseParticular.ATRASADO, repasse.statusAtual());
-        assertEquals(StatusRepasseParticular.PENDENTE, repasse.getStatus());
+        assertEquals(StatusRepasse.ATRASADO, repasse.statusAtual());
+        assertEquals(StatusRepasse.PENDENTE, repasse.getStatus());
     }
 
     @Test
     void shouldLinkAndUnlinkPayment() {
-        RepasseParticular repasse = repasse();
-        PagamentoParticular pagamento = pagamento();
+        Repasse repasse = repasse();
+        Pagamento pagamento = pagamento();
 
         repasse.vincularPagamento(pagamento);
 
         assertSame(pagamento, repasse.getPagamento());
-        assertEquals(StatusRepasseParticular.PAGO, repasse.getStatus());
+        assertEquals(StatusRepasse.PAGO, repasse.getStatus());
 
         repasse.desvincularPagamento();
 
         assertNull(repasse.getPagamento());
-        assertEquals(StatusRepasseParticular.PENDENTE, repasse.getStatus());
+        assertEquals(StatusRepasse.PENDENTE, repasse.getStatus());
     }
 
     @Test
     void shouldUpdatePendingRepasse() {
-        RepasseParticular repasse = repasse();
+        Repasse repasse = repasse();
         UUID novoColaboradorId =
             UUID.fromString("44444444-4444-4444-4444-444444444444");
 
@@ -73,45 +76,45 @@ class RepasseParticularTest {
 
     @Test
     void shouldNotUpdatePaidRepasse() {
-        RepasseParticular repasse = repasse();
+        Repasse repasse = repasse();
         repasse.vincularPagamento(pagamento());
 
         assertThrows(
-            RepasseParticularDadosInvalidosException.class,
+            RepasseDadosInvalidosException.class,
             () -> repasse.atualizar(COLABORADOR_ID, new BigDecimal("90.00"))
         );
     }
 
     @Test
     void shouldCancelPendingRepasse() {
-        RepasseParticular repasse = repasse();
+        Repasse repasse = repasse();
 
         repasse.cancelar();
 
-        assertEquals(StatusRepasseParticular.CANCELADO, repasse.getStatus());
+        assertEquals(StatusRepasse.CANCELADO, repasse.getStatus());
     }
 
     @Test
     void shouldNotCancelPaidRepasse() {
-        RepasseParticular repasse = repasse();
+        Repasse repasse = repasse();
         repasse.vincularPagamento(pagamento());
 
         assertThrows(
-            RepasseParticularDadosInvalidosException.class,
+            RepasseDadosInvalidosException.class,
             repasse::cancelar
         );
     }
 
-    private static RepasseParticular repasse() {
-        return new RepasseParticular(
+    private static Repasse repasse() {
+        return new Repasse(
             10L,
             COLABORADOR_ID,
             new BigDecimal("80.00")
         );
     }
 
-    private static PagamentoParticular pagamento() {
-        return new PagamentoParticular(
+    private static Pagamento pagamento() {
+        return new Pagamento(
             LocalDate.now(),
             new BigDecimal("80.00"),
             FormaPagamentoEnum.PIX,

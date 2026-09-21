@@ -6,7 +6,9 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import aprimorar.common.FormaPagamentoEnum;
-import aprimorar.financeiro.financeiro_particular.pagamentos_colaboradores.domain.exception.PagamentoParticularDadosInvalidosException;
+import aprimorar.financeiro.pagamentos_colaboradores.domain.Pagamento;
+import aprimorar.financeiro.pagamentos_colaboradores.domain.exception.PagamentoDadosInvalidosException;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import org.junit.jupiter.api.Test;
@@ -15,7 +17,7 @@ class PagamentoParticularTest {
 
     @Test
     void shouldCreatePayment() {
-        PagamentoParticular pagamento = new PagamentoParticular(
+        Pagamento pagamento = new Pagamento(
             LocalDate.now(),
             new BigDecimal("80.00"),
             FormaPagamentoEnum.PIX,
@@ -31,7 +33,7 @@ class PagamentoParticularTest {
 
     @Test
     void shouldAllowPaymentWithoutReceipt() {
-        PagamentoParticular pagamento = new PagamentoParticular(
+        Pagamento pagamento = new Pagamento(
             LocalDate.now(),
             new BigDecimal("80.00"),
             FormaPagamentoEnum.PIX,
@@ -44,8 +46,8 @@ class PagamentoParticularTest {
     @Test
     void shouldRejectFuturePaymentDate() {
         assertThrows(
-            PagamentoParticularDadosInvalidosException.class,
-            () -> new PagamentoParticular(
+            PagamentoDadosInvalidosException.class,
+            () -> new Pagamento(
                 LocalDate.now().plusDays(1),
                 new BigDecimal("80.00"),
                 FormaPagamentoEnum.PIX,

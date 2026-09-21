@@ -4,7 +4,7 @@ import aprimorar.agendamento.atendimentos_particular.domain.AtendimentoParticula
 import aprimorar.agendamento.atendimentos_particular.domain.enums.StatusAtendimentoParticular;
 import aprimorar.agendamento.atendimentos_particular.domain.enums.TipoAtendimentoParticular;
 import aprimorar.financeiro.financeiro_particular.recebimentos_alunos.api.CobrancaParticularSummary;
-import aprimorar.financeiro.financeiro_particular.pagamentos_colaboradores.api.RepasseParticularSummary;
+import aprimorar.financeiro.pagamentos_colaboradores.api.queries.RepasseQueryApi;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotNull;
@@ -60,7 +60,7 @@ public record AtendimentoParticularResponse(
     public static AtendimentoParticularResponse toDto(
         AtendimentoParticular atendimento,
         CobrancaParticularSummary cobranca,
-        RepasseParticularSummary repasse
+        RepasseQueryApi repasse
     ) {
         return new AtendimentoParticularResponse(
             atendimento.getId(),
