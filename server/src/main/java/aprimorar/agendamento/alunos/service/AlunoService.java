@@ -89,7 +89,7 @@ public class AlunoService {
         aluno.activate();
     }
 
-    private Aluno findAlunoOrThrow(UUID alunoId) {
+    public Aluno findAlunoOrThrow(UUID alunoId) {
         return alunoRepo.findById(alunoId)
             .orElseThrow(() -> new AlunoNaoEncontradoException("Aluno não encontrado no banco de dados"));
     }

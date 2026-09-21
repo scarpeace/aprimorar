@@ -82,10 +82,10 @@ public class PagamentoParticularController {
         @PageableDefault(sort = "dataPagamento", direction = Sort.Direction.DESC)
         Pageable pageable
     ) {
-        return ResponseEntity.ok(
-            pagamentoService.buscarPagamentos(filtro, pageable)
-                .map(PagamentoParticularResponse::toDto)
-        );
+        Page<PagamentoParticularResponse> pagamentos = pagamentoService
+            .getPagamentos(filtro, pageable);
+
+        return ResponseEntity.ok(pagamentos);
     }
 
     @GetMapping("/{pagamentoId}")
@@ -99,11 +99,10 @@ public class PagamentoParticularController {
     public ResponseEntity<PagamentoParticularDetalheResponse> buscarPorId(
         @PathVariable UUID pagamentoId
     ) {
-        return ResponseEntity.ok(
-            PagamentoParticularDetalheResponse.toDto(
-                pagamentoService.buscarDetalhesPorId(pagamentoId)
-            )
-        );
+        PagamentoParticularDetalheResponse pagamento = pagamentoService
+            .getPagamentoPorId(pagamentoId);
+
+        return ResponseEntity.ok(pagamento);
     }
 
     @DeleteMapping("/{pagamentoId}")

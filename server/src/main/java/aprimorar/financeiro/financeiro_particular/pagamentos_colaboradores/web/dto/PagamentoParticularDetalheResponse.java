@@ -3,7 +3,6 @@ package aprimorar.financeiro.financeiro_particular.pagamentos_colaboradores.web.
 import aprimorar.common.FormaPagamentoEnum;
 import aprimorar.financeiro.financeiro_particular.pagamentos_colaboradores.domain.PagamentoParticular;
 import aprimorar.financeiro.financeiro_particular.pagamentos_colaboradores.domain.RepasseParticular;
-import aprimorar.financeiro.financeiro_particular.pagamentos_colaboradores.web.dto.RepasseParticularResponse;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotNull;

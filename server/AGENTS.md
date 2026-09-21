@@ -22,6 +22,7 @@
 ## DTO, validacao e mapeamento
 - Entrada/saida HTTP sempre por DTO (request/response), nunca entidade JPA direta.
 - Validar entrada no DTO com Bean Validation; mensagens de erro devem ser consistentes com Problem Details.
+- Services de consulta retornam DTOs de resposta e executam o `toDto` dentro da transacao; controllers apenas delegam e montam o `ResponseEntity`.
 - Mapeamento DTO <-> dominio deve ser explicito e previsivel; nao esconder regra em conversao automatica opaca.
 
 ## Erros e excecoes

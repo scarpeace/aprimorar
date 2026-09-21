@@ -11,6 +11,8 @@ import aprimorar.financeiro.financeiro_particular.recebimentos_alunos.api.Cobran
 import aprimorar.financeiro.financeiro_particular.recebimentos_alunos.repository.CobrancaParticularRepository;
 import aprimorar.financeiro.financeiro_particular.recebimentos_alunos.repository.CobrancaParticularSpecifications;
 import aprimorar.financeiro.financeiro_particular.recebimentos_alunos.web.dto.CobrancaParticularFiltroRequest;
+import aprimorar.financeiro.financeiro_particular.recebimentos_alunos.web.dto.CobrancaParticularResponse;
+
 import java.math.BigDecimal;
 import java.util.Map;
 import java.util.Set;
@@ -18,6 +20,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -82,20 +85,18 @@ public class CobrancaParticularService implements CobrancaParticularAPI {
     }
 
     @Transactional(readOnly = true)
-    public Page<CobrancaParticular> buscarCobrancas(
+    public Page<CobrancaParticularResponse> getCobrancas(
         CobrancaParticularFiltroRequest filtro,
         Pageable pageable
     ) {
-        return cobrancaRepository.findAll(
-            CobrancaParticularSpecifications.comFiltros(filtro),
-            pageable
-        );
+        Specification<CobrancaParticular> spec = CobrancaParticularSpecifications.comFiltros(filtro);
+        return cobrancaRepository.findAll(spec, pageable).map(CobrancaParticularResponse::toDto);
     }
 
     @Transactional(readOnly = true)
-    public CobrancaParticular buscarCobrancaPorId(Long cobrancaId) {
-        return cobrancaRepository.findById(cobrancaId)
-            .orElseThrow(CobrancaParticularNaoEncontradaException::new);
+    public CobrancaParticularResponse getCobrancaPorId(Long cobrancaId) {
+        CobrancaParticular cobranca = findByIdOrThrow(cobrancaId);
+        return CobrancaParticularResponse.toDto(cobranca);
     }
 
     @Override
@@ -123,6 +124,10 @@ public class CobrancaParticularService implements CobrancaParticularAPI {
                 CobrancaParticular::getAtendimentoId,
                 CobrancaParticularService::toSummary
             ));
+    }
+
+    private CobrancaParticular findByIdOrThrow(Long cobrancaId) {
+        return cobrancaRepository.findById(cobrancaId).orElseThrow(CobrancaParticularNaoEncontradaException::new);
     }
 
     private static void validarDados(CriarCobrancaParticularCommand command) {

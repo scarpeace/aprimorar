@@ -9,10 +9,16 @@ import aprimorar.financeiro.financeiro_particular.pagamentos_colaboradores.domai
 import aprimorar.financeiro.financeiro_particular.pagamentos_colaboradores.api.RepasseParticularDadosInvalidosException;
 import aprimorar.financeiro.financeiro_particular.pagamentos_colaboradores.api.RepasseParticularNaoEncontradoException;
 import aprimorar.financeiro.financeiro_particular.pagamentos_colaboradores.repository.RepasseParticularRepository;
+import aprimorar.financeiro.financeiro_particular.pagamentos_colaboradores.repository.RepasseParticularSpecifications;
+import aprimorar.financeiro.financeiro_particular.pagamentos_colaboradores.web.dto.RepasseParticularFiltroRequest;
+import aprimorar.financeiro.financeiro_particular.pagamentos_colaboradores.web.dto.RepasseParticularResponse;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -87,6 +93,24 @@ public class RepasseParticularService implements RepasseAPI {
         return repasseRepository.existsByColaboradorIdAndStatus(colaboradorId,StatusRepasseParticular.PENDENTE);
     }
 
+    @Transactional(readOnly = true)
+    public Page<RepasseParticularResponse> getRepasses(
+        RepasseParticularFiltroRequest filtro,
+        Pageable pageable
+    ) {
+        Specification<RepasseParticular> spec = RepasseParticularSpecifications
+            .comFiltros(filtro);
+
+        return repasseRepository.findAll(spec, pageable)
+            .map(RepasseParticularResponse::toDto);
+    }
+
+    @Transactional(readOnly = true)
+    public RepasseParticularResponse getRepassePorId(Long repasseId) {
+        RepasseParticular repasse = findByIdOrThrow(repasseId);
+        return RepasseParticularResponse.toDto(repasse);
+    }
+
     @Override
     @Transactional(readOnly = true)
     public RepasseParticularSummary buscarSummaryPorAtendimentoId(
@@ -125,5 +149,8 @@ public class RepasseParticularService implements RepasseAPI {
         );
     }
 
-
+    private RepasseParticular findByIdOrThrow(Long repasseId) {
+        return repasseRepository.findById(repasseId)
+            .orElseThrow(RepasseParticularNaoEncontradoException::new);
+    }
 }

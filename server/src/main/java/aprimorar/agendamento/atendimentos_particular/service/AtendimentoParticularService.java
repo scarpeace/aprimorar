@@ -101,14 +101,14 @@ public class AtendimentoParticularService {
         AgendarAtendimentoParticularRequest dto
     ) {
 
-        Aluno aluno = alunoService.findAlunoById(dto.alunoId());
+        Aluno aluno = alunoService.findAlunoOrThrow(dto.alunoId());
         if (!Boolean.TRUE.equals(aluno.getActive())) {
             throw new AtendimentoParticularDadosInvalidosException(
                 "Aluno informado não está ativo"
             );
         }
 
-        Colaborador colaborador = colaboradorService.findColaboradorById(dto.colaboradorId());
+        Colaborador colaborador = colaboradorService.findColaboradorOrThrow(dto.colaboradorId());
         if (!Boolean.TRUE.equals(colaborador.getActive())) {
             throw new AtendimentoParticularDadosInvalidosException(
                 "Colaborador informado não está ativo"
@@ -149,14 +149,14 @@ public class AtendimentoParticularService {
     ) {
         AtendimentoParticular atendimento = findAtendimentoOrThrow(atendimentoId);
 
-        Aluno aluno = alunoService.findAlunoById(dto.alunoId());
+        Aluno aluno = alunoService.findAlunoOrThrow(dto.alunoId());
         if (!Boolean.TRUE.equals(aluno.getActive())) {
             throw new AtendimentoParticularDadosInvalidosException(
                 "Aluno informado não está ativo"
             );
         }
 
-        Colaborador colaborador = colaboradorService.findColaboradorById(dto.colaboradorId());
+        Colaborador colaborador = colaboradorService.findColaboradorOrThrow(dto.colaboradorId());
         if (!Boolean.TRUE.equals(colaborador.getActive())) {
             throw new AtendimentoParticularDadosInvalidosException(
                 "Colaborador informado não está ativo"

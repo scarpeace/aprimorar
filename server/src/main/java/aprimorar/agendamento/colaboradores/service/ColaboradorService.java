@@ -93,7 +93,7 @@ public class ColaboradorService {
         colaborador.activate();
     }
 
-    private Colaborador findColaboradorOrThrow(UUID colaboradorId) {
+    public Colaborador findColaboradorOrThrow(UUID colaboradorId) {
         return colaboradorRepo.findById(colaboradorId)
             .orElseThrow(() -> new ColaboradorNaoEncontradoException("Colaborador não encontrado no banco de dados"));
     }

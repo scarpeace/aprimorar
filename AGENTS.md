@@ -41,6 +41,8 @@ Documento operacional do repositório. Mantenha este arquivo atualizado quando a
 - repository faz acesso a dados
 - DTO na borda HTTP
 - entidade JPA não vaza para API
+- services de consulta retornam DTOs de resposta e fazem o `toDto` dentro da
+  transação; controllers apenas delegam e montam o `ResponseEntity`
 - mudança de schema sempre via Flyway
 - dependência entre módulos só pelos contratos permitidos no `package-info.java`
 - quando um módulo expõe contratos a outros módulos, eles ficam em uma `api/`

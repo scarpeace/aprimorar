@@ -49,10 +49,10 @@ public class CobrancaParticularController {
         @PageableDefault(sort = "createdAt", direction = Sort.Direction.DESC)
         Pageable pageable
     ) {
-        return ResponseEntity.ok(
-            cobrancaService.buscarCobrancas(filtro, pageable)
-                .map(CobrancaParticularResponse::toDto)
-        );
+        Page<CobrancaParticularResponse> cobrancas = cobrancaService
+            .getCobrancas(filtro, pageable);
+
+        return ResponseEntity.ok(cobrancas);
     }
 
     @GetMapping("/{cobrancaId}")
@@ -65,10 +65,9 @@ public class CobrancaParticularController {
     public ResponseEntity<CobrancaParticularResponse> buscarPorId(
         @PathVariable Long cobrancaId
     ) {
-        return ResponseEntity.ok(
-            CobrancaParticularResponse.toDto(
-                cobrancaService.buscarCobrancaPorId(cobrancaId)
-            )
-        );
+        CobrancaParticularResponse cobranca = cobrancaService
+            .getCobrancaPorId(cobrancaId);
+
+        return ResponseEntity.ok(cobranca);
     }
 }

@@ -59,8 +59,8 @@ class AlunoServiceQueryTest {
         var response = service.listAlunosOptions();
 
         assertEquals(1, response.size());
-        assertEquals(aluno.getId(), response.getFirst().getId());
-        assertEquals("Ana Silva", response.getFirst().getNome());
+        assertEquals(aluno.getId(), response.getFirst().id());
+        assertEquals("Ana Silva", response.getFirst().nome());
     }
 
     @Test
@@ -73,9 +73,9 @@ class AlunoServiceQueryTest {
 
         var response = service.findAlunoById(id);
 
-        assertEquals(id, response.getId());
-        assertEquals("Ana Silva", response.getNome());
-        assertEquals("João Pereira", response.getResponsavel().getNome());
+        assertEquals(id, response.id());
+        assertEquals("Ana Silva", response.nome());
+        assertEquals("João Pereira", response.responsavel().nome());
     }
 
     @Test

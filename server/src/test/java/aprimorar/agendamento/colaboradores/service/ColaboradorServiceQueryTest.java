@@ -62,12 +62,12 @@ class ColaboradorServiceQueryTest {
         var response = service.getColaboradores(new ColaboradorFiltroRequest(null, null, null, true), pageable);
 
         assertEquals(1, response.getTotalElements());
-        assertEquals(colaborador.getId(), response.getContent().getFirst().getId());
-        assertEquals("João Pereira", response.getContent().getFirst().getNome());
-        assertEquals("12345678900", response.getContent().getFirst().getCpf());
-        assertEquals("61999999999", response.getContent().getFirst().getTelefone());
-        assertEquals(FuncoesColaborador.PROFESSOR, response.getContent().getFirst().getFuncao());
-        assertTrue(Boolean.TRUE.equals(response.getContent().getFirst().getActive()));
+        assertEquals(colaborador.getId(), response.getContent().getFirst().id());
+        assertEquals("João Pereira", response.getContent().getFirst().nome());
+        assertEquals("12345678900", response.getContent().getFirst().cpf());
+        assertEquals("61999999999", response.getContent().getFirst().telefone());
+        assertEquals(FuncoesColaborador.PROFESSOR, response.getContent().getFirst().funcao());
+        assertTrue(response.getContent().getFirst().active());
     }
 
     @Test
@@ -80,8 +80,8 @@ class ColaboradorServiceQueryTest {
 
         var response = service.findColaboradorById(id);
 
-        assertEquals(id, response.getId());
-        assertEquals("João Pereira", response.getNome());
+        assertEquals(id, response.id());
+        assertEquals("João Pereira", response.nome());
     }
 
     @Test
@@ -110,8 +110,8 @@ class ColaboradorServiceQueryTest {
         var response = service.listColaboradoresOptions();
 
         assertEquals(1, response.size());
-        assertEquals(colaborador.getId(), response.getFirst().getId());
-        assertEquals("João Pereira", response.getFirst().getNome());
+        assertEquals(colaborador.getId(), response.getFirst().id());
+        assertEquals("João Pereira", response.getFirst().nome());
     }
 
     private static Colaborador colaborador(String nome) {
