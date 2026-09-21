@@ -18,16 +18,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import aprimorar.agendamento.alunos.web.dto.aluno.AlunoListResponse;
-import aprimorar.agendamento.alunos.web.dto.aluno.AlunosOptionsResponse;
 import aprimorar.common.openapi.BadRequestProblemResponse;
 import aprimorar.common.openapi.CommonProblemResponses;
 import aprimorar.common.openapi.ConflictProblemResponse;
 import aprimorar.common.openapi.NotFoundProblemResponse;
 import aprimorar.agendamento.alunos.service.AlunoService;
-import aprimorar.agendamento.alunos.web.dto.aluno.AlunoResponse;
-import aprimorar.agendamento.alunos.web.dto.aluno.AlunoFiltroRequest;
-import aprimorar.agendamento.alunos.web.dto.aluno.AlunoRequest;
+import aprimorar.agendamento.alunos.web.dto.AlunoFiltroRequest;
+import aprimorar.agendamento.alunos.web.dto.AlunoRequest;
+import aprimorar.agendamento.alunos.web.dto.AlunoResponse;
+import aprimorar.agendamento.alunos.web.dto.AlunosOptionsResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -59,12 +58,11 @@ public class AlunoController {
     @GetMapping
     @Operation(operationId = "getAlunos", description = "Retorna uma lista paginada de alunos.")
     @ApiResponse(responseCode = "200", description = "Lista de alunos retornada com sucesso.")
-    public ResponseEntity<Page<AlunoListResponse>> getAlunos(
+    public ResponseEntity<Page<AlunoResponse>> getAlunos(
         @ParameterObject AlunoFiltroRequest filtro,
         @ParameterObject @PageableDefault(sort = "nome") Pageable pageable
     ) {
-        Page<AlunoListResponse> alunos = alunoService.getAlunos(filtro, pageable)
-            .map(AlunoListResponse::toDto);
+        Page<AlunoResponse> alunos = alunoService.getAlunos(filtro, pageable);
         return ResponseEntity.ok(alunos);
     }
 
@@ -72,10 +70,7 @@ public class AlunoController {
     @Operation(operationId = "listAlunosOptions", description = "Retorna uma lista de opções de alunos.")
     @ApiResponse(responseCode = "200", description = "Lista de opções de alunos retornada com sucesso.")
     public ResponseEntity<List<AlunosOptionsResponse>> listAlunosOptions() {
-        List<AlunosOptionsResponse> options = alunoService.listAlunosOptions()
-            .stream()
-            .map(AlunosOptionsResponse::toDto)
-            .toList();
+        List<AlunosOptionsResponse> options = alunoService.listAlunosOptions();
         return ResponseEntity.ok(options);
     }
 
@@ -83,7 +78,7 @@ public class AlunoController {
     @Operation(operationId = "getAlunoById", description = "Retorna um aluno por ID.")
     @ApiResponse(responseCode = "200", description = "Aluno retornado com sucesso.")
     public ResponseEntity<AlunoResponse> getAlunoById(@PathVariable UUID alunoId) {
-        AlunoResponse foundAluno = AlunoResponse.toDto(alunoService.findAlunoById(alunoId));
+        AlunoResponse foundAluno = alunoService.findAlunoById(alunoId);
         return ResponseEntity.ok(foundAluno);
     }
 

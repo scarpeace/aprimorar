@@ -1,4 +1,4 @@
-package aprimorar.agendamento.alunos.web.dto.aluno;
+package aprimorar.agendamento.alunos.web.dto;
 
 import aprimorar.agendamento.alunos.domain.Aluno;
 import aprimorar.agendamento.alunos.domain.Responsavel;

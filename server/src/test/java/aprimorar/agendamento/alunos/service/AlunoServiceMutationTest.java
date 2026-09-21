@@ -11,9 +11,7 @@ import aprimorar.agendamento.alunos.domain.Aluno;
 import aprimorar.agendamento.alunos.domain.Responsavel;
 import aprimorar.agendamento.alunos.domain.exception.AlunoPossuiPendenciaFinanceiraException;
 import aprimorar.agendamento.alunos.repository.AlunoRepository;
-
-import aprimorar.agendamento.alunos.web.dto.aluno.AlunoRequest;
-
+import aprimorar.agendamento.alunos.web.dto.AlunoRequest;
 import aprimorar.agendamento.common.domain.Endereco;
 import aprimorar.agendamento.common.web.dto.endereco.EnderecoRequest;
 

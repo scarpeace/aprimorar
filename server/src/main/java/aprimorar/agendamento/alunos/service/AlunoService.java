@@ -6,7 +6,9 @@ import aprimorar.agendamento.alunos.domain.exception.AlunoNaoEncontradoException
 import aprimorar.agendamento.alunos.domain.exception.AlunoPossuiPendenciaFinanceiraException;
 import aprimorar.agendamento.alunos.repository.AlunoRepository;
 import aprimorar.agendamento.alunos.repository.AlunoSpecifications;
-import aprimorar.agendamento.alunos.web.dto.aluno.AlunoFiltroRequest;
+import aprimorar.agendamento.alunos.web.dto.AlunoFiltroRequest;
+import aprimorar.agendamento.alunos.web.dto.AlunoResponse;
+import aprimorar.agendamento.alunos.web.dto.AlunosOptionsResponse;
 
 import java.util.List;
 import java.util.UUID;
@@ -29,23 +31,23 @@ public class AlunoService {
     }
 
     @Transactional(readOnly = true)
-    public Page<Aluno> getAlunos(AlunoFiltroRequest filtro, Pageable pageable) {
+    public Page<AlunoResponse> getAlunos(AlunoFiltroRequest filtro, Pageable pageable) {
         Specification<Aluno> spec = AlunoSpecifications.comFiltros(filtro);
-        return alunoRepo.findAll(spec, pageable);
+        return alunoRepo.findAll(spec, pageable).map(AlunoResponse::toDto);
     }
 
     @Transactional(readOnly = true)
-    public List<Aluno> listAlunosOptions() {
+    public List<AlunosOptionsResponse> listAlunosOptions() {
         Sort sort = Sort.by(Sort.Direction.ASC, "nome");
-        return alunoRepo
-            .findAll(AlunoSpecifications.isActive(), sort)
-            .stream()
+        return alunoRepo.findAll(AlunoSpecifications.isActive(), sort).stream()
+            .map(AlunosOptionsResponse::toDto)
             .toList();
     }
 
     @Transactional(readOnly = true)
-    public Aluno findAlunoById(UUID alunoId) {
-        return findAlunoOrThrow(alunoId);
+    public AlunoResponse findAlunoById(UUID alunoId) {
+        Aluno aluno = findAlunoOrThrow(alunoId);
+        return AlunoResponse.toDto(aluno);
     }
 
     @Transactional

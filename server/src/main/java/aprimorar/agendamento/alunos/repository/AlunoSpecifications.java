@@ -3,7 +3,7 @@ package aprimorar.agendamento.alunos.repository;
 import org.springframework.data.jpa.domain.Specification;
 
 import aprimorar.agendamento.alunos.domain.Aluno;
-import aprimorar.agendamento.alunos.web.dto.aluno.AlunoFiltroRequest;
+import aprimorar.agendamento.alunos.web.dto.AlunoFiltroRequest;
 
 public final class AlunoSpecifications {
 

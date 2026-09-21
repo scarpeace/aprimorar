@@ -7,6 +7,9 @@ import aprimorar.agendamento.colaboradores.domain.exception.ColaboradorPossuiRep
 import aprimorar.agendamento.colaboradores.repository.ColaboradorRepository;
 import aprimorar.agendamento.colaboradores.repository.ColaboradorSpecifications;
 import aprimorar.agendamento.colaboradores.web.dto.colaborador.ColaboradorFiltroRequest;
+import aprimorar.agendamento.colaboradores.web.dto.colaborador.ColaboradorResponse;
+import aprimorar.agendamento.colaboradores.web.dto.colaborador.ColaboradoresOptionsResponse;
+
 import java.util.List;
 import java.util.UUID;
 import org.springframework.data.domain.Page;
@@ -28,23 +31,25 @@ public class ColaboradorService {
     }
 
     @Transactional(readOnly = true)
-    public Page<Colaborador> getColaboradores(ColaboradorFiltroRequest filtro, Pageable pageable) {
+    public Page<ColaboradorResponse> getColaboradores(ColaboradorFiltroRequest filtro, Pageable pageable) {
         Specification<Colaborador> spec = ColaboradorSpecifications.comFiltros(filtro);
-        return colaboradorRepo.findAll(spec, pageable);
+        return colaboradorRepo.findAll(spec, pageable).map(ColaboradorResponse::toDto);
     }
 
     @Transactional(readOnly = true)
-    public Colaborador findColaboradorById(UUID colaboradorId) {
-        return findColaboradorOrThrow(colaboradorId);
+    public ColaboradorResponse findColaboradorById(UUID colaboradorId) {
+        Colaborador colaborador = findColaboradorOrThrow(colaboradorId);
+        return ColaboradorResponse.toDto(colaborador);
     }
 
     @Transactional(readOnly = true)
-    public List<Colaborador> listColaboradoresOptions() {
+    public List<ColaboradoresOptionsResponse> listColaboradoresOptions() {
         Sort sort = Sort.by(Sort.Direction.ASC, "nome");
 
         return colaboradorRepo
             .findAll(ColaboradorSpecifications.isActive(), sort)
             .stream()
+            .map(ColaboradoresOptionsResponse::toDto)
             .toList();
     }
 

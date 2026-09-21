@@ -1,4 +1,4 @@
-package aprimorar.agendamento.alunos.web.dto.aluno;
+package aprimorar.agendamento.alunos.web.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 

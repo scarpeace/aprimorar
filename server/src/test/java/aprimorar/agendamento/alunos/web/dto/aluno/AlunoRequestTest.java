@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.time.LocalDate;
 import org.junit.jupiter.api.Test;
 
+import aprimorar.agendamento.alunos.web.dto.AlunoRequest;
 import aprimorar.agendamento.common.web.dto.endereco.EnderecoRequest;
 
 class AlunoRequestTest {

@@ -1,4 +1,4 @@
-package aprimorar.agendamento.alunos.web.dto.aluno;
+package aprimorar.agendamento.alunos.web.dto;
 
 import java.time.LocalDate;
 import aprimorar.common.utils.CpfUtils;
