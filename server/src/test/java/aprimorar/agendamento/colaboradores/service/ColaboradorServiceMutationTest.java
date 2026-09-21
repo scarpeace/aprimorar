@@ -6,7 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
-import aprimorar.financeiro.api.repasses_particular.RepasseApi;
+import aprimorar.financeiro.financeiro_particular.pagamentos_colaboradores.api.RepasseAPI;
 import aprimorar.agendamento.colaboradores.domain.enums.FuncoesColaborador;
 import aprimorar.agendamento.colaboradores.domain.exception.ColaboradorPossuiRepassePendenteException;
 import aprimorar.agendamento.colaboradores.repository.ColaboradorRepository;
@@ -31,7 +31,7 @@ class ColaboradorServiceMutationTest {
     private ColaboradorRepository colaboradorRepo;
 
     @Mock
-    private RepasseApi repasseApi;
+    private RepasseAPI repasseApi;
 
     private ColaboradorService service;
 

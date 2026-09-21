@@ -3,13 +3,11 @@ package aprimorar.agendamento.atendimentos_particular.repository;
 
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -25,10 +23,6 @@ public interface AtendimentoParticularRepository
     @Override
     @EntityGraph(attributePaths = {"aluno", "colaborador"})
     Page<AtendimentoParticular> findAll(Specification<AtendimentoParticular> specification, Pageable pageable);
-
-    @Override
-    @EntityGraph(attributePaths = {"aluno", "colaborador"})
-    List<AtendimentoParticular> findAll(Specification<AtendimentoParticular> specification, Sort sort);
 
     @Override
     @EntityGraph(attributePaths = {"aluno", "colaborador"})

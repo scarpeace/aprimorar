@@ -1,6 +1,6 @@
 package aprimorar.agendamento.colaboradores.service;
 
-import aprimorar.financeiro.api.repasses_particular.RepasseApi;
+import aprimorar.financeiro.financeiro_particular.pagamentos_colaboradores.api.RepasseAPI;
 import aprimorar.agendamento.colaboradores.domain.Colaborador;
 import aprimorar.agendamento.colaboradores.domain.exception.ColaboradorNaoEncontradoException;
 import aprimorar.agendamento.colaboradores.domain.exception.ColaboradorPossuiRepassePendenteException;
@@ -8,7 +8,6 @@ import aprimorar.agendamento.colaboradores.repository.ColaboradorRepository;
 import aprimorar.agendamento.colaboradores.repository.ColaboradorSpecifications;
 import aprimorar.agendamento.colaboradores.web.dto.colaborador.ColaboradorFiltroRequest;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,16 +20,11 @@ import org.springframework.transaction.annotation.Transactional;
 public class ColaboradorService {
 
     private final ColaboradorRepository colaboradorRepo;
-    private final RepasseApi repasseApi;
+    private final RepasseAPI repasseApi;
 
-    public ColaboradorService(ColaboradorRepository colaboradorRepo, RepasseApi repasseApi) {
+    public ColaboradorService(ColaboradorRepository colaboradorRepo, RepasseAPI repasseApi) {
         this.colaboradorRepo = colaboradorRepo;
         this.repasseApi = repasseApi;
-    }
-
-    @Transactional(readOnly = true)
-    public Optional<Colaborador> findEntityById(UUID colaboradorId) {
-        return colaboradorRepo.findById(colaboradorId);
     }
 
     @Transactional(readOnly = true)

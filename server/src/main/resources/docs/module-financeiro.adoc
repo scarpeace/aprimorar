@@ -5,6 +5,6 @@
 |Spring components
 |_Services_
 
-* `aprimorar.financeiro.api.cobrancas_particular.CobrancaParticularApi` (via `aprimorar.financeiro.cobrancas_particular.service.CobrancaParticularService`)
-* `aprimorar.financeiro.api.repasses_particular.RepasseApi` (via `aprimorar.financeiro.repasses_particular.service.RepasseParticularService`)
+* `a.f.financeiro_particular.pagamentos_colaboradores.api.RepasseAPI` (via `a.f.financeiro_particular.pagamentos_colaboradores.service.RepasseParticularService`)
+* `a.f.financeiro_particular.recebimentos_alunos.api.CobrancaParticularAPI` (via `a.f.financeiro_particular.recebimentos_alunos.service.CobrancaParticularService`)
 |===

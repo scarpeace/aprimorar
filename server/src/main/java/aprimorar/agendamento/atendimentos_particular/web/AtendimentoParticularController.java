@@ -1,8 +1,8 @@
 package aprimorar.agendamento.atendimentos_particular.web;
 
 import aprimorar.agendamento.atendimentos_particular.service.AtendimentoParticularService;
-import aprimorar.agendamento.atendimentos_particular.web.dto.atendimento.AgendarAtendimentoParticularDTO;
-import aprimorar.agendamento.atendimentos_particular.web.dto.atendimento.AtualizarAtendimentoParticularDTO;
+import aprimorar.agendamento.atendimentos_particular.web.dto.atendimento.AgendarAtendimentoParticularRequest;
+import aprimorar.agendamento.atendimentos_particular.web.dto.atendimento.AtualizarAtendimentoParticularRequest;
 import aprimorar.agendamento.atendimentos_particular.web.dto.atendimento.AtendimentoParticularFiltroRequest;
 import aprimorar.agendamento.atendimentos_particular.web.dto.atendimento.AtendimentoParticularResponse;
 import aprimorar.common.openapi.BadRequestProblemResponse;
@@ -56,7 +56,7 @@ public class AtendimentoParticularController {
     )
     @ApiResponse(responseCode = "201", description = "Atendimento agendado com sucesso.")
     public ResponseEntity<Void> agendar(
-        @RequestBody @Valid AgendarAtendimentoParticularDTO dto
+        @RequestBody @Valid AgendarAtendimentoParticularRequest dto
     ) {
         Long id = atendimentoService.agendar(dto);
 
@@ -71,7 +71,7 @@ public class AtendimentoParticularController {
     @ApiResponse(responseCode = "204", description = "Atendimento atualizado com sucesso.")
     public ResponseEntity<Void> atualizar(
         @PathVariable Long id,
-        @RequestBody @Valid AtualizarAtendimentoParticularDTO dto
+        @RequestBody @Valid AtualizarAtendimentoParticularRequest dto
     ) {
         atendimentoService.atualizar(id, dto);
 

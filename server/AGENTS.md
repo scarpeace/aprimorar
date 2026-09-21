@@ -5,7 +5,7 @@
 - Priorizar regras de negocio claras, contratos estaveis e fronteiras de modulo respeitadas.
 
 ## Arquitetura em uma frase
-- Backend modular (Spring Modulith): entrada HTTP no pacote `internal/web` do modulo, orquestracao em service, persistencia via repository, integracao entre modulos apenas por contratos `...api`.
+- Backend modular (Spring Modulith): entrada HTTP nos pacotes `web` de cada capacidade, orquestracao em service, persistencia via repository, integracao entre modulos apenas por contratos `...api`.
 
 ## Fluxo de implementacao obrigatorio
 - Controller: recebe request, valida DTO (`@Valid`), delega para service e retorna DTO de resposta; sem regra de negocio.
@@ -45,11 +45,10 @@
 - Dependencia cruzada so por `...api`; nunca importar classes internas de outro modulo.
 - Antes de nova dependencia, leia `package-info.java` do modulo e confirme `allowedDependencies`.
 - Modulos atuais e limites principais:
-  - `atendimentos` pode depender de `financeiro::api`, `pessoas::api`, `shared::*`, `shared`.
-  - `financeiro` pode depender de `shared::*`.
-  - `pessoas` pode depender de `shared::*`, `shared`.
-  - `auth` pode depender de `shared::*`, `shared`.
-  - `shared` nao deve depender de outros modulos de dominio.
+  - `agendamento` pode depender de `common`, `financeiro::pagamentos-colaboradores-api` e `financeiro::recebimentos-alunos-api`.
+  - `financeiro` pode depender de `common`; `financeiro_particular/pagamentos_colaboradores` e `financeiro_particular/recebimentos_alunos` sao pacotes internos, nao modulos independentes.
+  - `auth` pode depender de `common`.
+  - `common` nao deve depender de outros modulos de dominio.
 - Mudou contrato de endpoint: alinhar OpenAPI e comunicar impacto no frontend (Kubb depende de `/v3/api-docs`).
 
 ## Matriz de testes por tipo de mudanca

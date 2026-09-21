@@ -14,9 +14,9 @@ Container_Boundary("AprimorarAplication.AprimorarAplication_boundary", "Aprimora
   Component(AprimorarAplication.AprimorarAplication.Agendamento, "Agendamento", $techn="Module", $descr="", $tags="", $link="")
 }
 
-Rel(AprimorarAplication.AprimorarAplication.Agendamento, AprimorarAplication.AprimorarAplication.Common, "depends on", $techn="", $tags="", $link="")
 Rel(AprimorarAplication.AprimorarAplication.Agendamento, AprimorarAplication.AprimorarAplication.Financeiro, "uses", $techn="", $tags="", $link="")
 Rel(AprimorarAplication.AprimorarAplication.Financeiro, AprimorarAplication.AprimorarAplication.Common, "depends on", $techn="", $tags="", $link="")
+Rel(AprimorarAplication.AprimorarAplication.Agendamento, AprimorarAplication.AprimorarAplication.Common, "depends on", $techn="", $tags="", $link="")
 
 SHOW_LEGEND(true)
 @enduml

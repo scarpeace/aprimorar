@@ -8,20 +8,20 @@ import aprimorar.agendamento.atendimentos_particular.domain.exception.Atendiment
 import aprimorar.agendamento.atendimentos_particular.domain.exception.AtendimentoParticularNaoEncontradoException;
 import aprimorar.agendamento.atendimentos_particular.repository.AtendimentoParticularRepository;
 import aprimorar.agendamento.atendimentos_particular.repository.AtendimentoSpecifications;
-import aprimorar.agendamento.atendimentos_particular.web.dto.atendimento.AgendarAtendimentoParticularDTO;
-import aprimorar.agendamento.atendimentos_particular.web.dto.atendimento.AtualizarAtendimentoParticularDTO;
+import aprimorar.agendamento.atendimentos_particular.web.dto.atendimento.AgendarAtendimentoParticularRequest;
+import aprimorar.agendamento.atendimentos_particular.web.dto.atendimento.AtualizarAtendimentoParticularRequest;
 import aprimorar.agendamento.atendimentos_particular.web.dto.atendimento.AtendimentoParticularFiltroRequest;
 import aprimorar.agendamento.atendimentos_particular.web.dto.atendimento.AtendimentoParticularResponse;
 import aprimorar.agendamento.colaboradores.domain.Colaborador;
 import aprimorar.agendamento.colaboradores.service.ColaboradorService;
-import aprimorar.financeiro.api.cobrancas_particular.AtualizarCobrancaParticularCommand;
-import aprimorar.financeiro.api.cobrancas_particular.CobrancaParticularApi;
-import aprimorar.financeiro.api.cobrancas_particular.CobrancaParticularSummary;
-import aprimorar.financeiro.api.cobrancas_particular.CriarCobrancaParticularCommand;
-import aprimorar.financeiro.api.repasses_particular.AtualizarRepasseCommand;
-import aprimorar.financeiro.api.repasses_particular.CriarRepasseCommand;
-import aprimorar.financeiro.api.repasses_particular.RepasseApi;
-import aprimorar.financeiro.api.repasses_particular.RepasseParticularSummary;
+import aprimorar.financeiro.financeiro_particular.recebimentos_alunos.api.AtualizarCobrancaParticularCommand;
+import aprimorar.financeiro.financeiro_particular.recebimentos_alunos.api.CobrancaParticularAPI;
+import aprimorar.financeiro.financeiro_particular.recebimentos_alunos.api.CobrancaParticularSummary;
+import aprimorar.financeiro.financeiro_particular.recebimentos_alunos.api.CriarCobrancaParticularCommand;
+import aprimorar.financeiro.financeiro_particular.pagamentos_colaboradores.api.AtualizarRepasseCommand;
+import aprimorar.financeiro.financeiro_particular.pagamentos_colaboradores.api.CriarRepasseCommand;
+import aprimorar.financeiro.financeiro_particular.pagamentos_colaboradores.api.RepasseAPI;
+import aprimorar.financeiro.financeiro_particular.pagamentos_colaboradores.api.RepasseParticularSummary;
 import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.Set;
@@ -38,15 +38,15 @@ import org.springframework.transaction.annotation.Transactional;
 public class AtendimentoParticularService {
 
     private final AtendimentoParticularRepository atendimentoRepository;
-    private final CobrancaParticularApi cobrancaParticularApi;
-    private final RepasseApi repasseParticularApi;
+    private final CobrancaParticularAPI cobrancaParticularApi;
+    private final RepasseAPI repasseParticularApi;
     private final AlunoService alunoService;
     private final ColaboradorService colaboradorService;
 
     public AtendimentoParticularService(
         AtendimentoParticularRepository atendimentoRepository,
-        CobrancaParticularApi cobrancaApi,
-        RepasseApi repasseApi,
+        CobrancaParticularAPI cobrancaApi,
+        RepasseAPI repasseApi,
         AlunoService alunoService,
         ColaboradorService colaboradorService
     ) {
@@ -98,7 +98,7 @@ public class AtendimentoParticularService {
 
     @Transactional
     public Long agendar(
-        AgendarAtendimentoParticularDTO dto
+        AgendarAtendimentoParticularRequest dto
     ) {
 
         Aluno aluno = alunoService.findAlunoById(dto.alunoId());
@@ -145,19 +145,19 @@ public class AtendimentoParticularService {
     @Transactional
     public void atualizar(
         Long atendimentoId,
-        AtualizarAtendimentoParticularDTO dto
+        AtualizarAtendimentoParticularRequest dto
     ) {
         AtendimentoParticular atendimento = findAtendimentoOrThrow(atendimentoId);
 
         Aluno aluno = alunoService.findAlunoById(dto.alunoId());
-        if (!Boolean.TRUE.equals(atendimento.getAluno().getActive())) {
+        if (!Boolean.TRUE.equals(aluno.getActive())) {
             throw new AtendimentoParticularDadosInvalidosException(
                 "Aluno informado não está ativo"
             );
         }
 
         Colaborador colaborador = colaboradorService.findColaboradorById(dto.colaboradorId());
-        if (!Boolean.TRUE.equals(atendimento.getColaborador().getActive())) {
+        if (!Boolean.TRUE.equals(colaborador.getActive())) {
             throw new AtendimentoParticularDadosInvalidosException(
                 "Colaborador informado não está ativo"
             );

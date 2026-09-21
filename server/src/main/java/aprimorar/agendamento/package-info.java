@@ -3,8 +3,8 @@
     displayName = "Agendamento",
     allowedDependencies = {
         "common",
-        "financeiro::financeiro-aluno-api",
-        "financeiro::repasses-api"
+        "financeiro::pagamentos-colaboradores-api",
+        "financeiro::recebimentos-alunos-api"
     }
 )
 package aprimorar.agendamento;

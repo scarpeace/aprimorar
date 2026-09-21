@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
-import aprimorar.financeiro.api.repasses_particular.RepasseApi;
+import aprimorar.financeiro.financeiro_particular.pagamentos_colaboradores.api.RepasseAPI;
 import aprimorar.agendamento.colaboradores.domain.enums.FuncoesColaborador;
 import aprimorar.agendamento.colaboradores.domain.exception.ColaboradorNaoEncontradoException;
 import aprimorar.agendamento.colaboradores.repository.ColaboradorRepository;
@@ -40,7 +40,7 @@ class ColaboradorServiceQueryTest {
     private ColaboradorRepository colaboradorRepo;
 
     @Mock
-    private RepasseApi repasseApi;
+    private RepasseAPI repasseApi;
 
     private ColaboradorService service;
 
@@ -67,7 +67,7 @@ class ColaboradorServiceQueryTest {
         assertEquals("12345678900", response.getContent().getFirst().getCpf());
         assertEquals("61999999999", response.getContent().getFirst().getTelefone());
         assertEquals(FuncoesColaborador.PROFESSOR, response.getContent().getFirst().getFuncao());
-        assertTrue(response.getContent().getFirst().ativo());
+        assertTrue(Boolean.TRUE.equals(response.getContent().getFirst().getActive()));
     }
 
     @Test
@@ -82,31 +82,6 @@ class ColaboradorServiceQueryTest {
 
         assertEquals(id, response.getId());
         assertEquals("João Pereira", response.getNome());
-    }
-
-    @Test
-    void shouldFindColaboradorById() {
-        var id = UUID.randomUUID();
-        var colaborador = colaborador("João Pereira");
-        setId(colaborador, id);
-
-        when(colaboradorRepo.findById(id)).thenReturn(Optional.of(colaborador));
-
-        var response = service.findEntityById(id);
-
-        assertTrue(response.isPresent());
-        assertEquals(colaborador, response.orElseThrow());
-    }
-
-    @Test
-    void shouldReturnEmptyWhenColaboradorDoesNotExist() {
-        var id = UUID.randomUUID();
-
-        when(colaboradorRepo.findById(id)).thenReturn(Optional.empty());
-
-        var response = service.findEntityById(id);
-
-        assertTrue(response.isEmpty());
     }
 
     @Test
