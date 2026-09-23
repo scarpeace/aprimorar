@@ -1,4 +1,4 @@
-package aprimorar.auth.user;
+package aprimorar.auth.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

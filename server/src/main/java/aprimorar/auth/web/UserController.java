@@ -1,9 +1,9 @@
 package aprimorar.auth.web;
 
-import aprimorar.auth.dto.UserCreateRequest;
-import aprimorar.auth.dto.UserListResponse;
-import aprimorar.auth.dto.UserResponse;
-import aprimorar.auth.user.UserService;
+import aprimorar.auth.application.UserService;
+import aprimorar.auth.web.dto.UserCreateRequest;
+import aprimorar.auth.web.dto.UserListResponse;
+import aprimorar.auth.web.dto.UserResponse;
 import aprimorar.common.openapi.BadRequestProblemResponse;
 import aprimorar.common.openapi.CommonProblemResponses;
 import aprimorar.common.openapi.ConflictProblemResponse;

@@ -1,5 +1,6 @@
-package aprimorar.auth.dto;
+package aprimorar.auth.web.dto;
 
+import aprimorar.common.utils.EmailUtils;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -14,4 +15,7 @@ public record LoginRequest(
     @Schema(nullable = false, description = "Senha do usuário", format = "password")
     String password
 ) {
+    public LoginRequest {
+        email = EmailUtils.normalize(email);
+    }
 }

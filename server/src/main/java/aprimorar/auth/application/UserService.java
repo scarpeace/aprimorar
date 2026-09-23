@@ -1,12 +1,12 @@
-package aprimorar.auth.user;
+package aprimorar.auth.application;
 
-import aprimorar.auth.dto.UserCreateRequest;
-import aprimorar.auth.dto.UserListResponse;
-import aprimorar.auth.dto.UserResponse;
-import aprimorar.auth.exception.UserAlreadyExistsException;
-import aprimorar.auth.exception.UserNotFoundException;
-import aprimorar.auth.refresh.RefreshTokenService;
-import aprimorar.common.utils.EmailUtils;
+import aprimorar.auth.domain.User;
+import aprimorar.auth.domain.exception.UserAlreadyExistsException;
+import aprimorar.auth.domain.exception.UserNotFoundException;
+import aprimorar.auth.infrastructure.UserRepository;
+import aprimorar.auth.web.dto.UserCreateRequest;
+import aprimorar.auth.web.dto.UserListResponse;
+import aprimorar.auth.web.dto.UserResponse;
 import java.util.List;
 import java.util.UUID;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -32,7 +32,7 @@ public class UserService {
 
     @Transactional
     public UserResponse create(UserCreateRequest request) {
-        String email = EmailUtils.normalize(request.email());
+        String email = request.email();
 
         if (userRepository.findByEmail(email).isPresent()) {
             throw new UserAlreadyExistsException("Já existe um usuário com este e-mail.");
@@ -75,7 +75,7 @@ public class UserService {
     @Transactional
     public void delete(UUID userId) {
         User user = findUser(userId);
-        refreshTokenService.revokeAll(user.getId());
+        refreshTokenService.deleteAll(user.getId());
         userRepository.delete(user);
     }
 

@@ -1,6 +1,7 @@
-package aprimorar.auth.dto;
+package aprimorar.auth.web.dto;
 
-import aprimorar.auth.user.Role;
+import aprimorar.auth.domain.Role;
+import aprimorar.common.utils.EmailUtils;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -21,4 +22,7 @@ public record UserCreateRequest(
     @Schema(nullable = false, description = "Perfil de acesso do usuário", example = "SECRETARIA")
     Role role
 ) {
+    public UserCreateRequest {
+        email = EmailUtils.normalize(email);
+    }
 }

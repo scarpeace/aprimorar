@@ -1,10 +1,11 @@
-package aprimorar.auth;
+package aprimorar.auth.web;
 
-import aprimorar.auth.dto.AuthMeResponse;
-import aprimorar.auth.dto.LoginRequest;
-import aprimorar.auth.dto.LoginResponse;
-import aprimorar.auth.dto.LoginResult;
-import aprimorar.auth.exception.AuthException;
+import aprimorar.auth.application.AuthService;
+import aprimorar.auth.application.LoginResult;
+import aprimorar.auth.domain.exception.AuthException;
+import aprimorar.auth.web.dto.AuthMeResponse;
+import aprimorar.auth.web.dto.LoginRequest;
+import aprimorar.auth.web.dto.LoginResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import io.swagger.v3.oas.annotations.tags.Tag;

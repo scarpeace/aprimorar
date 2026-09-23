@@ -1,4 +1,6 @@
-package aprimorar.auth.user;
+package aprimorar.auth.infrastructure;
+
+import aprimorar.auth.domain.User;
 
 import java.util.Optional;
 import java.util.UUID;

@@ -1,6 +1,8 @@
-package aprimorar.auth.refresh;
+package aprimorar.auth.application;
 
-import aprimorar.auth.exception.AuthException;
+import aprimorar.auth.domain.RefreshToken;
+import aprimorar.auth.domain.exception.AuthException;
+import aprimorar.auth.infrastructure.RefreshTokenRepository;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -66,6 +68,16 @@ public class RefreshTokenService {
     @Transactional
     public void revokeAll(UUID userId) {
         repository.findAllByUserId(userId).forEach(RefreshToken::revoke);
+    }
+
+    @Transactional
+    public void deleteAll(UUID userId) {
+        repository.deleteAllByUserId(userId);
+    }
+
+    @Transactional
+    public int deleteInactive() {
+        return repository.deleteInactive(Instant.now());
     }
 
     private String generateRandomToken() {

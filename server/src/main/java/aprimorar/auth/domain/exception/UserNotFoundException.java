@@ -1,4 +1,4 @@
-package aprimorar.auth.exception;
+package aprimorar.auth.domain.exception;
 
 public class UserNotFoundException extends RuntimeException {
 

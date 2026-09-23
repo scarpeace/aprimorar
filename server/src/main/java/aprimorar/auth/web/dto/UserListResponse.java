@@ -1,7 +1,7 @@
-package aprimorar.auth.dto;
+package aprimorar.auth.web.dto;
 
-import aprimorar.auth.user.Role;
-import aprimorar.auth.user.User;
+import aprimorar.auth.domain.Role;
+import aprimorar.auth.domain.User;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;

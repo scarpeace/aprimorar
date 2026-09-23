@@ -1,4 +1,4 @@
-package aprimorar.auth.dto;
+package aprimorar.auth.web.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;

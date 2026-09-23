@@ -1,4 +1,4 @@
-package aprimorar.auth.dto;
+package aprimorar.auth.application;
 
 public record LoginResult(String accessToken, String refreshToken) {
 }

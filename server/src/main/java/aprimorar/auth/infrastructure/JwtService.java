@@ -1,6 +1,6 @@
-package aprimorar.auth.jwt;
+package aprimorar.auth.infrastructure;
 
-import aprimorar.auth.user.User;
+import aprimorar.auth.domain.User;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.List;

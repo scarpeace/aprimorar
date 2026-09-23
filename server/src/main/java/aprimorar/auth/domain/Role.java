@@ -1,4 +1,4 @@
-package aprimorar.auth.user;
+package aprimorar.auth.domain;
 
 public enum Role {
     ADMIN,

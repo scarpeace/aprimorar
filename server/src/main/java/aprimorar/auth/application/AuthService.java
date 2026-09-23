@@ -1,14 +1,12 @@
-package aprimorar.auth;
+package aprimorar.auth.application;
 
-import aprimorar.auth.dto.AuthMeResponse;
-import aprimorar.auth.dto.LoginRequest;
-import aprimorar.auth.dto.LoginResult;
-import aprimorar.auth.exception.AuthException;
-import aprimorar.auth.jwt.JwtService;
-import aprimorar.auth.refresh.RefreshTokenService;
-import aprimorar.auth.user.Role;
-import aprimorar.auth.user.User;
-import aprimorar.auth.user.UserRepository;
+import aprimorar.auth.domain.Role;
+import aprimorar.auth.domain.User;
+import aprimorar.auth.domain.exception.AuthException;
+import aprimorar.auth.infrastructure.JwtService;
+import aprimorar.auth.infrastructure.UserRepository;
+import aprimorar.auth.web.dto.AuthMeResponse;
+import aprimorar.auth.web.dto.LoginRequest;
 import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
