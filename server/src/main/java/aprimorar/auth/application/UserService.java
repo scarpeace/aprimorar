@@ -5,7 +5,6 @@ import aprimorar.auth.domain.exception.UserAlreadyExistsException;
 import aprimorar.auth.domain.exception.UserNotFoundException;
 import aprimorar.auth.infrastructure.UserRepository;
 import aprimorar.auth.web.dto.UserCreateRequest;
-import aprimorar.auth.web.dto.UserListResponse;
 import aprimorar.auth.web.dto.UserResponse;
 import java.util.List;
 import java.util.UUID;
@@ -48,10 +47,10 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public List<UserListResponse> findAll() {
+    public List<UserResponse> findAll() {
         return userRepository.findAll()
             .stream()
-            .map(UserListResponse::from)
+            .map(UserResponse::from)
             .toList();
     }
 

@@ -2,7 +2,6 @@ package aprimorar.auth.web;
 
 import aprimorar.auth.application.UserService;
 import aprimorar.auth.web.dto.UserCreateRequest;
-import aprimorar.auth.web.dto.UserListResponse;
 import aprimorar.auth.web.dto.UserResponse;
 import aprimorar.common.openapi.BadRequestProblemResponse;
 import aprimorar.common.openapi.CommonProblemResponses;
@@ -54,7 +53,7 @@ class UserController {
     @GetMapping
     @Operation(operationId = "getUsers", description = "Lista todos os usuários.")
     @ApiResponse(responseCode = "200", description = "Lista de usuários retornada com sucesso.")
-    public ResponseEntity<List<UserListResponse>> getUsers() {
+    public ResponseEntity<List<UserResponse>> getUsers() {
         return ResponseEntity.ok(userService.findAll());
     }
 

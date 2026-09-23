@@ -7,7 +7,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import java.util.UUID;
 
-@Schema(description = "Dados detalhados de um usuário")
+@Schema(description = "Dados de um usuário")
 public record UserResponse(
     @NotNull
     @Schema(nullable = false, description = "Identificador do usuário", example = "550e8400-e29b-41d4-a716-446655440000")
