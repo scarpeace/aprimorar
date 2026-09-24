@@ -2,12 +2,4 @@
 |===
 |Base package
 |`aprimorar.auth`
-|Spring components
-|_Controllers_
-
-* `a.a.AuthController`
-
-_Services_
-
-* `a.a.AuthService`
 |===

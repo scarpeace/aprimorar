@@ -5,7 +5,6 @@
 |Spring components
 |_Services_
 
-* `a.f.repasses_colaboradores.api.PagamentosApiImpl`
-* `a.f.repasses_colaboradores.application.PagamentoService`
-* `a.f.recebimentos_alunos.api.RecebimentosApi` (via `a.f.recebimentos_alunos.application.RecebimentoService`)
+* `a.f.recebimentos_alunos.api.RecebimentosApi` (via `a.f.recebimentos_alunos.api.RecebimentosApiImpl`)
+* `a.f.repasses_colaboradores.api.PagamentosApi` (via `a.f.repasses_colaboradores.api.PagamentosApiImpl`)
 |===

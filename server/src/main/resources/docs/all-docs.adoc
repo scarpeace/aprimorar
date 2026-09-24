@@ -20,3 +20,4 @@ include::module-financeiro.adoc[]
 == Agendamento
 plantuml::module-agendamento.puml[,,format=svg]
 include::module-agendamento.adoc[]
+
