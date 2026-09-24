@@ -9,7 +9,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-@Schema(description = "Cobrança particular")
+@Schema(description = "Cobrança")
 public record CobrancaResponse(
     @NotNull
     @Schema(nullable = false)

@@ -120,9 +120,9 @@ Dentro de `server/`:
 - `Aluno` e `Colaborador` usam `Endereco` com `@Embedded`
 - `Aluno` usa `Responsavel` com `@Embedded`; não existe tabela ou ID próprio
   para responsável
-- o valor da cobrança particular vive em `recebimentos_alunos`; o valor do repasse vive
+- o valor da cobrança vive em `recebimentos_alunos`; o valor do repasse vive
   em `repasses_colaboradores`
-- recebimentos de cobranças particulares vivem em `recebimentos_alunos`;
+- recebimentos de cobranças vivem em `recebimentos_alunos`;
   um recebimento pode quitar várias cobranças do mesmo aluno e seu total é calculado
   pela soma das cobranças vinculadas
 - toda criação de atendimento individual cria uma cobrança e um repasse

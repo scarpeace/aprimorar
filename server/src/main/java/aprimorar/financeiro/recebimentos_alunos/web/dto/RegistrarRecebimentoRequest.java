@@ -10,7 +10,7 @@ import jakarta.validation.constraints.Size;
 import java.time.LocalDate;
 import java.util.List;
 
-@Schema(description = "Dados para registrar o recebimento de cobranças particulares")
+@Schema(description = "Dados para registrar o recebimento de cobranças")
 public record RegistrarRecebimentoRequest(
     @NotEmpty(message = "Informe ao menos uma cobrança")
     List<@NotNull(message = "Informe o ID da cobrança") Long> cobrancaIds,

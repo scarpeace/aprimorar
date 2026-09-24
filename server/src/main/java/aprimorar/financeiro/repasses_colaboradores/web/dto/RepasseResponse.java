@@ -10,7 +10,7 @@ import java.util.UUID;
 import aprimorar.financeiro.repasses_colaboradores.domain.Repasse;
 import aprimorar.financeiro.repasses_colaboradores.domain.enums.StatusRepasse;
 
-@Schema(description = "Repasse particular")
+@Schema(description = "Repasse")
 public record RepasseResponse(
     @NotNull
     @Schema(nullable = false)

@@ -2,6 +2,7 @@ package aprimorar.financeiro.recebimentos_alunos.api;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -11,18 +12,22 @@ import aprimorar.financeiro.recebimentos_alunos.domain.Cobranca;
 import aprimorar.financeiro.recebimentos_alunos.domain.CobrancaRecebimento;
 import aprimorar.financeiro.recebimentos_alunos.domain.enums.StatusCobranca;
 import aprimorar.financeiro.recebimentos_alunos.domain.exception.CobrancaDadosInvalidosException;
+import aprimorar.financeiro.recebimentos_alunos.domain.exception.CobrancaJaExistenteException;
 import aprimorar.financeiro.recebimentos_alunos.infrastructure.CobrancaRepository;
 import aprimorar.common.FormaPagamentoEnum;
 import java.math.BigDecimal;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.Optional;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.hibernate.exception.ConstraintViolationException;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.dao.DataIntegrityViolationException;
 
 @ExtendWith(MockitoExtension.class)
 class RecebimentosApiImplTest {
@@ -44,11 +49,29 @@ class RecebimentosApiImplTest {
         api.criarCobranca(new CriarCobrancaCommandApi(10L, ALUNO_ID, new BigDecimal("80.00")));
 
         ArgumentCaptor<Cobranca> captor = ArgumentCaptor.forClass(Cobranca.class);
-        verify(cobrancaRepository).save(captor.capture());
+        verify(cobrancaRepository).saveAndFlush(captor.capture());
         assertEquals(10L, captor.getValue().getAtendimentoId());
         assertEquals(ALUNO_ID, captor.getValue().getAlunoId());
         assertEquals(new BigDecimal("80.00"), captor.getValue().getValor());
         assertEquals(StatusCobranca.PENDENTE, captor.getValue().getStatus());
+    }
+
+    @Test
+    void deveTraduzirCobrancaJaExistente() {
+        when(cobrancaRepository.saveAndFlush(any(Cobranca.class))).thenThrow(
+            violacaoDaConstraint("uk_cobrancas_atendimento")
+        );
+
+        assertThrows(
+            CobrancaJaExistenteException.class,
+            () -> api.criarCobranca(
+                new CriarCobrancaCommandApi(
+                    10L,
+                    ALUNO_ID,
+                    new BigDecimal("80.00")
+                )
+            )
+        );
     }
 
     @Test
@@ -120,6 +143,20 @@ class RecebimentosApiImplTest {
             new BigDecimal("80.00"),
             FormaPagamentoEnum.PIX,
             null
+        );
+    }
+
+    private static DataIntegrityViolationException violacaoDaConstraint(
+        String constraint
+    ) {
+        return new DataIntegrityViolationException(
+            "violação de constraint",
+            new ConstraintViolationException(
+                "violação de constraint",
+                new SQLException(),
+                "",
+                constraint
+            )
         );
     }
 }

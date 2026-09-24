@@ -32,8 +32,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/financeiro/cobrancas/recebimentos")
 @Tag(
-    name = "Recebimentos particulares",
-    description = "APIs para registrar, consultar e cancelar recebimentos de cobranças particulares"
+    name = "Recebimentos",
+    description = "APIs para registrar, consultar e cancelar recebimentos de cobranças"
 )
 @CommonProblemResponses
 @ConflictProblemResponse
@@ -47,7 +47,7 @@ class RecebimentosController {
 
     @PostMapping
     @Operation(
-        operationId = "registrarRecebimentoParticular",
+        operationId = "registrarRecebimento",
         description = "Registra um recebimento para uma ou mais cobranças do mesmo aluno."
     )
     @ApiResponse(responseCode = "201", description = "Recebimento registrado.")
@@ -65,8 +65,8 @@ class RecebimentosController {
 
     @GetMapping
     @Operation(
-        operationId = "buscarRecebimentosParticulares",
-        description = "Lista recebimentos particulares com filtros e paginação."
+        operationId = "buscarRecebimentos",
+        description = "Lista recebimentos com filtros e paginação."
     )
     @ApiResponse(responseCode = "200", description = "Recebimentos encontrados.")
     @BadRequestProblemResponse
@@ -84,8 +84,8 @@ class RecebimentosController {
 
     @GetMapping("/{recebimentoId}")
     @Operation(
-        operationId = "buscarRecebimentoParticularPorId",
-        description = "Busca os detalhes de um recebimento particular pelo ID."
+        operationId = "buscarRecebimentoPorId",
+        description = "Busca os detalhes de um recebimento pelo ID."
     )
     @ApiResponse(responseCode = "200", description = "Recebimento encontrado.")
     @BadRequestProblemResponse
@@ -101,7 +101,7 @@ class RecebimentosController {
 
     @DeleteMapping("/{recebimentoId}")
     @Operation(
-        operationId = "cancelarRecebimentoParticular",
+        operationId = "cancelarRecebimento",
         description = "Cancela o recebimento inteiro e libera todas as cobranças vinculadas."
     )
     @ApiResponse(responseCode = "204", description = "Recebimento cancelado.")

@@ -33,8 +33,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/financeiro/repasses/pagamentos")
 @Tag(
-    name = "Pagamentos particulares",
-    description = "APIs para registrar, consultar e cancelar pagamentos de repasses particulares"
+    name = "Pagamentos",
+    description = "APIs para registrar, consultar e cancelar pagamentos de repasses"
 )
 @CommonProblemResponses
 @ConflictProblemResponse
@@ -47,7 +47,7 @@ class PagamentosController {
     }
 
     @PostMapping
-    @Operation(operationId = "registrarPagamentoParticular", description = "Registra um pagamento para um ou mais repasses do mesmo colaborador.")
+    @Operation(operationId = "registrarPagamento", description = "Registra um pagamento para um ou mais repasses do mesmo colaborador.")
     @ApiResponse(responseCode = "201", description = "Pagamento registrado.")
     @BadRequestProblemResponse
     @NotFoundProblemResponse
@@ -57,7 +57,7 @@ class PagamentosController {
     }
 
     @GetMapping
-    @Operation(operationId = "buscarPagamentosParticulares", description = "Lista pagamentos de repasses particulares com filtros e paginação.")
+    @Operation(operationId = "buscarPagamentos", description = "Lista pagamentos de repasses com filtros e paginação.")
     @ApiResponse(responseCode = "200", description = "Pagamentos encontrados.")
     @BadRequestProblemResponse
     public ResponseEntity<Page<PagamentoResponse>> buscarPagamentos(
@@ -69,7 +69,7 @@ class PagamentosController {
     }
 
     @GetMapping("/{pagamentoId}")
-    @Operation(operationId = "buscarPagamentoParticularPorId", description = "Busca os detalhes de um pagamento de repasses particulares pelo ID.")
+    @Operation(operationId = "buscarPagamentoPorId", description = "Busca os detalhes de um pagamento de repasses pelo ID.")
     @ApiResponse(responseCode = "200", description = "Pagamento encontrado.")
     @BadRequestProblemResponse
     @NotFoundProblemResponse
@@ -79,7 +79,7 @@ class PagamentosController {
     }
 
     @DeleteMapping("/{pagamentoId}")
-    @Operation(operationId = "cancelarPagamentoParticular",description = "Cancela o pagamento inteiro e libera todos os repasses vinculados.")
+    @Operation(operationId = "cancelarPagamento",description = "Cancela o pagamento inteiro e libera todos os repasses vinculados.")
     @ApiResponse(responseCode = "204", description = "Pagamento cancelado.")
     @BadRequestProblemResponse
     @NotFoundProblemResponse

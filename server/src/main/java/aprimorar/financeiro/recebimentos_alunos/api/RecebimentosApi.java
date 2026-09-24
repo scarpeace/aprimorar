@@ -17,9 +17,9 @@ public interface RecebimentosApi {
 
     boolean possuiCobrancaPendente(UUID alunoId);
 
-    CobrancaSummary getCobrancaQueryApiPorAtendimento(Long atendimentoId);
+    CobrancaSummary getCobrancaSummaryPorAtendimento(Long atendimentoId);
 
-    Map<Long, CobrancaSummary> getCobrancasQueryApisPorAtendimentos(
+    Map<Long, CobrancaSummary> getCobrancasSummariesPorAtendimentos(
         Set<Long> atendimentoIds
     );
 }

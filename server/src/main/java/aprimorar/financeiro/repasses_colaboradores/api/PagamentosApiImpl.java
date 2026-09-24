@@ -5,15 +5,18 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import aprimorar.common.utils.ExceptionUtils;
 import aprimorar.financeiro.repasses_colaboradores.api.commands.AtualizarRepasseCommandApi;
 import aprimorar.financeiro.repasses_colaboradores.api.commands.CriarRepasseCommandApi;
 import aprimorar.financeiro.repasses_colaboradores.api.queries.RepasseSummary;
 import aprimorar.financeiro.repasses_colaboradores.domain.Repasse;
 import aprimorar.financeiro.repasses_colaboradores.domain.enums.StatusRepasse;
 import aprimorar.financeiro.repasses_colaboradores.domain.exception.RepasseDadosInvalidosException;
+import aprimorar.financeiro.repasses_colaboradores.domain.exception.RepasseJaExistenteException;
 import aprimorar.financeiro.repasses_colaboradores.domain.exception.RepasseNaoEncontradoException;
 import aprimorar.financeiro.repasses_colaboradores.infrastructure.RepasseRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -26,17 +29,22 @@ class PagamentosApiImpl  implements  PagamentosApi{
     }
 
     @Override
+	@Transactional
 	public void criarRepasse(CriarRepasseCommandApi command) {
 	    if (!CriarRepasseCommandApi.validate(command)) {
                throw new RepasseDadosInvalidosException("ID do atendimento, ID do colaborador e valor são obrigatórios");
            }
-           repasseRepository.save(
-               new Repasse(
-                   command.atendimentoId(),
-                   command.colaboradorId(),
-                   command.valor()
-               )
-           );
+           try {
+               repasseRepository.saveAndFlush(
+                   new Repasse(
+                       command.atendimentoId(),
+                       command.colaboradorId(),
+                       command.valor()
+                   )
+               );
+           } catch (DataIntegrityViolationException ex) {
+               throw traduzirViolacaoDoRepasse(ex);
+           }
 	}
 
 	@Override
@@ -67,14 +75,14 @@ class PagamentosApiImpl  implements  PagamentosApi{
 	}
 
 	@Override
-	public RepasseSummary getRepasseQueryApiPorAtendimento(Long atendimentoId) {
+	public RepasseSummary getRepasseSummaryPorAtendimento(Long atendimentoId) {
 		return repasseRepository.findByAtendimentoId(atendimentoId)
                .map(RepasseSummary::toSummary)
                .orElseThrow(RepasseNaoEncontradoException::new);
 	}
 
 	@Override
-	public Map<Long, RepasseSummary> getRepassesQueryApisPorAtendimentos(Set<Long> atendimentoIds) {
+	public Map<Long, RepasseSummary> getRepassesSummariesPorAtendimentos(Set<Long> atendimentoIds) {
 	    if (atendimentoIds == null || atendimentoIds.isEmpty()) {
                return Map.of();
            }
@@ -86,4 +94,18 @@ class PagamentosApiImpl  implements  PagamentosApi{
                    RepasseSummary::toSummary
                ));
 	}
+
+    private RuntimeException traduzirViolacaoDoRepasse(
+        DataIntegrityViolationException ex
+    ) {
+        String constraint = ExceptionUtils.findConstraintName(ex);
+
+        return switch (constraint == null ? "" : constraint) {
+            case "uk_repasses_atendimento" -> new RepasseJaExistenteException();
+            case "ck_repasses_valor" -> new RepasseDadosInvalidosException(
+                "O valor do repasse não pode ser negativo."
+            );
+            default -> ex;
+        };
+    }
 }

@@ -71,9 +71,9 @@ public class AtendimentoIndividualService {
             .collect(Collectors.toUnmodifiableSet());
 
         Map<Long, CobrancaSummary> cobrancas =
-            cobrancaApi.getCobrancasQueryApisPorAtendimentos(atendimentoIds);
+            cobrancaApi.getCobrancasSummariesPorAtendimentos(atendimentoIds);
         Map<Long, RepasseSummary> repasses =
-            repasseApi.getRepassesQueryApisPorAtendimentos(atendimentoIds);
+            repasseApi.getRepassesSummariesPorAtendimentos(atendimentoIds);
 
         return atendimentos.map(atendimento ->
             AtendimentoIndividualResponse.toDto(
@@ -87,8 +87,8 @@ public class AtendimentoIndividualService {
     @Transactional(readOnly = true)
     public AtendimentoIndividualResponse buscarAtendimentoPorId(Long atendimentoId) {
         AtendimentoIndividual atendimento = findAtendimentoOrThrow(atendimentoId);
-        CobrancaSummary cobranca = cobrancaApi.getCobrancaQueryApiPorAtendimento(atendimentoId);
-        RepasseSummary repasse = repasseApi.getRepasseQueryApiPorAtendimento(atendimentoId);
+        CobrancaSummary cobranca = cobrancaApi.getCobrancaSummaryPorAtendimento(atendimentoId);
+        RepasseSummary repasse = repasseApi.getRepasseSummaryPorAtendimento(atendimentoId);
 
         return AtendimentoIndividualResponse.toDto(
             atendimento,
@@ -164,12 +164,12 @@ public class AtendimentoIndividualService {
             );
         }
 
-        CobrancaSummary cobranca = cobrancaApi.getCobrancaQueryApiPorAtendimento(atendimentoId);
+        CobrancaSummary cobranca = cobrancaApi.getCobrancaSummaryPorAtendimento(atendimentoId);
         if(cobranca.recebimentoId() != null) {
             throw new AtendimentoIndividualDadosInvalidosException("Não é possível alterar um atendimento já pago");
         }
 
-        RepasseSummary repasse = repasseApi.getRepasseQueryApiPorAtendimento(atendimentoId);
+        RepasseSummary repasse = repasseApi.getRepasseSummaryPorAtendimento(atendimentoId);
         if(repasse.pagamentoId() != null) {
             throw new AtendimentoIndividualDadosInvalidosException("Não é possível alterar um atendimento já pago");
         }
@@ -212,12 +212,12 @@ public class AtendimentoIndividualService {
     public void cancelar(Long atendimentoId) {
         AtendimentoIndividual atendimento = findAtendimentoOrThrow(atendimentoId);
 
-        CobrancaSummary cobranca = cobrancaApi.getCobrancaQueryApiPorAtendimento(atendimentoId);
+        CobrancaSummary cobranca = cobrancaApi.getCobrancaSummaryPorAtendimento(atendimentoId);
         if(cobranca.recebimentoId() != null) {
             throw new AtendimentoIndividualDadosInvalidosException("Não é possível cancelar um atendimento com recebimento registrado");
         }
 
-        RepasseSummary repasse = repasseApi.getRepasseQueryApiPorAtendimento(atendimentoId);
+        RepasseSummary repasse = repasseApi.getRepasseSummaryPorAtendimento(atendimentoId);
         if(repasse.pagamentoId() != null) {
             throw new AtendimentoIndividualDadosInvalidosException("Não é possível cancelar um atendimento com pagamento registrado");
         }

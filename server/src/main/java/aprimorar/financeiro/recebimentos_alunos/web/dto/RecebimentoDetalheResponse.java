@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
-@Schema(description = "Detalhes de um recebimento de cobranças particulares")
+@Schema(description = "Detalhes de um recebimento de cobranças")
 public record RecebimentoDetalheResponse(
     @NotNull
     @Schema(nullable = false)

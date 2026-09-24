@@ -5,10 +5,6 @@ import aprimorar.agendamento.atendimentos_individuais.domain.exception.Atendimen
 import aprimorar.agendamento.atendimentos_individuais.domain.exception.AtendimentoIndividualEdicaoExpiradaException;
 import aprimorar.agendamento.atendimentos_individuais.domain.exception.AtendimentoIndividualNaoEncontradoException;
 import aprimorar.common.utils.ExceptionUtils;
-import aprimorar.financeiro.recebimentos_alunos.domain.exception.CobrancaDadosInvalidosException;
-import aprimorar.financeiro.recebimentos_alunos.domain.exception.CobrancaNaoEncontradaException;
-import aprimorar.financeiro.repasses_colaboradores.domain.exception.RepasseDadosInvalidosException;
-import aprimorar.financeiro.repasses_colaboradores.domain.exception.RepasseNaoEncontradoException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
@@ -35,22 +31,6 @@ public class AtendimentoIndividualExceptionHandler {
         "ATENDIMENTO_INDIVIDUAL_PERIODO_INVALIDO";
     private static final String ATENDIMENTO_STATUS_INVALIDO =
         "ATENDIMENTO_INDIVIDUAL_STATUS_INVALIDO";
-    private static final String COBRANCA_NAO_ENCONTRADA =
-        "COBRANCA_PARTICULAR_NAO_ENCONTRADA";
-    private static final String COBRANCA_DADOS_INVALIDOS =
-        "COBRANCA_PARTICULAR_DADOS_INVALIDOS";
-    private static final String COBRANCA_JA_EXISTENTE =
-        "COBRANCA_PARTICULAR_JA_EXISTENTE";
-    private static final String COBRANCA_VALOR_INVALIDO =
-        "COBRANCA_PARTICULAR_VALOR_INVALIDO";
-    private static final String REPASSE_NAO_ENCONTRADO =
-        "REPASSE_PARTICULAR_NAO_ENCONTRADO";
-    private static final String REPASSE_DADOS_INVALIDOS =
-        "REPASSE_PARTICULAR_DADOS_INVALIDOS";
-    private static final String REPASSE_JA_EXISTENTE =
-        "REPASSE_PARTICULAR_JA_EXISTENTE";
-    private static final String REPASSE_VALOR_INVALIDO =
-        "REPASSE_PARTICULAR_VALOR_INVALIDO";
 
     @ExceptionHandler(AtendimentoIndividualNaoEncontradoException.class)
     public ResponseEntity<ProblemDetail> handleNotFound(
@@ -104,58 +84,6 @@ public class AtendimentoIndividualExceptionHandler {
         );
     }
 
-    @ExceptionHandler(CobrancaNaoEncontradaException.class)
-    public ResponseEntity<ProblemDetail> handleCobrancaNotFound(
-        CobrancaNaoEncontradaException ex,
-        HttpServletRequest request
-    ) {
-        return ExceptionUtils.response(
-            HttpStatus.NOT_FOUND,
-            COBRANCA_NAO_ENCONTRADA,
-            ex.getMessage(),
-            request
-        );
-    }
-
-    @ExceptionHandler(CobrancaDadosInvalidosException.class)
-    public ResponseEntity<ProblemDetail> handleCobrancaBadRequest(
-        CobrancaDadosInvalidosException ex,
-        HttpServletRequest request
-    ) {
-        return ExceptionUtils.response(
-            HttpStatus.BAD_REQUEST,
-            COBRANCA_DADOS_INVALIDOS,
-            ex.getMessage(),
-            request
-        );
-    }
-
-    @ExceptionHandler(RepasseNaoEncontradoException.class)
-    public ResponseEntity<ProblemDetail> handleRepasseNotFound(
-        RepasseNaoEncontradoException ex,
-        HttpServletRequest request
-    ) {
-        return ExceptionUtils.response(
-            HttpStatus.NOT_FOUND,
-            REPASSE_NAO_ENCONTRADO,
-            ex.getMessage(),
-            request
-        );
-    }
-
-    @ExceptionHandler(RepasseDadosInvalidosException.class)
-    public ResponseEntity<ProblemDetail> handleRepasseBadRequest(
-        RepasseDadosInvalidosException ex,
-        HttpServletRequest request
-    ) {
-        return ExceptionUtils.response(
-            HttpStatus.BAD_REQUEST,
-            REPASSE_DADOS_INVALIDOS,
-            ex.getMessage(),
-            request
-        );
-    }
-
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<ProblemDetail> handleDataIntegrityViolation(
         DataIntegrityViolationException ex,
@@ -174,30 +102,6 @@ public class AtendimentoIndividualExceptionHandler {
                 HttpStatus.BAD_REQUEST,
                 ATENDIMENTO_STATUS_INVALIDO,
                 "O status informado para o atendimento é inválido.",
-                request
-            );
-            case "uk_cobrancas_atendimento" -> ExceptionUtils.response(
-                HttpStatus.CONFLICT,
-                COBRANCA_JA_EXISTENTE,
-                "Já existe uma cobrança para o atendimento informado.",
-                request
-            );
-            case "ck_cobrancas_valor" -> ExceptionUtils.response(
-                HttpStatus.BAD_REQUEST,
-                COBRANCA_VALOR_INVALIDO,
-                "O valor da cobrança não pode ser negativo.",
-                request
-            );
-            case "uk_repasses_atendimento" -> ExceptionUtils.response(
-                HttpStatus.CONFLICT,
-                REPASSE_JA_EXISTENTE,
-                "Já existe um repasse para o atendimento informado.",
-                request
-            );
-            case "ck_repasses_valor" -> ExceptionUtils.response(
-                HttpStatus.BAD_REQUEST,
-                REPASSE_VALOR_INVALIDO,
-                "O valor do repasse não pode ser negativo.",
                 request
             );
             default -> throw ex;

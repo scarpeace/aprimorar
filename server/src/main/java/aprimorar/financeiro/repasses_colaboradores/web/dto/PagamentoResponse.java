@@ -10,7 +10,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-@Schema(description = "Pagamento de repasses particulares")
+@Schema(description = "Pagamento de repasses")
 public record PagamentoResponse(
     @NotNull
     @Schema(nullable = false)

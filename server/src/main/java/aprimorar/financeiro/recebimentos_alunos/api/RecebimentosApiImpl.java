@@ -5,13 +5,16 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import aprimorar.common.utils.ExceptionUtils;
 import aprimorar.financeiro.recebimentos_alunos.api.commands.AtualizarCobrancaCommandApi;
 import aprimorar.financeiro.recebimentos_alunos.api.commands.CriarCobrancaCommandApi;
 import aprimorar.financeiro.recebimentos_alunos.api.queries.CobrancaSummary;
 import aprimorar.financeiro.recebimentos_alunos.domain.Cobranca;
 import aprimorar.financeiro.recebimentos_alunos.domain.enums.StatusCobranca;
+import aprimorar.financeiro.recebimentos_alunos.domain.exception.CobrancaJaExistenteException;
 import aprimorar.financeiro.recebimentos_alunos.infrastructure.CobrancaRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import aprimorar.financeiro.recebimentos_alunos.domain.exception.CobrancaDadosInvalidosException;
@@ -35,13 +38,17 @@ class RecebimentosApiImpl implements RecebimentosApi {
             );
         }
 
-        cobrancaRepository.save(
-            new Cobranca(
-                command.atendimentoId(),
-                command.alunoId(),
-                command.valor()
-            )
-        );
+        try {
+            cobrancaRepository.saveAndFlush(
+                new Cobranca(
+                    command.atendimentoId(),
+                    command.alunoId(),
+                    command.valor()
+                )
+            );
+        } catch (DataIntegrityViolationException ex) {
+            throw traduzirViolacaoDaCobranca(ex);
+        }
     }
 
     @Override
@@ -81,7 +88,7 @@ class RecebimentosApiImpl implements RecebimentosApi {
 
     @Override
     @Transactional
-    public CobrancaSummary getCobrancaQueryApiPorAtendimento(Long atendimentoId) {
+    public CobrancaSummary getCobrancaSummaryPorAtendimento(Long atendimentoId) {
         return cobrancaRepository.findByAtendimentoId(atendimentoId)
             .map(CobrancaSummary::toSummary)
             .orElseThrow(CobrancaNaoEncontradaException::new);
@@ -89,7 +96,7 @@ class RecebimentosApiImpl implements RecebimentosApi {
 
     @Override
     @Transactional
-    public Map<Long, CobrancaSummary> getCobrancasQueryApisPorAtendimentos(
+    public Map<Long, CobrancaSummary> getCobrancasSummariesPorAtendimentos(
         Set<Long> atendimentoIds
     ) {
         if (atendimentoIds == null || atendimentoIds.isEmpty()) {
@@ -102,5 +109,19 @@ class RecebimentosApiImpl implements RecebimentosApi {
                 Cobranca::getAtendimentoId,
                 CobrancaSummary::toSummary
             ));
+    }
+
+    private RuntimeException traduzirViolacaoDaCobranca(
+        DataIntegrityViolationException ex
+    ) {
+        String constraint = ExceptionUtils.findConstraintName(ex);
+
+        return switch (constraint == null ? "" : constraint) {
+            case "uk_cobrancas_atendimento" -> new CobrancaJaExistenteException();
+            case "ck_cobrancas_valor" -> new CobrancaDadosInvalidosException(
+                "O valor da cobrança não pode ser negativo."
+            );
+            default -> ex;
+        };
     }
 }

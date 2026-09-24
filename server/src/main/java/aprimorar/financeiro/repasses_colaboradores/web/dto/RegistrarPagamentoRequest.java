@@ -9,7 +9,7 @@ import jakarta.validation.constraints.Size;
 import java.time.LocalDate;
 import java.util.List;
 
-@Schema(description = "Dados para registrar o pagamento de repasses particulares")
+@Schema(description = "Dados para registrar o pagamento de repasses")
 public record RegistrarPagamentoRequest(
     @NotEmpty(message = "Informe ao menos um repasse")
     List<@NotNull(message = "Informe o ID do repasse") Long> repasseIds,

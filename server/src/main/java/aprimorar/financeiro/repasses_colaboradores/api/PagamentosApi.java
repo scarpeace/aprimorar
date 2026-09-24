@@ -18,7 +18,7 @@ public interface PagamentosApi {
 
     boolean possuiRepassePendente(UUID colaboradorId);
 
-    RepasseSummary getRepasseQueryApiPorAtendimento(Long atendimentoId);
+    RepasseSummary getRepasseSummaryPorAtendimento(Long atendimentoId);
 
-    Map<Long, RepasseSummary> getRepassesQueryApisPorAtendimentos(Set<Long> atendimentoIds);
+    Map<Long, RepasseSummary> getRepassesSummariesPorAtendimentos(Set<Long> atendimentoIds);
 }

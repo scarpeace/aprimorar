@@ -22,9 +22,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/financeiro/cobrancas/particular")
+@RequestMapping("/financeiro/cobrancas")
 @Tag(
-    name = "Cobranças particulares",
+    name = "Cobranças",
     description = "APIs para consultar cobranças de atendimentos individuais"
 )
 @CommonProblemResponses
@@ -38,8 +38,8 @@ class CobrancaController {
 
     @GetMapping
     @Operation(
-        operationId = "buscarCobrancasParticulares",
-        description = "Lista cobranças particulares com filtros e paginação."
+        operationId = "buscarCobrancas",
+        description = "Lista cobranças com filtros e paginação."
     )
     @ApiResponse(responseCode = "200", description = "Cobranças encontradas.")
     @BadRequestProblemResponse
@@ -57,8 +57,8 @@ class CobrancaController {
 
     @GetMapping("/{cobrancaId}")
     @Operation(
-        operationId = "buscarCobrancaParticularPorId",
-        description = "Busca uma cobrança particular por ID."
+        operationId = "buscarCobrancaPorId",
+        description = "Busca uma cobrança por ID."
     )
     @ApiResponse(responseCode = "200", description = "Cobrança encontrada.")
     @NotFoundProblemResponse

@@ -7,7 +7,7 @@ import jakarta.validation.constraints.PastOrPresent;
 import java.time.LocalDate;
 import java.util.UUID;
 
-@Schema(description = "Filtros opcionais para listar cobranças particulares")
+@Schema(description = "Filtros opcionais para listar cobranças")
 public record CobrancaFiltroRequest(
     @Schema(description = "ID do aluno")
     UUID alunoId,

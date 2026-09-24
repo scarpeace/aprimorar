@@ -8,7 +8,7 @@ import jakarta.validation.constraints.PastOrPresent;
 import java.time.LocalDate;
 import java.util.UUID;
 
-@Schema(description = "Filtros opcionais para listar repasses particulares")
+@Schema(description = "Filtros opcionais para listar repasses")
 public record RepasseFiltroRequest(
     @Schema(description = "ID do colaborador")
     UUID colaboradorId,

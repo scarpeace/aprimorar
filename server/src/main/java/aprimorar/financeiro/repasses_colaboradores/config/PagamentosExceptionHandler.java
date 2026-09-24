@@ -1,10 +1,6 @@
 package aprimorar.financeiro.repasses_colaboradores.config;
 
 import aprimorar.common.utils.ExceptionUtils;
-import aprimorar.financeiro.repasses_colaboradores.domain.exception.PagamentoDadosInvalidosException;
-import aprimorar.financeiro.repasses_colaboradores.domain.exception.PagamentoNaoEncontradoException;
-import aprimorar.financeiro.repasses_colaboradores.domain.exception.RepasseDadosInvalidosException;
-import aprimorar.financeiro.repasses_colaboradores.domain.exception.RepasseNaoEncontradoException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,76 +22,12 @@ public class PagamentosExceptionHandler {
     private static final Logger log = LoggerFactory.getLogger(
         PagamentosExceptionHandler.class
     );
-    private static final String PAGAMENTO_NAO_ENCONTRADO =
-        "PAGAMENTO_PARTICULAR_NAO_ENCONTRADO";
-    private static final String PAGAMENTO_DADOS_INVALIDOS =
-        "PAGAMENTO_PARTICULAR_DADOS_INVALIDOS";
     private static final String PAGAMENTO_VALOR_INVALIDO =
-        "PAGAMENTO_PARTICULAR_VALOR_INVALIDO";
+        "PAGAMENTO_VALOR_INVALIDO";
     private static final String PAGAMENTO_FORMA_INVALIDA =
-        "PAGAMENTO_PARTICULAR_FORMA_PAGAMENTO_INVALIDA";
-    private static final String REPASSE_NAO_ENCONTRADO =
-        "REPASSE_PARTICULAR_NAO_ENCONTRADO";
-    private static final String REPASSE_DADOS_INVALIDOS =
-        "REPASSE_PARTICULAR_DADOS_INVALIDOS";
-    private static final String REPASSE_JA_EXISTENTE =
-        "REPASSE_PARTICULAR_JA_EXISTENTE";
-    private static final String REPASSE_VALOR_INVALIDO =
-        "REPASSE_PARTICULAR_VALOR_INVALIDO";
+        "PAGAMENTO_FORMA_PAGAMENTO_INVALIDA";
     private static final String FINANCEIRO_CONFLITO_DE_DADOS =
         "FINANCEIRO_CONFLITO_DE_DADOS";
-
-    @ExceptionHandler(PagamentoNaoEncontradoException.class)
-    public ResponseEntity<ProblemDetail> handlePagamentoNotFound(
-        PagamentoNaoEncontradoException ex,
-        HttpServletRequest request
-    ) {
-        return ExceptionUtils.response(
-            HttpStatus.NOT_FOUND,
-            PAGAMENTO_NAO_ENCONTRADO,
-            ex.getMessage(),
-            request
-        );
-    }
-
-    @ExceptionHandler(PagamentoDadosInvalidosException.class)
-    public ResponseEntity<ProblemDetail> handlePagamentoBadRequest(
-        PagamentoDadosInvalidosException ex,
-        HttpServletRequest request
-    ) {
-        return ExceptionUtils.response(
-            HttpStatus.BAD_REQUEST,
-            PAGAMENTO_DADOS_INVALIDOS,
-            ex.getMessage(),
-            request
-        );
-    }
-
-    @ExceptionHandler(RepasseNaoEncontradoException.class)
-    public ResponseEntity<ProblemDetail> handleRepasseNotFound(
-        RepasseNaoEncontradoException ex,
-        HttpServletRequest request
-    ) {
-        return ExceptionUtils.response(
-            HttpStatus.NOT_FOUND,
-            REPASSE_NAO_ENCONTRADO,
-            ex.getMessage(),
-            request
-        );
-    }
-
-    @ExceptionHandler(RepasseDadosInvalidosException.class)
-    public ResponseEntity<ProblemDetail> handleRepasseBadRequest(
-        RepasseDadosInvalidosException ex,
-        HttpServletRequest request
-    ) {
-        return ExceptionUtils.response(
-            HttpStatus.BAD_REQUEST,
-            REPASSE_DADOS_INVALIDOS,
-            ex.getMessage(),
-            request
-        );
-    }
 
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<ProblemDetail> handleDataIntegrityViolation(
@@ -115,18 +47,6 @@ public class PagamentosExceptionHandler {
                 HttpStatus.BAD_REQUEST,
                 PAGAMENTO_FORMA_INVALIDA,
                 "A forma de pagamento informada é inválida.",
-                request
-            );
-            case "uk_repasses_atendimento" -> ExceptionUtils.response(
-                HttpStatus.CONFLICT,
-                REPASSE_JA_EXISTENTE,
-                "Já existe um repasse para o atendimento informado.",
-                request
-            );
-            case "ck_repasses_valor" -> ExceptionUtils.response(
-                HttpStatus.BAD_REQUEST,
-                REPASSE_VALOR_INVALIDO,
-                "O valor do repasse não pode ser negativo.",
                 request
             );
             default -> {

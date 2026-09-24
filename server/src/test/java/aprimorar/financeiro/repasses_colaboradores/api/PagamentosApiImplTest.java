@@ -2,6 +2,7 @@ package aprimorar.financeiro.repasses_colaboradores.api;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -12,17 +13,21 @@ import aprimorar.financeiro.repasses_colaboradores.domain.RepassePagamento;
 import aprimorar.financeiro.repasses_colaboradores.domain.Repasse;
 import aprimorar.financeiro.repasses_colaboradores.domain.enums.StatusRepasse;
 import aprimorar.financeiro.repasses_colaboradores.domain.exception.RepasseDadosInvalidosException;
+import aprimorar.financeiro.repasses_colaboradores.domain.exception.RepasseJaExistenteException;
 import aprimorar.financeiro.repasses_colaboradores.infrastructure.RepasseRepository;
 
 import java.math.BigDecimal;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.hibernate.exception.ConstraintViolationException;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.dao.DataIntegrityViolationException;
 
 @ExtendWith(MockitoExtension.class)
 class PagamentosApiImplTest {
@@ -44,11 +49,29 @@ class PagamentosApiImplTest {
         service.criarRepasse(new CriarRepasseCommandApi(10L, COLABORADOR_ID, new BigDecimal("80.00")));
 
         ArgumentCaptor<Repasse> captor = ArgumentCaptor.forClass(Repasse.class);
-        verify(repasseRepository).save(captor.capture());
+        verify(repasseRepository).saveAndFlush(captor.capture());
         assertEquals(10L, captor.getValue().getAtendimentoId());
         assertEquals(COLABORADOR_ID, captor.getValue().getColaboradorId());
         assertEquals(new BigDecimal("80.00"), captor.getValue().getValor());
         assertEquals(StatusRepasse.PENDENTE, captor.getValue().getStatus());
+    }
+
+    @Test
+    void deveTraduzirRepasseJaExistente() {
+        when(repasseRepository.saveAndFlush(any(Repasse.class))).thenThrow(
+            violacaoDaConstraint("uk_repasses_atendimento")
+        );
+
+        assertThrows(
+            RepasseJaExistenteException.class,
+            () -> service.criarRepasse(
+                new CriarRepasseCommandApi(
+                    10L,
+                    COLABORADOR_ID,
+                    new BigDecimal("80.00")
+                )
+            )
+        );
     }
 
     @Test
@@ -116,5 +139,19 @@ class PagamentosApiImplTest {
 
     private static Repasse repasse(Long atendimentoId) {
         return new Repasse(atendimentoId, COLABORADOR_ID, new BigDecimal("80.00"));
+    }
+
+    private static DataIntegrityViolationException violacaoDaConstraint(
+        String constraint
+    ) {
+        return new DataIntegrityViolationException(
+            "violação de constraint",
+            new ConstraintViolationException(
+                "violação de constraint",
+                new SQLException(),
+                "",
+                constraint
+            )
+        );
     }
 }

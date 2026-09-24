@@ -10,7 +10,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-@Schema(description = "Recebimento particular")
+@Schema(description = "Recebimento")
 public record RecebimentoResponse(
     @NotNull
     @Schema(nullable = false)
