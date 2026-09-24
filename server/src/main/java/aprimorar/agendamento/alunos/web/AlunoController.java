@@ -26,7 +26,7 @@ import aprimorar.agendamento.alunos.application.AlunoService;
 import aprimorar.agendamento.alunos.web.dto.AlunoFiltroRequest;
 import aprimorar.agendamento.alunos.web.dto.AlunoRequest;
 import aprimorar.agendamento.alunos.web.dto.AlunoResponse;
-import aprimorar.agendamento.alunos.web.dto.AlunosOptionsResponse;
+import aprimorar.agendamento.alunos.web.dto.AlunoOptionResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -34,7 +34,7 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/instituicao/alunos")
-@Tag(name = "Aluno", description = "APIs de gestão de alunos")
+@Tag(name = "Alunos", description = "APIs de gestão de alunos")
 @CommonProblemResponses
 @BadRequestProblemResponse
 @ConflictProblemResponse
@@ -48,9 +48,9 @@ class AlunoController {
     }
 
     @PostMapping
-    @Operation(operationId = "criarAluno", description = "Cria um novo aluno com os dados fornecidos.")
+    @Operation(operationId = "matricularAluno", description = "Cria um novo aluno com os dados fornecidos.")
     @ApiResponse(responseCode = "201", description = "Aluno criado com sucesso.")
-    public ResponseEntity<Void> createAluno(@RequestBody @Valid AlunoRequest alunoRequest) {
+    public ResponseEntity<Void> matricularAluno(@RequestBody @Valid AlunoRequest alunoRequest) {
         UUID id = alunoService.createAluno(alunoRequest.toEntity());
         return ResponseEntity.created(URI.create("/instituicao/alunos/" + id)).build();
     }
@@ -69,8 +69,8 @@ class AlunoController {
     @GetMapping("/options")
     @Operation(operationId = "listAlunosOptions", description = "Retorna uma lista de opções de alunos.")
     @ApiResponse(responseCode = "200", description = "Lista de opções de alunos retornada com sucesso.")
-    public ResponseEntity<List<AlunosOptionsResponse>> listAlunosOptions() {
-        List<AlunosOptionsResponse> options = alunoService.listAlunosOptions();
+    public ResponseEntity<List<AlunoOptionResponse>> listAlunosOptions() {
+        List<AlunoOptionResponse> options = alunoService.listAlunosOptions();
         return ResponseEntity.ok(options);
     }
 
@@ -93,7 +93,7 @@ class AlunoController {
         return ResponseEntity.noContent().build();
     }
 
-    @PatchMapping("/{alunoId}/deactivate")
+    @PatchMapping("/{alunoId}/desativar")
     @Operation(operationId = "deactivateAluno", description = "Desativa um aluno por ID.")
     @ApiResponse(responseCode = "204", description = "Aluno desativado com sucesso.")
     public ResponseEntity<Void> deactivateAluno(@PathVariable UUID alunoId) {
@@ -101,7 +101,7 @@ class AlunoController {
         return ResponseEntity.noContent().build();
     }
 
-    @PatchMapping("/{alunoId}/activate")
+    @PatchMapping("/{alunoId}/ativar")
     @Operation(operationId = "activateAluno", description = "Ativa um aluno por ID.")
     @ApiResponse(responseCode = "204", description = "Aluno ativado com sucesso.")
     public ResponseEntity<Void> activateAluno(@PathVariable UUID alunoId) {

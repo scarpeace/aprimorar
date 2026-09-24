@@ -1,7 +1,0 @@
-{
-  "required": ["repasseIds"],
-  "type": "object",
-  "properties": { "repasseIds": { "minItems": 1, "type": "array", "items": { "type": "integer", "format": "int64" } } },
-  "description": "Repasses pagos que devem voltar para pendente",
-  "x-readme-ref-name": "CancelarRepasseIndividualRequest"
-}

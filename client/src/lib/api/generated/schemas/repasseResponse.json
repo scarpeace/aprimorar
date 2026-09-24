@@ -1,0 +1,15 @@
+{
+  "required": ["atendimentoId", "colaboradorId", "createdAt", "id", "status", "valor"],
+  "type": "object",
+  "properties": {
+    "id": { "type": "integer", "format": "int64" },
+    "atendimentoId": { "type": "integer", "format": "int64" },
+    "colaboradorId": { "type": "string", "format": "uuid" },
+    "valor": { "type": "number" },
+    "status": { "type": "string", "enum": ["PENDENTE", "PAGO", "ATRASADO", "CANCELADO"] },
+    "createdAt": { "type": "string", "format": "date-time" },
+    "pagamentoId": { "type": "string", "format": "uuid", "nullable": true }
+  },
+  "description": "Repasse",
+  "x-readme-ref-name": "RepasseResponse"
+}

@@ -6,7 +6,7 @@ import { FormProvider, useForm } from "react-hook-form";
 import { Button } from "@/components/ui/Button";
 import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 import { SelectInput } from "@/components/ui/forms/SelectInput";
-import { usePagamentoAlunoMutations } from "@/features/cobrancas/hooks/use-pagamento-aluno-mutations";
+import { useRecebimentoMutations } from "@/features/cobrancas/hooks/use-recebimento-mutations";
 import {
   registrarPagamentoAlunoFormSchema,
   type RegistrarPagamentoAlunoFormData,
@@ -43,14 +43,14 @@ export function RegistrarPagamentoAlunoForm({
       formaPagamento: "PIX",
     },
   });
-  const { registerStudentPayment } = usePagamentoAlunoMutations();
+  const { registerRecebimento } = useRecebimentoMutations();
 
   useEffect(() => {
     methods.setValue("cobrancaIds", cobrancaIds, { shouldValidate: true });
   }, [cobrancaIds, methods]);
 
   const onSubmit = methods.handleSubmit((data) => {
-    registerStudentPayment.mutate(
+    registerRecebimento.mutate(
       { data },
       {
         onSuccess,
@@ -77,11 +77,11 @@ export function RegistrarPagamentoAlunoForm({
         </label>
 
         <div className="flex justify-end gap-2">
-          <Button type="button" variant="ghost" onClick={onCancel} disabled={registerStudentPayment.isPending}>
+          <Button type="button" variant="ghost" onClick={onCancel} disabled={registerRecebimento.isPending}>
             Cancelar
           </Button>
-          <Button type="submit" disabled={cobrancaIds.length === 0 || registerStudentPayment.isPending}>
-            {registerStudentPayment.isPending ? (
+          <Button type="submit" disabled={cobrancaIds.length === 0 || registerRecebimento.isPending}>
+            {registerRecebimento.isPending ? (
               <>
                 <LoadingSpinner />
                 Registrando...

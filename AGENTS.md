@@ -50,6 +50,9 @@ Documento operacional do repositório. Mantenha este arquivo atualizado quando a
   subpacotes internos
 - conversão entre entidade, contrato e DTO deve ser explícita
 - evitar abstrações sem mais de um uso real
+- em APIs, consultas de coleção e detalhe usam `get`; projeções alternativas, como
+  opções para seletores, usam `list`; `operationId` e tags OpenAPI devem ser estáveis
+  e sem espaços ou acentos
 
 Estrutura atual dos módulos:
 

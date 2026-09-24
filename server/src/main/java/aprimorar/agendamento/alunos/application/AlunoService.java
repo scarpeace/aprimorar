@@ -8,7 +8,7 @@ import aprimorar.agendamento.alunos.infrastructure.AlunoRepository;
 import aprimorar.agendamento.alunos.infrastructure.AlunoSpecifications;
 import aprimorar.agendamento.alunos.web.dto.AlunoFiltroRequest;
 import aprimorar.agendamento.alunos.web.dto.AlunoResponse;
-import aprimorar.agendamento.alunos.web.dto.AlunosOptionsResponse;
+import aprimorar.agendamento.alunos.web.dto.AlunoOptionResponse;
 
 import java.util.List;
 import java.util.UUID;
@@ -37,10 +37,10 @@ public class AlunoService {
     }
 
     @Transactional(readOnly = true)
-    public List<AlunosOptionsResponse> listAlunosOptions() {
+    public List<AlunoOptionResponse> listAlunosOptions() {
         Sort sort = Sort.by(Sort.Direction.ASC, "nome");
         return alunoRepo.findAll(AlunoSpecifications.isActive(), sort).stream()
-            .map(AlunosOptionsResponse::toDto)
+            .map(AlunoOptionResponse::toDto)
             .toList();
     }
 

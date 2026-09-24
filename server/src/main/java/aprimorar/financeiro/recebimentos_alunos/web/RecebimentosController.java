@@ -65,12 +65,12 @@ class RecebimentosController {
 
     @GetMapping
     @Operation(
-        operationId = "buscarRecebimentos",
+        operationId = "getRecebimentos",
         description = "Lista recebimentos com filtros e paginação."
     )
     @ApiResponse(responseCode = "200", description = "Recebimentos encontrados.")
     @BadRequestProblemResponse
-    public ResponseEntity<Page<RecebimentoResponse>> buscarRecebimentos(
+    public ResponseEntity<Page<RecebimentoResponse>> getRecebimentos(
         @ParameterObject @Valid RecebimentoFiltroRequest filtro,
         @ParameterObject
         @PageableDefault(sort = "dataRecebimento", direction = Sort.Direction.DESC)
@@ -84,13 +84,13 @@ class RecebimentosController {
 
     @GetMapping("/{recebimentoId}")
     @Operation(
-        operationId = "buscarRecebimentoPorId",
+        operationId = "getRecebimentoById",
         description = "Busca os detalhes de um recebimento pelo ID."
     )
     @ApiResponse(responseCode = "200", description = "Recebimento encontrado.")
     @BadRequestProblemResponse
     @NotFoundProblemResponse
-    public ResponseEntity<RecebimentoDetalheResponse> buscarPorId(
+    public ResponseEntity<RecebimentoDetalheResponse> getRecebimentoById(
         @PathVariable UUID recebimentoId
     ) {
         RecebimentoDetalheResponse recebimento = recebimentoService

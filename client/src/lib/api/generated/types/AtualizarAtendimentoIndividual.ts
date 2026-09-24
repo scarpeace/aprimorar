@@ -3,14 +3,14 @@
  * Do not edit manually.
  */
 
-import type { AtendimentoIndividualRequest } from "./AtendimentoIndividualRequest.ts";
+import type { AtualizarAtendimentoIndividualRequest } from "./AtualizarAtendimentoIndividualRequest.ts";
 import type { ProblemDetail } from "./ProblemDetail.ts";
 
 export type AtualizarAtendimentoIndividualPathParams = {
   /**
    * @type integer, int64
    */
-  id: number;
+  atendimentoId: number;
 };
 
 /**
@@ -34,11 +34,16 @@ export type AtualizarAtendimentoIndividual401 = ProblemDetail;
 export type AtualizarAtendimentoIndividual404 = ProblemDetail;
 
 /**
+ * @description Conflito de dados ou de estado.
+ */
+export type AtualizarAtendimentoIndividual409 = ProblemDetail;
+
+/**
  * @description Erro interno do sistema.
  */
 export type AtualizarAtendimentoIndividual500 = ProblemDetail;
 
-export type AtualizarAtendimentoIndividualMutationRequest = AtendimentoIndividualRequest;
+export type AtualizarAtendimentoIndividualMutationRequest = AtualizarAtendimentoIndividualRequest;
 
 export type AtualizarAtendimentoIndividualMutationResponse = AtualizarAtendimentoIndividual204;
 
@@ -50,5 +55,6 @@ export type AtualizarAtendimentoIndividualMutation = {
     | AtualizarAtendimentoIndividual400
     | AtualizarAtendimentoIndividual401
     | AtualizarAtendimentoIndividual404
+    | AtualizarAtendimentoIndividual409
     | AtualizarAtendimentoIndividual500;
 };

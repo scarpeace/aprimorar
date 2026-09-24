@@ -34,10 +34,10 @@ class RepasseController {
     }
 
     @GetMapping
-    @Operation(operationId = "buscarRepasses",description = "Lista repasses com filtros e paginação.")
+    @Operation(operationId = "getRepasses",description = "Lista repasses com filtros e paginação.")
     @ApiResponse(responseCode = "200", description = "Repasses encontrados.")
     @BadRequestProblemResponse
-    public ResponseEntity<Page<RepasseResponse>> buscarRepasses(
+    public ResponseEntity<Page<RepasseResponse>> getRepasses(
         @ParameterObject @Valid RepasseFiltroRequest filtro,
         @ParameterObject @PageableDefault(sort = "createdAt", direction = Sort.Direction.DESC)Pageable pageable
     ) {
@@ -46,10 +46,10 @@ class RepasseController {
     }
 
     @GetMapping("/{repasseId}")
-    @Operation(operationId = "buscarRepassePorId",description = "Busca um repasse por ID.")
+    @Operation(operationId = "getRepasseById",description = "Busca um repasse por ID.")
     @ApiResponse(responseCode = "200", description = "Repasse encontrado.")
     @NotFoundProblemResponse
-    public ResponseEntity<RepasseResponse> buscarPorId(
+    public ResponseEntity<RepasseResponse> getRepasseById(
         @PathVariable Long repasseId
     ) {
         RepasseResponse repasse = pagamentoService.findRepasseById(repasseId);

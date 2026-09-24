@@ -3,7 +3,7 @@
  * Do not edit manually.
  */
 
-import type { AlunoDetailResponseDTO } from "./AlunoDetailResponseDTO.ts";
+import type { AlunoResponse } from "./AlunoResponse.ts";
 import type { ProblemDetail } from "./ProblemDetail.ts";
 
 export type GetAlunoByIdPathParams = {
@@ -16,7 +16,7 @@ export type GetAlunoByIdPathParams = {
 /**
  * @description Aluno retornado com sucesso.
  */
-export type GetAlunoById200 = AlunoDetailResponseDTO;
+export type GetAlunoById200 = AlunoResponse;
 
 /**
  * @description Requisição inválida.

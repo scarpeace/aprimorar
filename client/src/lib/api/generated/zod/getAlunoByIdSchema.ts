@@ -3,7 +3,7 @@
  * Do not edit manually.
  */
 
-import { alunoDetailResponseDTOSchema } from "./alunoDetailResponseDTOSchema.ts";
+import { alunoResponseSchema } from "./alunoResponseSchema.ts";
 import { problemDetailSchema } from "./problemDetailSchema.ts";
 import { z } from "zod/v4";
 
@@ -14,7 +14,7 @@ export const getAlunoByIdPathParamsSchema = z.object({
 /**
  * @description Aluno retornado com sucesso.
  */
-export const getAlunoById200Schema = z.lazy(() => alunoDetailResponseDTOSchema).describe("Dados detalhados do aluno");
+export const getAlunoById200Schema = z.lazy(() => alunoResponseSchema).describe("Dados detalhados do aluno");
 
 /**
  * @description Requisição inválida.

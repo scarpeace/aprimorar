@@ -2,12 +2,12 @@
 
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { useActivateUser } from "@/lib/api/generated/hooks/usuário/useActivateUser";
-import { useCreateUser } from "@/lib/api/generated/hooks/usuário/useCreateUser";
-import { useDeactivateUser } from "@/lib/api/generated/hooks/usuário/useDeactivateUser";
-import { useDeleteUser } from "@/lib/api/generated/hooks/usuário/useDeleteUser";
-import { getUserByIdQueryKey } from "@/lib/api/generated/hooks/usuário/useGetUserById";
-import { getUsersQueryKey } from "@/lib/api/generated/hooks/usuário/useGetUsers";
+import { useActivateUser } from "@/lib/api/generated/hooks/usuarios/useActivateUser";
+import { useCreateUser } from "@/lib/api/generated/hooks/usuarios/useCreateUser";
+import { useDeactivateUser } from "@/lib/api/generated/hooks/usuarios/useDeactivateUser";
+import { useDeleteUser } from "@/lib/api/generated/hooks/usuarios/useDeleteUser";
+import { getUserByIdQueryKey } from "@/lib/api/generated/hooks/usuarios/useGetUserById";
+import { getUsersQueryKey } from "@/lib/api/generated/hooks/usuarios/useGetUsers";
 import { getFriendlyErrorMessage } from "@/lib/api/api-error";
 
 export function useUserMutations() {

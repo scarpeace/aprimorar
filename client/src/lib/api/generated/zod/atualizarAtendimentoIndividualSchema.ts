@@ -3,12 +3,12 @@
  * Do not edit manually.
  */
 
-import { atendimentoIndividualRequestSchema } from "./atendimentoIndividualRequestSchema.ts";
+import { atualizarAtendimentoIndividualRequestSchema } from "./atualizarAtendimentoIndividualRequestSchema.ts";
 import { problemDetailSchema } from "./problemDetailSchema.ts";
 import { z } from "zod/v4";
 
 export const atualizarAtendimentoIndividualPathParamsSchema = z.object({
-  id: z.coerce.number().int(),
+  atendimentoId: z.coerce.number().int(),
 });
 
 /**
@@ -32,12 +32,17 @@ export const atualizarAtendimentoIndividual401Schema = z.lazy(() => problemDetai
 export const atualizarAtendimentoIndividual404Schema = z.lazy(() => problemDetailSchema);
 
 /**
+ * @description Conflito de dados ou de estado.
+ */
+export const atualizarAtendimentoIndividual409Schema = z.lazy(() => problemDetailSchema);
+
+/**
  * @description Erro interno do sistema.
  */
 export const atualizarAtendimentoIndividual500Schema = z.lazy(() => problemDetailSchema);
 
 export const atualizarAtendimentoIndividualMutationRequestSchema = z
-  .lazy(() => atendimentoIndividualRequestSchema)
-  .describe("Formato de payload para cadastro e atualização de atendimento");
+  .lazy(() => atualizarAtendimentoIndividualRequestSchema)
+  .describe("Dados para atualizar um atendimento individual");
 
 export const atualizarAtendimentoIndividualMutationResponseSchema = z.lazy(() => atualizarAtendimentoIndividual204Schema);

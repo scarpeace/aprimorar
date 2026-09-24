@@ -57,10 +57,10 @@ class PagamentosController {
     }
 
     @GetMapping
-    @Operation(operationId = "buscarPagamentos", description = "Lista pagamentos de repasses com filtros e paginação.")
+    @Operation(operationId = "getPagamentos", description = "Lista pagamentos de repasses com filtros e paginação.")
     @ApiResponse(responseCode = "200", description = "Pagamentos encontrados.")
     @BadRequestProblemResponse
-    public ResponseEntity<Page<PagamentoResponse>> buscarPagamentos(
+    public ResponseEntity<Page<PagamentoResponse>> getPagamentos(
         @ParameterObject @Valid PagamentoFiltroRequest filtro,
         @ParameterObject @PageableDefault(sort = "dataPagamento", direction = Sort.Direction.DESC) Pageable pageable
     ) {
@@ -69,11 +69,11 @@ class PagamentosController {
     }
 
     @GetMapping("/{pagamentoId}")
-    @Operation(operationId = "buscarPagamentoPorId", description = "Busca os detalhes de um pagamento de repasses pelo ID.")
+    @Operation(operationId = "getPagamentoById", description = "Busca os detalhes de um pagamento de repasses pelo ID.")
     @ApiResponse(responseCode = "200", description = "Pagamento encontrado.")
     @BadRequestProblemResponse
     @NotFoundProblemResponse
-    public ResponseEntity<PagamentoDetalheResponse> buscarPorId(@PathVariable UUID pagamentoId) {
+    public ResponseEntity<PagamentoDetalheResponse> getPagamentoById(@PathVariable UUID pagamentoId) {
         PagamentoDetalheResponse pagamento = pagamentoService.getPagamentoPorId(pagamentoId);
         return ResponseEntity.ok(pagamento);
     }

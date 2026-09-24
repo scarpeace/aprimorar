@@ -10,8 +10,10 @@ export {
 } from "./activateAlunoSchema.ts";
 export {
   activateColaborador204Schema,
+  activateColaborador400Schema,
   activateColaborador401Schema,
   activateColaborador404Schema,
+  activateColaborador409Schema,
   activateColaborador500Schema,
   activateColaboradorMutationResponseSchema,
   activateColaboradorPathParamsSchema,
@@ -24,27 +26,28 @@ export {
   activateUserMutationResponseSchema,
   activateUserPathParamsSchema,
 } from "./activateUserSchema.ts";
+export { agendarAtendimentoIndividualRequestSchema } from "./agendarAtendimentoIndividualRequestSchema.ts";
 export {
   agendarAtendimentoIndividual201Schema,
   agendarAtendimentoIndividual400Schema,
   agendarAtendimentoIndividual401Schema,
+  agendarAtendimentoIndividual404Schema,
+  agendarAtendimentoIndividual409Schema,
   agendarAtendimentoIndividual500Schema,
   agendarAtendimentoIndividualMutationRequestSchema,
   agendarAtendimentoIndividualMutationResponseSchema,
 } from "./agendarAtendimentoIndividualSchema.ts";
-export { alunoDetailResponseDTOSchema } from "./alunoDetailResponseDTOSchema.ts";
-export { alunoListResponseDTOSchema } from "./alunoListResponseDTOSchema.ts";
-export { alunoRequestDTOSchema } from "./alunoRequestDTOSchema.ts";
-export { alunoResumoSchema } from "./alunoResumoSchema.ts";
-export { alunosListDTOSchema } from "./alunosListDTOSchema.ts";
-export { atendimentoIndividualCalendarioResponseSchema } from "./atendimentoIndividualCalendarioResponseSchema.ts";
-export { atendimentoIndividualRequestSchema } from "./atendimentoIndividualRequestSchema.ts";
+export { alunoOptionResponseSchema } from "./alunoOptionResponseSchema.ts";
+export { alunoRequestSchema } from "./alunoRequestSchema.ts";
+export { alunoResponseSchema } from "./alunoResponseSchema.ts";
 export { atendimentoIndividualResponseSchema } from "./atendimentoIndividualResponseSchema.ts";
+export { atualizarAtendimentoIndividualRequestSchema } from "./atualizarAtendimentoIndividualRequestSchema.ts";
 export {
   atualizarAtendimentoIndividual204Schema,
   atualizarAtendimentoIndividual400Schema,
   atualizarAtendimentoIndividual401Schema,
   atualizarAtendimentoIndividual404Schema,
+  atualizarAtendimentoIndividual409Schema,
   atualizarAtendimentoIndividual500Schema,
   atualizarAtendimentoIndividualMutationRequestSchema,
   atualizarAtendimentoIndividualMutationResponseSchema,
@@ -52,112 +55,15 @@ export {
 } from "./atualizarAtendimentoIndividualSchema.ts";
 export { authMeResponseSchema } from "./authMeResponseSchema.ts";
 export {
-  buscarAtendimentoIndividualPorId200Schema,
-  buscarAtendimentoIndividualPorId401Schema,
-  buscarAtendimentoIndividualPorId404Schema,
-  buscarAtendimentoIndividualPorId500Schema,
-  buscarAtendimentoIndividualPorIdPathParamsSchema,
-  buscarAtendimentoIndividualPorIdQueryResponseSchema,
-} from "./buscarAtendimentoIndividualPorIdSchema.ts";
-export {
-  buscarAtendimentosIndividuais200Schema,
-  buscarAtendimentosIndividuais400Schema,
-  buscarAtendimentosIndividuais401Schema,
-  buscarAtendimentosIndividuais500Schema,
-  buscarAtendimentosIndividuaisQueryParamsSchema,
-  buscarAtendimentosIndividuaisQueryResponseSchema,
-} from "./buscarAtendimentosIndividuaisSchema.ts";
-export {
-  buscarCalendarioAtendimentosIndividuais200Schema,
-  buscarCalendarioAtendimentosIndividuais400Schema,
-  buscarCalendarioAtendimentosIndividuais401Schema,
-  buscarCalendarioAtendimentosIndividuais500Schema,
-  buscarCalendarioAtendimentosIndividuaisQueryParamsSchema,
-  buscarCalendarioAtendimentosIndividuaisQueryResponseSchema,
-} from "./buscarCalendarioAtendimentosIndividuaisSchema.ts";
-export {
-  buscarCobrancaAlunoPorId200Schema,
-  buscarCobrancaAlunoPorId401Schema,
-  buscarCobrancaAlunoPorId404Schema,
-  buscarCobrancaAlunoPorId500Schema,
-  buscarCobrancaAlunoPorIdPathParamsSchema,
-  buscarCobrancaAlunoPorIdQueryResponseSchema,
-} from "./buscarCobrancaAlunoPorIdSchema.ts";
-export {
-  buscarCobrancasAlunos200Schema,
-  buscarCobrancasAlunos400Schema,
-  buscarCobrancasAlunos401Schema,
-  buscarCobrancasAlunos500Schema,
-  buscarCobrancasAlunosQueryParamsSchema,
-  buscarCobrancasAlunosQueryResponseSchema,
-} from "./buscarCobrancasAlunosSchema.ts";
-export {
-  buscarLoteDeCobrancaPorId200Schema,
-  buscarLoteDeCobrancaPorId401Schema,
-  buscarLoteDeCobrancaPorId404Schema,
-  buscarLoteDeCobrancaPorId500Schema,
-  buscarLoteDeCobrancaPorIdPathParamsSchema,
-  buscarLoteDeCobrancaPorIdQueryResponseSchema,
-} from "./buscarLoteDeCobrancaPorIdSchema.ts";
-export {
-  buscarLoteDeRepassePorId200Schema,
-  buscarLoteDeRepassePorId401Schema,
-  buscarLoteDeRepassePorId404Schema,
-  buscarLoteDeRepassePorId500Schema,
-  buscarLoteDeRepassePorIdPathParamsSchema,
-  buscarLoteDeRepassePorIdQueryResponseSchema,
-} from "./buscarLoteDeRepassePorIdSchema.ts";
-export {
-  buscarLotesDeCobranca200Schema,
-  buscarLotesDeCobranca400Schema,
-  buscarLotesDeCobranca401Schema,
-  buscarLotesDeCobranca500Schema,
-  buscarLotesDeCobrancaQueryParamsSchema,
-  buscarLotesDeCobrancaQueryResponseSchema,
-} from "./buscarLotesDeCobrancaSchema.ts";
-export {
-  buscarLotesDeRepasse200Schema,
-  buscarLotesDeRepasse400Schema,
-  buscarLotesDeRepasse401Schema,
-  buscarLotesDeRepasse500Schema,
-  buscarLotesDeRepasseQueryParamsSchema,
-  buscarLotesDeRepasseQueryResponseSchema,
-} from "./buscarLotesDeRepasseSchema.ts";
-export {
-  buscarRepasseIndividualPorId200Schema,
-  buscarRepasseIndividualPorId401Schema,
-  buscarRepasseIndividualPorId404Schema,
-  buscarRepasseIndividualPorId500Schema,
-  buscarRepasseIndividualPorIdPathParamsSchema,
-  buscarRepasseIndividualPorIdQueryResponseSchema,
-} from "./buscarRepasseIndividualPorIdSchema.ts";
-export {
-  buscarRepassesIndividuais200Schema,
-  buscarRepassesIndividuais400Schema,
-  buscarRepassesIndividuais401Schema,
-  buscarRepassesIndividuais500Schema,
-  buscarRepassesIndividuaisQueryParamsSchema,
-  buscarRepassesIndividuaisQueryResponseSchema,
-} from "./buscarRepassesIndividuaisSchema.ts";
-export {
   cancelarAtendimentoIndividual204Schema,
   cancelarAtendimentoIndividual400Schema,
   cancelarAtendimentoIndividual401Schema,
   cancelarAtendimentoIndividual404Schema,
+  cancelarAtendimentoIndividual409Schema,
   cancelarAtendimentoIndividual500Schema,
   cancelarAtendimentoIndividualMutationResponseSchema,
   cancelarAtendimentoIndividualPathParamsSchema,
 } from "./cancelarAtendimentoIndividualSchema.ts";
-export { cancelarPagamentoAlunoRequestSchema } from "./cancelarPagamentoAlunoRequestSchema.ts";
-export {
-  cancelarPagamentoAluno204Schema,
-  cancelarPagamentoAluno400Schema,
-  cancelarPagamentoAluno401Schema,
-  cancelarPagamentoAluno404Schema,
-  cancelarPagamentoAluno500Schema,
-  cancelarPagamentoAlunoMutationRequestSchema,
-  cancelarPagamentoAlunoMutationResponseSchema,
-} from "./cancelarPagamentoAlunoSchema.ts";
 export {
   cancelarPagamentoDespesa200Schema,
   cancelarPagamentoDespesa401Schema,
@@ -166,35 +72,30 @@ export {
   cancelarPagamentoDespesaMutationResponseSchema,
   cancelarPagamentoDespesaPathParamsSchema,
 } from "./cancelarPagamentoDespesaSchema.ts";
-export { cancelarRepasseIndividualRequestSchema } from "./cancelarRepasseIndividualRequestSchema.ts";
 export {
-  cancelarRepassesIndividuais204Schema,
-  cancelarRepassesIndividuais400Schema,
-  cancelarRepassesIndividuais401Schema,
-  cancelarRepassesIndividuais404Schema,
-  cancelarRepassesIndividuais500Schema,
-  cancelarRepassesIndividuaisMutationRequestSchema,
-  cancelarRepassesIndividuaisMutationResponseSchema,
-} from "./cancelarRepassesIndividuaisSchema.ts";
-export { cobrancaAlunoResponseSchema } from "./cobrancaAlunoResponseSchema.ts";
-export { cobrancaAlunoResumoSchema } from "./cobrancaAlunoResumoSchema.ts";
-export { cobrancaLoteDetalheResponseSchema } from "./cobrancaLoteDetalheResponseSchema.ts";
-export { cobrancaLoteItemSchema } from "./cobrancaLoteItemSchema.ts";
-export { cobrancaLoteResponseSchema } from "./cobrancaLoteResponseSchema.ts";
-export { colaboradorDetailResponseDTOSchema } from "./colaboradorDetailResponseDTOSchema.ts";
-export { colaboradorListResponseDTOSchema } from "./colaboradorListResponseDTOSchema.ts";
-export { colaboradorRequestDTOSchema } from "./colaboradorRequestDTOSchema.ts";
-export { colaboradorResumoSchema } from "./colaboradorResumoSchema.ts";
-export { colaboradoresOptionsDTOSchema } from "./colaboradoresOptionsDTOSchema.ts";
+  cancelarPagamento204Schema,
+  cancelarPagamento400Schema,
+  cancelarPagamento401Schema,
+  cancelarPagamento404Schema,
+  cancelarPagamento409Schema,
+  cancelarPagamento500Schema,
+  cancelarPagamentoMutationResponseSchema,
+  cancelarPagamentoPathParamsSchema,
+} from "./cancelarPagamentoSchema.ts";
 export {
-  createColaborador201Schema,
-  createColaborador400Schema,
-  createColaborador401Schema,
-  createColaborador409Schema,
-  createColaborador500Schema,
-  createColaboradorMutationRequestSchema,
-  createColaboradorMutationResponseSchema,
-} from "./createColaboradorSchema.ts";
+  cancelarRecebimento204Schema,
+  cancelarRecebimento400Schema,
+  cancelarRecebimento401Schema,
+  cancelarRecebimento404Schema,
+  cancelarRecebimento409Schema,
+  cancelarRecebimento500Schema,
+  cancelarRecebimentoMutationResponseSchema,
+  cancelarRecebimentoPathParamsSchema,
+} from "./cancelarRecebimentoSchema.ts";
+export { cobrancaResponseSchema } from "./cobrancaResponseSchema.ts";
+export { colaboradorOptionResponseSchema } from "./colaboradorOptionResponseSchema.ts";
+export { colaboradorRequestSchema } from "./colaboradorRequestSchema.ts";
+export { colaboradorResponseSchema } from "./colaboradorResponseSchema.ts";
 export {
   createDespesa201Schema,
   createDespesa400Schema,
@@ -214,15 +115,15 @@ export {
   createUserMutationResponseSchema,
 } from "./createUserSchema.ts";
 export {
-  criarAluno201Schema,
-  criarAluno400Schema,
-  criarAluno401Schema,
-  criarAluno404Schema,
-  criarAluno409Schema,
-  criarAluno500Schema,
-  criarAlunoMutationRequestSchema,
-  criarAlunoMutationResponseSchema,
-} from "./criarAlunoSchema.ts";
+  criarColaborador201Schema,
+  criarColaborador400Schema,
+  criarColaborador401Schema,
+  criarColaborador404Schema,
+  criarColaborador409Schema,
+  criarColaborador500Schema,
+  criarColaboradorMutationRequestSchema,
+  criarColaboradorMutationResponseSchema,
+} from "./criarColaboradorSchema.ts";
 export {
   deactivateAluno204Schema,
   deactivateAluno400Schema,
@@ -235,8 +136,10 @@ export {
 } from "./deactivateAlunoSchema.ts";
 export {
   deactivateColaborador204Schema,
+  deactivateColaborador400Schema,
   deactivateColaborador401Schema,
   deactivateColaborador404Schema,
+  deactivateColaborador409Schema,
   deactivateColaborador500Schema,
   deactivateColaboradorMutationResponseSchema,
   deactivateColaboradorPathParamsSchema,
@@ -267,16 +170,8 @@ export {
 } from "./deleteUserSchema.ts";
 export { despesaRequestSchema } from "./despesaRequestSchema.ts";
 export { despesaResponseSchema } from "./despesaResponseSchema.ts";
-export { enderecoRequestDTOSchema } from "./enderecoRequestDTOSchema.ts";
-export { enderecoResponseDTOSchema } from "./enderecoResponseDTOSchema.ts";
-export {
-  findColaboradorById200Schema,
-  findColaboradorById401Schema,
-  findColaboradorById404Schema,
-  findColaboradorById500Schema,
-  findColaboradorByIdPathParamsSchema,
-  findColaboradorByIdQueryResponseSchema,
-} from "./findColaboradorByIdSchema.ts";
+export { enderecoRequestSchema } from "./enderecoRequestSchema.ts";
+export { enderecoResponseSchema } from "./enderecoResponseSchema.ts";
 export {
   getAlunoById200Schema,
   getAlunoById400Schema,
@@ -298,15 +193,57 @@ export {
   getAlunosQueryResponseSchema,
 } from "./getAlunosSchema.ts";
 export {
-  getColaboradoresList200Schema,
-  getColaboradoresList401Schema,
-  getColaboradoresList500Schema,
-  getColaboradoresListQueryResponseSchema,
-} from "./getColaboradoresListSchema.ts";
+  getAtendimentoIndividualById200Schema,
+  getAtendimentoIndividualById400Schema,
+  getAtendimentoIndividualById401Schema,
+  getAtendimentoIndividualById404Schema,
+  getAtendimentoIndividualById409Schema,
+  getAtendimentoIndividualById500Schema,
+  getAtendimentoIndividualByIdPathParamsSchema,
+  getAtendimentoIndividualByIdQueryResponseSchema,
+} from "./getAtendimentoIndividualByIdSchema.ts";
+export {
+  getAtendimentosIndividuais200Schema,
+  getAtendimentosIndividuais400Schema,
+  getAtendimentosIndividuais401Schema,
+  getAtendimentosIndividuais404Schema,
+  getAtendimentosIndividuais409Schema,
+  getAtendimentosIndividuais500Schema,
+  getAtendimentosIndividuaisQueryParamsSchema,
+  getAtendimentosIndividuaisQueryResponseSchema,
+} from "./getAtendimentosIndividuaisSchema.ts";
+export {
+  getCobrancaById200Schema,
+  getCobrancaById401Schema,
+  getCobrancaById404Schema,
+  getCobrancaById500Schema,
+  getCobrancaByIdPathParamsSchema,
+  getCobrancaByIdQueryResponseSchema,
+} from "./getCobrancaByIdSchema.ts";
+export {
+  getCobrancas200Schema,
+  getCobrancas400Schema,
+  getCobrancas401Schema,
+  getCobrancas500Schema,
+  getCobrancasQueryParamsSchema,
+  getCobrancasQueryResponseSchema,
+} from "./getCobrancasSchema.ts";
+export {
+  getColaboradorById200Schema,
+  getColaboradorById400Schema,
+  getColaboradorById401Schema,
+  getColaboradorById404Schema,
+  getColaboradorById409Schema,
+  getColaboradorById500Schema,
+  getColaboradorByIdPathParamsSchema,
+  getColaboradorByIdQueryResponseSchema,
+} from "./getColaboradorByIdSchema.ts";
 export {
   getColaboradores200Schema,
   getColaboradores400Schema,
   getColaboradores401Schema,
+  getColaboradores404Schema,
+  getColaboradores409Schema,
   getColaboradores500Schema,
   getColaboradoresQueryParamsSchema,
   getColaboradoresQueryResponseSchema,
@@ -329,6 +266,60 @@ export {
   getDespesasQueryResponseSchema,
 } from "./getDespesasSchema.ts";
 export {
+  getPagamentoById200Schema,
+  getPagamentoById400Schema,
+  getPagamentoById401Schema,
+  getPagamentoById404Schema,
+  getPagamentoById409Schema,
+  getPagamentoById500Schema,
+  getPagamentoByIdPathParamsSchema,
+  getPagamentoByIdQueryResponseSchema,
+} from "./getPagamentoByIdSchema.ts";
+export {
+  getPagamentos200Schema,
+  getPagamentos400Schema,
+  getPagamentos401Schema,
+  getPagamentos409Schema,
+  getPagamentos500Schema,
+  getPagamentosQueryParamsSchema,
+  getPagamentosQueryResponseSchema,
+} from "./getPagamentosSchema.ts";
+export {
+  getRecebimentoById200Schema,
+  getRecebimentoById400Schema,
+  getRecebimentoById401Schema,
+  getRecebimentoById404Schema,
+  getRecebimentoById409Schema,
+  getRecebimentoById500Schema,
+  getRecebimentoByIdPathParamsSchema,
+  getRecebimentoByIdQueryResponseSchema,
+} from "./getRecebimentoByIdSchema.ts";
+export {
+  getRecebimentos200Schema,
+  getRecebimentos400Schema,
+  getRecebimentos401Schema,
+  getRecebimentos409Schema,
+  getRecebimentos500Schema,
+  getRecebimentosQueryParamsSchema,
+  getRecebimentosQueryResponseSchema,
+} from "./getRecebimentosSchema.ts";
+export {
+  getRepasseById200Schema,
+  getRepasseById401Schema,
+  getRepasseById404Schema,
+  getRepasseById500Schema,
+  getRepasseByIdPathParamsSchema,
+  getRepasseByIdQueryResponseSchema,
+} from "./getRepasseByIdSchema.ts";
+export {
+  getRepasses200Schema,
+  getRepasses400Schema,
+  getRepasses401Schema,
+  getRepasses500Schema,
+  getRepassesQueryParamsSchema,
+  getRepassesQueryResponseSchema,
+} from "./getRepassesSchema.ts";
+export {
   getUserById200Schema,
   getUserById401Schema,
   getUserById404Schema,
@@ -338,18 +329,39 @@ export {
 } from "./getUserByIdSchema.ts";
 export { getUsers200Schema, getUsers401Schema, getUsers500Schema, getUsersQueryResponseSchema } from "./getUsersSchema.ts";
 export {
-  listAlunos200Schema,
-  listAlunos400Schema,
-  listAlunos401Schema,
-  listAlunos404Schema,
-  listAlunos409Schema,
-  listAlunos500Schema,
-  listAlunosQueryResponseSchema,
-} from "./listAlunosSchema.ts";
+  listAlunosOptions200Schema,
+  listAlunosOptions400Schema,
+  listAlunosOptions401Schema,
+  listAlunosOptions404Schema,
+  listAlunosOptions409Schema,
+  listAlunosOptions500Schema,
+  listAlunosOptionsQueryResponseSchema,
+} from "./listAlunosOptionsSchema.ts";
+export {
+  listColaboradoresOptions200Schema,
+  listColaboradoresOptions400Schema,
+  listColaboradoresOptions401Schema,
+  listColaboradoresOptions404Schema,
+  listColaboradoresOptions409Schema,
+  listColaboradoresOptions500Schema,
+  listColaboradoresOptionsQueryResponseSchema,
+} from "./listColaboradoresOptionsSchema.ts";
 export { loginRequestSchema } from "./loginRequestSchema.ts";
 export { loginResponseSchema } from "./loginResponseSchema.ts";
 export { login200Schema, loginMutationRequestSchema, loginMutationResponseSchema } from "./loginSchema.ts";
 export { logout200Schema, logoutMutationResponseSchema } from "./logoutSchema.ts";
+export {
+  matricularAluno201Schema,
+  matricularAluno400Schema,
+  matricularAluno401Schema,
+  matricularAluno404Schema,
+  matricularAluno409Schema,
+  matricularAluno500Schema,
+  matricularAlunoMutationRequestSchema,
+  matricularAlunoMutationResponseSchema,
+} from "./matricularAlunoSchema.ts";
+export { pagamentoDetalheResponseSchema } from "./pagamentoDetalheResponseSchema.ts";
+export { pagamentoResponseSchema } from "./pagamentoResponseSchema.ts";
 export {
   pagarDespesa200Schema,
   pagarDespesa401Schema,
@@ -359,54 +371,55 @@ export {
   pagarDespesaPathParamsSchema,
 } from "./pagarDespesaSchema.ts";
 export { pageMetadataSchema } from "./pageMetadataSchema.ts";
-export { pagedModelAlunoListResponseDTOSchema } from "./pagedModelAlunoListResponseDTOSchema.ts";
+export { pagedModelAlunoResponseSchema } from "./pagedModelAlunoResponseSchema.ts";
 export { pagedModelAtendimentoIndividualResponseSchema } from "./pagedModelAtendimentoIndividualResponseSchema.ts";
-export { pagedModelCobrancaAlunoResponseSchema } from "./pagedModelCobrancaAlunoResponseSchema.ts";
-export { pagedModelCobrancaLoteResponseSchema } from "./pagedModelCobrancaLoteResponseSchema.ts";
-export { pagedModelColaboradorListResponseDTOSchema } from "./pagedModelColaboradorListResponseDTOSchema.ts";
+export { pagedModelCobrancaResponseSchema } from "./pagedModelCobrancaResponseSchema.ts";
+export { pagedModelColaboradorResponseSchema } from "./pagedModelColaboradorResponseSchema.ts";
 export { pagedModelDespesaResponseSchema } from "./pagedModelDespesaResponseSchema.ts";
-export { pagedModelRepasseIndividualResponseSchema } from "./pagedModelRepasseIndividualResponseSchema.ts";
-export { pagedModelRepasseLoteResponseSchema } from "./pagedModelRepasseLoteResponseSchema.ts";
+export { pagedModelPagamentoResponseSchema } from "./pagedModelPagamentoResponseSchema.ts";
+export { pagedModelRecebimentoResponseSchema } from "./pagedModelRecebimentoResponseSchema.ts";
+export { pagedModelRepasseResponseSchema } from "./pagedModelRepasseResponseSchema.ts";
 export { problemDetailSchema } from "./problemDetailSchema.ts";
 export {
   realizarAtendimentoIndividual204Schema,
   realizarAtendimentoIndividual400Schema,
   realizarAtendimentoIndividual401Schema,
   realizarAtendimentoIndividual404Schema,
+  realizarAtendimentoIndividual409Schema,
   realizarAtendimentoIndividual500Schema,
   realizarAtendimentoIndividualMutationResponseSchema,
   realizarAtendimentoIndividualPathParamsSchema,
 } from "./realizarAtendimentoIndividualSchema.ts";
+export { recebimentoDetalheResponseSchema } from "./recebimentoDetalheResponseSchema.ts";
+export { recebimentoResponseSchema } from "./recebimentoResponseSchema.ts";
 export { refreshAccessToken200Schema, refreshAccessTokenMutationResponseSchema } from "./refreshAccessTokenSchema.ts";
-export { registrarPagamentoAlunoRequestSchema } from "./registrarPagamentoAlunoRequestSchema.ts";
+export { registrarPagamentoRequestSchema } from "./registrarPagamentoRequestSchema.ts";
 export {
-  registrarPagamentoAluno204Schema,
-  registrarPagamentoAluno400Schema,
-  registrarPagamentoAluno401Schema,
-  registrarPagamentoAluno404Schema,
-  registrarPagamentoAluno500Schema,
-  registrarPagamentoAlunoMutationRequestSchema,
-  registrarPagamentoAlunoMutationResponseSchema,
-} from "./registrarPagamentoAlunoSchema.ts";
-export { registrarRepasseIndividualRequestSchema } from "./registrarRepasseIndividualRequestSchema.ts";
+  registrarPagamento201Schema,
+  registrarPagamento400Schema,
+  registrarPagamento401Schema,
+  registrarPagamento404Schema,
+  registrarPagamento409Schema,
+  registrarPagamento500Schema,
+  registrarPagamentoMutationRequestSchema,
+  registrarPagamentoMutationResponseSchema,
+} from "./registrarPagamentoSchema.ts";
+export { registrarRecebimentoRequestSchema } from "./registrarRecebimentoRequestSchema.ts";
 export {
-  registrarRepassesIndividuais204Schema,
-  registrarRepassesIndividuais400Schema,
-  registrarRepassesIndividuais401Schema,
-  registrarRepassesIndividuais404Schema,
-  registrarRepassesIndividuais500Schema,
-  registrarRepassesIndividuaisMutationRequestSchema,
-  registrarRepassesIndividuaisMutationResponseSchema,
-} from "./registrarRepassesIndividuaisSchema.ts";
-export { repasseIndividualResponseSchema } from "./repasseIndividualResponseSchema.ts";
-export { repasseLoteDetalheResponseSchema } from "./repasseLoteDetalheResponseSchema.ts";
-export { repasseLoteItemSchema } from "./repasseLoteItemSchema.ts";
-export { repasseLoteResponseSchema } from "./repasseLoteResponseSchema.ts";
-export { repasseResumoSchema } from "./repasseResumoSchema.ts";
-export { responsavelRequestDTOSchema } from "./responsavelRequestDTOSchema.ts";
-export { responsavelResponseDTOSchema } from "./responsavelResponseDTOSchema.ts";
+  registrarRecebimento201Schema,
+  registrarRecebimento400Schema,
+  registrarRecebimento401Schema,
+  registrarRecebimento404Schema,
+  registrarRecebimento409Schema,
+  registrarRecebimento500Schema,
+  registrarRecebimentoMutationRequestSchema,
+  registrarRecebimentoMutationResponseSchema,
+} from "./registrarRecebimentoSchema.ts";
+export { repasseResponseSchema } from "./repasseResponseSchema.ts";
+export { responsavelRequestSchema } from "./responsavelRequestSchema.ts";
+export { responsavelResponseSchema } from "./responsavelResponseSchema.ts";
 export {
-  updateAluno200Schema,
+  updateAluno204Schema,
   updateAluno400Schema,
   updateAluno401Schema,
   updateAluno404Schema,
@@ -417,7 +430,7 @@ export {
   updateAlunoPathParamsSchema,
 } from "./updateAlunoSchema.ts";
 export {
-  updateColaborador200Schema,
+  updateColaborador204Schema,
   updateColaborador400Schema,
   updateColaborador401Schema,
   updateColaborador404Schema,
@@ -439,5 +452,4 @@ export {
   updateDespesaPathParamsSchema,
 } from "./updateDespesaSchema.ts";
 export { userCreateRequestSchema } from "./userCreateRequestSchema.ts";
-export { userListResponseSchema } from "./userListResponseSchema.ts";
 export { userResponseSchema } from "./userResponseSchema.ts";

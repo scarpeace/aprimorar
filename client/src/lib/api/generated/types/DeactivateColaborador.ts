@@ -18,6 +18,11 @@ export type DeactivateColaboradorPathParams = {
 export type DeactivateColaborador204 = any;
 
 /**
+ * @description Requisição inválida.
+ */
+export type DeactivateColaborador400 = ProblemDetail;
+
+/**
  * @description Não autenticado.
  */
 export type DeactivateColaborador401 = ProblemDetail;
@@ -26,6 +31,11 @@ export type DeactivateColaborador401 = ProblemDetail;
  * @description Recurso não encontrado.
  */
 export type DeactivateColaborador404 = ProblemDetail;
+
+/**
+ * @description Conflito de dados ou de estado.
+ */
+export type DeactivateColaborador409 = ProblemDetail;
 
 /**
  * @description Erro interno do sistema.
@@ -37,5 +47,10 @@ export type DeactivateColaboradorMutationResponse = DeactivateColaborador204;
 export type DeactivateColaboradorMutation = {
   Response: DeactivateColaborador204;
   PathParams: DeactivateColaboradorPathParams;
-  Errors: DeactivateColaborador401 | DeactivateColaborador404 | DeactivateColaborador500;
+  Errors:
+    | DeactivateColaborador400
+    | DeactivateColaborador401
+    | DeactivateColaborador404
+    | DeactivateColaborador409
+    | DeactivateColaborador500;
 };

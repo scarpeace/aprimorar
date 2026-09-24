@@ -3,7 +3,7 @@
  * Do not edit manually.
  */
 
-import { pagedModelAlunoListResponseDTOSchema } from "./pagedModelAlunoListResponseDTOSchema.ts";
+import { pagedModelAlunoResponseSchema } from "./pagedModelAlunoResponseSchema.ts";
 import { problemDetailSchema } from "./problemDetailSchema.ts";
 import { z } from "zod/v4";
 
@@ -25,7 +25,7 @@ export const getAlunosQueryParamsSchema = z.object({
 /**
  * @description Lista de alunos retornada com sucesso.
  */
-export const getAlunos200Schema = z.lazy(() => pagedModelAlunoListResponseDTOSchema);
+export const getAlunos200Schema = z.lazy(() => pagedModelAlunoResponseSchema);
 
 /**
  * @description Requisição inválida.

@@ -27,7 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/users")
-@Tag(name = "Usuário", description = "APIs administrativas de gestão de usuários")
+@Tag(name = "Usuarios", description = "APIs administrativas de gestão de usuários")
 @CommonProblemResponses
 @PreAuthorize("hasRole('ADMIN')")
 class UserController {
@@ -65,7 +65,7 @@ class UserController {
         return ResponseEntity.ok(userService.findById(userId));
     }
 
-    @PatchMapping("/{userId}/deactivate")
+    @PatchMapping("/{userId}/desativar")
     @Operation(operationId = "deactivateUser", description = "Desativa um usuário por ID.")
     @ApiResponse(responseCode = "204", description = "Usuário desativado com sucesso.")
     @NotFoundProblemResponse
@@ -74,7 +74,7 @@ class UserController {
         return ResponseEntity.noContent().build();
     }
 
-    @PatchMapping("/{userId}/activate")
+    @PatchMapping("/{userId}/ativar")
     @Operation(operationId = "activateUser", description = "Ativa um usuário por ID.")
     @ApiResponse(responseCode = "204", description = "Usuário ativado com sucesso.")
     @NotFoundProblemResponse

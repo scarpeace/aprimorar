@@ -6,7 +6,7 @@ import { useEffect } from "react";
 import { Button } from "@/components/ui/Button";
 import { SelectInput } from "@/components/ui/forms/SelectInput";
 import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
-import { useRepasseMutations } from "@/features/repasses/hooks/use-repasse-mutations";
+import { usePagamentoMutations } from "@/features/repasses/hooks/use-pagamento-mutations";
 import { brl } from "@/lib/utils/formatter";
 import { formaPagamentoLabels } from "@/lib/constants/pagamento-constants";
 import {
@@ -43,14 +43,14 @@ export function RegistrarRepasseForm({
       formaPagamento: "PIX",
     },
   });
-  const { registerCollaboratorPayment } = useRepasseMutations();
+  const { registerPayment } = usePagamentoMutations();
 
   useEffect(() => {
     methods.setValue("repasseIds", repasseIds, { shouldValidate: true });
   }, [methods, repasseIds]);
 
   const onSubmit = methods.handleSubmit((data) => {
-    registerCollaboratorPayment.mutate(
+    registerPayment.mutate(
       { data },
       {
         onSuccess,
@@ -77,11 +77,11 @@ export function RegistrarRepasseForm({
         </label>
 
         <div className="flex justify-end gap-2">
-          <Button type="button" variant="ghost" onClick={onCancel} disabled={registerCollaboratorPayment.isPending}>
+          <Button type="button" variant="ghost" onClick={onCancel} disabled={registerPayment.isPending}>
             Voltar
           </Button>
-          <Button type="submit" disabled={repasseIds.length === 0 || registerCollaboratorPayment.isPending}>
-            {registerCollaboratorPayment.isPending ? (
+          <Button type="submit" disabled={repasseIds.length === 0 || registerPayment.isPending}>
+            {registerPayment.isPending ? (
               <>
                 <LoadingSpinner />
                 Registrando...

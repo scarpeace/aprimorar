@@ -30,7 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/financeiro/despesas")
-@Tag(name = "Despesa", description = "APIs de gestão de despesas operacionais")
+@Tag(name = "Despesas", description = "APIs de gestão de despesas operacionais")
 @CommonProblemResponses
 class DespesaController {
 
@@ -98,7 +98,7 @@ class DespesaController {
         return ResponseEntity.ok(despesaService.pagar(despesaId));
     }
 
-    @PatchMapping("/{despesaId}/cancelarPagamento")
+    @PatchMapping("/{despesaId}/cancelar-pagamento")
     @Operation(operationId = "cancelarPagamentoDespesa", description = "Cancela o pagamento da despesa")
     @ApiResponse(responseCode = "200", description = "Pagamento da despesa cancelado com sucesso")
     @NotFoundProblemResponse

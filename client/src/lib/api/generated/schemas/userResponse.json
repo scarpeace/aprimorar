@@ -17,6 +17,6 @@
     },
     "enabled": { "type": "boolean", "description": "Indica se o usuário está habilitado", "example": true }
   },
-  "description": "Dados detalhados de um usuário",
+  "description": "Dados de um usuário",
   "x-readme-ref-name": "UserResponse"
 }

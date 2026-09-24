@@ -9,7 +9,7 @@ export type CancelarAtendimentoIndividualPathParams = {
   /**
    * @type integer, int64
    */
-  id: number;
+  atendimentoId: number;
 };
 
 /**
@@ -33,6 +33,11 @@ export type CancelarAtendimentoIndividual401 = ProblemDetail;
 export type CancelarAtendimentoIndividual404 = ProblemDetail;
 
 /**
+ * @description Conflito de dados ou de estado.
+ */
+export type CancelarAtendimentoIndividual409 = ProblemDetail;
+
+/**
  * @description Erro interno do sistema.
  */
 export type CancelarAtendimentoIndividual500 = ProblemDetail;
@@ -46,5 +51,6 @@ export type CancelarAtendimentoIndividualMutation = {
     | CancelarAtendimentoIndividual400
     | CancelarAtendimentoIndividual401
     | CancelarAtendimentoIndividual404
+    | CancelarAtendimentoIndividual409
     | CancelarAtendimentoIndividual500;
 };

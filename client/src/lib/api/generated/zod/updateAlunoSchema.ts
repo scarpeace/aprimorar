@@ -3,7 +3,7 @@
  * Do not edit manually.
  */
 
-import { alunoRequestDTOSchema } from "./alunoRequestDTOSchema.ts";
+import { alunoRequestSchema } from "./alunoRequestSchema.ts";
 import { problemDetailSchema } from "./problemDetailSchema.ts";
 import { z } from "zod/v4";
 
@@ -14,7 +14,7 @@ export const updateAlunoPathParamsSchema = z.object({
 /**
  * @description Aluno atualizado com sucesso.
  */
-export const updateAluno200Schema = z.any();
+export const updateAluno204Schema = z.any();
 
 /**
  * @description Requisição inválida.
@@ -42,7 +42,7 @@ export const updateAluno409Schema = z.lazy(() => problemDetailSchema);
 export const updateAluno500Schema = z.lazy(() => problemDetailSchema);
 
 export const updateAlunoMutationRequestSchema = z
-  .lazy(() => alunoRequestDTOSchema)
+  .lazy(() => alunoRequestSchema)
   .describe("Formato de payload para o cadastro de um aluno");
 
-export const updateAlunoMutationResponseSchema = z.lazy(() => updateAluno200Schema);
+export const updateAlunoMutationResponseSchema = z.lazy(() => updateAluno204Schema);

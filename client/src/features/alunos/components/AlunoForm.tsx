@@ -19,7 +19,7 @@ type AlunoFormProps = {
 };
 
 export function AlunoForm({ initialData, onSuccess, onCancel }: Readonly<AlunoFormProps>) {
-  const { createAluno, updateAluno } = useAlunoMutations();
+  const { matricularAluno, updateAluno } = useAlunoMutations();
   const isEditMode = !!initialData?.id;
 
   const methods = useForm<AlunoFormData>({
@@ -50,7 +50,7 @@ export function AlunoForm({ initialData, onSuccess, onCancel }: Readonly<AlunoFo
     },
   });
 
-  const isPending = createAluno.isPending || updateAluno.isPending;
+  const isPending = matricularAluno.isPending || updateAluno.isPending;
 
   const onSubmit = methods.handleSubmit((data) => {
     if (isEditMode && initialData?.id) {
@@ -63,7 +63,7 @@ export function AlunoForm({ initialData, onSuccess, onCancel }: Readonly<AlunoFo
       return;
     }
 
-    createAluno.mutate(
+    matricularAluno.mutate(
       { data },
       {
         onSuccess,

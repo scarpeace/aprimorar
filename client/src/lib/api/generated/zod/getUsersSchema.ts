@@ -4,15 +4,13 @@
  */
 
 import { problemDetailSchema } from "./problemDetailSchema.ts";
-import { userListResponseSchema } from "./userListResponseSchema.ts";
+import { userResponseSchema } from "./userResponseSchema.ts";
 import { z } from "zod/v4";
 
 /**
  * @description Lista de usuários retornada com sucesso.
  */
-export const getUsers200Schema = z.array(
-  z.lazy(() => userListResponseSchema).describe("Dados resumidos de um usuário para listagem"),
-);
+export const getUsers200Schema = z.array(z.lazy(() => userResponseSchema).describe("Dados de um usuário"));
 
 /**
  * @description Não autenticado.

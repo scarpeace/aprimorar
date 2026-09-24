@@ -3,7 +3,7 @@
  * Do not edit manually.
  */
 
-import type { AtendimentoIndividualRequest } from "./AtendimentoIndividualRequest.ts";
+import type { AgendarAtendimentoIndividualRequest } from "./AgendarAtendimentoIndividualRequest.ts";
 import type { ProblemDetail } from "./ProblemDetail.ts";
 
 /**
@@ -22,16 +22,31 @@ export type AgendarAtendimentoIndividual400 = ProblemDetail;
 export type AgendarAtendimentoIndividual401 = ProblemDetail;
 
 /**
+ * @description Recurso não encontrado.
+ */
+export type AgendarAtendimentoIndividual404 = ProblemDetail;
+
+/**
+ * @description Conflito de dados ou de estado.
+ */
+export type AgendarAtendimentoIndividual409 = ProblemDetail;
+
+/**
  * @description Erro interno do sistema.
  */
 export type AgendarAtendimentoIndividual500 = ProblemDetail;
 
-export type AgendarAtendimentoIndividualMutationRequest = AtendimentoIndividualRequest;
+export type AgendarAtendimentoIndividualMutationRequest = AgendarAtendimentoIndividualRequest;
 
 export type AgendarAtendimentoIndividualMutationResponse = AgendarAtendimentoIndividual201;
 
 export type AgendarAtendimentoIndividualMutation = {
   Response: AgendarAtendimentoIndividual201;
   Request: AgendarAtendimentoIndividualMutationRequest;
-  Errors: AgendarAtendimentoIndividual400 | AgendarAtendimentoIndividual401 | AgendarAtendimentoIndividual500;
+  Errors:
+    | AgendarAtendimentoIndividual400
+    | AgendarAtendimentoIndividual401
+    | AgendarAtendimentoIndividual404
+    | AgendarAtendimentoIndividual409
+    | AgendarAtendimentoIndividual500;
 };

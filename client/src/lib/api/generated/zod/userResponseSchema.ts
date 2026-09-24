@@ -6,7 +6,7 @@
 import { z } from "zod/v4";
 
 /**
- * @description Dados detalhados de um usuário
+ * @description Dados de um usuário
  */
 export const userResponseSchema = z
   .object({
@@ -15,4 +15,4 @@ export const userResponseSchema = z
     role: z.enum(["ADMIN", "SECRETARIA"]).describe("Perfil de acesso do usuário"),
     enabled: z.optional(z.boolean().describe("Indica se o usuário está habilitado")),
   })
-  .describe("Dados detalhados de um usuário");
+  .describe("Dados de um usuário");

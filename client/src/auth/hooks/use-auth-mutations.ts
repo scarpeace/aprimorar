@@ -3,8 +3,8 @@
 import { publicClient } from "@/lib/api/kubb-client";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { useLogin } from "@/lib/api/generated/hooks/autenticação/useLogin";
-import { useLogout } from "@/lib/api/generated/hooks/autenticação/useLogout";
+import { useLogin } from "@/lib/api/generated/hooks/auth/useLogin";
+import { useLogout } from "@/lib/api/generated/hooks/auth/useLogout";
 import { loginResponseSchema } from "@/lib/api/generated/zod/loginResponseSchema";
 import { getFriendlyErrorMessage } from "@/lib/api/api-error";
 import {

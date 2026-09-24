@@ -32,7 +32,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/instituicao/atendimentos/individuais")
 @Tag(
-    name = "Atendimentos individuais",
+    name = "Atendimentos",
     description = "APIs para gestão de atendimentos individuais"
 )
 @CommonProblemResponses
@@ -63,50 +63,50 @@ class AtendimentoIndividualController {
         return ResponseEntity.created(URI.create("/instituicao/atendimentos/individuais/" + id)).build();
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/{atendimentoId}")
     @Operation(
         operationId = "atualizarAtendimentoIndividual",
         description = "Atualiza um atendimento individual."
     )
     @ApiResponse(responseCode = "204", description = "Atendimento atualizado com sucesso.")
     public ResponseEntity<Void> atualizar(
-        @PathVariable Long id,
+        @PathVariable Long atendimentoId,
         @RequestBody @Valid AtualizarAtendimentoIndividualRequest dto
     ) {
-        atendimentoService.atualizar(id, dto);
+        atendimentoService.atualizar(atendimentoId, dto);
 
         return ResponseEntity.noContent().build();
     }
 
-    @PatchMapping("/{id}/realizar")
+    @PatchMapping("/{atendimentoId}/realizar")
     @Operation(
         operationId = "realizarAtendimentoIndividual",
         description = "Marca um atendimento individual como realizado."
     )
     @ApiResponse(responseCode = "204", description = "Atendimento realizado com sucesso.")
-    public ResponseEntity<Void> realizar(@PathVariable Long id) {
-        atendimentoService.realizar(id);
+    public ResponseEntity<Void> realizar(@PathVariable Long atendimentoId) {
+        atendimentoService.realizar(atendimentoId);
         return ResponseEntity.noContent().build();
     }
 
-    @PatchMapping("/{id}/cancelar")
+    @PatchMapping("/{atendimentoId}/cancelar")
     @Operation(
         operationId = "cancelarAtendimentoIndividual",
         description = "Cancela um atendimento individual e seus lançamentos pendentes."
     )
     @ApiResponse(responseCode = "204", description = "Atendimento cancelado com sucesso.")
-    public ResponseEntity<Void> cancelar(@PathVariable Long id) {
-        atendimentoService.cancelar(id);
+    public ResponseEntity<Void> cancelar(@PathVariable Long atendimentoId) {
+        atendimentoService.cancelar(atendimentoId);
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping
     @Operation(
-        operationId = "buscarAtendimentosIndividuais",
+        operationId = "getAtendimentosIndividuais",
         description = "Lista atendimentos individuais."
     )
     @ApiResponse(responseCode = "200", description = "Atendimentos encontrados.")
-    public ResponseEntity<Page<AtendimentoIndividualResponse>> buscarAtendimentos(
+    public ResponseEntity<Page<AtendimentoIndividualResponse>> getAtendimentosIndividuais(
         @ParameterObject @Valid AtendimentoIndividualFiltroRequest filtro,
         @ParameterObject @PageableDefault(sort = "dataHoraInicio", direction = Sort.Direction.DESC)
         Pageable pageable
@@ -114,17 +114,17 @@ class AtendimentoIndividualController {
         return ResponseEntity.ok(atendimentoService.buscarAtendimentos(filtro, pageable));
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{atendimentoId}")
     @Operation(
-        operationId = "buscarAtendimentoIndividualPorId",
+        operationId = "getAtendimentoIndividualById",
         description = "Busca um atendimento individual por ID."
     )
     @ApiResponse(responseCode = "200", description = "Atendimento encontrado.")
-    public ResponseEntity<AtendimentoIndividualResponse> buscarAtendimentoPorId(
-        @PathVariable Long id
+    public ResponseEntity<AtendimentoIndividualResponse> getAtendimentoIndividualById(
+        @PathVariable Long atendimentoId
     ) {
         return ResponseEntity.ok(
-            atendimentoService.buscarAtendimentoPorId(id)
+            atendimentoService.buscarAtendimentoPorId(atendimentoId)
         );
     }
 }

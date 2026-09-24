@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/financeiro/cobrancas")
 @Tag(
-    name = "Cobranças",
+    name = "Cobrancas",
     description = "APIs para consultar cobranças de atendimentos individuais"
 )
 @CommonProblemResponses
@@ -38,12 +38,12 @@ class CobrancaController {
 
     @GetMapping
     @Operation(
-        operationId = "buscarCobrancas",
+        operationId = "getCobrancas",
         description = "Lista cobranças com filtros e paginação."
     )
     @ApiResponse(responseCode = "200", description = "Cobranças encontradas.")
     @BadRequestProblemResponse
-    public ResponseEntity<Page<CobrancaResponse>> buscarCobrancas(
+    public ResponseEntity<Page<CobrancaResponse>> getCobrancas(
         @ParameterObject @Valid CobrancaFiltroRequest filtro,
         @ParameterObject
         @PageableDefault(sort = "createdAt", direction = Sort.Direction.DESC)
@@ -57,12 +57,12 @@ class CobrancaController {
 
     @GetMapping("/{cobrancaId}")
     @Operation(
-        operationId = "buscarCobrancaPorId",
+        operationId = "getCobrancaById",
         description = "Busca uma cobrança por ID."
     )
     @ApiResponse(responseCode = "200", description = "Cobrança encontrada.")
     @NotFoundProblemResponse
-    public ResponseEntity<CobrancaResponse> buscarPorId(
+    public ResponseEntity<CobrancaResponse> getCobrancaById(
         @PathVariable Long cobrancaId
     ) {
         CobrancaResponse cobranca = recebimentoService

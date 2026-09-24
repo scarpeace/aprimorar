@@ -2,13 +2,13 @@
 
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { useCreateDespesa } from "@/lib/api/generated/hooks/despesa/useCreateDespesa";
-import { useDeleteDespesa } from "@/lib/api/generated/hooks/despesa/useDeleteDespesa";
-import { getDespesaByIdQueryKey } from "@/lib/api/generated/hooks/despesa/useGetDespesaById";
-import { getDespesasQueryKey } from "@/lib/api/generated/hooks/despesa/useGetDespesas";
-import { usePagarDespesa } from "@/lib/api/generated/hooks/despesa/usePagarDespesa";
-import { useCancelarPagamentoDespesa } from "@/lib/api/generated/hooks/despesa/useCancelarPagamentoDespesa";
-import { useUpdateDespesa } from "@/lib/api/generated/hooks/despesa/useUpdateDespesa";
+import { useCreateDespesa } from "@/lib/api/generated/hooks/despesas/useCreateDespesa";
+import { useDeleteDespesa } from "@/lib/api/generated/hooks/despesas/useDeleteDespesa";
+import { getDespesaByIdQueryKey } from "@/lib/api/generated/hooks/despesas/useGetDespesaById";
+import { getDespesasQueryKey } from "@/lib/api/generated/hooks/despesas/useGetDespesas";
+import { usePagarDespesa } from "@/lib/api/generated/hooks/despesas/usePagarDespesa";
+import { useCancelarPagamentoDespesa } from "@/lib/api/generated/hooks/despesas/useCancelarPagamentoDespesa";
+import { useUpdateDespesa } from "@/lib/api/generated/hooks/despesas/useUpdateDespesa";
 import { getFriendlyErrorMessage } from "@/lib/api/api-error";
 
 export function useDespesaMutations() {

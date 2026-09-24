@@ -3,7 +3,7 @@
  * Do not edit manually.
  */
 
-import { atendimentoIndividualRequestSchema } from "./atendimentoIndividualRequestSchema.ts";
+import { agendarAtendimentoIndividualRequestSchema } from "./agendarAtendimentoIndividualRequestSchema.ts";
 import { problemDetailSchema } from "./problemDetailSchema.ts";
 import { z } from "zod/v4";
 
@@ -23,12 +23,22 @@ export const agendarAtendimentoIndividual400Schema = z.lazy(() => problemDetailS
 export const agendarAtendimentoIndividual401Schema = z.lazy(() => problemDetailSchema);
 
 /**
+ * @description Recurso não encontrado.
+ */
+export const agendarAtendimentoIndividual404Schema = z.lazy(() => problemDetailSchema);
+
+/**
+ * @description Conflito de dados ou de estado.
+ */
+export const agendarAtendimentoIndividual409Schema = z.lazy(() => problemDetailSchema);
+
+/**
  * @description Erro interno do sistema.
  */
 export const agendarAtendimentoIndividual500Schema = z.lazy(() => problemDetailSchema);
 
 export const agendarAtendimentoIndividualMutationRequestSchema = z
-  .lazy(() => atendimentoIndividualRequestSchema)
-  .describe("Formato de payload para cadastro e atualização de atendimento");
+  .lazy(() => agendarAtendimentoIndividualRequestSchema)
+  .describe("Dados para agendar um atendimento individual");
 
 export const agendarAtendimentoIndividualMutationResponseSchema = z.lazy(() => agendarAtendimentoIndividual201Schema);

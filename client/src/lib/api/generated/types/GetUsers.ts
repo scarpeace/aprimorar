@@ -4,12 +4,12 @@
  */
 
 import type { ProblemDetail } from "./ProblemDetail.ts";
-import type { UserListResponse } from "./UserListResponse.ts";
+import type { UserResponse } from "./UserResponse.ts";
 
 /**
  * @description Lista de usuários retornada com sucesso.
  */
-export type GetUsers200 = UserListResponse[];
+export type GetUsers200 = UserResponse[];
 
 /**
  * @description Não autenticado.

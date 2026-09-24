@@ -3,37 +3,25 @@
  * Do not edit manually.
  */
 
-import { alunoResumoSchema } from "./alunoResumoSchema.ts";
-import { cobrancaAlunoResumoSchema } from "./cobrancaAlunoResumoSchema.ts";
-import { colaboradorResumoSchema } from "./colaboradorResumoSchema.ts";
-import { repasseResumoSchema } from "./repasseResumoSchema.ts";
 import { z } from "zod/v4";
 
 /**
- * @description Dados do atendimento retornados pela API
+ * @description Dados do atendimento individual retornados pela API
  */
 export const atendimentoIndividualResponseSchema = z
   .object({
-    id: z.int().describe("Identificador unico do atendimento"),
+    id: z.int().describe("Identificador único do atendimento"),
     tipo: z
       .enum(["AULA", "MENTORIA", "TERAPIA", "ORIENTACAO_VOCACIONAL", "ENEM", "PAS", "OUTRO"])
       .describe("Tipo de conteudo ou categoria do atendimento"),
     status: z.enum(["AGENDADO", "REALIZADO", "CANCELADO"]).describe("Status do atendimento individual"),
-    dataHoraInicio: z.iso.datetime().describe("Data/hora de inicio do atendimento"),
-    dataHoraFim: z.iso.datetime().describe("Data/hora de fim do atendimento"),
-    get alunoResumo() {
-      return alunoResumoSchema.describe("Resumo do aluno vinculado ao atendimento");
-    },
-    get colaboradorResumo() {
-      return colaboradorResumoSchema.describe("Resumo do colaborador vinculado ao atendimento");
-    },
-    get cobranca() {
-      return cobrancaAlunoResumoSchema.describe("Resumo da cobrança do atendimento");
-    },
-    get repasse() {
-      return repasseResumoSchema.describe("Resumo do repasse do atendimento");
-    },
-    createdAt: z.iso.datetime().describe("Data de criacao do atendimento"),
-    updatedAt: z.iso.datetime().describe("Data de atualizacao do atendimento").nullish(),
+    dataHoraInicio: z.iso.datetime().describe("Data e hora de início"),
+    dataHoraFim: z.iso.datetime().describe("Data e hora de fim"),
+    alunoNome: z.string().describe("Nome do aluno vinculado"),
+    colaboradorNome: z.string().describe("Nome do colaborador vinculado"),
+    cobrancaStatus: z.string().describe("Status da cobrança do atendimento"),
+    repasseStatus: z.string().describe("Status do repasse do atendimento"),
+    createdAt: z.iso.datetime().describe("Data de criação do atendimento"),
+    updatedAt: z.iso.datetime().describe("Data de atualização do atendimento").nullish(),
   })
-  .describe("Dados do atendimento retornados pela API");
+  .describe("Dados do atendimento individual retornados pela API");

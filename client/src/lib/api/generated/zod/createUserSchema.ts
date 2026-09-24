@@ -11,7 +11,7 @@ import { z } from "zod/v4";
 /**
  * @description Usuário criado com sucesso.
  */
-export const createUser201Schema = z.lazy(() => userResponseSchema).describe("Dados detalhados de um usuário");
+export const createUser201Schema = z.lazy(() => userResponseSchema).describe("Dados de um usuário");
 
 /**
  * @description Requisição inválida.

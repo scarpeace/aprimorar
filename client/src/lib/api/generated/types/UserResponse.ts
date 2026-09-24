@@ -11,7 +11,7 @@ export const userResponseRoleEnum = {
 export type UserResponseRoleEnumKey = (typeof userResponseRoleEnum)[keyof typeof userResponseRoleEnum];
 
 /**
- * @description Dados detalhados de um usuário
+ * @description Dados de um usuário
  */
 export type UserResponse = {
   /**

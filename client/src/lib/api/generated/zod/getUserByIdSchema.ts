@@ -14,7 +14,7 @@ export const getUserByIdPathParamsSchema = z.object({
 /**
  * @description Usuário retornado com sucesso.
  */
-export const getUserById200Schema = z.lazy(() => userResponseSchema).describe("Dados detalhados de um usuário");
+export const getUserById200Schema = z.lazy(() => userResponseSchema).describe("Dados de um usuário");
 
 /**
  * @description Não autenticado.

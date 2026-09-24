@@ -3,7 +3,7 @@
  * Do not edit manually.
  */
 
-import { colaboradorRequestDTOSchema } from "./colaboradorRequestDTOSchema.ts";
+import { colaboradorRequestSchema } from "./colaboradorRequestSchema.ts";
 import { problemDetailSchema } from "./problemDetailSchema.ts";
 import { z } from "zod/v4";
 
@@ -14,7 +14,7 @@ export const updateColaboradorPathParamsSchema = z.object({
 /**
  * @description Colaborador atualizado com sucesso.
  */
-export const updateColaborador200Schema = z.any();
+export const updateColaborador204Schema = z.any();
 
 /**
  * @description Requisição inválida.
@@ -42,7 +42,7 @@ export const updateColaborador409Schema = z.lazy(() => problemDetailSchema);
 export const updateColaborador500Schema = z.lazy(() => problemDetailSchema);
 
 export const updateColaboradorMutationRequestSchema = z
-  .lazy(() => colaboradorRequestDTOSchema)
+  .lazy(() => colaboradorRequestSchema)
   .describe("Formato de payload para criar um novo colaborador");
 
-export const updateColaboradorMutationResponseSchema = z.lazy(() => updateColaborador200Schema);
+export const updateColaboradorMutationResponseSchema = z.lazy(() => updateColaborador204Schema);

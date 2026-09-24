@@ -3,11 +3,6 @@
  * Do not edit manually.
  */
 
-import type { AlunoResumo } from "./AlunoResumo.ts";
-import type { CobrancaAlunoResumo } from "./CobrancaAlunoResumo.ts";
-import type { ColaboradorResumo } from "./ColaboradorResumo.ts";
-import type { RepasseResumo } from "./RepasseResumo.ts";
-
 export const atendimentoIndividualResponseTipoEnum = {
   AULA: "AULA",
   MENTORIA: "MENTORIA",
@@ -31,11 +26,11 @@ export type AtendimentoIndividualResponseStatusEnumKey =
   (typeof atendimentoIndividualResponseStatusEnum)[keyof typeof atendimentoIndividualResponseStatusEnum];
 
 /**
- * @description Dados do atendimento retornados pela API
+ * @description Dados do atendimento individual retornados pela API
  */
 export type AtendimentoIndividualResponse = {
   /**
-   * @description Identificador unico do atendimento
+   * @description Identificador único do atendimento
    * @type integer, int64
    */
   id: number;
@@ -50,42 +45,42 @@ export type AtendimentoIndividualResponse = {
    */
   status: AtendimentoIndividualResponseStatusEnumKey;
   /**
-   * @description Data/hora de inicio do atendimento
+   * @description Data e hora de início
    * @type string, date-time
    */
   dataHoraInicio: string;
   /**
-   * @description Data/hora de fim do atendimento
+   * @description Data e hora de fim
    * @type string, date-time
    */
   dataHoraFim: string;
   /**
-   * @description Resumo do aluno vinculado ao atendimento
-   * @type object
+   * @description Nome do aluno vinculado
+   * @type string
    */
-  alunoResumo: AlunoResumo;
+  alunoNome: string;
   /**
-   * @description Resumo do colaborador vinculado ao atendimento
-   * @type object
+   * @description Nome do colaborador vinculado
+   * @type string
    */
-  colaboradorResumo: ColaboradorResumo;
+  colaboradorNome: string;
   /**
-   * @description Resumo da cobrança do atendimento
-   * @type object
+   * @description Status da cobrança do atendimento
+   * @type string
    */
-  cobranca: CobrancaAlunoResumo;
+  cobrancaStatus: string;
   /**
-   * @description Resumo do repasse do atendimento
-   * @type object
+   * @description Status do repasse do atendimento
+   * @type string
    */
-  repasse: RepasseResumo;
+  repasseStatus: string;
   /**
-   * @description Data de criacao do atendimento
+   * @description Data de criação do atendimento
    * @type string, date-time
    */
   createdAt: string;
   /**
-   * @description Data de atualizacao do atendimento
+   * @description Data de atualização do atendimento
    * @type string, date-time
    */
   updatedAt?: string | null;

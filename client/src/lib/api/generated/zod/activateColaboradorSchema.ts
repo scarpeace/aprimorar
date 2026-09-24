@@ -16,6 +16,11 @@ export const activateColaboradorPathParamsSchema = z.object({
 export const activateColaborador204Schema = z.any();
 
 /**
+ * @description Requisição inválida.
+ */
+export const activateColaborador400Schema = z.lazy(() => problemDetailSchema);
+
+/**
  * @description Não autenticado.
  */
 export const activateColaborador401Schema = z.lazy(() => problemDetailSchema);
@@ -24,6 +29,11 @@ export const activateColaborador401Schema = z.lazy(() => problemDetailSchema);
  * @description Recurso não encontrado.
  */
 export const activateColaborador404Schema = z.lazy(() => problemDetailSchema);
+
+/**
+ * @description Conflito de dados ou de estado.
+ */
+export const activateColaborador409Schema = z.lazy(() => problemDetailSchema);
 
 /**
  * @description Erro interno do sistema.

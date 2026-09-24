@@ -26,7 +26,7 @@ import aprimorar.common.openapi.NotFoundProblemResponse;
 import aprimorar.agendamento.colaboradores.application.ColaboradorService;
 import aprimorar.agendamento.colaboradores.web.dto.ColaboradorFiltroRequest;
 import aprimorar.agendamento.colaboradores.web.dto.ColaboradorRequest;
-import aprimorar.agendamento.colaboradores.web.dto.ColaboradoresOptionsResponse;
+import aprimorar.agendamento.colaboradores.web.dto.ColaboradorOptionResponse;
 import aprimorar.agendamento.colaboradores.web.dto.ColaboradorResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -35,7 +35,7 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/instituicao/colaboradores")
-@Tag(name = "Colaborador", description = "APIs de gestão de colaboradores")
+@Tag(name = "Colaboradores", description = "APIs de gestão de colaboradores")
 @CommonProblemResponses
 @BadRequestProblemResponse
 @ConflictProblemResponse
@@ -72,8 +72,8 @@ class ColaboradorController {
     @GetMapping("/options")
     @Operation(operationId = "listColaboradoresOptions", description = "Retorna uma lista de opções de colaboradores para dropdown.")
     @ApiResponse(responseCode = "200", description = "Lista de opções de colaboradores retornada com sucesso.")
-    public ResponseEntity<List<ColaboradoresOptionsResponse>> listColaboradoresOptions() {
-        List<ColaboradoresOptionsResponse> options = colaboradorService.listColaboradoresOptions();
+    public ResponseEntity<List<ColaboradorOptionResponse>> listColaboradoresOptions() {
+        List<ColaboradorOptionResponse> options = colaboradorService.listColaboradoresOptions();
         return ResponseEntity.ok(options);
     }
 
@@ -96,7 +96,7 @@ class ColaboradorController {
         return ResponseEntity.noContent().build();
     }
 
-    @PatchMapping("/{colaboradorId}/deactivate")
+    @PatchMapping("/{colaboradorId}/desativar")
     @Operation(operationId = "deactivateColaborador", description = "Desativa um colaborador por ID.")
     @ApiResponse(responseCode = "204", description = "Colaborador desativado com sucesso.")
     public ResponseEntity<Void> deactivateColaborador(@PathVariable UUID colaboradorId) {
@@ -104,7 +104,7 @@ class ColaboradorController {
         return ResponseEntity.noContent().build();
     }
 
-    @PatchMapping("/{colaboradorId}/activate")
+    @PatchMapping("/{colaboradorId}/ativar")
     @Operation(operationId = "activateColaborador", description = "Ativa um colaborador por ID.")
     @ApiResponse(responseCode = "204", description = "Colaborador ativado com sucesso.")
     public ResponseEntity<Void> activateColaborador(@PathVariable UUID colaboradorId) {

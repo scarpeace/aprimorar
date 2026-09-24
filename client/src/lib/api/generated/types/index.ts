@@ -11,8 +11,10 @@ export type {
 } from "./ActivateAluno.ts";
 export type {
   ActivateColaborador204,
+  ActivateColaborador400,
   ActivateColaborador401,
   ActivateColaborador404,
+  ActivateColaborador409,
   ActivateColaborador500,
   ActivateColaboradorMutation,
   ActivateColaboradorMutationResponse,
@@ -31,22 +33,20 @@ export type {
   AgendarAtendimentoIndividual201,
   AgendarAtendimentoIndividual400,
   AgendarAtendimentoIndividual401,
+  AgendarAtendimentoIndividual404,
+  AgendarAtendimentoIndividual409,
   AgendarAtendimentoIndividual500,
   AgendarAtendimentoIndividualMutation,
   AgendarAtendimentoIndividualMutationRequest,
   AgendarAtendimentoIndividualMutationResponse,
 } from "./AgendarAtendimentoIndividual.ts";
-export type { AlunoDetailResponseDTO } from "./AlunoDetailResponseDTO.ts";
-export type { AlunoListResponseDTO } from "./AlunoListResponseDTO.ts";
-export type { AlunoRequestDTO } from "./AlunoRequestDTO.ts";
-export type { AlunoResumo } from "./AlunoResumo.ts";
-export type { AlunosListDTO } from "./AlunosListDTO.ts";
 export type {
-  AtendimentoIndividualCalendarioResponse,
-  AtendimentoIndividualCalendarioResponseStatusEnumKey,
-  AtendimentoIndividualCalendarioResponseTipoEnumKey,
-} from "./AtendimentoIndividualCalendarioResponse.ts";
-export type { AtendimentoIndividualRequest, AtendimentoIndividualRequestTipoEnumKey } from "./AtendimentoIndividualRequest.ts";
+  AgendarAtendimentoIndividualRequest,
+  AgendarAtendimentoIndividualRequestTipoEnumKey,
+} from "./AgendarAtendimentoIndividualRequest.ts";
+export type { AlunoOptionResponse } from "./AlunoOptionResponse.ts";
+export type { AlunoRequest } from "./AlunoRequest.ts";
+export type { AlunoResponse } from "./AlunoResponse.ts";
 export type {
   AtendimentoIndividualResponse,
   AtendimentoIndividualResponseStatusEnumKey,
@@ -57,138 +57,40 @@ export type {
   AtualizarAtendimentoIndividual400,
   AtualizarAtendimentoIndividual401,
   AtualizarAtendimentoIndividual404,
+  AtualizarAtendimentoIndividual409,
   AtualizarAtendimentoIndividual500,
   AtualizarAtendimentoIndividualMutation,
   AtualizarAtendimentoIndividualMutationRequest,
   AtualizarAtendimentoIndividualMutationResponse,
   AtualizarAtendimentoIndividualPathParams,
 } from "./AtualizarAtendimentoIndividual.ts";
+export type {
+  AtualizarAtendimentoIndividualRequest,
+  AtualizarAtendimentoIndividualRequestTipoEnumKey,
+} from "./AtualizarAtendimentoIndividualRequest.ts";
 export type { AuthMeResponse, AuthMeResponseRoleEnumKey } from "./AuthMeResponse.ts";
-export type {
-  BuscarAtendimentoIndividualPorId200,
-  BuscarAtendimentoIndividualPorId401,
-  BuscarAtendimentoIndividualPorId404,
-  BuscarAtendimentoIndividualPorId500,
-  BuscarAtendimentoIndividualPorIdPathParams,
-  BuscarAtendimentoIndividualPorIdQuery,
-  BuscarAtendimentoIndividualPorIdQueryResponse,
-} from "./BuscarAtendimentoIndividualPorId.ts";
-export type {
-  BuscarAtendimentosIndividuais200,
-  BuscarAtendimentosIndividuais400,
-  BuscarAtendimentosIndividuais401,
-  BuscarAtendimentosIndividuais500,
-  BuscarAtendimentosIndividuaisQuery,
-  BuscarAtendimentosIndividuaisQueryParams,
-  BuscarAtendimentosIndividuaisQueryParamsTipoEnumKey,
-  BuscarAtendimentosIndividuaisQueryResponse,
-} from "./BuscarAtendimentosIndividuais.ts";
-export type {
-  BuscarCalendarioAtendimentosIndividuais200,
-  BuscarCalendarioAtendimentosIndividuais400,
-  BuscarCalendarioAtendimentosIndividuais401,
-  BuscarCalendarioAtendimentosIndividuais500,
-  BuscarCalendarioAtendimentosIndividuaisQuery,
-  BuscarCalendarioAtendimentosIndividuaisQueryParams,
-  BuscarCalendarioAtendimentosIndividuaisQueryResponse,
-} from "./BuscarCalendarioAtendimentosIndividuais.ts";
-export type {
-  BuscarCobrancaAlunoPorId200,
-  BuscarCobrancaAlunoPorId401,
-  BuscarCobrancaAlunoPorId404,
-  BuscarCobrancaAlunoPorId500,
-  BuscarCobrancaAlunoPorIdPathParams,
-  BuscarCobrancaAlunoPorIdQuery,
-  BuscarCobrancaAlunoPorIdQueryResponse,
-} from "./BuscarCobrancaAlunoPorId.ts";
-export type {
-  BuscarCobrancasAlunos200,
-  BuscarCobrancasAlunos400,
-  BuscarCobrancasAlunos401,
-  BuscarCobrancasAlunos500,
-  BuscarCobrancasAlunosQuery,
-  BuscarCobrancasAlunosQueryParams,
-  BuscarCobrancasAlunosQueryParamsFormaPagamentoEnumKey,
-  BuscarCobrancasAlunosQueryParamsStatusEnumKey,
-  BuscarCobrancasAlunosQueryResponse,
-} from "./BuscarCobrancasAlunos.ts";
-export type {
-  BuscarLoteDeCobrancaPorId200,
-  BuscarLoteDeCobrancaPorId401,
-  BuscarLoteDeCobrancaPorId404,
-  BuscarLoteDeCobrancaPorId500,
-  BuscarLoteDeCobrancaPorIdPathParams,
-  BuscarLoteDeCobrancaPorIdQuery,
-  BuscarLoteDeCobrancaPorIdQueryResponse,
-} from "./BuscarLoteDeCobrancaPorId.ts";
-export type {
-  BuscarLoteDeRepassePorId200,
-  BuscarLoteDeRepassePorId401,
-  BuscarLoteDeRepassePorId404,
-  BuscarLoteDeRepassePorId500,
-  BuscarLoteDeRepassePorIdPathParams,
-  BuscarLoteDeRepassePorIdQuery,
-  BuscarLoteDeRepassePorIdQueryResponse,
-} from "./BuscarLoteDeRepassePorId.ts";
-export type {
-  BuscarLotesDeCobranca200,
-  BuscarLotesDeCobranca400,
-  BuscarLotesDeCobranca401,
-  BuscarLotesDeCobranca500,
-  BuscarLotesDeCobrancaQuery,
-  BuscarLotesDeCobrancaQueryParams,
-  BuscarLotesDeCobrancaQueryResponse,
-} from "./BuscarLotesDeCobranca.ts";
-export type {
-  BuscarLotesDeRepasse200,
-  BuscarLotesDeRepasse400,
-  BuscarLotesDeRepasse401,
-  BuscarLotesDeRepasse500,
-  BuscarLotesDeRepasseQuery,
-  BuscarLotesDeRepasseQueryParams,
-  BuscarLotesDeRepasseQueryResponse,
-} from "./BuscarLotesDeRepasse.ts";
-export type {
-  BuscarRepasseIndividualPorId200,
-  BuscarRepasseIndividualPorId401,
-  BuscarRepasseIndividualPorId404,
-  BuscarRepasseIndividualPorId500,
-  BuscarRepasseIndividualPorIdPathParams,
-  BuscarRepasseIndividualPorIdQuery,
-  BuscarRepasseIndividualPorIdQueryResponse,
-} from "./BuscarRepasseIndividualPorId.ts";
-export type {
-  BuscarRepassesIndividuais200,
-  BuscarRepassesIndividuais400,
-  BuscarRepassesIndividuais401,
-  BuscarRepassesIndividuais500,
-  BuscarRepassesIndividuaisQuery,
-  BuscarRepassesIndividuaisQueryParams,
-  BuscarRepassesIndividuaisQueryParamsFormaPagamentoEnumKey,
-  BuscarRepassesIndividuaisQueryParamsStatusEnumKey,
-  BuscarRepassesIndividuaisQueryResponse,
-} from "./BuscarRepassesIndividuais.ts";
 export type {
   CancelarAtendimentoIndividual204,
   CancelarAtendimentoIndividual400,
   CancelarAtendimentoIndividual401,
   CancelarAtendimentoIndividual404,
+  CancelarAtendimentoIndividual409,
   CancelarAtendimentoIndividual500,
   CancelarAtendimentoIndividualMutation,
   CancelarAtendimentoIndividualMutationResponse,
   CancelarAtendimentoIndividualPathParams,
 } from "./CancelarAtendimentoIndividual.ts";
 export type {
-  CancelarPagamentoAluno204,
-  CancelarPagamentoAluno400,
-  CancelarPagamentoAluno401,
-  CancelarPagamentoAluno404,
-  CancelarPagamentoAluno500,
-  CancelarPagamentoAlunoMutation,
-  CancelarPagamentoAlunoMutationRequest,
-  CancelarPagamentoAlunoMutationResponse,
-} from "./CancelarPagamentoAluno.ts";
-export type { CancelarPagamentoAlunoRequest } from "./CancelarPagamentoAlunoRequest.ts";
+  CancelarPagamento204,
+  CancelarPagamento400,
+  CancelarPagamento401,
+  CancelarPagamento404,
+  CancelarPagamento409,
+  CancelarPagamento500,
+  CancelarPagamentoMutation,
+  CancelarPagamentoMutationResponse,
+  CancelarPagamentoPathParams,
+} from "./CancelarPagamento.ts";
 export type {
   CancelarPagamentoDespesa200,
   CancelarPagamentoDespesa401,
@@ -198,44 +100,21 @@ export type {
   CancelarPagamentoDespesaMutationResponse,
   CancelarPagamentoDespesaPathParams,
 } from "./CancelarPagamentoDespesa.ts";
-export type { CancelarRepasseIndividualRequest } from "./CancelarRepasseIndividualRequest.ts";
 export type {
-  CancelarRepassesIndividuais204,
-  CancelarRepassesIndividuais400,
-  CancelarRepassesIndividuais401,
-  CancelarRepassesIndividuais404,
-  CancelarRepassesIndividuais500,
-  CancelarRepassesIndividuaisMutation,
-  CancelarRepassesIndividuaisMutationRequest,
-  CancelarRepassesIndividuaisMutationResponse,
-} from "./CancelarRepassesIndividuais.ts";
-export type {
-  CobrancaAlunoResponse,
-  CobrancaAlunoResponseFormaPagamentoEnumKey,
-  CobrancaAlunoResponseStatusEnumKey,
-} from "./CobrancaAlunoResponse.ts";
-export type { CobrancaAlunoResumo } from "./CobrancaAlunoResumo.ts";
-export type {
-  CobrancaLoteDetalheResponse,
-  CobrancaLoteDetalheResponseFormaPagamentoEnumKey,
-} from "./CobrancaLoteDetalheResponse.ts";
-export type { CobrancaLoteItem, CobrancaLoteItemStatusEnumKey } from "./CobrancaLoteItem.ts";
-export type { CobrancaLoteResponse, CobrancaLoteResponseFormaPagamentoEnumKey } from "./CobrancaLoteResponse.ts";
-export type { ColaboradorDetailResponseDTO, ColaboradorDetailResponseDTOFuncaoEnumKey } from "./ColaboradorDetailResponseDTO.ts";
-export type { ColaboradorListResponseDTO, ColaboradorListResponseDTOFuncaoEnumKey } from "./ColaboradorListResponseDTO.ts";
-export type { ColaboradorRequestDTO, ColaboradorRequestDTOFuncaoEnumKey } from "./ColaboradorRequestDTO.ts";
-export type { ColaboradorResumo } from "./ColaboradorResumo.ts";
-export type { ColaboradoresOptionsDTO } from "./ColaboradoresOptionsDTO.ts";
-export type {
-  CreateColaborador201,
-  CreateColaborador400,
-  CreateColaborador401,
-  CreateColaborador409,
-  CreateColaborador500,
-  CreateColaboradorMutation,
-  CreateColaboradorMutationRequest,
-  CreateColaboradorMutationResponse,
-} from "./CreateColaborador.ts";
+  CancelarRecebimento204,
+  CancelarRecebimento400,
+  CancelarRecebimento401,
+  CancelarRecebimento404,
+  CancelarRecebimento409,
+  CancelarRecebimento500,
+  CancelarRecebimentoMutation,
+  CancelarRecebimentoMutationResponse,
+  CancelarRecebimentoPathParams,
+} from "./CancelarRecebimento.ts";
+export type { CobrancaResponse, CobrancaResponseStatusEnumKey } from "./CobrancaResponse.ts";
+export type { ColaboradorOptionResponse } from "./ColaboradorOptionResponse.ts";
+export type { ColaboradorRequest, ColaboradorRequestFuncaoEnumKey } from "./ColaboradorRequest.ts";
+export type { ColaboradorResponse, ColaboradorResponseFuncaoEnumKey } from "./ColaboradorResponse.ts";
 export type {
   CreateDespesa201,
   CreateDespesa400,
@@ -257,16 +136,16 @@ export type {
   CreateUserMutationResponse,
 } from "./CreateUser.ts";
 export type {
-  CriarAluno201,
-  CriarAluno400,
-  CriarAluno401,
-  CriarAluno404,
-  CriarAluno409,
-  CriarAluno500,
-  CriarAlunoMutation,
-  CriarAlunoMutationRequest,
-  CriarAlunoMutationResponse,
-} from "./CriarAluno.ts";
+  CriarColaborador201,
+  CriarColaborador400,
+  CriarColaborador401,
+  CriarColaborador404,
+  CriarColaborador409,
+  CriarColaborador500,
+  CriarColaboradorMutation,
+  CriarColaboradorMutationRequest,
+  CriarColaboradorMutationResponse,
+} from "./CriarColaborador.ts";
 export type {
   DeactivateAluno204,
   DeactivateAluno400,
@@ -280,8 +159,10 @@ export type {
 } from "./DeactivateAluno.ts";
 export type {
   DeactivateColaborador204,
+  DeactivateColaborador400,
   DeactivateColaborador401,
   DeactivateColaborador404,
+  DeactivateColaborador409,
   DeactivateColaborador500,
   DeactivateColaboradorMutation,
   DeactivateColaboradorMutationResponse,
@@ -327,17 +208,8 @@ export type {
   DespesaResponseStatusEnumKey,
   DespesaResponseTipoEnumKey,
 } from "./DespesaResponse.ts";
-export type { EnderecoRequestDTO } from "./EnderecoRequestDTO.ts";
-export type { EnderecoResponseDTO } from "./EnderecoResponseDTO.ts";
-export type {
-  FindColaboradorById200,
-  FindColaboradorById401,
-  FindColaboradorById404,
-  FindColaboradorById500,
-  FindColaboradorByIdPathParams,
-  FindColaboradorByIdQuery,
-  FindColaboradorByIdQueryResponse,
-} from "./FindColaboradorById.ts";
+export type { EnderecoRequest } from "./EnderecoRequest.ts";
+export type { EnderecoResponse } from "./EnderecoResponse.ts";
 export type {
   GetAlunoById200,
   GetAlunoById400,
@@ -361,21 +233,70 @@ export type {
   GetAlunosQueryResponse,
 } from "./GetAlunos.ts";
 export type {
+  GetAtendimentoIndividualById200,
+  GetAtendimentoIndividualById400,
+  GetAtendimentoIndividualById401,
+  GetAtendimentoIndividualById404,
+  GetAtendimentoIndividualById409,
+  GetAtendimentoIndividualById500,
+  GetAtendimentoIndividualByIdPathParams,
+  GetAtendimentoIndividualByIdQuery,
+  GetAtendimentoIndividualByIdQueryResponse,
+} from "./GetAtendimentoIndividualById.ts";
+export type {
+  GetAtendimentosIndividuais200,
+  GetAtendimentosIndividuais400,
+  GetAtendimentosIndividuais401,
+  GetAtendimentosIndividuais404,
+  GetAtendimentosIndividuais409,
+  GetAtendimentosIndividuais500,
+  GetAtendimentosIndividuaisQuery,
+  GetAtendimentosIndividuaisQueryParams,
+  GetAtendimentosIndividuaisQueryParamsStatusEnumKey,
+  GetAtendimentosIndividuaisQueryParamsTipoEnumKey,
+  GetAtendimentosIndividuaisQueryResponse,
+} from "./GetAtendimentosIndividuais.ts";
+export type {
+  GetCobrancaById200,
+  GetCobrancaById401,
+  GetCobrancaById404,
+  GetCobrancaById500,
+  GetCobrancaByIdPathParams,
+  GetCobrancaByIdQuery,
+  GetCobrancaByIdQueryResponse,
+} from "./GetCobrancaById.ts";
+export type {
+  GetCobrancas200,
+  GetCobrancas400,
+  GetCobrancas401,
+  GetCobrancas500,
+  GetCobrancasQuery,
+  GetCobrancasQueryParams,
+  GetCobrancasQueryParamsFormaPagamentoEnumKey,
+  GetCobrancasQueryResponse,
+} from "./GetCobrancas.ts";
+export type {
+  GetColaboradorById200,
+  GetColaboradorById400,
+  GetColaboradorById401,
+  GetColaboradorById404,
+  GetColaboradorById409,
+  GetColaboradorById500,
+  GetColaboradorByIdPathParams,
+  GetColaboradorByIdQuery,
+  GetColaboradorByIdQueryResponse,
+} from "./GetColaboradorById.ts";
+export type {
   GetColaboradores200,
   GetColaboradores400,
   GetColaboradores401,
+  GetColaboradores404,
+  GetColaboradores409,
   GetColaboradores500,
   GetColaboradoresQuery,
   GetColaboradoresQueryParams,
   GetColaboradoresQueryResponse,
 } from "./GetColaboradores.ts";
-export type {
-  GetColaboradoresList200,
-  GetColaboradoresList401,
-  GetColaboradoresList500,
-  GetColaboradoresListQuery,
-  GetColaboradoresListQueryResponse,
-} from "./GetColaboradoresList.ts";
 export type { GetCurrentUser200, GetCurrentUserQuery, GetCurrentUserQueryResponse } from "./GetCurrentUser.ts";
 export type {
   GetDespesaById200,
@@ -398,6 +319,70 @@ export type {
   GetDespesasQueryResponse,
 } from "./GetDespesas.ts";
 export type {
+  GetPagamentoById200,
+  GetPagamentoById400,
+  GetPagamentoById401,
+  GetPagamentoById404,
+  GetPagamentoById409,
+  GetPagamentoById500,
+  GetPagamentoByIdPathParams,
+  GetPagamentoByIdQuery,
+  GetPagamentoByIdQueryResponse,
+} from "./GetPagamentoById.ts";
+export type {
+  GetPagamentos200,
+  GetPagamentos400,
+  GetPagamentos401,
+  GetPagamentos409,
+  GetPagamentos500,
+  GetPagamentosQuery,
+  GetPagamentosQueryParams,
+  GetPagamentosQueryParamsFormaPagamentoEnumKey,
+  GetPagamentosQueryResponse,
+} from "./GetPagamentos.ts";
+export type {
+  GetRecebimentoById200,
+  GetRecebimentoById400,
+  GetRecebimentoById401,
+  GetRecebimentoById404,
+  GetRecebimentoById409,
+  GetRecebimentoById500,
+  GetRecebimentoByIdPathParams,
+  GetRecebimentoByIdQuery,
+  GetRecebimentoByIdQueryResponse,
+} from "./GetRecebimentoById.ts";
+export type {
+  GetRecebimentos200,
+  GetRecebimentos400,
+  GetRecebimentos401,
+  GetRecebimentos409,
+  GetRecebimentos500,
+  GetRecebimentosQuery,
+  GetRecebimentosQueryParams,
+  GetRecebimentosQueryParamsFormaPagamentoEnumKey,
+  GetRecebimentosQueryResponse,
+} from "./GetRecebimentos.ts";
+export type {
+  GetRepasseById200,
+  GetRepasseById401,
+  GetRepasseById404,
+  GetRepasseById500,
+  GetRepasseByIdPathParams,
+  GetRepasseByIdQuery,
+  GetRepasseByIdQueryResponse,
+} from "./GetRepasseById.ts";
+export type {
+  GetRepasses200,
+  GetRepasses400,
+  GetRepasses401,
+  GetRepasses500,
+  GetRepassesQuery,
+  GetRepassesQueryParams,
+  GetRepassesQueryParamsFormaPagamentoEnumKey,
+  GetRepassesQueryParamsStatusEnumKey,
+  GetRepassesQueryResponse,
+} from "./GetRepasses.ts";
+export type {
   GetUserById200,
   GetUserById401,
   GetUserById404,
@@ -408,19 +393,42 @@ export type {
 } from "./GetUserById.ts";
 export type { GetUsers200, GetUsers401, GetUsers500, GetUsersQuery, GetUsersQueryResponse } from "./GetUsers.ts";
 export type {
-  ListAlunos200,
-  ListAlunos400,
-  ListAlunos401,
-  ListAlunos404,
-  ListAlunos409,
-  ListAlunos500,
-  ListAlunosQuery,
-  ListAlunosQueryResponse,
-} from "./ListAlunos.ts";
+  ListAlunosOptions200,
+  ListAlunosOptions400,
+  ListAlunosOptions401,
+  ListAlunosOptions404,
+  ListAlunosOptions409,
+  ListAlunosOptions500,
+  ListAlunosOptionsQuery,
+  ListAlunosOptionsQueryResponse,
+} from "./ListAlunosOptions.ts";
+export type {
+  ListColaboradoresOptions200,
+  ListColaboradoresOptions400,
+  ListColaboradoresOptions401,
+  ListColaboradoresOptions404,
+  ListColaboradoresOptions409,
+  ListColaboradoresOptions500,
+  ListColaboradoresOptionsQuery,
+  ListColaboradoresOptionsQueryResponse,
+} from "./ListColaboradoresOptions.ts";
 export type { Login200, LoginMutation, LoginMutationRequest, LoginMutationResponse } from "./Login.ts";
 export type { LoginRequest } from "./LoginRequest.ts";
 export type { LoginResponse } from "./LoginResponse.ts";
 export type { Logout200, LogoutMutation, LogoutMutationResponse } from "./Logout.ts";
+export type {
+  MatricularAluno201,
+  MatricularAluno400,
+  MatricularAluno401,
+  MatricularAluno404,
+  MatricularAluno409,
+  MatricularAluno500,
+  MatricularAlunoMutation,
+  MatricularAlunoMutationRequest,
+  MatricularAlunoMutationResponse,
+} from "./MatricularAluno.ts";
+export type { PagamentoDetalheResponse, PagamentoDetalheResponseFormaPagamentoEnumKey } from "./PagamentoDetalheResponse.ts";
+export type { PagamentoResponse, PagamentoResponseFormaPagamentoEnumKey } from "./PagamentoResponse.ts";
 export type {
   PagarDespesa200,
   PagarDespesa401,
@@ -431,74 +439,68 @@ export type {
   PagarDespesaPathParams,
 } from "./PagarDespesa.ts";
 export type { PageMetadata } from "./PageMetadata.ts";
-export type { PagedModelAlunoListResponseDTO } from "./PagedModelAlunoListResponseDTO.ts";
+export type { PagedModelAlunoResponse } from "./PagedModelAlunoResponse.ts";
 export type { PagedModelAtendimentoIndividualResponse } from "./PagedModelAtendimentoIndividualResponse.ts";
-export type { PagedModelCobrancaAlunoResponse } from "./PagedModelCobrancaAlunoResponse.ts";
-export type { PagedModelCobrancaLoteResponse } from "./PagedModelCobrancaLoteResponse.ts";
-export type { PagedModelColaboradorListResponseDTO } from "./PagedModelColaboradorListResponseDTO.ts";
+export type { PagedModelCobrancaResponse } from "./PagedModelCobrancaResponse.ts";
+export type { PagedModelColaboradorResponse } from "./PagedModelColaboradorResponse.ts";
 export type { PagedModelDespesaResponse } from "./PagedModelDespesaResponse.ts";
-export type { PagedModelRepasseIndividualResponse } from "./PagedModelRepasseIndividualResponse.ts";
-export type { PagedModelRepasseLoteResponse } from "./PagedModelRepasseLoteResponse.ts";
+export type { PagedModelPagamentoResponse } from "./PagedModelPagamentoResponse.ts";
+export type { PagedModelRecebimentoResponse } from "./PagedModelRecebimentoResponse.ts";
+export type { PagedModelRepasseResponse } from "./PagedModelRepasseResponse.ts";
 export type { ProblemDetail } from "./ProblemDetail.ts";
 export type {
   RealizarAtendimentoIndividual204,
   RealizarAtendimentoIndividual400,
   RealizarAtendimentoIndividual401,
   RealizarAtendimentoIndividual404,
+  RealizarAtendimentoIndividual409,
   RealizarAtendimentoIndividual500,
   RealizarAtendimentoIndividualMutation,
   RealizarAtendimentoIndividualMutationResponse,
   RealizarAtendimentoIndividualPathParams,
 } from "./RealizarAtendimentoIndividual.ts";
 export type {
+  RecebimentoDetalheResponse,
+  RecebimentoDetalheResponseFormaPagamentoEnumKey,
+} from "./RecebimentoDetalheResponse.ts";
+export type { RecebimentoResponse, RecebimentoResponseFormaPagamentoEnumKey } from "./RecebimentoResponse.ts";
+export type {
   RefreshAccessToken200,
   RefreshAccessTokenMutation,
   RefreshAccessTokenMutationResponse,
 } from "./RefreshAccessToken.ts";
 export type {
-  RegistrarPagamentoAluno204,
-  RegistrarPagamentoAluno400,
-  RegistrarPagamentoAluno401,
-  RegistrarPagamentoAluno404,
-  RegistrarPagamentoAluno500,
-  RegistrarPagamentoAlunoMutation,
-  RegistrarPagamentoAlunoMutationRequest,
-  RegistrarPagamentoAlunoMutationResponse,
-} from "./RegistrarPagamentoAluno.ts";
+  RegistrarPagamento201,
+  RegistrarPagamento400,
+  RegistrarPagamento401,
+  RegistrarPagamento404,
+  RegistrarPagamento409,
+  RegistrarPagamento500,
+  RegistrarPagamentoMutation,
+  RegistrarPagamentoMutationRequest,
+  RegistrarPagamentoMutationResponse,
+} from "./RegistrarPagamento.ts";
+export type { RegistrarPagamentoRequest, RegistrarPagamentoRequestFormaPagamentoEnumKey } from "./RegistrarPagamentoRequest.ts";
 export type {
-  RegistrarPagamentoAlunoRequest,
-  RegistrarPagamentoAlunoRequestFormaPagamentoEnumKey,
-} from "./RegistrarPagamentoAlunoRequest.ts";
+  RegistrarRecebimento201,
+  RegistrarRecebimento400,
+  RegistrarRecebimento401,
+  RegistrarRecebimento404,
+  RegistrarRecebimento409,
+  RegistrarRecebimento500,
+  RegistrarRecebimentoMutation,
+  RegistrarRecebimentoMutationRequest,
+  RegistrarRecebimentoMutationResponse,
+} from "./RegistrarRecebimento.ts";
 export type {
-  RegistrarRepasseIndividualRequest,
-  RegistrarRepasseIndividualRequestFormaPagamentoEnumKey,
-} from "./RegistrarRepasseIndividualRequest.ts";
+  RegistrarRecebimentoRequest,
+  RegistrarRecebimentoRequestFormaPagamentoEnumKey,
+} from "./RegistrarRecebimentoRequest.ts";
+export type { RepasseResponse, RepasseResponseStatusEnumKey } from "./RepasseResponse.ts";
+export type { ResponsavelRequest } from "./ResponsavelRequest.ts";
+export type { ResponsavelResponse } from "./ResponsavelResponse.ts";
 export type {
-  RegistrarRepassesIndividuais204,
-  RegistrarRepassesIndividuais400,
-  RegistrarRepassesIndividuais401,
-  RegistrarRepassesIndividuais404,
-  RegistrarRepassesIndividuais500,
-  RegistrarRepassesIndividuaisMutation,
-  RegistrarRepassesIndividuaisMutationRequest,
-  RegistrarRepassesIndividuaisMutationResponse,
-} from "./RegistrarRepassesIndividuais.ts";
-export type {
-  RepasseIndividualResponse,
-  RepasseIndividualResponseFormaPagamentoEnumKey,
-  RepasseIndividualResponseStatusEnumKey,
-} from "./RepasseIndividualResponse.ts";
-export type {
-  RepasseLoteDetalheResponse,
-  RepasseLoteDetalheResponseFormaPagamentoEnumKey,
-} from "./RepasseLoteDetalheResponse.ts";
-export type { RepasseLoteItem, RepasseLoteItemStatusEnumKey } from "./RepasseLoteItem.ts";
-export type { RepasseLoteResponse, RepasseLoteResponseFormaPagamentoEnumKey } from "./RepasseLoteResponse.ts";
-export type { RepasseResumo } from "./RepasseResumo.ts";
-export type { ResponsavelRequestDTO } from "./ResponsavelRequestDTO.ts";
-export type { ResponsavelResponseDTO } from "./ResponsavelResponseDTO.ts";
-export type {
-  UpdateAluno200,
+  UpdateAluno204,
   UpdateAluno400,
   UpdateAluno401,
   UpdateAluno404,
@@ -510,7 +512,7 @@ export type {
   UpdateAlunoPathParams,
 } from "./UpdateAluno.ts";
 export type {
-  UpdateColaborador200,
+  UpdateColaborador204,
   UpdateColaborador400,
   UpdateColaborador401,
   UpdateColaborador404,
@@ -534,27 +536,15 @@ export type {
   UpdateDespesaPathParams,
 } from "./UpdateDespesa.ts";
 export type { UserCreateRequest, UserCreateRequestRoleEnumKey } from "./UserCreateRequest.ts";
-export type { UserListResponse, UserListResponseRoleEnumKey } from "./UserListResponse.ts";
 export type { UserResponse, UserResponseRoleEnumKey } from "./UserResponse.ts";
-export { atendimentoIndividualCalendarioResponseStatusEnum } from "./AtendimentoIndividualCalendarioResponse.ts";
-export { atendimentoIndividualCalendarioResponseTipoEnum } from "./AtendimentoIndividualCalendarioResponse.ts";
-export { atendimentoIndividualRequestTipoEnum } from "./AtendimentoIndividualRequest.ts";
+export { agendarAtendimentoIndividualRequestTipoEnum } from "./AgendarAtendimentoIndividualRequest.ts";
 export { atendimentoIndividualResponseStatusEnum } from "./AtendimentoIndividualResponse.ts";
 export { atendimentoIndividualResponseTipoEnum } from "./AtendimentoIndividualResponse.ts";
+export { atualizarAtendimentoIndividualRequestTipoEnum } from "./AtualizarAtendimentoIndividualRequest.ts";
 export { authMeResponseRoleEnum } from "./AuthMeResponse.ts";
-export { buscarAtendimentosIndividuaisQueryParamsTipoEnum } from "./BuscarAtendimentosIndividuais.ts";
-export { buscarCobrancasAlunosQueryParamsFormaPagamentoEnum } from "./BuscarCobrancasAlunos.ts";
-export { buscarCobrancasAlunosQueryParamsStatusEnum } from "./BuscarCobrancasAlunos.ts";
-export { buscarRepassesIndividuaisQueryParamsFormaPagamentoEnum } from "./BuscarRepassesIndividuais.ts";
-export { buscarRepassesIndividuaisQueryParamsStatusEnum } from "./BuscarRepassesIndividuais.ts";
-export { cobrancaAlunoResponseFormaPagamentoEnum } from "./CobrancaAlunoResponse.ts";
-export { cobrancaAlunoResponseStatusEnum } from "./CobrancaAlunoResponse.ts";
-export { cobrancaLoteDetalheResponseFormaPagamentoEnum } from "./CobrancaLoteDetalheResponse.ts";
-export { cobrancaLoteItemStatusEnum } from "./CobrancaLoteItem.ts";
-export { cobrancaLoteResponseFormaPagamentoEnum } from "./CobrancaLoteResponse.ts";
-export { colaboradorDetailResponseDTOFuncaoEnum } from "./ColaboradorDetailResponseDTO.ts";
-export { colaboradorListResponseDTOFuncaoEnum } from "./ColaboradorListResponseDTO.ts";
-export { colaboradorRequestDTOFuncaoEnum } from "./ColaboradorRequestDTO.ts";
+export { cobrancaResponseStatusEnum } from "./CobrancaResponse.ts";
+export { colaboradorRequestFuncaoEnum } from "./ColaboradorRequest.ts";
+export { colaboradorResponseFuncaoEnum } from "./ColaboradorResponse.ts";
 export { despesaRequestCategoriaEnum } from "./DespesaRequest.ts";
 export { despesaRequestFormaPagamentoEnum } from "./DespesaRequest.ts";
 export { despesaRequestTipoEnum } from "./DespesaRequest.ts";
@@ -562,15 +552,21 @@ export { despesaResponseCategoriaEnum } from "./DespesaResponse.ts";
 export { despesaResponseFormaPagamentoEnum } from "./DespesaResponse.ts";
 export { despesaResponseStatusEnum } from "./DespesaResponse.ts";
 export { despesaResponseTipoEnum } from "./DespesaResponse.ts";
+export { getAtendimentosIndividuaisQueryParamsStatusEnum } from "./GetAtendimentosIndividuais.ts";
+export { getAtendimentosIndividuaisQueryParamsTipoEnum } from "./GetAtendimentosIndividuais.ts";
+export { getCobrancasQueryParamsFormaPagamentoEnum } from "./GetCobrancas.ts";
 export { getDespesasQueryParamsCategoriaEnum } from "./GetDespesas.ts";
 export { getDespesasQueryParamsFormaPagamentoEnum } from "./GetDespesas.ts";
-export { registrarPagamentoAlunoRequestFormaPagamentoEnum } from "./RegistrarPagamentoAlunoRequest.ts";
-export { registrarRepasseIndividualRequestFormaPagamentoEnum } from "./RegistrarRepasseIndividualRequest.ts";
-export { repasseIndividualResponseFormaPagamentoEnum } from "./RepasseIndividualResponse.ts";
-export { repasseIndividualResponseStatusEnum } from "./RepasseIndividualResponse.ts";
-export { repasseLoteDetalheResponseFormaPagamentoEnum } from "./RepasseLoteDetalheResponse.ts";
-export { repasseLoteItemStatusEnum } from "./RepasseLoteItem.ts";
-export { repasseLoteResponseFormaPagamentoEnum } from "./RepasseLoteResponse.ts";
+export { getPagamentosQueryParamsFormaPagamentoEnum } from "./GetPagamentos.ts";
+export { getRecebimentosQueryParamsFormaPagamentoEnum } from "./GetRecebimentos.ts";
+export { getRepassesQueryParamsFormaPagamentoEnum } from "./GetRepasses.ts";
+export { getRepassesQueryParamsStatusEnum } from "./GetRepasses.ts";
+export { pagamentoDetalheResponseFormaPagamentoEnum } from "./PagamentoDetalheResponse.ts";
+export { pagamentoResponseFormaPagamentoEnum } from "./PagamentoResponse.ts";
+export { recebimentoDetalheResponseFormaPagamentoEnum } from "./RecebimentoDetalheResponse.ts";
+export { recebimentoResponseFormaPagamentoEnum } from "./RecebimentoResponse.ts";
+export { registrarPagamentoRequestFormaPagamentoEnum } from "./RegistrarPagamentoRequest.ts";
+export { registrarRecebimentoRequestFormaPagamentoEnum } from "./RegistrarRecebimentoRequest.ts";
+export { repasseResponseStatusEnum } from "./RepasseResponse.ts";
 export { userCreateRequestRoleEnum } from "./UserCreateRequest.ts";
-export { userListResponseRoleEnum } from "./UserListResponse.ts";
 export { userResponseRoleEnum } from "./UserResponse.ts";

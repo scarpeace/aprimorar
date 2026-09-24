@@ -2,36 +2,38 @@
 
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { useDeactivateColaborador } from "@/lib/api/generated/hooks/colaborador/useDeactivateColaborador";
-import { useCreateColaborador } from "@/lib/api/generated/hooks/colaborador/useCreateColaborador";
+import { useDeactivateColaborador } from "@/lib/api/generated/hooks/colaboradores/useDeactivateColaborador";
+import { useCriarColaborador } from "@/lib/api/generated/hooks/colaboradores/useCriarColaborador";
 
-import { useActivateColaborador } from "@/lib/api/generated/hooks/colaborador/useActivateColaborador";
-import { findColaboradorByIdQueryKey } from "@/lib/api/generated/hooks/colaborador/useFindColaboradorById";
-import { getColaboradoresQueryKey } from "@/lib/api/generated/hooks/colaborador/useGetColaboradores";
-import { getColaboradoresListQueryKey } from "@/lib/api/generated/hooks/colaborador/useGetColaboradoresList";
-import { useUpdateColaborador } from "@/lib/api/generated/hooks/colaborador/useUpdateColaborador";
+import { useActivateColaborador } from "@/lib/api/generated/hooks/colaboradores/useActivateColaborador";
+import { getColaboradorByIdQueryKey } from "@/lib/api/generated/hooks/colaboradores/useGetColaboradorById";
+import { getColaboradoresQueryKey } from "@/lib/api/generated/hooks/colaboradores/useGetColaboradores";
+import { listColaboradoresOptionsQueryKey } from "@/lib/api/generated/hooks/colaboradores/useListColaboradoresOptions";
+import { useUpdateColaborador } from "@/lib/api/generated/hooks/colaboradores/useUpdateColaborador";
 import { getFriendlyErrorMessage } from "@/lib/api/api-error";
 
 export function useColaboradorMutations() {
   const queryClient = useQueryClient();
 
   function invalidateColaboradores() {
-    queryClient.invalidateQueries({ queryKey: getColaboradoresQueryKey() });
-    queryClient.invalidateQueries({ queryKey: getColaboradoresListQueryKey() });
+    return Promise.all([
+      queryClient.invalidateQueries({ queryKey: getColaboradoresQueryKey() }),
+      queryClient.invalidateQueries({ queryKey: listColaboradoresOptionsQueryKey() }),
+    ]);
   }
 
   function invalidateColaboradorDetail(colaboradorId: string) {
-    queryClient.invalidateQueries({ queryKey: findColaboradorByIdQueryKey(colaboradorId) });
+    return queryClient.invalidateQueries({ queryKey: getColaboradorByIdQueryKey(colaboradorId) });
   }
 
-  const createColaborador = useCreateColaborador({
+  const createColaborador = useCriarColaborador({
     mutation: {
       onError: (error) => {
         toast.error(getFriendlyErrorMessage(error) || "Algo deu errado ao criar o colaborador");
       },
-      onSuccess: async (createdColaborador) => {
+      onSuccess: async () => {
         toast.success("Colaborador criado com sucesso");
-        await Promise.all([invalidateColaboradores(), invalidateColaboradorDetail(createdColaborador.id)]);
+        await invalidateColaboradores();
       },
     },
   });

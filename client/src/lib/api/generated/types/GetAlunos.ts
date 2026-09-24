@@ -3,7 +3,7 @@
  * Do not edit manually.
  */
 
-import type { PagedModelAlunoListResponseDTO } from "./PagedModelAlunoListResponseDTO.ts";
+import type { PagedModelAlunoResponse } from "./PagedModelAlunoResponse.ts";
 import type { ProblemDetail } from "./ProblemDetail.ts";
 
 export type GetAlunosQueryParams = {
@@ -56,7 +56,7 @@ export type GetAlunosQueryParams = {
 /**
  * @description Lista de alunos retornada com sucesso.
  */
-export type GetAlunos200 = PagedModelAlunoListResponseDTO;
+export type GetAlunos200 = PagedModelAlunoResponse;
 
 /**
  * @description Requisição inválida.

@@ -1,0 +1,18 @@
+{
+  "required": ["createdAt", "dataRecebimento", "formaPagamento", "id", "valorTotal"],
+  "type": "object",
+  "properties": {
+    "id": { "type": "string", "format": "uuid" },
+    "dataRecebimento": { "type": "string", "format": "date" },
+    "valorTotal": { "type": "number" },
+    "formaPagamento": {
+      "type": "string",
+      "description": "Forma de pagamento",
+      "enum": ["PIX", "DINHEIRO", "CARTAO_CREDITO", "CARTAO_DEBITO", "BOLETO", "TRANSFERENCIA"]
+    },
+    "comprovanteUrl": { "type": "string", "nullable": true },
+    "createdAt": { "type": "string", "format": "date-time" }
+  },
+  "description": "Recebimento",
+  "x-readme-ref-name": "RecebimentoResponse"
+}

@@ -7,7 +7,7 @@ import { problemDetailSchema } from "./problemDetailSchema.ts";
 import { z } from "zod/v4";
 
 export const cancelarAtendimentoIndividualPathParamsSchema = z.object({
-  id: z.coerce.number().int(),
+  atendimentoId: z.coerce.number().int(),
 });
 
 /**
@@ -29,6 +29,11 @@ export const cancelarAtendimentoIndividual401Schema = z.lazy(() => problemDetail
  * @description Recurso não encontrado.
  */
 export const cancelarAtendimentoIndividual404Schema = z.lazy(() => problemDetailSchema);
+
+/**
+ * @description Conflito de dados ou de estado.
+ */
+export const cancelarAtendimentoIndividual409Schema = z.lazy(() => problemDetailSchema);
 
 /**
  * @description Erro interno do sistema.

@@ -10,7 +10,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-@Tag(name = "Aluno", description = "Dados detalhados do aluno")
+@Tag(name = "Alunos", description = "Dados detalhados do aluno")
 @Schema(description = "Dados detalhados do aluno")
 public record AlunoResponse(
     @NotNull

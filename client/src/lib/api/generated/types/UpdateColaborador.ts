@@ -3,7 +3,7 @@
  * Do not edit manually.
  */
 
-import type { ColaboradorRequestDTO } from "./ColaboradorRequestDTO.ts";
+import type { ColaboradorRequest } from "./ColaboradorRequest.ts";
 import type { ProblemDetail } from "./ProblemDetail.ts";
 
 export type UpdateColaboradorPathParams = {
@@ -16,7 +16,7 @@ export type UpdateColaboradorPathParams = {
 /**
  * @description Colaborador atualizado com sucesso.
  */
-export type UpdateColaborador200 = any;
+export type UpdateColaborador204 = any;
 
 /**
  * @description Requisição inválida.
@@ -43,12 +43,12 @@ export type UpdateColaborador409 = ProblemDetail;
  */
 export type UpdateColaborador500 = ProblemDetail;
 
-export type UpdateColaboradorMutationRequest = ColaboradorRequestDTO;
+export type UpdateColaboradorMutationRequest = ColaboradorRequest;
 
-export type UpdateColaboradorMutationResponse = UpdateColaborador200;
+export type UpdateColaboradorMutationResponse = UpdateColaborador204;
 
 export type UpdateColaboradorMutation = {
-  Response: UpdateColaborador200;
+  Response: UpdateColaborador204;
   Request: UpdateColaboradorMutationRequest;
   PathParams: UpdateColaboradorPathParams;
   Errors: UpdateColaborador400 | UpdateColaborador401 | UpdateColaborador404 | UpdateColaborador409 | UpdateColaborador500;

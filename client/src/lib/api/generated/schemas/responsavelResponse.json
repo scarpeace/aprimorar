@@ -1,0 +1,12 @@
+{
+  "required": ["cpf", "email", "nome", "telefone"],
+  "type": "object",
+  "properties": {
+    "nome": { "type": "string", "description": "Nome do responsável", "example": "João Silva" },
+    "cpf": { "type": "string", "description": "CPF do responsável", "example": "12345678901" },
+    "telefone": { "type": "string", "description": "Contato do responsável", "example": "11999999999" },
+    "email": { "type": "string", "description": "Email do responsável", "example": "email@email.com" }
+  },
+  "description": "Dados do responsável do aluno",
+  "x-readme-ref-name": "ResponsavelResponse"
+}

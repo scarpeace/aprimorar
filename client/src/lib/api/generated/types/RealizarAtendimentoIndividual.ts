@@ -9,7 +9,7 @@ export type RealizarAtendimentoIndividualPathParams = {
   /**
    * @type integer, int64
    */
-  id: number;
+  atendimentoId: number;
 };
 
 /**
@@ -33,6 +33,11 @@ export type RealizarAtendimentoIndividual401 = ProblemDetail;
 export type RealizarAtendimentoIndividual404 = ProblemDetail;
 
 /**
+ * @description Conflito de dados ou de estado.
+ */
+export type RealizarAtendimentoIndividual409 = ProblemDetail;
+
+/**
  * @description Erro interno do sistema.
  */
 export type RealizarAtendimentoIndividual500 = ProblemDetail;
@@ -46,5 +51,6 @@ export type RealizarAtendimentoIndividualMutation = {
     | RealizarAtendimentoIndividual400
     | RealizarAtendimentoIndividual401
     | RealizarAtendimentoIndividual404
+    | RealizarAtendimentoIndividual409
     | RealizarAtendimentoIndividual500;
 };

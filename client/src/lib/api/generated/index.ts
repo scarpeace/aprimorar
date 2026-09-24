@@ -1,53 +1,52 @@
-export type { ActivateAlunoMutationKey } from "./hooks/aluno/useActivateAluno.ts";
-export type { CriarAlunoMutationKey } from "./hooks/aluno/useCriarAluno.ts";
-export type { DeactivateAlunoMutationKey } from "./hooks/aluno/useDeactivateAluno.ts";
-export type { GetAlunoByIdQueryKey } from "./hooks/aluno/useGetAlunoById.ts";
-export type { GetAlunosQueryKey } from "./hooks/aluno/useGetAlunos.ts";
-export type { ListAlunosQueryKey } from "./hooks/aluno/useListAlunos.ts";
-export type { UpdateAlunoMutationKey } from "./hooks/aluno/useUpdateAluno.ts";
-export type { AgendarAtendimentoIndividualMutationKey } from "./hooks/atendimentos individuais/useAgendarAtendimentoIndividual.ts";
-export type { AtualizarAtendimentoIndividualMutationKey } from "./hooks/atendimentos individuais/useAtualizarAtendimentoIndividual.ts";
-export type { BuscarAtendimentoIndividualPorIdQueryKey } from "./hooks/atendimentos individuais/useBuscarAtendimentoIndividualPorId.ts";
-export type { BuscarAtendimentosIndividuaisQueryKey } from "./hooks/atendimentos individuais/useBuscarAtendimentosIndividuais.ts";
-export type { BuscarCalendarioAtendimentosIndividuaisQueryKey } from "./hooks/atendimentos individuais/useBuscarCalendarioAtendimentosIndividuais.ts";
-export type { CancelarAtendimentoIndividualMutationKey } from "./hooks/atendimentos individuais/useCancelarAtendimentoIndividual.ts";
-export type { RealizarAtendimentoIndividualMutationKey } from "./hooks/atendimentos individuais/useRealizarAtendimentoIndividual.ts";
-export type { GetCurrentUserQueryKey } from "./hooks/autentica\u00E7\u00E3o/useGetCurrentUser.ts";
-export type { LoginMutationKey } from "./hooks/autentica\u00E7\u00E3o/useLogin.ts";
-export type { LogoutMutationKey } from "./hooks/autentica\u00E7\u00E3o/useLogout.ts";
-export type { RefreshAccessTokenMutationKey } from "./hooks/autentica\u00E7\u00E3o/useRefreshAccessToken.ts";
-export type { BuscarCobrancaAlunoPorIdQueryKey } from "./hooks/cobran\u00E7as de alunos/useBuscarCobrancaAlunoPorId.ts";
-export type { BuscarCobrancasAlunosQueryKey } from "./hooks/cobran\u00E7as de alunos/useBuscarCobrancasAlunos.ts";
-export type { BuscarLoteDeCobrancaPorIdQueryKey } from "./hooks/cobran\u00E7as de alunos/useBuscarLoteDeCobrancaPorId.ts";
-export type { BuscarLotesDeCobrancaQueryKey } from "./hooks/cobran\u00E7as de alunos/useBuscarLotesDeCobranca.ts";
-export type { CancelarPagamentoAlunoMutationKey } from "./hooks/cobran\u00E7as de alunos/useCancelarPagamentoAluno.ts";
-export type { RegistrarPagamentoAlunoMutationKey } from "./hooks/cobran\u00E7as de alunos/useRegistrarPagamentoAluno.ts";
-export type { ActivateColaboradorMutationKey } from "./hooks/colaborador/useActivateColaborador.ts";
-export type { CreateColaboradorMutationKey } from "./hooks/colaborador/useCreateColaborador.ts";
-export type { DeactivateColaboradorMutationKey } from "./hooks/colaborador/useDeactivateColaborador.ts";
-export type { FindColaboradorByIdQueryKey } from "./hooks/colaborador/useFindColaboradorById.ts";
-export type { GetColaboradoresQueryKey } from "./hooks/colaborador/useGetColaboradores.ts";
-export type { GetColaboradoresListQueryKey } from "./hooks/colaborador/useGetColaboradoresList.ts";
-export type { UpdateColaboradorMutationKey } from "./hooks/colaborador/useUpdateColaborador.ts";
-export type { CancelarPagamentoDespesaMutationKey } from "./hooks/despesa/useCancelarPagamentoDespesa.ts";
-export type { CreateDespesaMutationKey } from "./hooks/despesa/useCreateDespesa.ts";
-export type { DeleteDespesaMutationKey } from "./hooks/despesa/useDeleteDespesa.ts";
-export type { GetDespesaByIdQueryKey } from "./hooks/despesa/useGetDespesaById.ts";
-export type { GetDespesasQueryKey } from "./hooks/despesa/useGetDespesas.ts";
-export type { PagarDespesaMutationKey } from "./hooks/despesa/usePagarDespesa.ts";
-export type { UpdateDespesaMutationKey } from "./hooks/despesa/useUpdateDespesa.ts";
-export type { BuscarLoteDeRepassePorIdQueryKey } from "./hooks/repasses individuais/useBuscarLoteDeRepassePorId.ts";
-export type { BuscarLotesDeRepasseQueryKey } from "./hooks/repasses individuais/useBuscarLotesDeRepasse.ts";
-export type { BuscarRepasseIndividualPorIdQueryKey } from "./hooks/repasses individuais/useBuscarRepasseIndividualPorId.ts";
-export type { BuscarRepassesIndividuaisQueryKey } from "./hooks/repasses individuais/useBuscarRepassesIndividuais.ts";
-export type { CancelarRepassesIndividuaisMutationKey } from "./hooks/repasses individuais/useCancelarRepassesIndividuais.ts";
-export type { RegistrarRepassesIndividuaisMutationKey } from "./hooks/repasses individuais/useRegistrarRepassesIndividuais.ts";
-export type { ActivateUserMutationKey } from "./hooks/usu\u00E1rio/useActivateUser.ts";
-export type { CreateUserMutationKey } from "./hooks/usu\u00E1rio/useCreateUser.ts";
-export type { DeactivateUserMutationKey } from "./hooks/usu\u00E1rio/useDeactivateUser.ts";
-export type { DeleteUserMutationKey } from "./hooks/usu\u00E1rio/useDeleteUser.ts";
-export type { GetUserByIdQueryKey } from "./hooks/usu\u00E1rio/useGetUserById.ts";
-export type { GetUsersQueryKey } from "./hooks/usu\u00E1rio/useGetUsers.ts";
+export type { ActivateAlunoMutationKey } from "./hooks/alunos/useActivateAluno.ts";
+export type { DeactivateAlunoMutationKey } from "./hooks/alunos/useDeactivateAluno.ts";
+export type { GetAlunoByIdQueryKey } from "./hooks/alunos/useGetAlunoById.ts";
+export type { GetAlunosQueryKey } from "./hooks/alunos/useGetAlunos.ts";
+export type { ListAlunosOptionsQueryKey } from "./hooks/alunos/useListAlunosOptions.ts";
+export type { MatricularAlunoMutationKey } from "./hooks/alunos/useMatricularAluno.ts";
+export type { UpdateAlunoMutationKey } from "./hooks/alunos/useUpdateAluno.ts";
+export type { AgendarAtendimentoIndividualMutationKey } from "./hooks/atendimentos/useAgendarAtendimentoIndividual.ts";
+export type { AtualizarAtendimentoIndividualMutationKey } from "./hooks/atendimentos/useAtualizarAtendimentoIndividual.ts";
+export type { CancelarAtendimentoIndividualMutationKey } from "./hooks/atendimentos/useCancelarAtendimentoIndividual.ts";
+export type { GetAtendimentoIndividualByIdQueryKey } from "./hooks/atendimentos/useGetAtendimentoIndividualById.ts";
+export type { GetAtendimentosIndividuaisQueryKey } from "./hooks/atendimentos/useGetAtendimentosIndividuais.ts";
+export type { RealizarAtendimentoIndividualMutationKey } from "./hooks/atendimentos/useRealizarAtendimentoIndividual.ts";
+export type { GetCurrentUserQueryKey } from "./hooks/auth/useGetCurrentUser.ts";
+export type { LoginMutationKey } from "./hooks/auth/useLogin.ts";
+export type { LogoutMutationKey } from "./hooks/auth/useLogout.ts";
+export type { RefreshAccessTokenMutationKey } from "./hooks/auth/useRefreshAccessToken.ts";
+export type { GetCobrancaByIdQueryKey } from "./hooks/cobrancas/useGetCobrancaById.ts";
+export type { GetCobrancasQueryKey } from "./hooks/cobrancas/useGetCobrancas.ts";
+export type { ActivateColaboradorMutationKey } from "./hooks/colaboradores/useActivateColaborador.ts";
+export type { CriarColaboradorMutationKey } from "./hooks/colaboradores/useCriarColaborador.ts";
+export type { DeactivateColaboradorMutationKey } from "./hooks/colaboradores/useDeactivateColaborador.ts";
+export type { GetColaboradorByIdQueryKey } from "./hooks/colaboradores/useGetColaboradorById.ts";
+export type { GetColaboradoresQueryKey } from "./hooks/colaboradores/useGetColaboradores.ts";
+export type { ListColaboradoresOptionsQueryKey } from "./hooks/colaboradores/useListColaboradoresOptions.ts";
+export type { UpdateColaboradorMutationKey } from "./hooks/colaboradores/useUpdateColaborador.ts";
+export type { CancelarPagamentoDespesaMutationKey } from "./hooks/despesas/useCancelarPagamentoDespesa.ts";
+export type { CreateDespesaMutationKey } from "./hooks/despesas/useCreateDespesa.ts";
+export type { DeleteDespesaMutationKey } from "./hooks/despesas/useDeleteDespesa.ts";
+export type { GetDespesaByIdQueryKey } from "./hooks/despesas/useGetDespesaById.ts";
+export type { GetDespesasQueryKey } from "./hooks/despesas/useGetDespesas.ts";
+export type { PagarDespesaMutationKey } from "./hooks/despesas/usePagarDespesa.ts";
+export type { UpdateDespesaMutationKey } from "./hooks/despesas/useUpdateDespesa.ts";
+export type { CancelarPagamentoMutationKey } from "./hooks/pagamentos/useCancelarPagamento.ts";
+export type { GetPagamentoByIdQueryKey } from "./hooks/pagamentos/useGetPagamentoById.ts";
+export type { GetPagamentosQueryKey } from "./hooks/pagamentos/useGetPagamentos.ts";
+export type { RegistrarPagamentoMutationKey } from "./hooks/pagamentos/useRegistrarPagamento.ts";
+export type { CancelarRecebimentoMutationKey } from "./hooks/recebimentos/useCancelarRecebimento.ts";
+export type { GetRecebimentoByIdQueryKey } from "./hooks/recebimentos/useGetRecebimentoById.ts";
+export type { GetRecebimentosQueryKey } from "./hooks/recebimentos/useGetRecebimentos.ts";
+export type { RegistrarRecebimentoMutationKey } from "./hooks/recebimentos/useRegistrarRecebimento.ts";
+export type { GetRepasseByIdQueryKey } from "./hooks/repasses/useGetRepasseById.ts";
+export type { GetRepassesQueryKey } from "./hooks/repasses/useGetRepasses.ts";
+export type { ActivateUserMutationKey } from "./hooks/usuarios/useActivateUser.ts";
+export type { CreateUserMutationKey } from "./hooks/usuarios/useCreateUser.ts";
+export type { DeactivateUserMutationKey } from "./hooks/usuarios/useDeactivateUser.ts";
+export type { DeleteUserMutationKey } from "./hooks/usuarios/useDeleteUser.ts";
+export type { GetUserByIdQueryKey } from "./hooks/usuarios/useGetUserById.ts";
+export type { GetUsersQueryKey } from "./hooks/usuarios/useGetUsers.ts";
 export type {
   ActivateAluno204,
   ActivateAluno400,
@@ -61,8 +60,10 @@ export type {
 } from "./types/ActivateAluno.ts";
 export type {
   ActivateColaborador204,
+  ActivateColaborador400,
   ActivateColaborador401,
   ActivateColaborador404,
+  ActivateColaborador409,
   ActivateColaborador500,
   ActivateColaboradorMutation,
   ActivateColaboradorMutationResponse,
@@ -81,25 +82,20 @@ export type {
   AgendarAtendimentoIndividual201,
   AgendarAtendimentoIndividual400,
   AgendarAtendimentoIndividual401,
+  AgendarAtendimentoIndividual404,
+  AgendarAtendimentoIndividual409,
   AgendarAtendimentoIndividual500,
   AgendarAtendimentoIndividualMutation,
   AgendarAtendimentoIndividualMutationRequest,
   AgendarAtendimentoIndividualMutationResponse,
 } from "./types/AgendarAtendimentoIndividual.ts";
-export type { AlunoDetailResponseDTO } from "./types/AlunoDetailResponseDTO.ts";
-export type { AlunoListResponseDTO } from "./types/AlunoListResponseDTO.ts";
-export type { AlunoRequestDTO } from "./types/AlunoRequestDTO.ts";
-export type { AlunoResumo } from "./types/AlunoResumo.ts";
-export type { AlunosListDTO } from "./types/AlunosListDTO.ts";
 export type {
-  AtendimentoIndividualCalendarioResponse,
-  AtendimentoIndividualCalendarioResponseStatusEnumKey,
-  AtendimentoIndividualCalendarioResponseTipoEnumKey,
-} from "./types/AtendimentoIndividualCalendarioResponse.ts";
-export type {
-  AtendimentoIndividualRequest,
-  AtendimentoIndividualRequestTipoEnumKey,
-} from "./types/AtendimentoIndividualRequest.ts";
+  AgendarAtendimentoIndividualRequest,
+  AgendarAtendimentoIndividualRequestTipoEnumKey,
+} from "./types/AgendarAtendimentoIndividualRequest.ts";
+export type { AlunoOptionResponse } from "./types/AlunoOptionResponse.ts";
+export type { AlunoRequest } from "./types/AlunoRequest.ts";
+export type { AlunoResponse } from "./types/AlunoResponse.ts";
 export type {
   AtendimentoIndividualResponse,
   AtendimentoIndividualResponseStatusEnumKey,
@@ -110,138 +106,40 @@ export type {
   AtualizarAtendimentoIndividual400,
   AtualizarAtendimentoIndividual401,
   AtualizarAtendimentoIndividual404,
+  AtualizarAtendimentoIndividual409,
   AtualizarAtendimentoIndividual500,
   AtualizarAtendimentoIndividualMutation,
   AtualizarAtendimentoIndividualMutationRequest,
   AtualizarAtendimentoIndividualMutationResponse,
   AtualizarAtendimentoIndividualPathParams,
 } from "./types/AtualizarAtendimentoIndividual.ts";
+export type {
+  AtualizarAtendimentoIndividualRequest,
+  AtualizarAtendimentoIndividualRequestTipoEnumKey,
+} from "./types/AtualizarAtendimentoIndividualRequest.ts";
 export type { AuthMeResponse, AuthMeResponseRoleEnumKey } from "./types/AuthMeResponse.ts";
-export type {
-  BuscarAtendimentoIndividualPorId200,
-  BuscarAtendimentoIndividualPorId401,
-  BuscarAtendimentoIndividualPorId404,
-  BuscarAtendimentoIndividualPorId500,
-  BuscarAtendimentoIndividualPorIdPathParams,
-  BuscarAtendimentoIndividualPorIdQuery,
-  BuscarAtendimentoIndividualPorIdQueryResponse,
-} from "./types/BuscarAtendimentoIndividualPorId.ts";
-export type {
-  BuscarAtendimentosIndividuais200,
-  BuscarAtendimentosIndividuais400,
-  BuscarAtendimentosIndividuais401,
-  BuscarAtendimentosIndividuais500,
-  BuscarAtendimentosIndividuaisQuery,
-  BuscarAtendimentosIndividuaisQueryParams,
-  BuscarAtendimentosIndividuaisQueryParamsTipoEnumKey,
-  BuscarAtendimentosIndividuaisQueryResponse,
-} from "./types/BuscarAtendimentosIndividuais.ts";
-export type {
-  BuscarCalendarioAtendimentosIndividuais200,
-  BuscarCalendarioAtendimentosIndividuais400,
-  BuscarCalendarioAtendimentosIndividuais401,
-  BuscarCalendarioAtendimentosIndividuais500,
-  BuscarCalendarioAtendimentosIndividuaisQuery,
-  BuscarCalendarioAtendimentosIndividuaisQueryParams,
-  BuscarCalendarioAtendimentosIndividuaisQueryResponse,
-} from "./types/BuscarCalendarioAtendimentosIndividuais.ts";
-export type {
-  BuscarCobrancaAlunoPorId200,
-  BuscarCobrancaAlunoPorId401,
-  BuscarCobrancaAlunoPorId404,
-  BuscarCobrancaAlunoPorId500,
-  BuscarCobrancaAlunoPorIdPathParams,
-  BuscarCobrancaAlunoPorIdQuery,
-  BuscarCobrancaAlunoPorIdQueryResponse,
-} from "./types/BuscarCobrancaAlunoPorId.ts";
-export type {
-  BuscarCobrancasAlunos200,
-  BuscarCobrancasAlunos400,
-  BuscarCobrancasAlunos401,
-  BuscarCobrancasAlunos500,
-  BuscarCobrancasAlunosQuery,
-  BuscarCobrancasAlunosQueryParams,
-  BuscarCobrancasAlunosQueryParamsFormaPagamentoEnumKey,
-  BuscarCobrancasAlunosQueryParamsStatusEnumKey,
-  BuscarCobrancasAlunosQueryResponse,
-} from "./types/BuscarCobrancasAlunos.ts";
-export type {
-  BuscarLoteDeCobrancaPorId200,
-  BuscarLoteDeCobrancaPorId401,
-  BuscarLoteDeCobrancaPorId404,
-  BuscarLoteDeCobrancaPorId500,
-  BuscarLoteDeCobrancaPorIdPathParams,
-  BuscarLoteDeCobrancaPorIdQuery,
-  BuscarLoteDeCobrancaPorIdQueryResponse,
-} from "./types/BuscarLoteDeCobrancaPorId.ts";
-export type {
-  BuscarLoteDeRepassePorId200,
-  BuscarLoteDeRepassePorId401,
-  BuscarLoteDeRepassePorId404,
-  BuscarLoteDeRepassePorId500,
-  BuscarLoteDeRepassePorIdPathParams,
-  BuscarLoteDeRepassePorIdQuery,
-  BuscarLoteDeRepassePorIdQueryResponse,
-} from "./types/BuscarLoteDeRepassePorId.ts";
-export type {
-  BuscarLotesDeCobranca200,
-  BuscarLotesDeCobranca400,
-  BuscarLotesDeCobranca401,
-  BuscarLotesDeCobranca500,
-  BuscarLotesDeCobrancaQuery,
-  BuscarLotesDeCobrancaQueryParams,
-  BuscarLotesDeCobrancaQueryResponse,
-} from "./types/BuscarLotesDeCobranca.ts";
-export type {
-  BuscarLotesDeRepasse200,
-  BuscarLotesDeRepasse400,
-  BuscarLotesDeRepasse401,
-  BuscarLotesDeRepasse500,
-  BuscarLotesDeRepasseQuery,
-  BuscarLotesDeRepasseQueryParams,
-  BuscarLotesDeRepasseQueryResponse,
-} from "./types/BuscarLotesDeRepasse.ts";
-export type {
-  BuscarRepasseIndividualPorId200,
-  BuscarRepasseIndividualPorId401,
-  BuscarRepasseIndividualPorId404,
-  BuscarRepasseIndividualPorId500,
-  BuscarRepasseIndividualPorIdPathParams,
-  BuscarRepasseIndividualPorIdQuery,
-  BuscarRepasseIndividualPorIdQueryResponse,
-} from "./types/BuscarRepasseIndividualPorId.ts";
-export type {
-  BuscarRepassesIndividuais200,
-  BuscarRepassesIndividuais400,
-  BuscarRepassesIndividuais401,
-  BuscarRepassesIndividuais500,
-  BuscarRepassesIndividuaisQuery,
-  BuscarRepassesIndividuaisQueryParams,
-  BuscarRepassesIndividuaisQueryParamsFormaPagamentoEnumKey,
-  BuscarRepassesIndividuaisQueryParamsStatusEnumKey,
-  BuscarRepassesIndividuaisQueryResponse,
-} from "./types/BuscarRepassesIndividuais.ts";
 export type {
   CancelarAtendimentoIndividual204,
   CancelarAtendimentoIndividual400,
   CancelarAtendimentoIndividual401,
   CancelarAtendimentoIndividual404,
+  CancelarAtendimentoIndividual409,
   CancelarAtendimentoIndividual500,
   CancelarAtendimentoIndividualMutation,
   CancelarAtendimentoIndividualMutationResponse,
   CancelarAtendimentoIndividualPathParams,
 } from "./types/CancelarAtendimentoIndividual.ts";
 export type {
-  CancelarPagamentoAluno204,
-  CancelarPagamentoAluno400,
-  CancelarPagamentoAluno401,
-  CancelarPagamentoAluno404,
-  CancelarPagamentoAluno500,
-  CancelarPagamentoAlunoMutation,
-  CancelarPagamentoAlunoMutationRequest,
-  CancelarPagamentoAlunoMutationResponse,
-} from "./types/CancelarPagamentoAluno.ts";
-export type { CancelarPagamentoAlunoRequest } from "./types/CancelarPagamentoAlunoRequest.ts";
+  CancelarPagamento204,
+  CancelarPagamento400,
+  CancelarPagamento401,
+  CancelarPagamento404,
+  CancelarPagamento409,
+  CancelarPagamento500,
+  CancelarPagamentoMutation,
+  CancelarPagamentoMutationResponse,
+  CancelarPagamentoPathParams,
+} from "./types/CancelarPagamento.ts";
 export type {
   CancelarPagamentoDespesa200,
   CancelarPagamentoDespesa401,
@@ -251,47 +149,21 @@ export type {
   CancelarPagamentoDespesaMutationResponse,
   CancelarPagamentoDespesaPathParams,
 } from "./types/CancelarPagamentoDespesa.ts";
-export type { CancelarRepasseIndividualRequest } from "./types/CancelarRepasseIndividualRequest.ts";
 export type {
-  CancelarRepassesIndividuais204,
-  CancelarRepassesIndividuais400,
-  CancelarRepassesIndividuais401,
-  CancelarRepassesIndividuais404,
-  CancelarRepassesIndividuais500,
-  CancelarRepassesIndividuaisMutation,
-  CancelarRepassesIndividuaisMutationRequest,
-  CancelarRepassesIndividuaisMutationResponse,
-} from "./types/CancelarRepassesIndividuais.ts";
-export type {
-  CobrancaAlunoResponse,
-  CobrancaAlunoResponseFormaPagamentoEnumKey,
-  CobrancaAlunoResponseStatusEnumKey,
-} from "./types/CobrancaAlunoResponse.ts";
-export type { CobrancaAlunoResumo } from "./types/CobrancaAlunoResumo.ts";
-export type {
-  CobrancaLoteDetalheResponse,
-  CobrancaLoteDetalheResponseFormaPagamentoEnumKey,
-} from "./types/CobrancaLoteDetalheResponse.ts";
-export type { CobrancaLoteItem, CobrancaLoteItemStatusEnumKey } from "./types/CobrancaLoteItem.ts";
-export type { CobrancaLoteResponse, CobrancaLoteResponseFormaPagamentoEnumKey } from "./types/CobrancaLoteResponse.ts";
-export type {
-  ColaboradorDetailResponseDTO,
-  ColaboradorDetailResponseDTOFuncaoEnumKey,
-} from "./types/ColaboradorDetailResponseDTO.ts";
-export type { ColaboradorListResponseDTO, ColaboradorListResponseDTOFuncaoEnumKey } from "./types/ColaboradorListResponseDTO.ts";
-export type { ColaboradorRequestDTO, ColaboradorRequestDTOFuncaoEnumKey } from "./types/ColaboradorRequestDTO.ts";
-export type { ColaboradorResumo } from "./types/ColaboradorResumo.ts";
-export type { ColaboradoresOptionsDTO } from "./types/ColaboradoresOptionsDTO.ts";
-export type {
-  CreateColaborador201,
-  CreateColaborador400,
-  CreateColaborador401,
-  CreateColaborador409,
-  CreateColaborador500,
-  CreateColaboradorMutation,
-  CreateColaboradorMutationRequest,
-  CreateColaboradorMutationResponse,
-} from "./types/CreateColaborador.ts";
+  CancelarRecebimento204,
+  CancelarRecebimento400,
+  CancelarRecebimento401,
+  CancelarRecebimento404,
+  CancelarRecebimento409,
+  CancelarRecebimento500,
+  CancelarRecebimentoMutation,
+  CancelarRecebimentoMutationResponse,
+  CancelarRecebimentoPathParams,
+} from "./types/CancelarRecebimento.ts";
+export type { CobrancaResponse, CobrancaResponseStatusEnumKey } from "./types/CobrancaResponse.ts";
+export type { ColaboradorOptionResponse } from "./types/ColaboradorOptionResponse.ts";
+export type { ColaboradorRequest, ColaboradorRequestFuncaoEnumKey } from "./types/ColaboradorRequest.ts";
+export type { ColaboradorResponse, ColaboradorResponseFuncaoEnumKey } from "./types/ColaboradorResponse.ts";
 export type {
   CreateDespesa201,
   CreateDespesa400,
@@ -313,16 +185,16 @@ export type {
   CreateUserMutationResponse,
 } from "./types/CreateUser.ts";
 export type {
-  CriarAluno201,
-  CriarAluno400,
-  CriarAluno401,
-  CriarAluno404,
-  CriarAluno409,
-  CriarAluno500,
-  CriarAlunoMutation,
-  CriarAlunoMutationRequest,
-  CriarAlunoMutationResponse,
-} from "./types/CriarAluno.ts";
+  CriarColaborador201,
+  CriarColaborador400,
+  CriarColaborador401,
+  CriarColaborador404,
+  CriarColaborador409,
+  CriarColaborador500,
+  CriarColaboradorMutation,
+  CriarColaboradorMutationRequest,
+  CriarColaboradorMutationResponse,
+} from "./types/CriarColaborador.ts";
 export type {
   DeactivateAluno204,
   DeactivateAluno400,
@@ -336,8 +208,10 @@ export type {
 } from "./types/DeactivateAluno.ts";
 export type {
   DeactivateColaborador204,
+  DeactivateColaborador400,
   DeactivateColaborador401,
   DeactivateColaborador404,
+  DeactivateColaborador409,
   DeactivateColaborador500,
   DeactivateColaboradorMutation,
   DeactivateColaboradorMutationResponse,
@@ -383,17 +257,8 @@ export type {
   DespesaResponseStatusEnumKey,
   DespesaResponseTipoEnumKey,
 } from "./types/DespesaResponse.ts";
-export type { EnderecoRequestDTO } from "./types/EnderecoRequestDTO.ts";
-export type { EnderecoResponseDTO } from "./types/EnderecoResponseDTO.ts";
-export type {
-  FindColaboradorById200,
-  FindColaboradorById401,
-  FindColaboradorById404,
-  FindColaboradorById500,
-  FindColaboradorByIdPathParams,
-  FindColaboradorByIdQuery,
-  FindColaboradorByIdQueryResponse,
-} from "./types/FindColaboradorById.ts";
+export type { EnderecoRequest } from "./types/EnderecoRequest.ts";
+export type { EnderecoResponse } from "./types/EnderecoResponse.ts";
 export type {
   GetAlunoById200,
   GetAlunoById400,
@@ -417,21 +282,70 @@ export type {
   GetAlunosQueryResponse,
 } from "./types/GetAlunos.ts";
 export type {
+  GetAtendimentoIndividualById200,
+  GetAtendimentoIndividualById400,
+  GetAtendimentoIndividualById401,
+  GetAtendimentoIndividualById404,
+  GetAtendimentoIndividualById409,
+  GetAtendimentoIndividualById500,
+  GetAtendimentoIndividualByIdPathParams,
+  GetAtendimentoIndividualByIdQuery,
+  GetAtendimentoIndividualByIdQueryResponse,
+} from "./types/GetAtendimentoIndividualById.ts";
+export type {
+  GetAtendimentosIndividuais200,
+  GetAtendimentosIndividuais400,
+  GetAtendimentosIndividuais401,
+  GetAtendimentosIndividuais404,
+  GetAtendimentosIndividuais409,
+  GetAtendimentosIndividuais500,
+  GetAtendimentosIndividuaisQuery,
+  GetAtendimentosIndividuaisQueryParams,
+  GetAtendimentosIndividuaisQueryParamsStatusEnumKey,
+  GetAtendimentosIndividuaisQueryParamsTipoEnumKey,
+  GetAtendimentosIndividuaisQueryResponse,
+} from "./types/GetAtendimentosIndividuais.ts";
+export type {
+  GetCobrancaById200,
+  GetCobrancaById401,
+  GetCobrancaById404,
+  GetCobrancaById500,
+  GetCobrancaByIdPathParams,
+  GetCobrancaByIdQuery,
+  GetCobrancaByIdQueryResponse,
+} from "./types/GetCobrancaById.ts";
+export type {
+  GetCobrancas200,
+  GetCobrancas400,
+  GetCobrancas401,
+  GetCobrancas500,
+  GetCobrancasQuery,
+  GetCobrancasQueryParams,
+  GetCobrancasQueryParamsFormaPagamentoEnumKey,
+  GetCobrancasQueryResponse,
+} from "./types/GetCobrancas.ts";
+export type {
+  GetColaboradorById200,
+  GetColaboradorById400,
+  GetColaboradorById401,
+  GetColaboradorById404,
+  GetColaboradorById409,
+  GetColaboradorById500,
+  GetColaboradorByIdPathParams,
+  GetColaboradorByIdQuery,
+  GetColaboradorByIdQueryResponse,
+} from "./types/GetColaboradorById.ts";
+export type {
   GetColaboradores200,
   GetColaboradores400,
   GetColaboradores401,
+  GetColaboradores404,
+  GetColaboradores409,
   GetColaboradores500,
   GetColaboradoresQuery,
   GetColaboradoresQueryParams,
   GetColaboradoresQueryResponse,
 } from "./types/GetColaboradores.ts";
-export type {
-  GetColaboradoresList200,
-  GetColaboradoresList401,
-  GetColaboradoresList500,
-  GetColaboradoresListQuery,
-  GetColaboradoresListQueryResponse,
-} from "./types/GetColaboradoresList.ts";
 export type { GetCurrentUser200, GetCurrentUserQuery, GetCurrentUserQueryResponse } from "./types/GetCurrentUser.ts";
 export type {
   GetDespesaById200,
@@ -454,6 +368,70 @@ export type {
   GetDespesasQueryResponse,
 } from "./types/GetDespesas.ts";
 export type {
+  GetPagamentoById200,
+  GetPagamentoById400,
+  GetPagamentoById401,
+  GetPagamentoById404,
+  GetPagamentoById409,
+  GetPagamentoById500,
+  GetPagamentoByIdPathParams,
+  GetPagamentoByIdQuery,
+  GetPagamentoByIdQueryResponse,
+} from "./types/GetPagamentoById.ts";
+export type {
+  GetPagamentos200,
+  GetPagamentos400,
+  GetPagamentos401,
+  GetPagamentos409,
+  GetPagamentos500,
+  GetPagamentosQuery,
+  GetPagamentosQueryParams,
+  GetPagamentosQueryParamsFormaPagamentoEnumKey,
+  GetPagamentosQueryResponse,
+} from "./types/GetPagamentos.ts";
+export type {
+  GetRecebimentoById200,
+  GetRecebimentoById400,
+  GetRecebimentoById401,
+  GetRecebimentoById404,
+  GetRecebimentoById409,
+  GetRecebimentoById500,
+  GetRecebimentoByIdPathParams,
+  GetRecebimentoByIdQuery,
+  GetRecebimentoByIdQueryResponse,
+} from "./types/GetRecebimentoById.ts";
+export type {
+  GetRecebimentos200,
+  GetRecebimentos400,
+  GetRecebimentos401,
+  GetRecebimentos409,
+  GetRecebimentos500,
+  GetRecebimentosQuery,
+  GetRecebimentosQueryParams,
+  GetRecebimentosQueryParamsFormaPagamentoEnumKey,
+  GetRecebimentosQueryResponse,
+} from "./types/GetRecebimentos.ts";
+export type {
+  GetRepasseById200,
+  GetRepasseById401,
+  GetRepasseById404,
+  GetRepasseById500,
+  GetRepasseByIdPathParams,
+  GetRepasseByIdQuery,
+  GetRepasseByIdQueryResponse,
+} from "./types/GetRepasseById.ts";
+export type {
+  GetRepasses200,
+  GetRepasses400,
+  GetRepasses401,
+  GetRepasses500,
+  GetRepassesQuery,
+  GetRepassesQueryParams,
+  GetRepassesQueryParamsFormaPagamentoEnumKey,
+  GetRepassesQueryParamsStatusEnumKey,
+  GetRepassesQueryResponse,
+} from "./types/GetRepasses.ts";
+export type {
   GetUserById200,
   GetUserById401,
   GetUserById404,
@@ -464,19 +442,45 @@ export type {
 } from "./types/GetUserById.ts";
 export type { GetUsers200, GetUsers401, GetUsers500, GetUsersQuery, GetUsersQueryResponse } from "./types/GetUsers.ts";
 export type {
-  ListAlunos200,
-  ListAlunos400,
-  ListAlunos401,
-  ListAlunos404,
-  ListAlunos409,
-  ListAlunos500,
-  ListAlunosQuery,
-  ListAlunosQueryResponse,
-} from "./types/ListAlunos.ts";
+  ListAlunosOptions200,
+  ListAlunosOptions400,
+  ListAlunosOptions401,
+  ListAlunosOptions404,
+  ListAlunosOptions409,
+  ListAlunosOptions500,
+  ListAlunosOptionsQuery,
+  ListAlunosOptionsQueryResponse,
+} from "./types/ListAlunosOptions.ts";
+export type {
+  ListColaboradoresOptions200,
+  ListColaboradoresOptions400,
+  ListColaboradoresOptions401,
+  ListColaboradoresOptions404,
+  ListColaboradoresOptions409,
+  ListColaboradoresOptions500,
+  ListColaboradoresOptionsQuery,
+  ListColaboradoresOptionsQueryResponse,
+} from "./types/ListColaboradoresOptions.ts";
 export type { Login200, LoginMutation, LoginMutationRequest, LoginMutationResponse } from "./types/Login.ts";
 export type { LoginRequest } from "./types/LoginRequest.ts";
 export type { LoginResponse } from "./types/LoginResponse.ts";
 export type { Logout200, LogoutMutation, LogoutMutationResponse } from "./types/Logout.ts";
+export type {
+  MatricularAluno201,
+  MatricularAluno400,
+  MatricularAluno401,
+  MatricularAluno404,
+  MatricularAluno409,
+  MatricularAluno500,
+  MatricularAlunoMutation,
+  MatricularAlunoMutationRequest,
+  MatricularAlunoMutationResponse,
+} from "./types/MatricularAluno.ts";
+export type {
+  PagamentoDetalheResponse,
+  PagamentoDetalheResponseFormaPagamentoEnumKey,
+} from "./types/PagamentoDetalheResponse.ts";
+export type { PagamentoResponse, PagamentoResponseFormaPagamentoEnumKey } from "./types/PagamentoResponse.ts";
 export type {
   PagarDespesa200,
   PagarDespesa401,
@@ -487,74 +491,71 @@ export type {
   PagarDespesaPathParams,
 } from "./types/PagarDespesa.ts";
 export type { PageMetadata } from "./types/PageMetadata.ts";
-export type { PagedModelAlunoListResponseDTO } from "./types/PagedModelAlunoListResponseDTO.ts";
+export type { PagedModelAlunoResponse } from "./types/PagedModelAlunoResponse.ts";
 export type { PagedModelAtendimentoIndividualResponse } from "./types/PagedModelAtendimentoIndividualResponse.ts";
-export type { PagedModelCobrancaAlunoResponse } from "./types/PagedModelCobrancaAlunoResponse.ts";
-export type { PagedModelCobrancaLoteResponse } from "./types/PagedModelCobrancaLoteResponse.ts";
-export type { PagedModelColaboradorListResponseDTO } from "./types/PagedModelColaboradorListResponseDTO.ts";
+export type { PagedModelCobrancaResponse } from "./types/PagedModelCobrancaResponse.ts";
+export type { PagedModelColaboradorResponse } from "./types/PagedModelColaboradorResponse.ts";
 export type { PagedModelDespesaResponse } from "./types/PagedModelDespesaResponse.ts";
-export type { PagedModelRepasseIndividualResponse } from "./types/PagedModelRepasseIndividualResponse.ts";
-export type { PagedModelRepasseLoteResponse } from "./types/PagedModelRepasseLoteResponse.ts";
+export type { PagedModelPagamentoResponse } from "./types/PagedModelPagamentoResponse.ts";
+export type { PagedModelRecebimentoResponse } from "./types/PagedModelRecebimentoResponse.ts";
+export type { PagedModelRepasseResponse } from "./types/PagedModelRepasseResponse.ts";
 export type { ProblemDetail } from "./types/ProblemDetail.ts";
 export type {
   RealizarAtendimentoIndividual204,
   RealizarAtendimentoIndividual400,
   RealizarAtendimentoIndividual401,
   RealizarAtendimentoIndividual404,
+  RealizarAtendimentoIndividual409,
   RealizarAtendimentoIndividual500,
   RealizarAtendimentoIndividualMutation,
   RealizarAtendimentoIndividualMutationResponse,
   RealizarAtendimentoIndividualPathParams,
 } from "./types/RealizarAtendimentoIndividual.ts";
 export type {
+  RecebimentoDetalheResponse,
+  RecebimentoDetalheResponseFormaPagamentoEnumKey,
+} from "./types/RecebimentoDetalheResponse.ts";
+export type { RecebimentoResponse, RecebimentoResponseFormaPagamentoEnumKey } from "./types/RecebimentoResponse.ts";
+export type {
   RefreshAccessToken200,
   RefreshAccessTokenMutation,
   RefreshAccessTokenMutationResponse,
 } from "./types/RefreshAccessToken.ts";
 export type {
-  RegistrarPagamentoAluno204,
-  RegistrarPagamentoAluno400,
-  RegistrarPagamentoAluno401,
-  RegistrarPagamentoAluno404,
-  RegistrarPagamentoAluno500,
-  RegistrarPagamentoAlunoMutation,
-  RegistrarPagamentoAlunoMutationRequest,
-  RegistrarPagamentoAlunoMutationResponse,
-} from "./types/RegistrarPagamentoAluno.ts";
+  RegistrarPagamento201,
+  RegistrarPagamento400,
+  RegistrarPagamento401,
+  RegistrarPagamento404,
+  RegistrarPagamento409,
+  RegistrarPagamento500,
+  RegistrarPagamentoMutation,
+  RegistrarPagamentoMutationRequest,
+  RegistrarPagamentoMutationResponse,
+} from "./types/RegistrarPagamento.ts";
 export type {
-  RegistrarPagamentoAlunoRequest,
-  RegistrarPagamentoAlunoRequestFormaPagamentoEnumKey,
-} from "./types/RegistrarPagamentoAlunoRequest.ts";
+  RegistrarPagamentoRequest,
+  RegistrarPagamentoRequestFormaPagamentoEnumKey,
+} from "./types/RegistrarPagamentoRequest.ts";
 export type {
-  RegistrarRepasseIndividualRequest,
-  RegistrarRepasseIndividualRequestFormaPagamentoEnumKey,
-} from "./types/RegistrarRepasseIndividualRequest.ts";
+  RegistrarRecebimento201,
+  RegistrarRecebimento400,
+  RegistrarRecebimento401,
+  RegistrarRecebimento404,
+  RegistrarRecebimento409,
+  RegistrarRecebimento500,
+  RegistrarRecebimentoMutation,
+  RegistrarRecebimentoMutationRequest,
+  RegistrarRecebimentoMutationResponse,
+} from "./types/RegistrarRecebimento.ts";
 export type {
-  RegistrarRepassesIndividuais204,
-  RegistrarRepassesIndividuais400,
-  RegistrarRepassesIndividuais401,
-  RegistrarRepassesIndividuais404,
-  RegistrarRepassesIndividuais500,
-  RegistrarRepassesIndividuaisMutation,
-  RegistrarRepassesIndividuaisMutationRequest,
-  RegistrarRepassesIndividuaisMutationResponse,
-} from "./types/RegistrarRepassesIndividuais.ts";
+  RegistrarRecebimentoRequest,
+  RegistrarRecebimentoRequestFormaPagamentoEnumKey,
+} from "./types/RegistrarRecebimentoRequest.ts";
+export type { RepasseResponse, RepasseResponseStatusEnumKey } from "./types/RepasseResponse.ts";
+export type { ResponsavelRequest } from "./types/ResponsavelRequest.ts";
+export type { ResponsavelResponse } from "./types/ResponsavelResponse.ts";
 export type {
-  RepasseIndividualResponse,
-  RepasseIndividualResponseFormaPagamentoEnumKey,
-  RepasseIndividualResponseStatusEnumKey,
-} from "./types/RepasseIndividualResponse.ts";
-export type {
-  RepasseLoteDetalheResponse,
-  RepasseLoteDetalheResponseFormaPagamentoEnumKey,
-} from "./types/RepasseLoteDetalheResponse.ts";
-export type { RepasseLoteItem, RepasseLoteItemStatusEnumKey } from "./types/RepasseLoteItem.ts";
-export type { RepasseLoteResponse, RepasseLoteResponseFormaPagamentoEnumKey } from "./types/RepasseLoteResponse.ts";
-export type { RepasseResumo } from "./types/RepasseResumo.ts";
-export type { ResponsavelRequestDTO } from "./types/ResponsavelRequestDTO.ts";
-export type { ResponsavelResponseDTO } from "./types/ResponsavelResponseDTO.ts";
-export type {
-  UpdateAluno200,
+  UpdateAluno204,
   UpdateAluno400,
   UpdateAluno401,
   UpdateAluno404,
@@ -566,7 +567,7 @@ export type {
   UpdateAlunoPathParams,
 } from "./types/UpdateAluno.ts";
 export type {
-  UpdateColaborador200,
+  UpdateColaborador204,
   UpdateColaborador400,
   UpdateColaborador401,
   UpdateColaborador404,
@@ -590,227 +591,211 @@ export type {
   UpdateDespesaPathParams,
 } from "./types/UpdateDespesa.ts";
 export type { UserCreateRequest, UserCreateRequestRoleEnumKey } from "./types/UserCreateRequest.ts";
-export type { UserListResponse, UserListResponseRoleEnumKey } from "./types/UserListResponse.ts";
 export type { UserResponse, UserResponseRoleEnumKey } from "./types/UserResponse.ts";
-export { activateAluno } from "./hooks/aluno/useActivateAluno.ts";
-export { activateAlunoMutationKey } from "./hooks/aluno/useActivateAluno.ts";
-export { activateAlunoMutationOptions } from "./hooks/aluno/useActivateAluno.ts";
-export { useActivateAluno } from "./hooks/aluno/useActivateAluno.ts";
-export { criarAluno } from "./hooks/aluno/useCriarAluno.ts";
-export { criarAlunoMutationKey } from "./hooks/aluno/useCriarAluno.ts";
-export { criarAlunoMutationOptions } from "./hooks/aluno/useCriarAluno.ts";
-export { useCriarAluno } from "./hooks/aluno/useCriarAluno.ts";
-export { deactivateAluno } from "./hooks/aluno/useDeactivateAluno.ts";
-export { deactivateAlunoMutationKey } from "./hooks/aluno/useDeactivateAluno.ts";
-export { deactivateAlunoMutationOptions } from "./hooks/aluno/useDeactivateAluno.ts";
-export { useDeactivateAluno } from "./hooks/aluno/useDeactivateAluno.ts";
-export { getAlunoById } from "./hooks/aluno/useGetAlunoById.ts";
-export { getAlunoByIdQueryKey } from "./hooks/aluno/useGetAlunoById.ts";
-export { getAlunoByIdQueryOptions } from "./hooks/aluno/useGetAlunoById.ts";
-export { useGetAlunoById } from "./hooks/aluno/useGetAlunoById.ts";
-export { getAlunos } from "./hooks/aluno/useGetAlunos.ts";
-export { getAlunosQueryKey } from "./hooks/aluno/useGetAlunos.ts";
-export { getAlunosQueryOptions } from "./hooks/aluno/useGetAlunos.ts";
-export { useGetAlunos } from "./hooks/aluno/useGetAlunos.ts";
-export { listAlunos } from "./hooks/aluno/useListAlunos.ts";
-export { listAlunosQueryKey } from "./hooks/aluno/useListAlunos.ts";
-export { listAlunosQueryOptions } from "./hooks/aluno/useListAlunos.ts";
-export { useListAlunos } from "./hooks/aluno/useListAlunos.ts";
-export { updateAluno } from "./hooks/aluno/useUpdateAluno.ts";
-export { updateAlunoMutationKey } from "./hooks/aluno/useUpdateAluno.ts";
-export { updateAlunoMutationOptions } from "./hooks/aluno/useUpdateAluno.ts";
-export { useUpdateAluno } from "./hooks/aluno/useUpdateAluno.ts";
-export { agendarAtendimentoIndividual } from "./hooks/atendimentos individuais/useAgendarAtendimentoIndividual.ts";
-export { agendarAtendimentoIndividualMutationKey } from "./hooks/atendimentos individuais/useAgendarAtendimentoIndividual.ts";
-export { agendarAtendimentoIndividualMutationOptions } from "./hooks/atendimentos individuais/useAgendarAtendimentoIndividual.ts";
-export { useAgendarAtendimentoIndividual } from "./hooks/atendimentos individuais/useAgendarAtendimentoIndividual.ts";
-export { atualizarAtendimentoIndividual } from "./hooks/atendimentos individuais/useAtualizarAtendimentoIndividual.ts";
-export { atualizarAtendimentoIndividualMutationKey } from "./hooks/atendimentos individuais/useAtualizarAtendimentoIndividual.ts";
-export { atualizarAtendimentoIndividualMutationOptions } from "./hooks/atendimentos individuais/useAtualizarAtendimentoIndividual.ts";
-export { useAtualizarAtendimentoIndividual } from "./hooks/atendimentos individuais/useAtualizarAtendimentoIndividual.ts";
-export { buscarAtendimentoIndividualPorId } from "./hooks/atendimentos individuais/useBuscarAtendimentoIndividualPorId.ts";
-export { buscarAtendimentoIndividualPorIdQueryKey } from "./hooks/atendimentos individuais/useBuscarAtendimentoIndividualPorId.ts";
-export { buscarAtendimentoIndividualPorIdQueryOptions } from "./hooks/atendimentos individuais/useBuscarAtendimentoIndividualPorId.ts";
-export { useBuscarAtendimentoIndividualPorId } from "./hooks/atendimentos individuais/useBuscarAtendimentoIndividualPorId.ts";
-export { buscarAtendimentosIndividuais } from "./hooks/atendimentos individuais/useBuscarAtendimentosIndividuais.ts";
-export { buscarAtendimentosIndividuaisQueryKey } from "./hooks/atendimentos individuais/useBuscarAtendimentosIndividuais.ts";
-export { buscarAtendimentosIndividuaisQueryOptions } from "./hooks/atendimentos individuais/useBuscarAtendimentosIndividuais.ts";
-export { useBuscarAtendimentosIndividuais } from "./hooks/atendimentos individuais/useBuscarAtendimentosIndividuais.ts";
-export { buscarCalendarioAtendimentosIndividuais } from "./hooks/atendimentos individuais/useBuscarCalendarioAtendimentosIndividuais.ts";
-export { buscarCalendarioAtendimentosIndividuaisQueryKey } from "./hooks/atendimentos individuais/useBuscarCalendarioAtendimentosIndividuais.ts";
-export { buscarCalendarioAtendimentosIndividuaisQueryOptions } from "./hooks/atendimentos individuais/useBuscarCalendarioAtendimentosIndividuais.ts";
-export { useBuscarCalendarioAtendimentosIndividuais } from "./hooks/atendimentos individuais/useBuscarCalendarioAtendimentosIndividuais.ts";
-export { cancelarAtendimentoIndividual } from "./hooks/atendimentos individuais/useCancelarAtendimentoIndividual.ts";
-export { cancelarAtendimentoIndividualMutationKey } from "./hooks/atendimentos individuais/useCancelarAtendimentoIndividual.ts";
-export { cancelarAtendimentoIndividualMutationOptions } from "./hooks/atendimentos individuais/useCancelarAtendimentoIndividual.ts";
-export { useCancelarAtendimentoIndividual } from "./hooks/atendimentos individuais/useCancelarAtendimentoIndividual.ts";
-export { realizarAtendimentoIndividual } from "./hooks/atendimentos individuais/useRealizarAtendimentoIndividual.ts";
-export { realizarAtendimentoIndividualMutationKey } from "./hooks/atendimentos individuais/useRealizarAtendimentoIndividual.ts";
-export { realizarAtendimentoIndividualMutationOptions } from "./hooks/atendimentos individuais/useRealizarAtendimentoIndividual.ts";
-export { useRealizarAtendimentoIndividual } from "./hooks/atendimentos individuais/useRealizarAtendimentoIndividual.ts";
-export { getCurrentUser } from "./hooks/autentica\u00E7\u00E3o/useGetCurrentUser.ts";
-export { getCurrentUserQueryKey } from "./hooks/autentica\u00E7\u00E3o/useGetCurrentUser.ts";
-export { getCurrentUserQueryOptions } from "./hooks/autentica\u00E7\u00E3o/useGetCurrentUser.ts";
-export { useGetCurrentUser } from "./hooks/autentica\u00E7\u00E3o/useGetCurrentUser.ts";
-export { login } from "./hooks/autentica\u00E7\u00E3o/useLogin.ts";
-export { loginMutationKey } from "./hooks/autentica\u00E7\u00E3o/useLogin.ts";
-export { loginMutationOptions } from "./hooks/autentica\u00E7\u00E3o/useLogin.ts";
-export { useLogin } from "./hooks/autentica\u00E7\u00E3o/useLogin.ts";
-export { logout } from "./hooks/autentica\u00E7\u00E3o/useLogout.ts";
-export { logoutMutationKey } from "./hooks/autentica\u00E7\u00E3o/useLogout.ts";
-export { logoutMutationOptions } from "./hooks/autentica\u00E7\u00E3o/useLogout.ts";
-export { useLogout } from "./hooks/autentica\u00E7\u00E3o/useLogout.ts";
-export { refreshAccessToken } from "./hooks/autentica\u00E7\u00E3o/useRefreshAccessToken.ts";
-export { refreshAccessTokenMutationKey } from "./hooks/autentica\u00E7\u00E3o/useRefreshAccessToken.ts";
-export { refreshAccessTokenMutationOptions } from "./hooks/autentica\u00E7\u00E3o/useRefreshAccessToken.ts";
-export { useRefreshAccessToken } from "./hooks/autentica\u00E7\u00E3o/useRefreshAccessToken.ts";
-export { buscarCobrancaAlunoPorId } from "./hooks/cobran\u00E7as de alunos/useBuscarCobrancaAlunoPorId.ts";
-export { buscarCobrancaAlunoPorIdQueryKey } from "./hooks/cobran\u00E7as de alunos/useBuscarCobrancaAlunoPorId.ts";
-export { buscarCobrancaAlunoPorIdQueryOptions } from "./hooks/cobran\u00E7as de alunos/useBuscarCobrancaAlunoPorId.ts";
-export { useBuscarCobrancaAlunoPorId } from "./hooks/cobran\u00E7as de alunos/useBuscarCobrancaAlunoPorId.ts";
-export { buscarCobrancasAlunos } from "./hooks/cobran\u00E7as de alunos/useBuscarCobrancasAlunos.ts";
-export { buscarCobrancasAlunosQueryKey } from "./hooks/cobran\u00E7as de alunos/useBuscarCobrancasAlunos.ts";
-export { buscarCobrancasAlunosQueryOptions } from "./hooks/cobran\u00E7as de alunos/useBuscarCobrancasAlunos.ts";
-export { useBuscarCobrancasAlunos } from "./hooks/cobran\u00E7as de alunos/useBuscarCobrancasAlunos.ts";
-export { buscarLoteDeCobrancaPorId } from "./hooks/cobran\u00E7as de alunos/useBuscarLoteDeCobrancaPorId.ts";
-export { buscarLoteDeCobrancaPorIdQueryKey } from "./hooks/cobran\u00E7as de alunos/useBuscarLoteDeCobrancaPorId.ts";
-export { buscarLoteDeCobrancaPorIdQueryOptions } from "./hooks/cobran\u00E7as de alunos/useBuscarLoteDeCobrancaPorId.ts";
-export { useBuscarLoteDeCobrancaPorId } from "./hooks/cobran\u00E7as de alunos/useBuscarLoteDeCobrancaPorId.ts";
-export { buscarLotesDeCobranca } from "./hooks/cobran\u00E7as de alunos/useBuscarLotesDeCobranca.ts";
-export { buscarLotesDeCobrancaQueryKey } from "./hooks/cobran\u00E7as de alunos/useBuscarLotesDeCobranca.ts";
-export { buscarLotesDeCobrancaQueryOptions } from "./hooks/cobran\u00E7as de alunos/useBuscarLotesDeCobranca.ts";
-export { useBuscarLotesDeCobranca } from "./hooks/cobran\u00E7as de alunos/useBuscarLotesDeCobranca.ts";
-export { cancelarPagamentoAluno } from "./hooks/cobran\u00E7as de alunos/useCancelarPagamentoAluno.ts";
-export { cancelarPagamentoAlunoMutationKey } from "./hooks/cobran\u00E7as de alunos/useCancelarPagamentoAluno.ts";
-export { cancelarPagamentoAlunoMutationOptions } from "./hooks/cobran\u00E7as de alunos/useCancelarPagamentoAluno.ts";
-export { useCancelarPagamentoAluno } from "./hooks/cobran\u00E7as de alunos/useCancelarPagamentoAluno.ts";
-export { registrarPagamentoAluno } from "./hooks/cobran\u00E7as de alunos/useRegistrarPagamentoAluno.ts";
-export { registrarPagamentoAlunoMutationKey } from "./hooks/cobran\u00E7as de alunos/useRegistrarPagamentoAluno.ts";
-export { registrarPagamentoAlunoMutationOptions } from "./hooks/cobran\u00E7as de alunos/useRegistrarPagamentoAluno.ts";
-export { useRegistrarPagamentoAluno } from "./hooks/cobran\u00E7as de alunos/useRegistrarPagamentoAluno.ts";
-export { activateColaborador } from "./hooks/colaborador/useActivateColaborador.ts";
-export { activateColaboradorMutationKey } from "./hooks/colaborador/useActivateColaborador.ts";
-export { activateColaboradorMutationOptions } from "./hooks/colaborador/useActivateColaborador.ts";
-export { useActivateColaborador } from "./hooks/colaborador/useActivateColaborador.ts";
-export { createColaborador } from "./hooks/colaborador/useCreateColaborador.ts";
-export { createColaboradorMutationKey } from "./hooks/colaborador/useCreateColaborador.ts";
-export { createColaboradorMutationOptions } from "./hooks/colaborador/useCreateColaborador.ts";
-export { useCreateColaborador } from "./hooks/colaborador/useCreateColaborador.ts";
-export { deactivateColaborador } from "./hooks/colaborador/useDeactivateColaborador.ts";
-export { deactivateColaboradorMutationKey } from "./hooks/colaborador/useDeactivateColaborador.ts";
-export { deactivateColaboradorMutationOptions } from "./hooks/colaborador/useDeactivateColaborador.ts";
-export { useDeactivateColaborador } from "./hooks/colaborador/useDeactivateColaborador.ts";
-export { findColaboradorById } from "./hooks/colaborador/useFindColaboradorById.ts";
-export { findColaboradorByIdQueryKey } from "./hooks/colaborador/useFindColaboradorById.ts";
-export { findColaboradorByIdQueryOptions } from "./hooks/colaborador/useFindColaboradorById.ts";
-export { useFindColaboradorById } from "./hooks/colaborador/useFindColaboradorById.ts";
-export { getColaboradores } from "./hooks/colaborador/useGetColaboradores.ts";
-export { getColaboradoresQueryKey } from "./hooks/colaborador/useGetColaboradores.ts";
-export { getColaboradoresQueryOptions } from "./hooks/colaborador/useGetColaboradores.ts";
-export { useGetColaboradores } from "./hooks/colaborador/useGetColaboradores.ts";
-export { getColaboradoresList } from "./hooks/colaborador/useGetColaboradoresList.ts";
-export { getColaboradoresListQueryKey } from "./hooks/colaborador/useGetColaboradoresList.ts";
-export { getColaboradoresListQueryOptions } from "./hooks/colaborador/useGetColaboradoresList.ts";
-export { useGetColaboradoresList } from "./hooks/colaborador/useGetColaboradoresList.ts";
-export { updateColaborador } from "./hooks/colaborador/useUpdateColaborador.ts";
-export { updateColaboradorMutationKey } from "./hooks/colaborador/useUpdateColaborador.ts";
-export { updateColaboradorMutationOptions } from "./hooks/colaborador/useUpdateColaborador.ts";
-export { useUpdateColaborador } from "./hooks/colaborador/useUpdateColaborador.ts";
-export { cancelarPagamentoDespesa } from "./hooks/despesa/useCancelarPagamentoDespesa.ts";
-export { cancelarPagamentoDespesaMutationKey } from "./hooks/despesa/useCancelarPagamentoDespesa.ts";
-export { cancelarPagamentoDespesaMutationOptions } from "./hooks/despesa/useCancelarPagamentoDespesa.ts";
-export { useCancelarPagamentoDespesa } from "./hooks/despesa/useCancelarPagamentoDespesa.ts";
-export { createDespesa } from "./hooks/despesa/useCreateDespesa.ts";
-export { createDespesaMutationKey } from "./hooks/despesa/useCreateDespesa.ts";
-export { createDespesaMutationOptions } from "./hooks/despesa/useCreateDespesa.ts";
-export { useCreateDespesa } from "./hooks/despesa/useCreateDespesa.ts";
-export { deleteDespesa } from "./hooks/despesa/useDeleteDespesa.ts";
-export { deleteDespesaMutationKey } from "./hooks/despesa/useDeleteDespesa.ts";
-export { deleteDespesaMutationOptions } from "./hooks/despesa/useDeleteDespesa.ts";
-export { useDeleteDespesa } from "./hooks/despesa/useDeleteDespesa.ts";
-export { getDespesaById } from "./hooks/despesa/useGetDespesaById.ts";
-export { getDespesaByIdQueryKey } from "./hooks/despesa/useGetDespesaById.ts";
-export { getDespesaByIdQueryOptions } from "./hooks/despesa/useGetDespesaById.ts";
-export { useGetDespesaById } from "./hooks/despesa/useGetDespesaById.ts";
-export { getDespesas } from "./hooks/despesa/useGetDespesas.ts";
-export { getDespesasQueryKey } from "./hooks/despesa/useGetDespesas.ts";
-export { getDespesasQueryOptions } from "./hooks/despesa/useGetDespesas.ts";
-export { useGetDespesas } from "./hooks/despesa/useGetDespesas.ts";
-export { pagarDespesa } from "./hooks/despesa/usePagarDespesa.ts";
-export { pagarDespesaMutationKey } from "./hooks/despesa/usePagarDespesa.ts";
-export { pagarDespesaMutationOptions } from "./hooks/despesa/usePagarDespesa.ts";
-export { usePagarDespesa } from "./hooks/despesa/usePagarDespesa.ts";
-export { updateDespesa } from "./hooks/despesa/useUpdateDespesa.ts";
-export { updateDespesaMutationKey } from "./hooks/despesa/useUpdateDespesa.ts";
-export { updateDespesaMutationOptions } from "./hooks/despesa/useUpdateDespesa.ts";
-export { useUpdateDespesa } from "./hooks/despesa/useUpdateDespesa.ts";
-export { buscarLoteDeRepassePorId } from "./hooks/repasses individuais/useBuscarLoteDeRepassePorId.ts";
-export { buscarLoteDeRepassePorIdQueryKey } from "./hooks/repasses individuais/useBuscarLoteDeRepassePorId.ts";
-export { buscarLoteDeRepassePorIdQueryOptions } from "./hooks/repasses individuais/useBuscarLoteDeRepassePorId.ts";
-export { useBuscarLoteDeRepassePorId } from "./hooks/repasses individuais/useBuscarLoteDeRepassePorId.ts";
-export { buscarLotesDeRepasse } from "./hooks/repasses individuais/useBuscarLotesDeRepasse.ts";
-export { buscarLotesDeRepasseQueryKey } from "./hooks/repasses individuais/useBuscarLotesDeRepasse.ts";
-export { buscarLotesDeRepasseQueryOptions } from "./hooks/repasses individuais/useBuscarLotesDeRepasse.ts";
-export { useBuscarLotesDeRepasse } from "./hooks/repasses individuais/useBuscarLotesDeRepasse.ts";
-export { buscarRepasseIndividualPorId } from "./hooks/repasses individuais/useBuscarRepasseIndividualPorId.ts";
-export { buscarRepasseIndividualPorIdQueryKey } from "./hooks/repasses individuais/useBuscarRepasseIndividualPorId.ts";
-export { buscarRepasseIndividualPorIdQueryOptions } from "./hooks/repasses individuais/useBuscarRepasseIndividualPorId.ts";
-export { useBuscarRepasseIndividualPorId } from "./hooks/repasses individuais/useBuscarRepasseIndividualPorId.ts";
-export { buscarRepassesIndividuais } from "./hooks/repasses individuais/useBuscarRepassesIndividuais.ts";
-export { buscarRepassesIndividuaisQueryKey } from "./hooks/repasses individuais/useBuscarRepassesIndividuais.ts";
-export { buscarRepassesIndividuaisQueryOptions } from "./hooks/repasses individuais/useBuscarRepassesIndividuais.ts";
-export { useBuscarRepassesIndividuais } from "./hooks/repasses individuais/useBuscarRepassesIndividuais.ts";
-export { cancelarRepassesIndividuais } from "./hooks/repasses individuais/useCancelarRepassesIndividuais.ts";
-export { cancelarRepassesIndividuaisMutationKey } from "./hooks/repasses individuais/useCancelarRepassesIndividuais.ts";
-export { cancelarRepassesIndividuaisMutationOptions } from "./hooks/repasses individuais/useCancelarRepassesIndividuais.ts";
-export { useCancelarRepassesIndividuais } from "./hooks/repasses individuais/useCancelarRepassesIndividuais.ts";
-export { registrarRepassesIndividuais } from "./hooks/repasses individuais/useRegistrarRepassesIndividuais.ts";
-export { registrarRepassesIndividuaisMutationKey } from "./hooks/repasses individuais/useRegistrarRepassesIndividuais.ts";
-export { registrarRepassesIndividuaisMutationOptions } from "./hooks/repasses individuais/useRegistrarRepassesIndividuais.ts";
-export { useRegistrarRepassesIndividuais } from "./hooks/repasses individuais/useRegistrarRepassesIndividuais.ts";
-export { activateUser } from "./hooks/usu\u00E1rio/useActivateUser.ts";
-export { activateUserMutationKey } from "./hooks/usu\u00E1rio/useActivateUser.ts";
-export { activateUserMutationOptions } from "./hooks/usu\u00E1rio/useActivateUser.ts";
-export { useActivateUser } from "./hooks/usu\u00E1rio/useActivateUser.ts";
-export { createUser } from "./hooks/usu\u00E1rio/useCreateUser.ts";
-export { createUserMutationKey } from "./hooks/usu\u00E1rio/useCreateUser.ts";
-export { createUserMutationOptions } from "./hooks/usu\u00E1rio/useCreateUser.ts";
-export { useCreateUser } from "./hooks/usu\u00E1rio/useCreateUser.ts";
-export { deactivateUser } from "./hooks/usu\u00E1rio/useDeactivateUser.ts";
-export { deactivateUserMutationKey } from "./hooks/usu\u00E1rio/useDeactivateUser.ts";
-export { deactivateUserMutationOptions } from "./hooks/usu\u00E1rio/useDeactivateUser.ts";
-export { useDeactivateUser } from "./hooks/usu\u00E1rio/useDeactivateUser.ts";
-export { deleteUser } from "./hooks/usu\u00E1rio/useDeleteUser.ts";
-export { deleteUserMutationKey } from "./hooks/usu\u00E1rio/useDeleteUser.ts";
-export { deleteUserMutationOptions } from "./hooks/usu\u00E1rio/useDeleteUser.ts";
-export { useDeleteUser } from "./hooks/usu\u00E1rio/useDeleteUser.ts";
-export { getUserById } from "./hooks/usu\u00E1rio/useGetUserById.ts";
-export { getUserByIdQueryKey } from "./hooks/usu\u00E1rio/useGetUserById.ts";
-export { getUserByIdQueryOptions } from "./hooks/usu\u00E1rio/useGetUserById.ts";
-export { useGetUserById } from "./hooks/usu\u00E1rio/useGetUserById.ts";
-export { getUsers } from "./hooks/usu\u00E1rio/useGetUsers.ts";
-export { getUsersQueryKey } from "./hooks/usu\u00E1rio/useGetUsers.ts";
-export { getUsersQueryOptions } from "./hooks/usu\u00E1rio/useGetUsers.ts";
-export { useGetUsers } from "./hooks/usu\u00E1rio/useGetUsers.ts";
-export { atendimentoIndividualCalendarioResponseStatusEnum } from "./types/AtendimentoIndividualCalendarioResponse.ts";
-export { atendimentoIndividualCalendarioResponseTipoEnum } from "./types/AtendimentoIndividualCalendarioResponse.ts";
-export { atendimentoIndividualRequestTipoEnum } from "./types/AtendimentoIndividualRequest.ts";
+export { activateAluno } from "./hooks/alunos/useActivateAluno.ts";
+export { activateAlunoMutationKey } from "./hooks/alunos/useActivateAluno.ts";
+export { activateAlunoMutationOptions } from "./hooks/alunos/useActivateAluno.ts";
+export { useActivateAluno } from "./hooks/alunos/useActivateAluno.ts";
+export { deactivateAluno } from "./hooks/alunos/useDeactivateAluno.ts";
+export { deactivateAlunoMutationKey } from "./hooks/alunos/useDeactivateAluno.ts";
+export { deactivateAlunoMutationOptions } from "./hooks/alunos/useDeactivateAluno.ts";
+export { useDeactivateAluno } from "./hooks/alunos/useDeactivateAluno.ts";
+export { getAlunoById } from "./hooks/alunos/useGetAlunoById.ts";
+export { getAlunoByIdQueryKey } from "./hooks/alunos/useGetAlunoById.ts";
+export { getAlunoByIdQueryOptions } from "./hooks/alunos/useGetAlunoById.ts";
+export { useGetAlunoById } from "./hooks/alunos/useGetAlunoById.ts";
+export { getAlunos } from "./hooks/alunos/useGetAlunos.ts";
+export { getAlunosQueryKey } from "./hooks/alunos/useGetAlunos.ts";
+export { getAlunosQueryOptions } from "./hooks/alunos/useGetAlunos.ts";
+export { useGetAlunos } from "./hooks/alunos/useGetAlunos.ts";
+export { listAlunosOptions } from "./hooks/alunos/useListAlunosOptions.ts";
+export { listAlunosOptionsQueryKey } from "./hooks/alunos/useListAlunosOptions.ts";
+export { listAlunosOptionsQueryOptions } from "./hooks/alunos/useListAlunosOptions.ts";
+export { useListAlunosOptions } from "./hooks/alunos/useListAlunosOptions.ts";
+export { matricularAluno } from "./hooks/alunos/useMatricularAluno.ts";
+export { matricularAlunoMutationKey } from "./hooks/alunos/useMatricularAluno.ts";
+export { matricularAlunoMutationOptions } from "./hooks/alunos/useMatricularAluno.ts";
+export { useMatricularAluno } from "./hooks/alunos/useMatricularAluno.ts";
+export { updateAluno } from "./hooks/alunos/useUpdateAluno.ts";
+export { updateAlunoMutationKey } from "./hooks/alunos/useUpdateAluno.ts";
+export { updateAlunoMutationOptions } from "./hooks/alunos/useUpdateAluno.ts";
+export { useUpdateAluno } from "./hooks/alunos/useUpdateAluno.ts";
+export { agendarAtendimentoIndividual } from "./hooks/atendimentos/useAgendarAtendimentoIndividual.ts";
+export { agendarAtendimentoIndividualMutationKey } from "./hooks/atendimentos/useAgendarAtendimentoIndividual.ts";
+export { agendarAtendimentoIndividualMutationOptions } from "./hooks/atendimentos/useAgendarAtendimentoIndividual.ts";
+export { useAgendarAtendimentoIndividual } from "./hooks/atendimentos/useAgendarAtendimentoIndividual.ts";
+export { atualizarAtendimentoIndividual } from "./hooks/atendimentos/useAtualizarAtendimentoIndividual.ts";
+export { atualizarAtendimentoIndividualMutationKey } from "./hooks/atendimentos/useAtualizarAtendimentoIndividual.ts";
+export { atualizarAtendimentoIndividualMutationOptions } from "./hooks/atendimentos/useAtualizarAtendimentoIndividual.ts";
+export { useAtualizarAtendimentoIndividual } from "./hooks/atendimentos/useAtualizarAtendimentoIndividual.ts";
+export { cancelarAtendimentoIndividual } from "./hooks/atendimentos/useCancelarAtendimentoIndividual.ts";
+export { cancelarAtendimentoIndividualMutationKey } from "./hooks/atendimentos/useCancelarAtendimentoIndividual.ts";
+export { cancelarAtendimentoIndividualMutationOptions } from "./hooks/atendimentos/useCancelarAtendimentoIndividual.ts";
+export { useCancelarAtendimentoIndividual } from "./hooks/atendimentos/useCancelarAtendimentoIndividual.ts";
+export { getAtendimentoIndividualById } from "./hooks/atendimentos/useGetAtendimentoIndividualById.ts";
+export { getAtendimentoIndividualByIdQueryKey } from "./hooks/atendimentos/useGetAtendimentoIndividualById.ts";
+export { getAtendimentoIndividualByIdQueryOptions } from "./hooks/atendimentos/useGetAtendimentoIndividualById.ts";
+export { useGetAtendimentoIndividualById } from "./hooks/atendimentos/useGetAtendimentoIndividualById.ts";
+export { getAtendimentosIndividuais } from "./hooks/atendimentos/useGetAtendimentosIndividuais.ts";
+export { getAtendimentosIndividuaisQueryKey } from "./hooks/atendimentos/useGetAtendimentosIndividuais.ts";
+export { getAtendimentosIndividuaisQueryOptions } from "./hooks/atendimentos/useGetAtendimentosIndividuais.ts";
+export { useGetAtendimentosIndividuais } from "./hooks/atendimentos/useGetAtendimentosIndividuais.ts";
+export { realizarAtendimentoIndividual } from "./hooks/atendimentos/useRealizarAtendimentoIndividual.ts";
+export { realizarAtendimentoIndividualMutationKey } from "./hooks/atendimentos/useRealizarAtendimentoIndividual.ts";
+export { realizarAtendimentoIndividualMutationOptions } from "./hooks/atendimentos/useRealizarAtendimentoIndividual.ts";
+export { useRealizarAtendimentoIndividual } from "./hooks/atendimentos/useRealizarAtendimentoIndividual.ts";
+export { getCurrentUser } from "./hooks/auth/useGetCurrentUser.ts";
+export { getCurrentUserQueryKey } from "./hooks/auth/useGetCurrentUser.ts";
+export { getCurrentUserQueryOptions } from "./hooks/auth/useGetCurrentUser.ts";
+export { useGetCurrentUser } from "./hooks/auth/useGetCurrentUser.ts";
+export { login } from "./hooks/auth/useLogin.ts";
+export { loginMutationKey } from "./hooks/auth/useLogin.ts";
+export { loginMutationOptions } from "./hooks/auth/useLogin.ts";
+export { useLogin } from "./hooks/auth/useLogin.ts";
+export { logout } from "./hooks/auth/useLogout.ts";
+export { logoutMutationKey } from "./hooks/auth/useLogout.ts";
+export { logoutMutationOptions } from "./hooks/auth/useLogout.ts";
+export { useLogout } from "./hooks/auth/useLogout.ts";
+export { refreshAccessToken } from "./hooks/auth/useRefreshAccessToken.ts";
+export { refreshAccessTokenMutationKey } from "./hooks/auth/useRefreshAccessToken.ts";
+export { refreshAccessTokenMutationOptions } from "./hooks/auth/useRefreshAccessToken.ts";
+export { useRefreshAccessToken } from "./hooks/auth/useRefreshAccessToken.ts";
+export { getCobrancaById } from "./hooks/cobrancas/useGetCobrancaById.ts";
+export { getCobrancaByIdQueryKey } from "./hooks/cobrancas/useGetCobrancaById.ts";
+export { getCobrancaByIdQueryOptions } from "./hooks/cobrancas/useGetCobrancaById.ts";
+export { useGetCobrancaById } from "./hooks/cobrancas/useGetCobrancaById.ts";
+export { getCobrancas } from "./hooks/cobrancas/useGetCobrancas.ts";
+export { getCobrancasQueryKey } from "./hooks/cobrancas/useGetCobrancas.ts";
+export { getCobrancasQueryOptions } from "./hooks/cobrancas/useGetCobrancas.ts";
+export { useGetCobrancas } from "./hooks/cobrancas/useGetCobrancas.ts";
+export { activateColaborador } from "./hooks/colaboradores/useActivateColaborador.ts";
+export { activateColaboradorMutationKey } from "./hooks/colaboradores/useActivateColaborador.ts";
+export { activateColaboradorMutationOptions } from "./hooks/colaboradores/useActivateColaborador.ts";
+export { useActivateColaborador } from "./hooks/colaboradores/useActivateColaborador.ts";
+export { criarColaborador } from "./hooks/colaboradores/useCriarColaborador.ts";
+export { criarColaboradorMutationKey } from "./hooks/colaboradores/useCriarColaborador.ts";
+export { criarColaboradorMutationOptions } from "./hooks/colaboradores/useCriarColaborador.ts";
+export { useCriarColaborador } from "./hooks/colaboradores/useCriarColaborador.ts";
+export { deactivateColaborador } from "./hooks/colaboradores/useDeactivateColaborador.ts";
+export { deactivateColaboradorMutationKey } from "./hooks/colaboradores/useDeactivateColaborador.ts";
+export { deactivateColaboradorMutationOptions } from "./hooks/colaboradores/useDeactivateColaborador.ts";
+export { useDeactivateColaborador } from "./hooks/colaboradores/useDeactivateColaborador.ts";
+export { getColaboradorById } from "./hooks/colaboradores/useGetColaboradorById.ts";
+export { getColaboradorByIdQueryKey } from "./hooks/colaboradores/useGetColaboradorById.ts";
+export { getColaboradorByIdQueryOptions } from "./hooks/colaboradores/useGetColaboradorById.ts";
+export { useGetColaboradorById } from "./hooks/colaboradores/useGetColaboradorById.ts";
+export { getColaboradores } from "./hooks/colaboradores/useGetColaboradores.ts";
+export { getColaboradoresQueryKey } from "./hooks/colaboradores/useGetColaboradores.ts";
+export { getColaboradoresQueryOptions } from "./hooks/colaboradores/useGetColaboradores.ts";
+export { useGetColaboradores } from "./hooks/colaboradores/useGetColaboradores.ts";
+export { listColaboradoresOptions } from "./hooks/colaboradores/useListColaboradoresOptions.ts";
+export { listColaboradoresOptionsQueryKey } from "./hooks/colaboradores/useListColaboradoresOptions.ts";
+export { listColaboradoresOptionsQueryOptions } from "./hooks/colaboradores/useListColaboradoresOptions.ts";
+export { useListColaboradoresOptions } from "./hooks/colaboradores/useListColaboradoresOptions.ts";
+export { updateColaborador } from "./hooks/colaboradores/useUpdateColaborador.ts";
+export { updateColaboradorMutationKey } from "./hooks/colaboradores/useUpdateColaborador.ts";
+export { updateColaboradorMutationOptions } from "./hooks/colaboradores/useUpdateColaborador.ts";
+export { useUpdateColaborador } from "./hooks/colaboradores/useUpdateColaborador.ts";
+export { cancelarPagamentoDespesa } from "./hooks/despesas/useCancelarPagamentoDespesa.ts";
+export { cancelarPagamentoDespesaMutationKey } from "./hooks/despesas/useCancelarPagamentoDespesa.ts";
+export { cancelarPagamentoDespesaMutationOptions } from "./hooks/despesas/useCancelarPagamentoDespesa.ts";
+export { useCancelarPagamentoDespesa } from "./hooks/despesas/useCancelarPagamentoDespesa.ts";
+export { createDespesa } from "./hooks/despesas/useCreateDespesa.ts";
+export { createDespesaMutationKey } from "./hooks/despesas/useCreateDespesa.ts";
+export { createDespesaMutationOptions } from "./hooks/despesas/useCreateDespesa.ts";
+export { useCreateDespesa } from "./hooks/despesas/useCreateDespesa.ts";
+export { deleteDespesa } from "./hooks/despesas/useDeleteDespesa.ts";
+export { deleteDespesaMutationKey } from "./hooks/despesas/useDeleteDespesa.ts";
+export { deleteDespesaMutationOptions } from "./hooks/despesas/useDeleteDespesa.ts";
+export { useDeleteDespesa } from "./hooks/despesas/useDeleteDespesa.ts";
+export { getDespesaById } from "./hooks/despesas/useGetDespesaById.ts";
+export { getDespesaByIdQueryKey } from "./hooks/despesas/useGetDespesaById.ts";
+export { getDespesaByIdQueryOptions } from "./hooks/despesas/useGetDespesaById.ts";
+export { useGetDespesaById } from "./hooks/despesas/useGetDespesaById.ts";
+export { getDespesas } from "./hooks/despesas/useGetDespesas.ts";
+export { getDespesasQueryKey } from "./hooks/despesas/useGetDespesas.ts";
+export { getDespesasQueryOptions } from "./hooks/despesas/useGetDespesas.ts";
+export { useGetDespesas } from "./hooks/despesas/useGetDespesas.ts";
+export { pagarDespesa } from "./hooks/despesas/usePagarDespesa.ts";
+export { pagarDespesaMutationKey } from "./hooks/despesas/usePagarDespesa.ts";
+export { pagarDespesaMutationOptions } from "./hooks/despesas/usePagarDespesa.ts";
+export { usePagarDespesa } from "./hooks/despesas/usePagarDespesa.ts";
+export { updateDespesa } from "./hooks/despesas/useUpdateDespesa.ts";
+export { updateDespesaMutationKey } from "./hooks/despesas/useUpdateDespesa.ts";
+export { updateDespesaMutationOptions } from "./hooks/despesas/useUpdateDespesa.ts";
+export { useUpdateDespesa } from "./hooks/despesas/useUpdateDespesa.ts";
+export { cancelarPagamento } from "./hooks/pagamentos/useCancelarPagamento.ts";
+export { cancelarPagamentoMutationKey } from "./hooks/pagamentos/useCancelarPagamento.ts";
+export { cancelarPagamentoMutationOptions } from "./hooks/pagamentos/useCancelarPagamento.ts";
+export { useCancelarPagamento } from "./hooks/pagamentos/useCancelarPagamento.ts";
+export { getPagamentoById } from "./hooks/pagamentos/useGetPagamentoById.ts";
+export { getPagamentoByIdQueryKey } from "./hooks/pagamentos/useGetPagamentoById.ts";
+export { getPagamentoByIdQueryOptions } from "./hooks/pagamentos/useGetPagamentoById.ts";
+export { useGetPagamentoById } from "./hooks/pagamentos/useGetPagamentoById.ts";
+export { getPagamentos } from "./hooks/pagamentos/useGetPagamentos.ts";
+export { getPagamentosQueryKey } from "./hooks/pagamentos/useGetPagamentos.ts";
+export { getPagamentosQueryOptions } from "./hooks/pagamentos/useGetPagamentos.ts";
+export { useGetPagamentos } from "./hooks/pagamentos/useGetPagamentos.ts";
+export { registrarPagamento } from "./hooks/pagamentos/useRegistrarPagamento.ts";
+export { registrarPagamentoMutationKey } from "./hooks/pagamentos/useRegistrarPagamento.ts";
+export { registrarPagamentoMutationOptions } from "./hooks/pagamentos/useRegistrarPagamento.ts";
+export { useRegistrarPagamento } from "./hooks/pagamentos/useRegistrarPagamento.ts";
+export { cancelarRecebimento } from "./hooks/recebimentos/useCancelarRecebimento.ts";
+export { cancelarRecebimentoMutationKey } from "./hooks/recebimentos/useCancelarRecebimento.ts";
+export { cancelarRecebimentoMutationOptions } from "./hooks/recebimentos/useCancelarRecebimento.ts";
+export { useCancelarRecebimento } from "./hooks/recebimentos/useCancelarRecebimento.ts";
+export { getRecebimentoById } from "./hooks/recebimentos/useGetRecebimentoById.ts";
+export { getRecebimentoByIdQueryKey } from "./hooks/recebimentos/useGetRecebimentoById.ts";
+export { getRecebimentoByIdQueryOptions } from "./hooks/recebimentos/useGetRecebimentoById.ts";
+export { useGetRecebimentoById } from "./hooks/recebimentos/useGetRecebimentoById.ts";
+export { getRecebimentos } from "./hooks/recebimentos/useGetRecebimentos.ts";
+export { getRecebimentosQueryKey } from "./hooks/recebimentos/useGetRecebimentos.ts";
+export { getRecebimentosQueryOptions } from "./hooks/recebimentos/useGetRecebimentos.ts";
+export { useGetRecebimentos } from "./hooks/recebimentos/useGetRecebimentos.ts";
+export { registrarRecebimento } from "./hooks/recebimentos/useRegistrarRecebimento.ts";
+export { registrarRecebimentoMutationKey } from "./hooks/recebimentos/useRegistrarRecebimento.ts";
+export { registrarRecebimentoMutationOptions } from "./hooks/recebimentos/useRegistrarRecebimento.ts";
+export { useRegistrarRecebimento } from "./hooks/recebimentos/useRegistrarRecebimento.ts";
+export { getRepasseById } from "./hooks/repasses/useGetRepasseById.ts";
+export { getRepasseByIdQueryKey } from "./hooks/repasses/useGetRepasseById.ts";
+export { getRepasseByIdQueryOptions } from "./hooks/repasses/useGetRepasseById.ts";
+export { useGetRepasseById } from "./hooks/repasses/useGetRepasseById.ts";
+export { getRepasses } from "./hooks/repasses/useGetRepasses.ts";
+export { getRepassesQueryKey } from "./hooks/repasses/useGetRepasses.ts";
+export { getRepassesQueryOptions } from "./hooks/repasses/useGetRepasses.ts";
+export { useGetRepasses } from "./hooks/repasses/useGetRepasses.ts";
+export { activateUser } from "./hooks/usuarios/useActivateUser.ts";
+export { activateUserMutationKey } from "./hooks/usuarios/useActivateUser.ts";
+export { activateUserMutationOptions } from "./hooks/usuarios/useActivateUser.ts";
+export { useActivateUser } from "./hooks/usuarios/useActivateUser.ts";
+export { createUser } from "./hooks/usuarios/useCreateUser.ts";
+export { createUserMutationKey } from "./hooks/usuarios/useCreateUser.ts";
+export { createUserMutationOptions } from "./hooks/usuarios/useCreateUser.ts";
+export { useCreateUser } from "./hooks/usuarios/useCreateUser.ts";
+export { deactivateUser } from "./hooks/usuarios/useDeactivateUser.ts";
+export { deactivateUserMutationKey } from "./hooks/usuarios/useDeactivateUser.ts";
+export { deactivateUserMutationOptions } from "./hooks/usuarios/useDeactivateUser.ts";
+export { useDeactivateUser } from "./hooks/usuarios/useDeactivateUser.ts";
+export { deleteUser } from "./hooks/usuarios/useDeleteUser.ts";
+export { deleteUserMutationKey } from "./hooks/usuarios/useDeleteUser.ts";
+export { deleteUserMutationOptions } from "./hooks/usuarios/useDeleteUser.ts";
+export { useDeleteUser } from "./hooks/usuarios/useDeleteUser.ts";
+export { getUserById } from "./hooks/usuarios/useGetUserById.ts";
+export { getUserByIdQueryKey } from "./hooks/usuarios/useGetUserById.ts";
+export { getUserByIdQueryOptions } from "./hooks/usuarios/useGetUserById.ts";
+export { useGetUserById } from "./hooks/usuarios/useGetUserById.ts";
+export { getUsers } from "./hooks/usuarios/useGetUsers.ts";
+export { getUsersQueryKey } from "./hooks/usuarios/useGetUsers.ts";
+export { getUsersQueryOptions } from "./hooks/usuarios/useGetUsers.ts";
+export { useGetUsers } from "./hooks/usuarios/useGetUsers.ts";
+export { agendarAtendimentoIndividualRequestTipoEnum } from "./types/AgendarAtendimentoIndividualRequest.ts";
 export { atendimentoIndividualResponseStatusEnum } from "./types/AtendimentoIndividualResponse.ts";
 export { atendimentoIndividualResponseTipoEnum } from "./types/AtendimentoIndividualResponse.ts";
+export { atualizarAtendimentoIndividualRequestTipoEnum } from "./types/AtualizarAtendimentoIndividualRequest.ts";
 export { authMeResponseRoleEnum } from "./types/AuthMeResponse.ts";
-export { buscarAtendimentosIndividuaisQueryParamsTipoEnum } from "./types/BuscarAtendimentosIndividuais.ts";
-export { buscarCobrancasAlunosQueryParamsFormaPagamentoEnum } from "./types/BuscarCobrancasAlunos.ts";
-export { buscarCobrancasAlunosQueryParamsStatusEnum } from "./types/BuscarCobrancasAlunos.ts";
-export { buscarRepassesIndividuaisQueryParamsFormaPagamentoEnum } from "./types/BuscarRepassesIndividuais.ts";
-export { buscarRepassesIndividuaisQueryParamsStatusEnum } from "./types/BuscarRepassesIndividuais.ts";
-export { cobrancaAlunoResponseFormaPagamentoEnum } from "./types/CobrancaAlunoResponse.ts";
-export { cobrancaAlunoResponseStatusEnum } from "./types/CobrancaAlunoResponse.ts";
-export { cobrancaLoteDetalheResponseFormaPagamentoEnum } from "./types/CobrancaLoteDetalheResponse.ts";
-export { cobrancaLoteItemStatusEnum } from "./types/CobrancaLoteItem.ts";
-export { cobrancaLoteResponseFormaPagamentoEnum } from "./types/CobrancaLoteResponse.ts";
-export { colaboradorDetailResponseDTOFuncaoEnum } from "./types/ColaboradorDetailResponseDTO.ts";
-export { colaboradorListResponseDTOFuncaoEnum } from "./types/ColaboradorListResponseDTO.ts";
-export { colaboradorRequestDTOFuncaoEnum } from "./types/ColaboradorRequestDTO.ts";
+export { cobrancaResponseStatusEnum } from "./types/CobrancaResponse.ts";
+export { colaboradorRequestFuncaoEnum } from "./types/ColaboradorRequest.ts";
+export { colaboradorResponseFuncaoEnum } from "./types/ColaboradorResponse.ts";
 export { despesaRequestCategoriaEnum } from "./types/DespesaRequest.ts";
 export { despesaRequestFormaPagamentoEnum } from "./types/DespesaRequest.ts";
 export { despesaRequestTipoEnum } from "./types/DespesaRequest.ts";
@@ -818,17 +803,23 @@ export { despesaResponseCategoriaEnum } from "./types/DespesaResponse.ts";
 export { despesaResponseFormaPagamentoEnum } from "./types/DespesaResponse.ts";
 export { despesaResponseStatusEnum } from "./types/DespesaResponse.ts";
 export { despesaResponseTipoEnum } from "./types/DespesaResponse.ts";
+export { getAtendimentosIndividuaisQueryParamsStatusEnum } from "./types/GetAtendimentosIndividuais.ts";
+export { getAtendimentosIndividuaisQueryParamsTipoEnum } from "./types/GetAtendimentosIndividuais.ts";
+export { getCobrancasQueryParamsFormaPagamentoEnum } from "./types/GetCobrancas.ts";
 export { getDespesasQueryParamsCategoriaEnum } from "./types/GetDespesas.ts";
 export { getDespesasQueryParamsFormaPagamentoEnum } from "./types/GetDespesas.ts";
-export { registrarPagamentoAlunoRequestFormaPagamentoEnum } from "./types/RegistrarPagamentoAlunoRequest.ts";
-export { registrarRepasseIndividualRequestFormaPagamentoEnum } from "./types/RegistrarRepasseIndividualRequest.ts";
-export { repasseIndividualResponseFormaPagamentoEnum } from "./types/RepasseIndividualResponse.ts";
-export { repasseIndividualResponseStatusEnum } from "./types/RepasseIndividualResponse.ts";
-export { repasseLoteDetalheResponseFormaPagamentoEnum } from "./types/RepasseLoteDetalheResponse.ts";
-export { repasseLoteItemStatusEnum } from "./types/RepasseLoteItem.ts";
-export { repasseLoteResponseFormaPagamentoEnum } from "./types/RepasseLoteResponse.ts";
+export { getPagamentosQueryParamsFormaPagamentoEnum } from "./types/GetPagamentos.ts";
+export { getRecebimentosQueryParamsFormaPagamentoEnum } from "./types/GetRecebimentos.ts";
+export { getRepassesQueryParamsFormaPagamentoEnum } from "./types/GetRepasses.ts";
+export { getRepassesQueryParamsStatusEnum } from "./types/GetRepasses.ts";
+export { pagamentoDetalheResponseFormaPagamentoEnum } from "./types/PagamentoDetalheResponse.ts";
+export { pagamentoResponseFormaPagamentoEnum } from "./types/PagamentoResponse.ts";
+export { recebimentoDetalheResponseFormaPagamentoEnum } from "./types/RecebimentoDetalheResponse.ts";
+export { recebimentoResponseFormaPagamentoEnum } from "./types/RecebimentoResponse.ts";
+export { registrarPagamentoRequestFormaPagamentoEnum } from "./types/RegistrarPagamentoRequest.ts";
+export { registrarRecebimentoRequestFormaPagamentoEnum } from "./types/RegistrarRecebimentoRequest.ts";
+export { repasseResponseStatusEnum } from "./types/RepasseResponse.ts";
 export { userCreateRequestRoleEnum } from "./types/UserCreateRequest.ts";
-export { userListResponseRoleEnum } from "./types/UserListResponse.ts";
 export { userResponseRoleEnum } from "./types/UserResponse.ts";
 export {
   activateAluno204Schema,
@@ -842,8 +833,10 @@ export {
 } from "./zod/activateAlunoSchema.ts";
 export {
   activateColaborador204Schema,
+  activateColaborador400Schema,
   activateColaborador401Schema,
   activateColaborador404Schema,
+  activateColaborador409Schema,
   activateColaborador500Schema,
   activateColaboradorMutationResponseSchema,
   activateColaboradorPathParamsSchema,
@@ -856,27 +849,28 @@ export {
   activateUserMutationResponseSchema,
   activateUserPathParamsSchema,
 } from "./zod/activateUserSchema.ts";
+export { agendarAtendimentoIndividualRequestSchema } from "./zod/agendarAtendimentoIndividualRequestSchema.ts";
 export {
   agendarAtendimentoIndividual201Schema,
   agendarAtendimentoIndividual400Schema,
   agendarAtendimentoIndividual401Schema,
+  agendarAtendimentoIndividual404Schema,
+  agendarAtendimentoIndividual409Schema,
   agendarAtendimentoIndividual500Schema,
   agendarAtendimentoIndividualMutationRequestSchema,
   agendarAtendimentoIndividualMutationResponseSchema,
 } from "./zod/agendarAtendimentoIndividualSchema.ts";
-export { alunoDetailResponseDTOSchema } from "./zod/alunoDetailResponseDTOSchema.ts";
-export { alunoListResponseDTOSchema } from "./zod/alunoListResponseDTOSchema.ts";
-export { alunoRequestDTOSchema } from "./zod/alunoRequestDTOSchema.ts";
-export { alunoResumoSchema } from "./zod/alunoResumoSchema.ts";
-export { alunosListDTOSchema } from "./zod/alunosListDTOSchema.ts";
-export { atendimentoIndividualCalendarioResponseSchema } from "./zod/atendimentoIndividualCalendarioResponseSchema.ts";
-export { atendimentoIndividualRequestSchema } from "./zod/atendimentoIndividualRequestSchema.ts";
+export { alunoOptionResponseSchema } from "./zod/alunoOptionResponseSchema.ts";
+export { alunoRequestSchema } from "./zod/alunoRequestSchema.ts";
+export { alunoResponseSchema } from "./zod/alunoResponseSchema.ts";
 export { atendimentoIndividualResponseSchema } from "./zod/atendimentoIndividualResponseSchema.ts";
+export { atualizarAtendimentoIndividualRequestSchema } from "./zod/atualizarAtendimentoIndividualRequestSchema.ts";
 export {
   atualizarAtendimentoIndividual204Schema,
   atualizarAtendimentoIndividual400Schema,
   atualizarAtendimentoIndividual401Schema,
   atualizarAtendimentoIndividual404Schema,
+  atualizarAtendimentoIndividual409Schema,
   atualizarAtendimentoIndividual500Schema,
   atualizarAtendimentoIndividualMutationRequestSchema,
   atualizarAtendimentoIndividualMutationResponseSchema,
@@ -884,112 +878,15 @@ export {
 } from "./zod/atualizarAtendimentoIndividualSchema.ts";
 export { authMeResponseSchema } from "./zod/authMeResponseSchema.ts";
 export {
-  buscarAtendimentoIndividualPorId200Schema,
-  buscarAtendimentoIndividualPorId401Schema,
-  buscarAtendimentoIndividualPorId404Schema,
-  buscarAtendimentoIndividualPorId500Schema,
-  buscarAtendimentoIndividualPorIdPathParamsSchema,
-  buscarAtendimentoIndividualPorIdQueryResponseSchema,
-} from "./zod/buscarAtendimentoIndividualPorIdSchema.ts";
-export {
-  buscarAtendimentosIndividuais200Schema,
-  buscarAtendimentosIndividuais400Schema,
-  buscarAtendimentosIndividuais401Schema,
-  buscarAtendimentosIndividuais500Schema,
-  buscarAtendimentosIndividuaisQueryParamsSchema,
-  buscarAtendimentosIndividuaisQueryResponseSchema,
-} from "./zod/buscarAtendimentosIndividuaisSchema.ts";
-export {
-  buscarCalendarioAtendimentosIndividuais200Schema,
-  buscarCalendarioAtendimentosIndividuais400Schema,
-  buscarCalendarioAtendimentosIndividuais401Schema,
-  buscarCalendarioAtendimentosIndividuais500Schema,
-  buscarCalendarioAtendimentosIndividuaisQueryParamsSchema,
-  buscarCalendarioAtendimentosIndividuaisQueryResponseSchema,
-} from "./zod/buscarCalendarioAtendimentosIndividuaisSchema.ts";
-export {
-  buscarCobrancaAlunoPorId200Schema,
-  buscarCobrancaAlunoPorId401Schema,
-  buscarCobrancaAlunoPorId404Schema,
-  buscarCobrancaAlunoPorId500Schema,
-  buscarCobrancaAlunoPorIdPathParamsSchema,
-  buscarCobrancaAlunoPorIdQueryResponseSchema,
-} from "./zod/buscarCobrancaAlunoPorIdSchema.ts";
-export {
-  buscarCobrancasAlunos200Schema,
-  buscarCobrancasAlunos400Schema,
-  buscarCobrancasAlunos401Schema,
-  buscarCobrancasAlunos500Schema,
-  buscarCobrancasAlunosQueryParamsSchema,
-  buscarCobrancasAlunosQueryResponseSchema,
-} from "./zod/buscarCobrancasAlunosSchema.ts";
-export {
-  buscarLoteDeCobrancaPorId200Schema,
-  buscarLoteDeCobrancaPorId401Schema,
-  buscarLoteDeCobrancaPorId404Schema,
-  buscarLoteDeCobrancaPorId500Schema,
-  buscarLoteDeCobrancaPorIdPathParamsSchema,
-  buscarLoteDeCobrancaPorIdQueryResponseSchema,
-} from "./zod/buscarLoteDeCobrancaPorIdSchema.ts";
-export {
-  buscarLoteDeRepassePorId200Schema,
-  buscarLoteDeRepassePorId401Schema,
-  buscarLoteDeRepassePorId404Schema,
-  buscarLoteDeRepassePorId500Schema,
-  buscarLoteDeRepassePorIdPathParamsSchema,
-  buscarLoteDeRepassePorIdQueryResponseSchema,
-} from "./zod/buscarLoteDeRepassePorIdSchema.ts";
-export {
-  buscarLotesDeCobranca200Schema,
-  buscarLotesDeCobranca400Schema,
-  buscarLotesDeCobranca401Schema,
-  buscarLotesDeCobranca500Schema,
-  buscarLotesDeCobrancaQueryParamsSchema,
-  buscarLotesDeCobrancaQueryResponseSchema,
-} from "./zod/buscarLotesDeCobrancaSchema.ts";
-export {
-  buscarLotesDeRepasse200Schema,
-  buscarLotesDeRepasse400Schema,
-  buscarLotesDeRepasse401Schema,
-  buscarLotesDeRepasse500Schema,
-  buscarLotesDeRepasseQueryParamsSchema,
-  buscarLotesDeRepasseQueryResponseSchema,
-} from "./zod/buscarLotesDeRepasseSchema.ts";
-export {
-  buscarRepasseIndividualPorId200Schema,
-  buscarRepasseIndividualPorId401Schema,
-  buscarRepasseIndividualPorId404Schema,
-  buscarRepasseIndividualPorId500Schema,
-  buscarRepasseIndividualPorIdPathParamsSchema,
-  buscarRepasseIndividualPorIdQueryResponseSchema,
-} from "./zod/buscarRepasseIndividualPorIdSchema.ts";
-export {
-  buscarRepassesIndividuais200Schema,
-  buscarRepassesIndividuais400Schema,
-  buscarRepassesIndividuais401Schema,
-  buscarRepassesIndividuais500Schema,
-  buscarRepassesIndividuaisQueryParamsSchema,
-  buscarRepassesIndividuaisQueryResponseSchema,
-} from "./zod/buscarRepassesIndividuaisSchema.ts";
-export {
   cancelarAtendimentoIndividual204Schema,
   cancelarAtendimentoIndividual400Schema,
   cancelarAtendimentoIndividual401Schema,
   cancelarAtendimentoIndividual404Schema,
+  cancelarAtendimentoIndividual409Schema,
   cancelarAtendimentoIndividual500Schema,
   cancelarAtendimentoIndividualMutationResponseSchema,
   cancelarAtendimentoIndividualPathParamsSchema,
 } from "./zod/cancelarAtendimentoIndividualSchema.ts";
-export { cancelarPagamentoAlunoRequestSchema } from "./zod/cancelarPagamentoAlunoRequestSchema.ts";
-export {
-  cancelarPagamentoAluno204Schema,
-  cancelarPagamentoAluno400Schema,
-  cancelarPagamentoAluno401Schema,
-  cancelarPagamentoAluno404Schema,
-  cancelarPagamentoAluno500Schema,
-  cancelarPagamentoAlunoMutationRequestSchema,
-  cancelarPagamentoAlunoMutationResponseSchema,
-} from "./zod/cancelarPagamentoAlunoSchema.ts";
 export {
   cancelarPagamentoDespesa200Schema,
   cancelarPagamentoDespesa401Schema,
@@ -998,35 +895,30 @@ export {
   cancelarPagamentoDespesaMutationResponseSchema,
   cancelarPagamentoDespesaPathParamsSchema,
 } from "./zod/cancelarPagamentoDespesaSchema.ts";
-export { cancelarRepasseIndividualRequestSchema } from "./zod/cancelarRepasseIndividualRequestSchema.ts";
 export {
-  cancelarRepassesIndividuais204Schema,
-  cancelarRepassesIndividuais400Schema,
-  cancelarRepassesIndividuais401Schema,
-  cancelarRepassesIndividuais404Schema,
-  cancelarRepassesIndividuais500Schema,
-  cancelarRepassesIndividuaisMutationRequestSchema,
-  cancelarRepassesIndividuaisMutationResponseSchema,
-} from "./zod/cancelarRepassesIndividuaisSchema.ts";
-export { cobrancaAlunoResponseSchema } from "./zod/cobrancaAlunoResponseSchema.ts";
-export { cobrancaAlunoResumoSchema } from "./zod/cobrancaAlunoResumoSchema.ts";
-export { cobrancaLoteDetalheResponseSchema } from "./zod/cobrancaLoteDetalheResponseSchema.ts";
-export { cobrancaLoteItemSchema } from "./zod/cobrancaLoteItemSchema.ts";
-export { cobrancaLoteResponseSchema } from "./zod/cobrancaLoteResponseSchema.ts";
-export { colaboradorDetailResponseDTOSchema } from "./zod/colaboradorDetailResponseDTOSchema.ts";
-export { colaboradorListResponseDTOSchema } from "./zod/colaboradorListResponseDTOSchema.ts";
-export { colaboradorRequestDTOSchema } from "./zod/colaboradorRequestDTOSchema.ts";
-export { colaboradorResumoSchema } from "./zod/colaboradorResumoSchema.ts";
-export { colaboradoresOptionsDTOSchema } from "./zod/colaboradoresOptionsDTOSchema.ts";
+  cancelarPagamento204Schema,
+  cancelarPagamento400Schema,
+  cancelarPagamento401Schema,
+  cancelarPagamento404Schema,
+  cancelarPagamento409Schema,
+  cancelarPagamento500Schema,
+  cancelarPagamentoMutationResponseSchema,
+  cancelarPagamentoPathParamsSchema,
+} from "./zod/cancelarPagamentoSchema.ts";
 export {
-  createColaborador201Schema,
-  createColaborador400Schema,
-  createColaborador401Schema,
-  createColaborador409Schema,
-  createColaborador500Schema,
-  createColaboradorMutationRequestSchema,
-  createColaboradorMutationResponseSchema,
-} from "./zod/createColaboradorSchema.ts";
+  cancelarRecebimento204Schema,
+  cancelarRecebimento400Schema,
+  cancelarRecebimento401Schema,
+  cancelarRecebimento404Schema,
+  cancelarRecebimento409Schema,
+  cancelarRecebimento500Schema,
+  cancelarRecebimentoMutationResponseSchema,
+  cancelarRecebimentoPathParamsSchema,
+} from "./zod/cancelarRecebimentoSchema.ts";
+export { cobrancaResponseSchema } from "./zod/cobrancaResponseSchema.ts";
+export { colaboradorOptionResponseSchema } from "./zod/colaboradorOptionResponseSchema.ts";
+export { colaboradorRequestSchema } from "./zod/colaboradorRequestSchema.ts";
+export { colaboradorResponseSchema } from "./zod/colaboradorResponseSchema.ts";
 export {
   createDespesa201Schema,
   createDespesa400Schema,
@@ -1046,15 +938,15 @@ export {
   createUserMutationResponseSchema,
 } from "./zod/createUserSchema.ts";
 export {
-  criarAluno201Schema,
-  criarAluno400Schema,
-  criarAluno401Schema,
-  criarAluno404Schema,
-  criarAluno409Schema,
-  criarAluno500Schema,
-  criarAlunoMutationRequestSchema,
-  criarAlunoMutationResponseSchema,
-} from "./zod/criarAlunoSchema.ts";
+  criarColaborador201Schema,
+  criarColaborador400Schema,
+  criarColaborador401Schema,
+  criarColaborador404Schema,
+  criarColaborador409Schema,
+  criarColaborador500Schema,
+  criarColaboradorMutationRequestSchema,
+  criarColaboradorMutationResponseSchema,
+} from "./zod/criarColaboradorSchema.ts";
 export {
   deactivateAluno204Schema,
   deactivateAluno400Schema,
@@ -1067,8 +959,10 @@ export {
 } from "./zod/deactivateAlunoSchema.ts";
 export {
   deactivateColaborador204Schema,
+  deactivateColaborador400Schema,
   deactivateColaborador401Schema,
   deactivateColaborador404Schema,
+  deactivateColaborador409Schema,
   deactivateColaborador500Schema,
   deactivateColaboradorMutationResponseSchema,
   deactivateColaboradorPathParamsSchema,
@@ -1099,16 +993,8 @@ export {
 } from "./zod/deleteUserSchema.ts";
 export { despesaRequestSchema } from "./zod/despesaRequestSchema.ts";
 export { despesaResponseSchema } from "./zod/despesaResponseSchema.ts";
-export { enderecoRequestDTOSchema } from "./zod/enderecoRequestDTOSchema.ts";
-export { enderecoResponseDTOSchema } from "./zod/enderecoResponseDTOSchema.ts";
-export {
-  findColaboradorById200Schema,
-  findColaboradorById401Schema,
-  findColaboradorById404Schema,
-  findColaboradorById500Schema,
-  findColaboradorByIdPathParamsSchema,
-  findColaboradorByIdQueryResponseSchema,
-} from "./zod/findColaboradorByIdSchema.ts";
+export { enderecoRequestSchema } from "./zod/enderecoRequestSchema.ts";
+export { enderecoResponseSchema } from "./zod/enderecoResponseSchema.ts";
 export {
   getAlunoById200Schema,
   getAlunoById400Schema,
@@ -1130,15 +1016,57 @@ export {
   getAlunosQueryResponseSchema,
 } from "./zod/getAlunosSchema.ts";
 export {
-  getColaboradoresList200Schema,
-  getColaboradoresList401Schema,
-  getColaboradoresList500Schema,
-  getColaboradoresListQueryResponseSchema,
-} from "./zod/getColaboradoresListSchema.ts";
+  getAtendimentoIndividualById200Schema,
+  getAtendimentoIndividualById400Schema,
+  getAtendimentoIndividualById401Schema,
+  getAtendimentoIndividualById404Schema,
+  getAtendimentoIndividualById409Schema,
+  getAtendimentoIndividualById500Schema,
+  getAtendimentoIndividualByIdPathParamsSchema,
+  getAtendimentoIndividualByIdQueryResponseSchema,
+} from "./zod/getAtendimentoIndividualByIdSchema.ts";
+export {
+  getAtendimentosIndividuais200Schema,
+  getAtendimentosIndividuais400Schema,
+  getAtendimentosIndividuais401Schema,
+  getAtendimentosIndividuais404Schema,
+  getAtendimentosIndividuais409Schema,
+  getAtendimentosIndividuais500Schema,
+  getAtendimentosIndividuaisQueryParamsSchema,
+  getAtendimentosIndividuaisQueryResponseSchema,
+} from "./zod/getAtendimentosIndividuaisSchema.ts";
+export {
+  getCobrancaById200Schema,
+  getCobrancaById401Schema,
+  getCobrancaById404Schema,
+  getCobrancaById500Schema,
+  getCobrancaByIdPathParamsSchema,
+  getCobrancaByIdQueryResponseSchema,
+} from "./zod/getCobrancaByIdSchema.ts";
+export {
+  getCobrancas200Schema,
+  getCobrancas400Schema,
+  getCobrancas401Schema,
+  getCobrancas500Schema,
+  getCobrancasQueryParamsSchema,
+  getCobrancasQueryResponseSchema,
+} from "./zod/getCobrancasSchema.ts";
+export {
+  getColaboradorById200Schema,
+  getColaboradorById400Schema,
+  getColaboradorById401Schema,
+  getColaboradorById404Schema,
+  getColaboradorById409Schema,
+  getColaboradorById500Schema,
+  getColaboradorByIdPathParamsSchema,
+  getColaboradorByIdQueryResponseSchema,
+} from "./zod/getColaboradorByIdSchema.ts";
 export {
   getColaboradores200Schema,
   getColaboradores400Schema,
   getColaboradores401Schema,
+  getColaboradores404Schema,
+  getColaboradores409Schema,
   getColaboradores500Schema,
   getColaboradoresQueryParamsSchema,
   getColaboradoresQueryResponseSchema,
@@ -1161,6 +1089,60 @@ export {
   getDespesasQueryResponseSchema,
 } from "./zod/getDespesasSchema.ts";
 export {
+  getPagamentoById200Schema,
+  getPagamentoById400Schema,
+  getPagamentoById401Schema,
+  getPagamentoById404Schema,
+  getPagamentoById409Schema,
+  getPagamentoById500Schema,
+  getPagamentoByIdPathParamsSchema,
+  getPagamentoByIdQueryResponseSchema,
+} from "./zod/getPagamentoByIdSchema.ts";
+export {
+  getPagamentos200Schema,
+  getPagamentos400Schema,
+  getPagamentos401Schema,
+  getPagamentos409Schema,
+  getPagamentos500Schema,
+  getPagamentosQueryParamsSchema,
+  getPagamentosQueryResponseSchema,
+} from "./zod/getPagamentosSchema.ts";
+export {
+  getRecebimentoById200Schema,
+  getRecebimentoById400Schema,
+  getRecebimentoById401Schema,
+  getRecebimentoById404Schema,
+  getRecebimentoById409Schema,
+  getRecebimentoById500Schema,
+  getRecebimentoByIdPathParamsSchema,
+  getRecebimentoByIdQueryResponseSchema,
+} from "./zod/getRecebimentoByIdSchema.ts";
+export {
+  getRecebimentos200Schema,
+  getRecebimentos400Schema,
+  getRecebimentos401Schema,
+  getRecebimentos409Schema,
+  getRecebimentos500Schema,
+  getRecebimentosQueryParamsSchema,
+  getRecebimentosQueryResponseSchema,
+} from "./zod/getRecebimentosSchema.ts";
+export {
+  getRepasseById200Schema,
+  getRepasseById401Schema,
+  getRepasseById404Schema,
+  getRepasseById500Schema,
+  getRepasseByIdPathParamsSchema,
+  getRepasseByIdQueryResponseSchema,
+} from "./zod/getRepasseByIdSchema.ts";
+export {
+  getRepasses200Schema,
+  getRepasses400Schema,
+  getRepasses401Schema,
+  getRepasses500Schema,
+  getRepassesQueryParamsSchema,
+  getRepassesQueryResponseSchema,
+} from "./zod/getRepassesSchema.ts";
+export {
   getUserById200Schema,
   getUserById401Schema,
   getUserById404Schema,
@@ -1170,18 +1152,39 @@ export {
 } from "./zod/getUserByIdSchema.ts";
 export { getUsers200Schema, getUsers401Schema, getUsers500Schema, getUsersQueryResponseSchema } from "./zod/getUsersSchema.ts";
 export {
-  listAlunos200Schema,
-  listAlunos400Schema,
-  listAlunos401Schema,
-  listAlunos404Schema,
-  listAlunos409Schema,
-  listAlunos500Schema,
-  listAlunosQueryResponseSchema,
-} from "./zod/listAlunosSchema.ts";
+  listAlunosOptions200Schema,
+  listAlunosOptions400Schema,
+  listAlunosOptions401Schema,
+  listAlunosOptions404Schema,
+  listAlunosOptions409Schema,
+  listAlunosOptions500Schema,
+  listAlunosOptionsQueryResponseSchema,
+} from "./zod/listAlunosOptionsSchema.ts";
+export {
+  listColaboradoresOptions200Schema,
+  listColaboradoresOptions400Schema,
+  listColaboradoresOptions401Schema,
+  listColaboradoresOptions404Schema,
+  listColaboradoresOptions409Schema,
+  listColaboradoresOptions500Schema,
+  listColaboradoresOptionsQueryResponseSchema,
+} from "./zod/listColaboradoresOptionsSchema.ts";
 export { loginRequestSchema } from "./zod/loginRequestSchema.ts";
 export { loginResponseSchema } from "./zod/loginResponseSchema.ts";
 export { login200Schema, loginMutationRequestSchema, loginMutationResponseSchema } from "./zod/loginSchema.ts";
 export { logout200Schema, logoutMutationResponseSchema } from "./zod/logoutSchema.ts";
+export {
+  matricularAluno201Schema,
+  matricularAluno400Schema,
+  matricularAluno401Schema,
+  matricularAluno404Schema,
+  matricularAluno409Schema,
+  matricularAluno500Schema,
+  matricularAlunoMutationRequestSchema,
+  matricularAlunoMutationResponseSchema,
+} from "./zod/matricularAlunoSchema.ts";
+export { pagamentoDetalheResponseSchema } from "./zod/pagamentoDetalheResponseSchema.ts";
+export { pagamentoResponseSchema } from "./zod/pagamentoResponseSchema.ts";
 export {
   pagarDespesa200Schema,
   pagarDespesa401Schema,
@@ -1191,54 +1194,55 @@ export {
   pagarDespesaPathParamsSchema,
 } from "./zod/pagarDespesaSchema.ts";
 export { pageMetadataSchema } from "./zod/pageMetadataSchema.ts";
-export { pagedModelAlunoListResponseDTOSchema } from "./zod/pagedModelAlunoListResponseDTOSchema.ts";
+export { pagedModelAlunoResponseSchema } from "./zod/pagedModelAlunoResponseSchema.ts";
 export { pagedModelAtendimentoIndividualResponseSchema } from "./zod/pagedModelAtendimentoIndividualResponseSchema.ts";
-export { pagedModelCobrancaAlunoResponseSchema } from "./zod/pagedModelCobrancaAlunoResponseSchema.ts";
-export { pagedModelCobrancaLoteResponseSchema } from "./zod/pagedModelCobrancaLoteResponseSchema.ts";
-export { pagedModelColaboradorListResponseDTOSchema } from "./zod/pagedModelColaboradorListResponseDTOSchema.ts";
+export { pagedModelCobrancaResponseSchema } from "./zod/pagedModelCobrancaResponseSchema.ts";
+export { pagedModelColaboradorResponseSchema } from "./zod/pagedModelColaboradorResponseSchema.ts";
 export { pagedModelDespesaResponseSchema } from "./zod/pagedModelDespesaResponseSchema.ts";
-export { pagedModelRepasseIndividualResponseSchema } from "./zod/pagedModelRepasseIndividualResponseSchema.ts";
-export { pagedModelRepasseLoteResponseSchema } from "./zod/pagedModelRepasseLoteResponseSchema.ts";
+export { pagedModelPagamentoResponseSchema } from "./zod/pagedModelPagamentoResponseSchema.ts";
+export { pagedModelRecebimentoResponseSchema } from "./zod/pagedModelRecebimentoResponseSchema.ts";
+export { pagedModelRepasseResponseSchema } from "./zod/pagedModelRepasseResponseSchema.ts";
 export { problemDetailSchema } from "./zod/problemDetailSchema.ts";
 export {
   realizarAtendimentoIndividual204Schema,
   realizarAtendimentoIndividual400Schema,
   realizarAtendimentoIndividual401Schema,
   realizarAtendimentoIndividual404Schema,
+  realizarAtendimentoIndividual409Schema,
   realizarAtendimentoIndividual500Schema,
   realizarAtendimentoIndividualMutationResponseSchema,
   realizarAtendimentoIndividualPathParamsSchema,
 } from "./zod/realizarAtendimentoIndividualSchema.ts";
+export { recebimentoDetalheResponseSchema } from "./zod/recebimentoDetalheResponseSchema.ts";
+export { recebimentoResponseSchema } from "./zod/recebimentoResponseSchema.ts";
 export { refreshAccessToken200Schema, refreshAccessTokenMutationResponseSchema } from "./zod/refreshAccessTokenSchema.ts";
-export { registrarPagamentoAlunoRequestSchema } from "./zod/registrarPagamentoAlunoRequestSchema.ts";
+export { registrarPagamentoRequestSchema } from "./zod/registrarPagamentoRequestSchema.ts";
 export {
-  registrarPagamentoAluno204Schema,
-  registrarPagamentoAluno400Schema,
-  registrarPagamentoAluno401Schema,
-  registrarPagamentoAluno404Schema,
-  registrarPagamentoAluno500Schema,
-  registrarPagamentoAlunoMutationRequestSchema,
-  registrarPagamentoAlunoMutationResponseSchema,
-} from "./zod/registrarPagamentoAlunoSchema.ts";
-export { registrarRepasseIndividualRequestSchema } from "./zod/registrarRepasseIndividualRequestSchema.ts";
+  registrarPagamento201Schema,
+  registrarPagamento400Schema,
+  registrarPagamento401Schema,
+  registrarPagamento404Schema,
+  registrarPagamento409Schema,
+  registrarPagamento500Schema,
+  registrarPagamentoMutationRequestSchema,
+  registrarPagamentoMutationResponseSchema,
+} from "./zod/registrarPagamentoSchema.ts";
+export { registrarRecebimentoRequestSchema } from "./zod/registrarRecebimentoRequestSchema.ts";
 export {
-  registrarRepassesIndividuais204Schema,
-  registrarRepassesIndividuais400Schema,
-  registrarRepassesIndividuais401Schema,
-  registrarRepassesIndividuais404Schema,
-  registrarRepassesIndividuais500Schema,
-  registrarRepassesIndividuaisMutationRequestSchema,
-  registrarRepassesIndividuaisMutationResponseSchema,
-} from "./zod/registrarRepassesIndividuaisSchema.ts";
-export { repasseIndividualResponseSchema } from "./zod/repasseIndividualResponseSchema.ts";
-export { repasseLoteDetalheResponseSchema } from "./zod/repasseLoteDetalheResponseSchema.ts";
-export { repasseLoteItemSchema } from "./zod/repasseLoteItemSchema.ts";
-export { repasseLoteResponseSchema } from "./zod/repasseLoteResponseSchema.ts";
-export { repasseResumoSchema } from "./zod/repasseResumoSchema.ts";
-export { responsavelRequestDTOSchema } from "./zod/responsavelRequestDTOSchema.ts";
-export { responsavelResponseDTOSchema } from "./zod/responsavelResponseDTOSchema.ts";
+  registrarRecebimento201Schema,
+  registrarRecebimento400Schema,
+  registrarRecebimento401Schema,
+  registrarRecebimento404Schema,
+  registrarRecebimento409Schema,
+  registrarRecebimento500Schema,
+  registrarRecebimentoMutationRequestSchema,
+  registrarRecebimentoMutationResponseSchema,
+} from "./zod/registrarRecebimentoSchema.ts";
+export { repasseResponseSchema } from "./zod/repasseResponseSchema.ts";
+export { responsavelRequestSchema } from "./zod/responsavelRequestSchema.ts";
+export { responsavelResponseSchema } from "./zod/responsavelResponseSchema.ts";
 export {
-  updateAluno200Schema,
+  updateAluno204Schema,
   updateAluno400Schema,
   updateAluno401Schema,
   updateAluno404Schema,
@@ -1249,7 +1253,7 @@ export {
   updateAlunoPathParamsSchema,
 } from "./zod/updateAlunoSchema.ts";
 export {
-  updateColaborador200Schema,
+  updateColaborador204Schema,
   updateColaborador400Schema,
   updateColaborador401Schema,
   updateColaborador404Schema,
@@ -1271,5 +1275,4 @@ export {
   updateDespesaPathParamsSchema,
 } from "./zod/updateDespesaSchema.ts";
 export { userCreateRequestSchema } from "./zod/userCreateRequestSchema.ts";
-export { userListResponseSchema } from "./zod/userListResponseSchema.ts";
 export { userResponseSchema } from "./zod/userResponseSchema.ts";

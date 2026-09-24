@@ -3,7 +3,7 @@
  * Do not edit manually.
  */
 
-import type { AlunoRequestDTO } from "./AlunoRequestDTO.ts";
+import type { AlunoRequest } from "./AlunoRequest.ts";
 import type { ProblemDetail } from "./ProblemDetail.ts";
 
 export type UpdateAlunoPathParams = {
@@ -16,7 +16,7 @@ export type UpdateAlunoPathParams = {
 /**
  * @description Aluno atualizado com sucesso.
  */
-export type UpdateAluno200 = any;
+export type UpdateAluno204 = any;
 
 /**
  * @description Requisição inválida.
@@ -43,12 +43,12 @@ export type UpdateAluno409 = ProblemDetail;
  */
 export type UpdateAluno500 = ProblemDetail;
 
-export type UpdateAlunoMutationRequest = AlunoRequestDTO;
+export type UpdateAlunoMutationRequest = AlunoRequest;
 
-export type UpdateAlunoMutationResponse = UpdateAluno200;
+export type UpdateAlunoMutationResponse = UpdateAluno204;
 
 export type UpdateAlunoMutation = {
-  Response: UpdateAluno200;
+  Response: UpdateAluno204;
   Request: UpdateAlunoMutationRequest;
   PathParams: UpdateAlunoPathParams;
   Errors: UpdateAluno400 | UpdateAluno401 | UpdateAluno404 | UpdateAluno409 | UpdateAluno500;

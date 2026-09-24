@@ -7,7 +7,7 @@ import aprimorar.agendamento.colaboradores.infrastructure.ColaboradorRepository;
 import aprimorar.agendamento.colaboradores.infrastructure.ColaboradorSpecifications;
 import aprimorar.agendamento.colaboradores.web.dto.ColaboradorFiltroRequest;
 import aprimorar.agendamento.colaboradores.web.dto.ColaboradorResponse;
-import aprimorar.agendamento.colaboradores.web.dto.ColaboradoresOptionsResponse;
+import aprimorar.agendamento.colaboradores.web.dto.ColaboradorOptionResponse;
 import aprimorar.financeiro.repasses_colaboradores.api.PagamentosApi;
 
 import java.util.List;
@@ -43,13 +43,13 @@ public class ColaboradorService {
     }
 
     @Transactional(readOnly = true)
-    public List<ColaboradoresOptionsResponse> listColaboradoresOptions() {
+    public List<ColaboradorOptionResponse> listColaboradoresOptions() {
         Sort sort = Sort.by(Sort.Direction.ASC, "nome");
 
         return colaboradorRepo
             .findAll(ColaboradorSpecifications.isActive(), sort)
             .stream()
-            .map(ColaboradoresOptionsResponse::toDto)
+            .map(ColaboradorOptionResponse::toDto)
             .toList();
     }
 
