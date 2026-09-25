@@ -20,7 +20,7 @@ export function AlunoAtendimentoCard({ atendimento, onOpen }: Readonly<AlunoAten
         <div>
           <AtendimentoTipoBadge tipo={atendimento.tipo} />
           <h3 className="mt-2 font-semibold text-base-content">
-            {atendimento.colaboradorResumo.nome}
+            {atendimento.colaboradorNome}
           </h3>
         </div>
 
@@ -34,8 +34,8 @@ export function AlunoAtendimentoCard({ atendimento, onOpen }: Readonly<AlunoAten
           </p>
           <p className="flex items-center gap-2">
             <span className="font-medium text-base-content">Cobrança:</span>
-            <PaymentStatusIndicator status={atendimento.cobranca.status} />
-            <span>{brl.format(atendimento.cobranca.valor)}</span>
+            <PaymentStatusIndicator status={atendimento.cobrancaStatus} />
+            <span>{brl.format(atendimento.valorCobranca)}</span>
           </p>
         </div>
       </div>

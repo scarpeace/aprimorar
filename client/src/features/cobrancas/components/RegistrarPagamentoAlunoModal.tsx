@@ -7,8 +7,8 @@ import { LoadingSkeleton } from "@/components/ui/LoadingSkeleton";
 import { Modal } from "@/components/ui/Modal";
 import { Pagination } from "@/components/ui/Pagination";
 import { RegistrarPagamentoAlunoForm } from "@/features/cobrancas/components/RegistrarPagamentoAlunoForm";
-import { CobrancasPendentesTable } from "@/features/cobrancas/components/CobrancasPendentesTable";
-import { useBuscarCobrancasAlunos } from "@/lib/api/generated/hooks/cobranças de alunos/useBuscarCobrancasAlunos";
+import { CobrancasEmAbertoTable } from "@/features/cobrancas/components/CobrancasEmAbertoTable";
+import { useGetCobrancas } from "@/lib/api/generated/hooks/cobrancas/useGetCobrancas";
 
 const PAGE_SIZE = 10;
 
@@ -21,10 +21,10 @@ type RegistrarPagamentoAlunoModalProps = {
 export function RegistrarPagamentoAlunoModal({ alunoId, isOpen, onClose }: Readonly<RegistrarPagamentoAlunoModalProps>) {
   const [page, setPage] = useState(0);
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
-  const cobrancas = useBuscarCobrancasAlunos(
+  const cobrancas = useGetCobrancas(
     {
       alunoId,
-      status: "PENDENTE",
+      status: ["PENDENTE", "ATRASADA"],
       page,
       size: PAGE_SIZE,
     },
@@ -67,7 +67,7 @@ export function RegistrarPagamentoAlunoModal({ alunoId, isOpen, onClose }: Reado
       isOpen={isOpen}
       onClose={handleClose}
       title="Registrar pagamento"
-      description="Selecione as cobranças pendentes e informe a forma de pagamento."
+      description="Selecione as cobranças em aberto e informe a forma de pagamento."
       size="lg"
     >
       <div className="space-y-6">
@@ -75,18 +75,18 @@ export function RegistrarPagamentoAlunoModal({ alunoId, isOpen, onClose }: Reado
           <LoadingSkeleton className="h-56 w-full" />
         ) : cobrancas.error ? (
           <ErrorCard
-            title="Não foi possível carregar as cobranças pendentes"
+            title="Não foi possível carregar as cobranças em aberto"
             description="A consulta falhou. Tente novamente."
             error={cobrancas.error}
           />
         ) : content.length === 0 ? (
           <EmptyCard
-            title="Nenhuma cobrança pendente"
-            description="Não existem cobranças pendentes para este aluno."
+            title="Nenhuma cobrança em aberto"
+            description="Não existem cobranças pendentes ou atrasadas para este aluno."
           />
         ) : (
           <>
-            <CobrancasPendentesTable
+            <CobrancasEmAbertoTable
               cobrancas={content}
               selectedIds={selectedIds}
               onToggle={toggleCobranca}
@@ -95,7 +95,7 @@ export function RegistrarPagamentoAlunoModal({ alunoId, isOpen, onClose }: Reado
             <Pagination
               currentPage={currentPage}
               totalPages={totalPages}
-              summary={<>Mostrando {content.length} de {totalElements} cobrança(s) pendente(s)</>}
+              summary={<>Mostrando {content.length} de {totalElements} cobrança(s) em aberto</>}
               onPrevious={() => changePage(currentPage - 1)}
               onNext={() => changePage(currentPage + 1)}
             />

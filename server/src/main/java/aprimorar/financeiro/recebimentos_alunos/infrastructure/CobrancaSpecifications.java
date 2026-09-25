@@ -1,9 +1,11 @@
 package aprimorar.financeiro.recebimentos_alunos.infrastructure;
 
 import aprimorar.financeiro.recebimentos_alunos.domain.Cobranca;
+import aprimorar.financeiro.recebimentos_alunos.domain.enums.StatusCobranca;
 import aprimorar.financeiro.recebimentos_alunos.web.dto.CobrancaFiltroRequest;
 import aprimorar.common.FormaPagamentoEnum;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.UUID;
 import org.springframework.data.jpa.domain.Specification;
 
@@ -17,10 +19,19 @@ public final class CobrancaSpecifications {
     ) {
         return Specification.allOf(
             alunoIdIgual(filtro.alunoId()),
+            statusEm(filtro.status()),
             formaPagamentoIgual(filtro.formaPagamento()),
             dataRecebimentoMaiorOuIgual(filtro.dataRecebimentoInicio()),
             dataRecebimentoMenorOuIgual(filtro.dataRecebimentoFim())
         );
+    }
+
+    private static Specification<Cobranca> statusEm(
+        List<StatusCobranca> statuses
+    ) {
+        return (root, query, cb) -> statuses == null || statuses.isEmpty()
+            ? null
+            : root.get("status").in(statuses);
     }
 
     private static Specification<Cobranca> alunoIdIgual(UUID alunoId) {

@@ -28,9 +28,9 @@ export function useAtendimentoMutations() {
       onError: (error) => {
         toast.error(getFriendlyErrorMessage(error) || "Algo deu errado ao criar o atendimento");
       },
-      onSuccess: async (createdAtendimento) => {
+      onSuccess: async () => {
         toast.success("Atendimento criado com sucesso");
-        await Promise.all([invalidateAtendimentos(), invalidateAtendimentoDetail(createdAtendimento.id)]);
+        await invalidateAtendimentos();
       },
     },
   });

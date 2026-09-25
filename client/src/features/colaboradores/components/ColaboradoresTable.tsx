@@ -10,7 +10,7 @@ import { LoadingSkeleton } from "@/components/ui/LoadingSkeleton";
 import { Pagination } from "@/components/ui/Pagination";
 import { SearchInput } from "@/components/ui/SearchInput";
 
-import { useGetColaboradores } from "@/lib/api/generated/hooks/colaborador/useGetColaboradores";
+import { useGetColaboradores } from "@/lib/api/generated/hooks/colaboradores/useGetColaboradores";
 import { useDebounce } from "@/lib/hooks/use-debounce";
 
 const PAGE_SIZE = 10;
@@ -115,7 +115,7 @@ export function ColaboradoresTable() {
                     <td className="font-semibold">{colaborador.nome ?? "Não informado"}</td>
                     <td>{colaborador.funcao ?? "Não informada"}</td>
                     <td>
-                      <ActiveStatusIndicator active={colaborador.ativo ?? false} />
+                      <ActiveStatusIndicator active={colaborador.active ?? false} />
                     </td>
                   </tr>
                 ))}

@@ -1,11 +1,11 @@
-import type { ColaboradorDetailResponseDTO } from "@/lib/api/generated/types/ColaboradorDetailResponseDTO";
+import type { ColaboradorResponse } from "@/lib/api/generated/types/ColaboradorResponse";
 import { Collapse } from "@/components/ui/Collapse";
 import { DetailField } from "@/components/ui/DetailField";
 import { EnderecoDetails } from "@/components/ui/EnderecoDetails";
 import { formatCpf, formatDate, formatPhone } from "@/lib/utils/formatter";
 
 type ColaboradorDetailsProps = {
-  colaborador: ColaboradorDetailResponseDTO;
+  colaborador: ColaboradorResponse;
 };
 
 export function ColaboradorDetails({ colaborador }: Readonly<ColaboradorDetailsProps>) {

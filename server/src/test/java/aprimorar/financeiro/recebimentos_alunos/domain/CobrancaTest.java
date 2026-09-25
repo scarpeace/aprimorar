@@ -10,10 +10,8 @@ import aprimorar.financeiro.recebimentos_alunos.domain.enums.StatusCobranca;
 import aprimorar.financeiro.recebimentos_alunos.domain.exception.CobrancaDadosInvalidosException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
-import org.springframework.test.util.ReflectionTestUtils;
 
 class CobrancaTest {
 
@@ -27,19 +25,6 @@ class CobrancaTest {
         assertEquals(10L, cobranca.getAtendimentoId());
         assertEquals(ALUNO_ID, cobranca.getAlunoId());
         assertEquals(new BigDecimal("80.00"), cobranca.getValor());
-        assertEquals(StatusCobranca.PENDENTE, cobranca.getStatus());
-    }
-
-    @Test
-    void deveCalcularStatusAtrasado() {
-        Cobranca cobranca = cobranca();
-        ReflectionTestUtils.setField(
-            cobranca,
-            "createdAt",
-            LocalDateTime.now().minusDays(31)
-        );
-
-        assertEquals(StatusCobranca.ATRASADA, cobranca.statusAtual());
         assertEquals(StatusCobranca.PENDENTE, cobranca.getStatus());
     }
 

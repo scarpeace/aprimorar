@@ -1,7 +1,9 @@
 {
   "required": [
+    "alunoId",
     "alunoNome",
     "cobrancaStatus",
+    "colaboradorId",
     "colaboradorNome",
     "createdAt",
     "dataHoraFim",
@@ -9,7 +11,9 @@
     "id",
     "repasseStatus",
     "status",
-    "tipo"
+    "tipo",
+    "valorCobranca",
+    "valorRepasse"
   ],
   "type": "object",
   "properties": {
@@ -26,10 +30,26 @@
     },
     "dataHoraInicio": { "type": "string", "description": "Data e hora de início", "format": "date-time" },
     "dataHoraFim": { "type": "string", "description": "Data e hora de fim", "format": "date-time" },
+    "alunoId": { "type": "string", "description": "Identificador do aluno vinculado", "format": "uuid" },
     "alunoNome": { "type": "string", "description": "Nome do aluno vinculado" },
+    "colaboradorId": { "type": "string", "description": "Identificador do colaborador vinculado", "format": "uuid" },
     "colaboradorNome": { "type": "string", "description": "Nome do colaborador vinculado" },
+    "valorCobranca": { "type": "number", "description": "Valor da cobrança vinculada" },
     "cobrancaStatus": { "type": "string", "description": "Status da cobrança do atendimento" },
+    "recebimentoId": {
+      "type": "string",
+      "description": "Identificador do recebimento associado à cobrança",
+      "format": "uuid",
+      "nullable": true
+    },
+    "valorRepasse": { "type": "number", "description": "Valor do repasse vinculado" },
     "repasseStatus": { "type": "string", "description": "Status do repasse do atendimento" },
+    "pagamentoId": {
+      "type": "string",
+      "description": "Identificador do pagamento associado ao repasse",
+      "format": "uuid",
+      "nullable": true
+    },
     "createdAt": { "type": "string", "description": "Data de criação do atendimento", "format": "date-time" },
     "updatedAt": {
       "type": "string",

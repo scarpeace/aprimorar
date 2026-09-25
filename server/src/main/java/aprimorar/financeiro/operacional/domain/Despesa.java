@@ -84,7 +84,7 @@ public class Despesa {
         this.categoria = categoria;
         this.valor = valor;
         this.dataVencimento = dataVencimento;
-        this.status = calcularStatus(dataVencimento);
+        this.status = StatusDespesa.PENDENTE;
         this.formaPagamento = formaPagamento;
         this.descricao = descricao;
     }
@@ -106,7 +106,9 @@ public class Despesa {
         this.dataVencimento = dataVencimento;
         this.formaPagamento = formaPagamento;
         this.descricao = descricao;
-        this.status = dataPagamento == null ? calcularStatus(dataVencimento) : StatusDespesa.PAGA;
+        if (dataPagamento != null) {
+            this.status = StatusDespesa.PAGA;
+        }
     }
 
     public void pagar() {
@@ -116,7 +118,7 @@ public class Despesa {
 
     public void cancelarPagamento() {
         this.dataPagamento = null;
-        this.status = calcularStatus(dataVencimento);
+        this.status = StatusDespesa.PENDENTE;
     }
 
     private static void validarCamposObrigatorios(
@@ -145,10 +147,6 @@ public class Despesa {
         if (formaPagamento == null) {
             throw new DespesaDadosInvalidosException("Forma de pagamento é obrigatória");
         }
-    }
-
-    private static StatusDespesa calcularStatus(LocalDate dataVencimento) {
-        return dataVencimento.isBefore(LocalDate.now()) ? StatusDespesa.ATRASADA : StatusDespesa.PENDENTE;
     }
 
     @PrePersist

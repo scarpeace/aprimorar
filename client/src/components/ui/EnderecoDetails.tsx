@@ -1,9 +1,9 @@
-import type { EnderecoResponseDTO } from "@/lib/api/generated/types/EnderecoResponseDTO";
+import type { EnderecoResponse } from "@/lib/api/generated/types/EnderecoResponse";
 import { DetailField } from "@/components/ui/DetailField";
 import { formatZip } from "@/lib/utils/formatter";
 
 type EnderecoDetailsProps = {
-  endereco: EnderecoResponseDTO;
+  endereco: EnderecoResponse;
 };
 
 export function EnderecoDetails({ endereco }: Readonly<EnderecoDetailsProps>) {

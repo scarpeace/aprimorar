@@ -10,7 +10,7 @@ import { ErrorCard } from "@/components/ui/ErrorCard";
 import { LoadingSkeleton } from "@/components/ui/LoadingSkeleton";
 import { AtendimentoFinancialCard } from "@/features/atendimentos/components/AtendimentoFinancialCard";
 import { AtendimentoTipoBadge } from "@/features/atendimentos/components/AtendimentoTipoBadge";
-import { useBuscarAtendimentoIndividualPorId } from "@/lib/api/generated/hooks/atendimentos individuais/useBuscarAtendimentoIndividualPorId";
+import { useGetAtendimentoIndividualById } from "@/lib/api/generated/hooks/atendimentos/useGetAtendimentoIndividualById";
 import { formatDateShortYear, formatTime } from "@/lib/utils/date-utils";
 import { formatDate } from "@/lib/utils/formatter";
 
@@ -20,7 +20,7 @@ type AtendimentoDetailsProps = {
 
 
 export function AtendimentoDetails({ atendimentoId }: Readonly<AtendimentoDetailsProps>) {
-  const atendimento = useBuscarAtendimentoIndividualPorId(Number(atendimentoId));
+  const atendimento = useGetAtendimentoIndividualById(Number(atendimentoId));
 
   return (
     <Card>
@@ -55,9 +55,9 @@ export function AtendimentoDetails({ atendimentoId }: Readonly<AtendimentoDetail
               <p className="text-xs font-semibold uppercase tracking-wider text-base-content/50">Aluno</p>
               <Link
                 className="btn btn-link btn-sm h-auto min-h-0 justify-start gap-1 p-0 text-sm"
-                href={`/alunos/${atendimento.data.alunoResumo.id}`}
+                href={`/alunos/${atendimento.data.alunoId}`}
               >
-                {atendimento.data.alunoResumo.nome}
+                {atendimento.data.alunoNome}
                 <SquareArrowOutUpRight size={14} aria-hidden="true" />
               </Link>
             </div>
@@ -65,9 +65,9 @@ export function AtendimentoDetails({ atendimentoId }: Readonly<AtendimentoDetail
               <p className="text-xs font-semibold uppercase tracking-wider text-base-content/50">Colaborador</p>
               <Link
                 className="btn btn-link btn-sm h-auto min-h-0 justify-start gap-1 p-0 text-sm"
-                href={`/colaboradores/${atendimento.data.colaboradorResumo.id}`}
+                href={`/colaboradores/${atendimento.data.colaboradorId}`}
               >
-                {atendimento.data.colaboradorResumo.nome}
+                {atendimento.data.colaboradorNome}
                 <SquareArrowOutUpRight size={14} aria-hidden="true" />
               </Link>
             </div>
@@ -81,29 +81,13 @@ export function AtendimentoDetails({ atendimentoId }: Readonly<AtendimentoDetail
           <div className="grid gap-4 md:grid-cols-2">
             <AtendimentoFinancialCard
               title="Cobrança"
-              value={atendimento.data.cobranca.valor}
-              status={atendimento.data.cobranca.status}
-              loteId={atendimento.data.cobranca.loteId}
-              paymentDate={atendimento.data.cobranca.dataPagamento}
-              formaPagamento={atendimento.data.cobranca.formaPagamento}
-              paymentRecordHref={
-                atendimento.data.cobranca.loteId
-                  ? `/financeiro/cobrancas/lotes/${atendimento.data.cobranca.loteId}`
-                  : undefined
-              }
+              value={atendimento.data.valorCobranca}
+              status={atendimento.data.cobrancaStatus}
             />
             <AtendimentoFinancialCard
               title="Repasse"
-              value={atendimento.data.repasse.valor}
-              status={atendimento.data.repasse.status}
-              loteId={atendimento.data.repasse.loteId}
-              paymentDate={atendimento.data.repasse.dataRepasse}
-              formaPagamento={atendimento.data.repasse.formaPagamento}
-              paymentRecordHref={
-                atendimento.data.repasse.loteId
-                  ? `/financeiro/repasses/lotes/${atendimento.data.repasse.loteId}`
-                  : undefined
-              }
+              value={atendimento.data.valorRepasse}
+              status={atendimento.data.repasseStatus}
             />
           </div>
 

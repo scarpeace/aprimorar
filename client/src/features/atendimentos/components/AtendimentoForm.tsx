@@ -4,8 +4,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { FormProvider, useForm, useWatch } from "react-hook-form";
 import type { AtendimentoIndividualResponse } from "@/lib/api/generated/types/AtendimentoIndividualResponse";
-import { useListAlunos } from "@/lib/api/generated/hooks/aluno/useListAlunos";
-import { useGetColaboradoresList } from "@/lib/api/generated/hooks/colaborador/useGetColaboradoresList";
+import { useListAlunosOptions } from "@/lib/api/generated/hooks/alunos/useListAlunosOptions";
+import { useListColaboradoresOptions } from "@/lib/api/generated/hooks/colaboradores/useListColaboradoresOptions";
 import { Button } from "@/components/ui/Button";
 import { AsyncSelectInput } from "@/components/ui/forms/AsyncSelectInput";
 import { Field } from "@/components/ui/forms/Field";
@@ -33,20 +33,20 @@ type AtendimentoFormProps = {
 export function AtendimentoForm({ initialData, onSuccess, onCancel }: Readonly<AtendimentoFormProps>) {
   const { createAtendimento, updateAtendimento } = useAtendimentoMutations();
   const isEditMode = !!initialData;
-  const alunos = useListAlunos();
-  const colaboradores = useGetColaboradoresList();
+  const alunos = useListAlunosOptions();
+  const colaboradores = useListColaboradoresOptions();
 
   const methods = useForm<AtendimentoFormInput>({
     resolver: zodResolver(atendimentoFormSchema),
     mode: "onBlur",
     defaultValues: {
-      alunoId: initialData?.alunoResumo.id ?? "",
-      colaboradorId: initialData?.colaboradorResumo.id ?? "",
+      alunoId: initialData?.alunoId ?? "",
+      colaboradorId: initialData?.colaboradorId ?? "",
       tipo: initialData?.tipo ?? "AULA",
       dataHoraInicio: formatDateTimeLocal(initialData?.dataHoraInicio ?? new Date()),
       duracao: initialData ? getDurationInHours(initialData.dataHoraInicio, initialData.dataHoraFim) : 1,
-      valorCobranca: initialData?.cobranca.valor,
-      valorRepasse: initialData?.repasse.valor,
+      valorCobranca: initialData?.valorCobranca,
+      valorRepasse: initialData?.valorRepasse,
     },
   });
 
@@ -89,7 +89,7 @@ export function AtendimentoForm({ initialData, onSuccess, onCancel }: Readonly<A
     if (isEditMode && initialData) {
       updateAtendimento.mutate(
         {
-          id: initialData.id,
+          atendimentoId: initialData.id,
           data: payload,
         },
         {

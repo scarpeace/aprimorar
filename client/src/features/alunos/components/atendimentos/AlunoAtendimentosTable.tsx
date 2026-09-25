@@ -14,8 +14,8 @@ import { SelectField } from "@/components/ui/SelectField";
 import { AlunoAtendimentoCard } from "@/features/alunos/components/atendimentos/AlunoAtendimentoCard";
 import { RegistrarPagamentoAlunoButton } from "@/features/cobrancas/components/RegistrarPagamentoAlunoButton";
 import { AtendimentoTipoBadge } from "@/features/atendimentos/components/AtendimentoTipoBadge";
-import { useBuscarAtendimentosIndividuais } from "@/lib/api/generated/hooks/atendimentos individuais/useBuscarAtendimentosIndividuais";
-import type { BuscarAtendimentosIndividuaisQueryParamsTipoEnumKey } from "@/lib/api/generated/types/BuscarAtendimentosIndividuais";
+import { useGetAtendimentosIndividuais } from "@/lib/api/generated/hooks/atendimentos/useGetAtendimentosIndividuais";
+import type { GetAtendimentosIndividuaisQueryParamsTipoEnumKey } from "@/lib/api/generated/types/GetAtendimentosIndividuais";
 import { atendimentoTipoOptions } from "@/lib/constants/atendimento-constants";
 import { useDebounce } from "@/lib/hooks/use-debounce";
 import { formatDateShortYear, formatTime } from "@/lib/utils/date-utils";
@@ -23,7 +23,7 @@ import { brl } from "@/lib/utils/formatter";
 
 const PAGE_SIZE = 10;
 
-type AlunoAtendimentoTipo = BuscarAtendimentosIndividuaisQueryParamsTipoEnumKey | "";
+type AlunoAtendimentoTipo = GetAtendimentosIndividuaisQueryParamsTipoEnumKey | "";
 
 type AlunoAtendimentosTableProps = {
   alunoId: string;
@@ -39,7 +39,7 @@ export function AlunoAtendimentosTable({ alunoId }: Readonly<AlunoAtendimentosTa
   const [dataFim, setDataFim] = useState("");
   const search = useDebounce(searchInput.trim(), 300);
 
-  const atendimentos = useBuscarAtendimentosIndividuais({
+  const atendimentos = useGetAtendimentosIndividuais({
     page,
     size: PAGE_SIZE,
     alunoId,
@@ -141,7 +141,7 @@ export function AlunoAtendimentosTable({ alunoId }: Readonly<AlunoAtendimentosTa
                     className="cursor-pointer hover:bg-base-200/70"
                     onClick={() => openAtendimento(atendimento.id)}
                   >
-                    <td className="font-semibold">{atendimento.colaboradorResumo.nome}</td>
+                    <td className="font-semibold">{atendimento.colaboradorNome}</td>
                     <td>{formatDateShortYear(atendimento.dataHoraInicio)}</td>
                     <td>
                       {formatTime(atendimento.dataHoraInicio)} - {formatTime(atendimento.dataHoraFim)}
@@ -151,8 +151,8 @@ export function AlunoAtendimentosTable({ alunoId }: Readonly<AlunoAtendimentosTa
                     </td>
                     <td className="w-10">
                       <div className="flex items-center justify-between gap-3">
-                        <PaymentStatusIndicator status={atendimento.cobranca.status} />
-                        <span>{brl.format(atendimento.cobranca.valor)}</span>
+                        <PaymentStatusIndicator status={atendimento.cobrancaStatus} />
+                        <span>{brl.format(atendimento.valorCobranca)}</span>
                       </div>
                     </td>
                   </tr>

@@ -1,6 +1,7 @@
 package aprimorar.financeiro.repasses_colaboradores.application;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -12,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import aprimorar.financeiro.repasses_colaboradores.domain.RepassePagamento;
 import aprimorar.financeiro.repasses_colaboradores.domain.Repasse;
+import aprimorar.financeiro.repasses_colaboradores.domain.enums.StatusRepasse;
 import aprimorar.financeiro.repasses_colaboradores.domain.exception.PagamentoDadosInvalidosException;
 import aprimorar.financeiro.repasses_colaboradores.domain.exception.PagamentoNaoEncontradoException;
 import aprimorar.financeiro.repasses_colaboradores.domain.exception.RepasseNaoEncontradoException;
@@ -117,5 +119,14 @@ public class PagamentoService{
         Repasse repasse = repasseRepository.findById(id)
             .orElseThrow(RepasseNaoEncontradoException::new);
         return RepasseResponse.toDto(repasse);
+    }
+
+    @Transactional
+    public int marcarRepassesAtrasados() {
+        return repasseRepository.marcarAtrasados(
+            StatusRepasse.PENDENTE,
+            StatusRepasse.ATRASADO,
+            LocalDateTime.now().minusDays(30)
+        );
     }
 }

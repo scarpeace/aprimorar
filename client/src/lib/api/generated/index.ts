@@ -322,6 +322,7 @@ export type {
   GetCobrancasQuery,
   GetCobrancasQueryParams,
   GetCobrancasQueryParamsFormaPagamentoEnumKey,
+  GetCobrancasQueryParamsStatusEnumKey,
   GetCobrancasQueryResponse,
 } from "./types/GetCobrancas.ts";
 export type {
@@ -806,6 +807,7 @@ export { despesaResponseTipoEnum } from "./types/DespesaResponse.ts";
 export { getAtendimentosIndividuaisQueryParamsStatusEnum } from "./types/GetAtendimentosIndividuais.ts";
 export { getAtendimentosIndividuaisQueryParamsTipoEnum } from "./types/GetAtendimentosIndividuais.ts";
 export { getCobrancasQueryParamsFormaPagamentoEnum } from "./types/GetCobrancas.ts";
+export { getCobrancasQueryParamsStatusEnum } from "./types/GetCobrancas.ts";
 export { getDespesasQueryParamsCategoriaEnum } from "./types/GetDespesas.ts";
 export { getDespesasQueryParamsFormaPagamentoEnum } from "./types/GetDespesas.ts";
 export { getPagamentosQueryParamsFormaPagamentoEnum } from "./types/GetPagamentos.ts";

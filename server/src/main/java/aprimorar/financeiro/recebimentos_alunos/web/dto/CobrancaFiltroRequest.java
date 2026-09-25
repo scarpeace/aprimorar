@@ -1,16 +1,21 @@
 package aprimorar.financeiro.recebimentos_alunos.web.dto;
 
 import aprimorar.common.FormaPagamentoEnum;
+import aprimorar.financeiro.recebimentos_alunos.domain.enums.StatusCobranca;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.PastOrPresent;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.UUID;
 
 @Schema(description = "Filtros opcionais para listar cobranças")
 public record CobrancaFiltroRequest(
     @Schema(description = "ID do aluno")
     UUID alunoId,
+
+    @Schema(description = "Status da cobrança")
+    List<StatusCobranca> status,
 
     @Schema(description = "Forma de pagamento do recebimento")
     FormaPagamentoEnum formaPagamento,

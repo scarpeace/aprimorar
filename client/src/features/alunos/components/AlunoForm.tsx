@@ -9,11 +9,11 @@ import { SelectInput } from "@/components/ui/forms/SelectInput";
 import { TextInput } from "@/components/ui/forms/TextInput";
 import { useAlunoMutations } from "@/features/alunos/hooks/use-aluno-mutations";
 import { alunoFormSchema, type AlunoFormData } from "@/features/alunos/schemas/aluno-form-schema";
-import type { AlunoDetailResponseDTO } from "@/lib/api/generated/types/AlunoDetailResponseDTO";
+import type { AlunoResponse } from "@/lib/api/generated/types/AlunoResponse";
 import { BRAZILIAN_STATES } from "@/lib/constants/endereco-constants";
 
 type AlunoFormProps = {
-  initialData?: AlunoDetailResponseDTO;
+  initialData?: AlunoResponse;
   onSuccess: () => void;
   onCancel: () => void;
 };

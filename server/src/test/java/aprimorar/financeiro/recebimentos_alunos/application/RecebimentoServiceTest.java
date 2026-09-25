@@ -3,6 +3,7 @@ package aprimorar.financeiro.recebimentos_alunos.application;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -17,6 +18,7 @@ import aprimorar.financeiro.recebimentos_alunos.infrastructure.RecebimentoReposi
 import aprimorar.financeiro.recebimentos_alunos.web.dto.RegistrarRecebimentoRequest;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -71,6 +73,17 @@ class RecebimentoServiceTest {
         assertEquals(new BigDecimal("200.00"), captor.getValue().getValorTotal());
         assertEquals(StatusCobranca.PAGA, primeira.getStatus());
         assertEquals(StatusCobranca.PAGA, segunda.getStatus());
+    }
+
+    @Test
+    void deveMarcarCobrancasAtrasadas() {
+        service.marcarCobrancasAtrasadas();
+
+        verify(cobrancaRepository).marcarAtrasadas(
+            eq(StatusCobranca.PENDENTE),
+            eq(StatusCobranca.ATRASADA),
+            any(LocalDateTime.class)
+        );
     }
 
     @Test

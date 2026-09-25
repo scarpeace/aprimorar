@@ -8,7 +8,7 @@ import { LoadingSkeleton } from "@/components/ui/LoadingSkeleton";
 import { AlunoDetails } from "@/features/alunos/components/AlunoDetails";
 import { AlunoStatusButton } from "@/features/alunos/components/AlunoStatusButton";
 import { EditarAlunoButton } from "@/features/alunos/components/EditarAlunoButton";
-import { useGetAlunoById } from "@/lib/api/generated/hooks/aluno/useGetAlunoById";
+import { useGetAlunoById } from "@/lib/api/generated/hooks/alunos/useGetAlunoById";
 
 type AlunoProfileProps = {
   alunoId: string;

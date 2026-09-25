@@ -3,6 +3,7 @@ package aprimorar.financeiro.repasses_colaboradores.application;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -18,6 +19,7 @@ import aprimorar.financeiro.repasses_colaboradores.web.dto.RegistrarPagamentoReq
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -71,6 +73,17 @@ class PagamentoServiceTest {
         assertEquals(new BigDecimal("200.00"), captor.getValue().getValorTotal());
         assertEquals(StatusRepasse.PAGO, primeiro.getStatus());
         assertEquals(StatusRepasse.PAGO, segundo.getStatus());
+    }
+
+    @Test
+    void deveMarcarRepassesAtrasados() {
+        service.marcarRepassesAtrasados();
+
+        verify(repasseRepository).marcarAtrasados(
+            eq(StatusRepasse.PENDENTE),
+            eq(StatusRepasse.ATRASADO),
+            any(LocalDateTime.class)
+        );
     }
 
     @Test

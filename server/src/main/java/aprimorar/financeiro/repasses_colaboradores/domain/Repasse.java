@@ -63,28 +63,14 @@ public class Repasse {
         this.status = StatusRepasse.PENDENTE;
     }
 
-    public StatusRepasse statusAtual() {
-        if (status == StatusRepasse.PENDENTE
-                && pagamento == null
-                && createdAt != null
-                && createdAt.isBefore(LocalDateTime.now().minusDays(30))
-        ) {
-            return StatusRepasse.ATRASADO;
-        }
-
-        return status;
-    }
-
     private void validarDisponivelParaPagamento() {
-        StatusRepasse statusAtual = statusAtual();
-
-        if (pagamento != null || statusAtual == StatusRepasse.PAGO) {
+        if (pagamento != null || status == StatusRepasse.PAGO) {
             throw new RepasseDadosInvalidosException("Repasse já está pago");
         }
 
         if (
-            statusAtual != StatusRepasse.PENDENTE
-                && statusAtual != StatusRepasse.ATRASADO
+            status != StatusRepasse.PENDENTE
+                && status != StatusRepasse.ATRASADO
         ) {
             throw new RepasseDadosInvalidosException("Somente repasses pendentes ou atrasados podem ser pagos");
         }

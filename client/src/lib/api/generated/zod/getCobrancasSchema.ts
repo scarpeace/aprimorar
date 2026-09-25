@@ -9,6 +9,9 @@ import { z } from "zod/v4";
 
 export const getCobrancasQueryParamsSchema = z.object({
   alunoId: z.optional(z.uuid().describe("ID do aluno")),
+  status: z.optional(
+    z.array(z.enum(["PENDENTE", "PAGA", "ATRASADA", "CANCELADA"]).describe("Status da cobrança")).describe("Status da cobrança"),
+  ),
   formaPagamento: z.optional(
     z.enum(["PIX", "DINHEIRO", "CARTAO_CREDITO", "CARTAO_DEBITO", "BOLETO", "TRANSFERENCIA"]).describe("Forma de pagamento"),
   ),

@@ -13,10 +13,8 @@ import aprimorar.financeiro.repasses_colaboradores.domain.exception.RepasseDados
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
-import org.springframework.test.util.ReflectionTestUtils;
 
 class RepasseTest {
 
@@ -30,19 +28,6 @@ class RepasseTest {
         assertEquals(10L, repasse.getAtendimentoId());
         assertEquals(COLABORADOR_ID, repasse.getColaboradorId());
         assertEquals(new BigDecimal("80.00"), repasse.getValor());
-        assertEquals(StatusRepasse.PENDENTE, repasse.getStatus());
-    }
-
-    @Test
-    void shouldCalculateOverdueStatus() {
-        Repasse repasse = repasse();
-        ReflectionTestUtils.setField(
-            repasse,
-            "createdAt",
-            LocalDateTime.now().minusDays(31)
-        );
-
-        assertEquals(StatusRepasse.ATRASADO, repasse.statusAtual());
         assertEquals(StatusRepasse.PENDENTE, repasse.getStatus());
     }
 

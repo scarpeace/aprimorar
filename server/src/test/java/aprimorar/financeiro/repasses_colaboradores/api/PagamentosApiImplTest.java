@@ -19,6 +19,7 @@ import aprimorar.financeiro.repasses_colaboradores.infrastructure.RepasseReposit
 import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -129,7 +130,10 @@ class PagamentosApiImplTest {
 
     @Test
     void deveConsultarPendenciaPorColaborador() {
-        when(repasseRepository.existsByColaboradorIdAndStatus(COLABORADOR_ID, StatusRepasse.PENDENTE))
+        when(repasseRepository.existsByColaboradorIdAndStatusIn(
+            COLABORADOR_ID,
+            List.of(StatusRepasse.PENDENTE, StatusRepasse.ATRASADO)
+        ))
             .thenReturn(true);
 
         boolean possuiPendencia = service.possuiRepassePendente(COLABORADOR_ID);

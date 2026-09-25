@@ -46,7 +46,7 @@ public record RepasseResponse(
             repasse.getAtendimentoId(),
             repasse.getColaboradorId(),
             repasse.getValor(),
-            repasse.statusAtual(),
+            repasse.getStatus(),
             repasse.getCreatedAt(),
             repasse.getPagamento() == null ? null : repasse.getPagamento().getId()
         );

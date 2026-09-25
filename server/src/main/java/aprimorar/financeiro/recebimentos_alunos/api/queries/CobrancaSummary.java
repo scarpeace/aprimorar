@@ -19,7 +19,7 @@ public record CobrancaSummary(
             cobranca.getId(),
             cobranca.getAtendimentoId(),
             cobranca.getValor(),
-            cobranca.statusAtual().name(),
+            cobranca.getStatus().name(),
             cobranca.getCreatedAt(),
             cobranca.getRecebimento() == null ? null : cobranca.getRecebimento().getId()
         );

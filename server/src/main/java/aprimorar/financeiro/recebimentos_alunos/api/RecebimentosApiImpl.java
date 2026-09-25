@@ -1,5 +1,6 @@
 package aprimorar.financeiro.recebimentos_alunos.api;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -80,9 +81,9 @@ class RecebimentosApiImpl implements RecebimentosApi {
     @Override
     @Transactional
     public boolean possuiCobrancaPendente(UUID alunoId) {
-        return cobrancaRepository.existsByAlunoIdAndStatus(
+        return cobrancaRepository.existsByAlunoIdAndStatusIn(
             alunoId,
-            StatusCobranca.PENDENTE
+            List.of(StatusCobranca.PENDENTE, StatusCobranca.ATRASADA)
         );
     }
 

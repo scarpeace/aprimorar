@@ -1,11 +1,11 @@
-import type { AlunoDetailResponseDTO } from "@/lib/api/generated/types/AlunoDetailResponseDTO";
+import type { AlunoResponse } from "@/lib/api/generated/types/AlunoResponse";
 import { Collapse } from "@/components/ui/Collapse";
 import { DetailField } from "@/components/ui/DetailField";
 import { EnderecoDetails } from "@/components/ui/EnderecoDetails";
 import { formatCpf, formatDate, formatPhone } from "@/lib/utils/formatter";
 
 type AlunoDetailsProps = {
-  aluno: AlunoDetailResponseDTO;
+  aluno: AlunoResponse;
 };
 
 export function AlunoDetails({ aluno }: Readonly<AlunoDetailsProps>) {

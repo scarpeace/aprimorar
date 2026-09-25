@@ -1,11 +1,14 @@
 package aprimorar.financeiro.operacional.service;
 
-import aprimorar.financeiro.operacional.web.dto.DespesaRequest;
+import java.time.LocalDate;
+
 import aprimorar.financeiro.operacional.domain.Despesa;
+import aprimorar.financeiro.operacional.domain.enums.StatusDespesa;
 import aprimorar.financeiro.operacional.domain.exception.DespesaNaoEncontradaException;
 import aprimorar.financeiro.operacional.repository.DespesaRepository;
 import aprimorar.financeiro.operacional.repository.DespesaSpecifications;
 import aprimorar.financeiro.operacional.web.dto.DespesaFiltroRequest;
+import aprimorar.financeiro.operacional.web.dto.DespesaRequest;
 import aprimorar.financeiro.operacional.web.dto.DespesaResponse;
 
 import org.slf4j.Logger;
@@ -93,6 +96,22 @@ public class DespesaService {
         despesa.cancelarPagamento();
         log.info("Pagamento da despesa {} cancelado com sucesso.", despesa.getTitulo().toUpperCase());
         return DespesaResponse.toDto(despesa);
+    }
+
+    @Transactional
+    public int atualizarStatusAtrasos() {
+        LocalDate hoje = LocalDate.now();
+        int reabertas = despesaRepo.reabrirVencimentosFuturos(
+            StatusDespesa.ATRASADA,
+            StatusDespesa.PENDENTE,
+            hoje
+        );
+        int atrasadas = despesaRepo.marcarAtrasadas(
+            StatusDespesa.PENDENTE,
+            StatusDespesa.ATRASADA,
+            hoje
+        );
+        return reabertas + atrasadas;
     }
 
     private Despesa findDespesaOrThrow(Long despesaId) {

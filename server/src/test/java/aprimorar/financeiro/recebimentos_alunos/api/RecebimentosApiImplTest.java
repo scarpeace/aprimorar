@@ -18,6 +18,7 @@ import aprimorar.common.FormaPagamentoEnum;
 import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
@@ -127,7 +128,10 @@ class RecebimentosApiImplTest {
 
     @Test
     void deveConsultarPendenciaPorAluno() {
-        when(cobrancaRepository.existsByAlunoIdAndStatus(ALUNO_ID, StatusCobranca.PENDENTE))
+        when(cobrancaRepository.existsByAlunoIdAndStatusIn(
+            ALUNO_ID,
+            List.of(StatusCobranca.PENDENTE, StatusCobranca.ATRASADA)
+        ))
             .thenReturn(true);
 
         assertEquals(true, api.possuiCobrancaPendente(ALUNO_ID));

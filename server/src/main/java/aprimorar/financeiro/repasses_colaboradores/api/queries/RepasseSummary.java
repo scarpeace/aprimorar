@@ -20,7 +20,7 @@ public record RepasseSummary(
             repasse.getId(),
             repasse.getAtendimentoId(),
             repasse.getValor(),
-            repasse.statusAtual().name(),
+            repasse.getStatus().name(),
             repasse.getCreatedAt(),
             repasse.getPagamento() == null ? null : repasse.getPagamento().getId()
         );

@@ -9,7 +9,7 @@ import { ErrorCard } from "@/components/ui/ErrorCard";
 import { LoadingSkeleton } from "@/components/ui/LoadingSkeleton";
 import { Pagination } from "@/components/ui/Pagination";
 import { SearchInput } from "@/components/ui/SearchInput";
-import { useGetAlunos } from "@/lib/api/generated/hooks/aluno/useGetAlunos";
+import { useGetAlunos } from "@/lib/api/generated/hooks/alunos/useGetAlunos";
 import { useDebounce } from "@/lib/hooks/use-debounce";
 
 const PAGE_SIZE = 10;
@@ -109,7 +109,7 @@ export function AlunosTable() {
                     <td className="font-semibold">{aluno.nome ?? "Não informado"}</td>
                     <td>{aluno.escola ?? "Não informada"}</td>
                     <td>
-                      <ActiveStatusIndicator active={aluno.ativo ?? false} />
+                      <ActiveStatusIndicator active={aluno.active ?? false} />
                     </td>
                   </tr>
                 ))}

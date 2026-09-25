@@ -1,5 +1,6 @@
 package aprimorar.financeiro.repasses_colaboradores.api;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -71,7 +72,10 @@ class PagamentosApiImpl  implements  PagamentosApi{
 
 	@Override
 	public boolean possuiRepassePendente(UUID colaboradorId) {
-	    return repasseRepository.existsByColaboradorIdAndStatus(colaboradorId,StatusRepasse.PENDENTE);
+	    return repasseRepository.existsByColaboradorIdAndStatusIn(
+            colaboradorId,
+            List.of(StatusRepasse.PENDENTE, StatusRepasse.ATRASADO)
+        );
 	}
 
 	@Override

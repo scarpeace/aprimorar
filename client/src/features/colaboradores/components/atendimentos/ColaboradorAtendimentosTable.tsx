@@ -14,8 +14,8 @@ import { SelectField } from "@/components/ui/SelectField";
 import { ColaboradorAtendimentoCard } from "@/features/colaboradores/components/atendimentos/ColaboradorAtendimentoCard";
 import { AtendimentoTipoBadge } from "@/features/atendimentos/components/AtendimentoTipoBadge";
 import { RegistrarRepasseButton } from "@/features/repasses/components/RegistrarRepasseButton";
-import { useBuscarAtendimentosIndividuais } from "@/lib/api/generated/hooks/atendimentos individuais/useBuscarAtendimentosIndividuais";
-import type { BuscarAtendimentosIndividuaisQueryParamsTipoEnumKey } from "@/lib/api/generated/types/BuscarAtendimentosIndividuais";
+import { useGetAtendimentosIndividuais } from "@/lib/api/generated/hooks/atendimentos/useGetAtendimentosIndividuais";
+import type { GetAtendimentosIndividuaisQueryParamsTipoEnumKey } from "@/lib/api/generated/types/GetAtendimentosIndividuais";
 import { atendimentoTipoOptions } from "@/lib/constants/atendimento-constants";
 import { useDebounce } from "@/lib/hooks/use-debounce";
 import { formatDateShortYear, formatTime } from "@/lib/utils/date-utils";
@@ -23,7 +23,7 @@ import { brl } from "@/lib/utils/formatter";
 
 const PAGE_SIZE = 10;
 
-type ColaboradorAtendimentoTipo = BuscarAtendimentosIndividuaisQueryParamsTipoEnumKey | "";
+type ColaboradorAtendimentoTipo = GetAtendimentosIndividuaisQueryParamsTipoEnumKey | "";
 
 type ColaboradorAtendimentosTableProps = {
   colaboradorId: string;
@@ -39,7 +39,7 @@ export function ColaboradorAtendimentosTable({ colaboradorId }: Readonly<Colabor
   const [dataFim, setDataFim] = useState("");
   const search = useDebounce(searchInput.trim(), 300);
 
-  const atendimentos = useBuscarAtendimentosIndividuais({
+  const atendimentos = useGetAtendimentosIndividuais({
     page,
     size: PAGE_SIZE,
     colaboradorId,
@@ -144,7 +144,7 @@ export function ColaboradorAtendimentosTable({ colaboradorId }: Readonly<Colabor
                     className="cursor-pointer hover:bg-base-200/70"
                     onClick={() => openAtendimento(atendimento.id)}
                   >
-                    <td className="font-semibold">{atendimento.alunoResumo.nome}</td>
+                    <td className="font-semibold">{atendimento.alunoNome}</td>
                     <td>{formatDateShortYear(atendimento.dataHoraInicio)}</td>
                     <td>
                       {formatTime(atendimento.dataHoraInicio)} - {formatTime(atendimento.dataHoraFim)}
@@ -154,8 +154,8 @@ export function ColaboradorAtendimentosTable({ colaboradorId }: Readonly<Colabor
                     </td>
                     <td className="w-10">
                       <div className="flex items-center justify-between gap-3">
-                        <PaymentStatusIndicator status={atendimento.repasse.status} />
-                        <span>{brl.format(atendimento.repasse.valor)}</span>
+                        <PaymentStatusIndicator status={atendimento.repasseStatus} />
+                        <span>{brl.format(atendimento.valorRepasse)}</span>
                       </div>
                     </td>
                   </tr>

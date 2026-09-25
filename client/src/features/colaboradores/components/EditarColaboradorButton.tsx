@@ -2,13 +2,13 @@
 
 import { PencilLine } from "lucide-react";
 import { useState } from "react";
-import type { ColaboradorDetailResponseDTO } from "@/lib/api/generated/types/ColaboradorDetailResponseDTO";
+import type { ColaboradorResponse } from "@/lib/api/generated/types/ColaboradorResponse";
 import { Button } from "@/components/ui/Button";
 import { Modal } from "@/components/ui/Modal";
 import { ColaboradorForm } from "@/features/colaboradores/components/ColaboradorForm";
 
 type EditarColaboradorButtonProps = {
-  colaborador: ColaboradorDetailResponseDTO;
+  colaborador: ColaboradorResponse;
 };
 
 export function EditarColaboradorButton({ colaborador }: Readonly<EditarColaboradorButtonProps>) {

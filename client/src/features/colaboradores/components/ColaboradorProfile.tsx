@@ -9,14 +9,14 @@ import { LoadingSkeleton } from "@/components/ui/LoadingSkeleton";
 import { ColaboradorDetails } from "@/features/colaboradores/components/ColaboradorDetails";
 import { ColaboradorStatusButton } from "@/features/colaboradores/components/ColaboradorStatusButton";
 import { EditarColaboradorButton } from "@/features/colaboradores/components/EditarColaboradorButton";
-import { useFindColaboradorById } from "@/lib/api/generated/hooks/colaborador/useFindColaboradorById";
+import { useGetColaboradorById } from "@/lib/api/generated/hooks/colaboradores/useGetColaboradorById";
 
 type ColaboradorProfileProps = {
   colaboradorId: string;
 };
 
 export function ColaboradorProfile({ colaboradorId }: Readonly<ColaboradorProfileProps>) {
-  const colaborador = useFindColaboradorById(colaboradorId);
+  const colaborador = useGetColaboradorById(colaboradorId);
 
   return (
     <Card className="h-full">

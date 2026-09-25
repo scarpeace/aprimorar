@@ -1,6 +1,7 @@
 package aprimorar.financeiro.repasses_colaboradores.infrastructure;
 
 import jakarta.persistence.LockModeType;
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -8,6 +9,7 @@ import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Lock;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -33,7 +35,22 @@ public interface RepasseRepository
 
     Optional<Repasse> findByAtendimentoId(Long atendimentoId);
 
-    boolean existsByColaboradorIdAndStatus(UUID colaboradorId, StatusRepasse status);
+    boolean existsByColaboradorIdAndStatusIn(UUID colaboradorId, Collection<StatusRepasse> statuses);
+
+    @Modifying
+    @Query("""
+        update Repasse r
+           set r.status = :statusDestino,
+               r.updatedAt = CURRENT_TIMESTAMP
+         where r.status = :statusOrigem
+           and r.pagamento is null
+           and r.createdAt < :limite
+        """)
+    int marcarAtrasados(
+        @Param("statusOrigem") StatusRepasse statusOrigem,
+        @Param("statusDestino") StatusRepasse statusDestino,
+        @Param("limite") LocalDateTime limite
+    );
 
     List<Repasse> findAllByAtendimentoIdIn(Collection<Long> atendimentoIds);
 }

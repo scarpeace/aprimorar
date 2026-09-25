@@ -1,17 +1,17 @@
-import type { CobrancaAlunoResponse } from "@/lib/api/generated/types/CobrancaAlunoResponse";
+import type { CobrancaResponse } from "@/lib/api/generated/types/CobrancaResponse";
 import { brl } from "@/lib/utils/formatter";
 
-type CobrancasPendentesTableProps = {
-  cobrancas: CobrancaAlunoResponse[];
+type CobrancasEmAbertoTableProps = {
+  cobrancas: CobrancaResponse[];
   selectedIds: number[];
   onToggle: (cobrancaId: number) => void;
 };
 
-export function CobrancasPendentesTable({
+export function CobrancasEmAbertoTable({
   cobrancas,
   selectedIds,
   onToggle,
-}: Readonly<CobrancasPendentesTableProps>) {
+}: Readonly<CobrancasEmAbertoTableProps>) {
   return (
     <div className="overflow-x-auto">
       <table className="table table-zebra table-sm">

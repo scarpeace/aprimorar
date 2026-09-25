@@ -6,7 +6,6 @@ import aprimorar.financeiro.repasses_colaboradores.domain.enums.StatusRepasse;
 import aprimorar.financeiro.repasses_colaboradores.web.dto.RepasseFiltroRequest;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.UUID;
 import org.springframework.data.jpa.domain.Specification;
 
@@ -38,24 +37,9 @@ public final class RepasseSpecifications {
     private static Specification<Repasse> statusIgual(
         StatusRepasse status
     ) {
-        return (root, query, cb) -> {
-            if (status == null) {
-                return null;
-            }
-
-            if (status == StatusRepasse.ATRASADO) {
-                return cb.and(
-                    cb.equal(root.get("status"), StatusRepasse.PENDENTE),
-                    cb.lessThan(
-                        root.get("createdAt"),
-                        LocalDateTime.now().minusDays(30)
-                    ),
-                    cb.isNull(root.get("pagamento"))
-                );
-            }
-
-            return cb.equal(root.get("status"), status);
-        };
+        return (root, query, cb) -> status == null
+            ? null
+            : cb.equal(root.get("status"), status);
     }
 
     private static Specification<Repasse> formaPagamentoIgual(

@@ -6,6 +6,16 @@
 import type { PagedModelCobrancaResponse } from "./PagedModelCobrancaResponse.ts";
 import type { ProblemDetail } from "./ProblemDetail.ts";
 
+export const getCobrancasQueryParamsStatusEnum = {
+  PENDENTE: "PENDENTE",
+  PAGA: "PAGA",
+  ATRASADA: "ATRASADA",
+  CANCELADA: "CANCELADA",
+} as const;
+
+export type GetCobrancasQueryParamsStatusEnumKey =
+  (typeof getCobrancasQueryParamsStatusEnum)[keyof typeof getCobrancasQueryParamsStatusEnum];
+
 export const getCobrancasQueryParamsFormaPagamentoEnum = {
   PIX: "PIX",
   DINHEIRO: "DINHEIRO",
@@ -24,6 +34,11 @@ export type GetCobrancasQueryParams = {
    * @type string | undefined, uuid
    */
   alunoId?: string;
+  /**
+   * @description Status da cobrança
+   * @type array | undefined
+   */
+  status?: GetCobrancasQueryParamsStatusEnumKey[];
   /**
    * @description Forma de pagamento
    * @type string | undefined

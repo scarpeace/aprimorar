@@ -10,7 +10,7 @@ import { TextInput } from "@/components/ui/forms/TextInput";
 import { useColaboradorMutations } from "@/features/colaboradores/hooks/use-colaborador-mutations";
 import { BRAZILIAN_STATES } from "@/lib/constants/endereco-constants";
 import { colaboradorFormSchema, type ColaboradorFormData } from "@/features/colaboradores/schemas/colaborador-form-schema";
-import { ColaboradorDetailResponseDTO } from "@/lib/api/generated";
+import type { ColaboradorResponse } from "@/lib/api/generated/types/ColaboradorResponse";
 
 const FUNCAO_OPTIONS: { value: string; label: string }[] = [
   { value: "PROFESSOR", label: "Professor" },
@@ -20,7 +20,7 @@ const FUNCAO_OPTIONS: { value: string; label: string }[] = [
 ];
 
 type ColaboradorFormProps = {
-  initialData?: ColaboradorDetailResponseDTO;
+  initialData?: ColaboradorResponse;
   onSuccess: () => void;
   onCancel: () => void;
 };

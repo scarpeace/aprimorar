@@ -8,7 +8,9 @@ import aprimorar.financeiro.repasses_colaboradores.api.queries.RepasseSummary;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotNull;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Schema(description = "Dados do atendimento individual retornados pela API")
 public record AtendimentoIndividualResponse(
@@ -33,20 +35,44 @@ public record AtendimentoIndividualResponse(
     LocalDateTime dataHoraFim,
 
     @NotNull
+    @Schema(nullable = false, description = "Identificador do aluno vinculado")
+    UUID alunoId,
+
+    @NotNull
     @Schema(nullable = false, description = "Nome do aluno vinculado")
     String alunoNome,
+
+    @NotNull
+    @Schema(nullable = false, description = "Identificador do colaborador vinculado")
+    UUID colaboradorId,
 
     @NotNull
     @Schema(nullable = false, description = "Nome do colaborador vinculado")
     String colaboradorNome,
 
     @NotNull
+    @Schema(nullable = false, description = "Valor da cobrança vinculada")
+    BigDecimal valorCobranca,
+
+    @NotNull
     @Schema(nullable = false, description = "Status da cobrança do atendimento")
     String cobrancaStatus,
+
+    @Nullable
+    @Schema(nullable = true, description = "Identificador do recebimento associado à cobrança")
+    UUID recebimentoId,
+
+    @NotNull
+    @Schema(nullable = false, description = "Valor do repasse vinculado")
+    BigDecimal valorRepasse,
 
     @NotNull
     @Schema(nullable = false, description = "Status do repasse do atendimento")
     String repasseStatus,
+
+    @Nullable
+    @Schema(nullable = true, description = "Identificador do pagamento associado ao repasse")
+    UUID pagamentoId,
 
     @NotNull
     @Schema(nullable = false, description = "Data de criação do atendimento")
@@ -68,10 +94,16 @@ public record AtendimentoIndividualResponse(
             atendimento.getStatus(),
             atendimento.getDataHoraInicio(),
             atendimento.getDataHoraFim(),
+            atendimento.getAluno().getId(),
             atendimento.getAluno().getNome(),
+            atendimento.getColaborador().getId(),
             atendimento.getColaborador().getNome(),
+            cobranca.valor(),
             cobranca.status(),
+            cobranca.recebimentoId(),
+            repasse.valor(),
             repasse.status(),
+            repasse.pagamentoId(),
             atendimento.getCreatedAt(),
             atendimento.getUpdatedAt()
         );

@@ -20,7 +20,7 @@ export function ColaboradorAtendimentoCard({ atendimento, onOpen }: Readonly<Col
         <div>
           <AtendimentoTipoBadge tipo={atendimento.tipo} />
           <h3 className="mt-2 font-semibold text-base-content">
-            {atendimento.alunoResumo.nome}
+            {atendimento.alunoNome}
           </h3>
         </div>
 
@@ -34,8 +34,8 @@ export function ColaboradorAtendimentoCard({ atendimento, onOpen }: Readonly<Col
           </p>
           <p className="flex items-center gap-2">
             <span className="font-medium text-base-content">Repasse:</span>
-            <PaymentStatusIndicator status={atendimento.repasse.status} />
-            <span>{brl.format(atendimento.repasse.valor)}</span>
+            <PaymentStatusIndicator status={atendimento.repasseStatus} />
+            <span>{brl.format(atendimento.valorRepasse)}</span>
           </p>
         </div>
       </div>

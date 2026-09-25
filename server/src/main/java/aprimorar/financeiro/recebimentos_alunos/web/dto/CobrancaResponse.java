@@ -45,7 +45,7 @@ public record CobrancaResponse(
             cobranca.getAtendimentoId(),
             cobranca.getAlunoId(),
             cobranca.getValor(),
-            cobranca.statusAtual(),
+            cobranca.getStatus(),
             cobranca.getCreatedAt(),
             cobranca.getRecebimento() == null ? null : cobranca.getRecebimento().getId()
         );

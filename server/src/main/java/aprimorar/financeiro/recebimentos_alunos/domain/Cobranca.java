@@ -62,29 +62,14 @@ public class Cobranca {
         this.status = StatusCobranca.PENDENTE;
     }
 
-    public StatusCobranca statusAtual() {
-        if (
-            status == StatusCobranca.PENDENTE
-                && recebimento == null
-                && createdAt != null
-                && createdAt.isBefore(LocalDateTime.now().minusDays(30))
-        ) {
-            return StatusCobranca.ATRASADA;
-        }
-
-        return status;
-    }
-
     private void validarDisponivelParaRecebimento() {
-        StatusCobranca statusAtual = statusAtual();
-
-        if (recebimento != null || statusAtual == StatusCobranca.PAGA) {
+        if (recebimento != null || status == StatusCobranca.PAGA) {
             throw new CobrancaDadosInvalidosException("Cobrança já está paga");
         }
 
         if (
-            statusAtual != StatusCobranca.PENDENTE
-                && statusAtual != StatusCobranca.ATRASADA
+            status != StatusCobranca.PENDENTE
+                && status != StatusCobranca.ATRASADA
         ) {
             throw new CobrancaDadosInvalidosException(
                 "Somente cobranças pendentes ou atrasadas podem ser recebidas"

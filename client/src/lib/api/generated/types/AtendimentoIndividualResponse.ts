@@ -55,25 +55,55 @@ export type AtendimentoIndividualResponse = {
    */
   dataHoraFim: string;
   /**
+   * @description Identificador do aluno vinculado
+   * @type string, uuid
+   */
+  alunoId: string;
+  /**
    * @description Nome do aluno vinculado
    * @type string
    */
   alunoNome: string;
+  /**
+   * @description Identificador do colaborador vinculado
+   * @type string, uuid
+   */
+  colaboradorId: string;
   /**
    * @description Nome do colaborador vinculado
    * @type string
    */
   colaboradorNome: string;
   /**
+   * @description Valor da cobrança vinculada
+   * @type number
+   */
+  valorCobranca: number;
+  /**
    * @description Status da cobrança do atendimento
    * @type string
    */
   cobrancaStatus: string;
   /**
+   * @description Identificador do recebimento associado à cobrança
+   * @type string, uuid
+   */
+  recebimentoId?: string | null;
+  /**
+   * @description Valor do repasse vinculado
+   * @type number
+   */
+  valorRepasse: number;
+  /**
    * @description Status do repasse do atendimento
    * @type string
    */
   repasseStatus: string;
+  /**
+   * @description Identificador do pagamento associado ao repasse
+   * @type string, uuid
+   */
+  pagamentoId?: string | null;
   /**
    * @description Data de criação do atendimento
    * @type string, date-time

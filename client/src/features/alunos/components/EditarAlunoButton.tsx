@@ -5,10 +5,10 @@ import { useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { Modal } from "@/components/ui/Modal";
 import { AlunoForm } from "@/features/alunos/components/AlunoForm";
-import type { AlunoDetailResponseDTO } from "@/lib/api/generated/types/AlunoDetailResponseDTO";
+import type { AlunoResponse } from "@/lib/api/generated/types/AlunoResponse";
 
 type EditarAlunoButtonProps = {
-  aluno: AlunoDetailResponseDTO;
+  aluno: AlunoResponse;
 };
 
 export function EditarAlunoButton({ aluno }: Readonly<EditarAlunoButtonProps>) {

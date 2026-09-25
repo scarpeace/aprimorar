@@ -2,6 +2,7 @@ package aprimorar.financeiro.recebimentos_alunos.application;
 
 import aprimorar.financeiro.recebimentos_alunos.domain.Cobranca;
 import aprimorar.financeiro.recebimentos_alunos.domain.CobrancaRecebimento;
+import aprimorar.financeiro.recebimentos_alunos.domain.enums.StatusCobranca;
 import aprimorar.financeiro.recebimentos_alunos.domain.exception.CobrancaNaoEncontradaException;
 import aprimorar.financeiro.recebimentos_alunos.domain.exception.RecebimentoDadosInvalidosException;
 import aprimorar.financeiro.recebimentos_alunos.domain.exception.RecebimentoNaoEncontradoException;
@@ -17,6 +18,7 @@ import aprimorar.financeiro.recebimentos_alunos.web.dto.RecebimentoResponse;
 import aprimorar.financeiro.recebimentos_alunos.web.dto.RegistrarRecebimentoRequest;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 import org.springframework.data.domain.Page;
@@ -140,5 +142,14 @@ public class RecebimentoService {
         Cobranca cobranca = cobrancaRepository.findById(cobrancaId)
             .orElseThrow(CobrancaNaoEncontradaException::new);
         return CobrancaResponse.toDto(cobranca);
+    }
+
+    @Transactional
+    public int marcarCobrancasAtrasadas() {
+        return cobrancaRepository.marcarAtrasadas(
+            StatusCobranca.PENDENTE,
+            StatusCobranca.ATRASADA,
+            LocalDateTime.now().minusDays(30)
+        );
     }
 }

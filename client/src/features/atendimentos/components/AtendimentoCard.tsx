@@ -19,8 +19,8 @@ export function AtendimentoCard({ atendimento, onOpen }: Readonly<AtendimentoCar
       <div className="card-body gap-4 p-4">
         <div>
           <AtendimentoTipoBadge tipo={atendimento.tipo} />
-          <h3 className="mt-2 font-semibold text-base-content">{atendimento.alunoResumo.nome}</h3>
-          <p className="text-sm text-base-content/65">{atendimento.colaboradorResumo.nome}</p>
+          <h3 className="mt-2 font-semibold text-base-content">{atendimento.alunoNome}</h3>
+          <p className="text-sm text-base-content/65">{atendimento.colaboradorNome}</p>
         </div>
 
         <div className="grid gap-2 text-sm">
@@ -33,13 +33,13 @@ export function AtendimentoCard({ atendimento, onOpen }: Readonly<AtendimentoCar
           </p>
           <p className="flex items-center gap-2">
             <span className="font-medium text-base-content">Cobrança:</span>
-            <PaymentStatusIndicator status={atendimento.cobranca.status} />
-            <span>{brl.format(atendimento.cobranca.valor)}</span>
+            <PaymentStatusIndicator status={atendimento.cobrancaStatus} />
+            <span>{brl.format(atendimento.valorCobranca)}</span>
           </p>
           <p className="flex items-center gap-2">
             <span className="font-medium text-base-content">Repasse:</span>
-            <PaymentStatusIndicator status={atendimento.repasse.status} />
-            <span>{brl.format(atendimento.repasse.valor)}</span>
+            <PaymentStatusIndicator status={atendimento.repasseStatus} />
+            <span>{brl.format(atendimento.valorRepasse)}</span>
           </p>
         </div>
       </div>
